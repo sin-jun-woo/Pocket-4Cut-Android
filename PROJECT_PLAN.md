@@ -156,15 +156,15 @@ MVP가 안정된 이후 별도 로드맵(Phase 6 이후)으로 관리합니다.
 
 #### Day 1: 프로젝트 생성
 
-- [ ] Android Studio에서 새 프로젝트 생성
+- [x] Android Studio에서 새 프로젝트 생성
   - Name: Pocket4Cut
   - Package: com.pocket4cut
   - Template: Empty Activity (Compose) 또는 Empty Views
   - Language: Kotlin
-  - Min SDK: API 24+
-- [ ] Git 초기화 및 .gitignore 설정
-- [ ] README.md 확인 및 필요 시 업데이트
-- [ ] 빌드 테스트 성공 확인
+  - Min SDK: API 26+
+- [x] Git 초기화 및 .gitignore 설정
+- [x] README.md 확인 및 필요 시 업데이트
+- [x] 빌드 테스트 성공 확인
 
 **산출물**: 기본 Android 프로젝트
 
@@ -172,15 +172,15 @@ MVP가 안정된 이후 별도 로드맵(Phase 6 이후)으로 관리합니다.
 
 #### Day 2: 프로젝트 구조 생성
 
-- [ ] app 소스 아래 패키지/폴더 구조 생성
+- [x] app 소스 아래 패키지/폴더 구조 생성
   - presentation/ (home, frameTypeSelect, capture, selection, frameTheme, edit, result, gallery)
   - domain/ (model, repository, usecase)
   - data/ (storage, local)
   - camera/ (CaptureEngine)
   - frame/ (FrameDefinitions, CollageRenderer)
   - core/ (util, extensions, designsystem)
-- [ ] 각 패키지에 플레이스홀더 Kotlin 파일 또는 빈 디렉터리 생성
-- [ ] 빌드 테스트 성공 확인
+- [x] 각 패키지에 플레이스홀더 Kotlin 파일 또는 빈 디렉터리 생성
+- [x] 빌드 테스트 성공 확인
 
 **산출물**: 프로젝트 구조 생성 및 기본 플레이스홀더
 
@@ -188,12 +188,12 @@ MVP가 안정된 이후 별도 로드맵(Phase 6 이후)으로 관리합니다.
 
 #### Day 3: 권한 및 AndroidManifest
 
-- [ ] AndroidManifest.xml 권한 추가
+- [x] AndroidManifest.xml 권한 추가
   - CAMERA
   - READ_MEDIA_IMAGES (API 33+) / READ_EXTERNAL_STORAGE (이하)
   - WRITE_EXTERNAL_STORAGE (필요 시, API 29 이하)
-- [ ] 도메인 모델 초안: PhotoSession (README 참고)
-- [ ] 빌드 테스트 성공 확인
+- [x] 도메인 모델 초안: PhotoSession (README 참고)
+- [x] 빌드 테스트 성공 확인
 
 **산출물**: 권한 설정 및 모델 정의 (PhotoSession, 권한은 Manifest 반영)
 
@@ -201,10 +201,10 @@ MVP가 안정된 이후 별도 로드맵(Phase 6 이후)으로 관리합니다.
 
 #### Day 4: 테마 및 공통 컴포넌트
 
-- [ ] DesignSystem: Color, Typography (Compose Theme 또는 res/values)
-- [ ] Constants: 촬영 장수(8/10), 컷 수(4/6), 타이머 기본값 (Constants.kt)
-- [ ] Extensions: Long/Date 포맷 등 공통 확장
-- [ ] 빌드 테스트 성공 확인
+- [x] DesignSystem: Color, Typography (Compose Theme 또는 res/values)
+- [x] Constants: 촬영 장수(8/10), 컷 수(4/6), 타이머 기본값 (Constants.kt)
+- [x] Extensions: Long/Date 포맷 등 공통 확장
+- [x] 빌드 테스트 성공 확인
 
 **산출물**: 테마 및 상수/확장 정의 파일 초안
 
@@ -221,11 +221,11 @@ MVP가 안정된 이후 별도 로드맵(Phase 6 이후)으로 관리합니다.
 
 ### Phase 0 완료 체크리스트
 
-- [ ] Android Studio 프로젝트 생성 완료
-- [ ] 프로젝트 패키지/폴더 구조 생성
-- [ ] AndroidManifest 권한 설정 완료
-- [ ] Git 리포지토리 초기화
-- [ ] 프로젝트 빌드 성공
+- [x] Android Studio 프로젝트 생성 완료
+- [x] 프로젝트 패키지/폴더 구조 생성
+- [x] AndroidManifest 권한 설정 완료
+- [x] Git 리포지토리 초기화
+- [x] 프로젝트 빌드 성공
 
 ---
 
