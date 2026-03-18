@@ -40,14 +40,14 @@ object CollageRenderer {
         // background
         canvas.drawColor(theme.background.toArgb())
 
-        val padding = (targetWidth * 0.04f).roundToInt().toFloat()
+        val padding = (targetWidth * 0.05f).roundToInt().toFloat()
         val gap = when (frameType) {
-            FrameType.TWO_CUT -> (targetWidth * 0.025f).roundToInt().toFloat()
-            FrameType.FOUR_CUT -> (targetWidth * 0.05f).roundToInt().toFloat()
-            FrameType.SIX_CUT -> (targetWidth * 0.04f).roundToInt().toFloat()
+            FrameType.TWO_CUT -> (targetWidth * 0.03f).roundToInt().toFloat()
+            FrameType.FOUR_CUT -> (targetWidth * 0.06f).roundToInt().toFloat()
+            FrameType.SIX_CUT -> (targetWidth * 0.06f).roundToInt().toFloat()
         }
-        val header = (targetHeight * 0.03f).roundToInt().toFloat()
-        val footer = (targetHeight * 0.08f).roundToInt().toFloat()
+        val header = (targetHeight * 0.02f).roundToInt().toFloat()
+        val footer = (targetHeight * 0.07f).roundToInt().toFloat()
 
         val contentLeft = padding
         val contentTop = padding + header
@@ -73,7 +73,7 @@ object CollageRenderer {
         }
         val slotBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
-            strokeWidth = (targetWidth * 0.004f).coerceAtLeast(1.5f)
+            strokeWidth = (targetWidth * 0.006f).coerceAtLeast(2f)
             color = theme.border.toArgb()
         }
         val imagePaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
