@@ -64,7 +64,7 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
 
         _uiState.update {
             it.copy(
-                phase = CapturePhase.COUNTDOWN,
+                phase = CapturePhase.READY,
                 countdownRemaining = Constants.COUNTDOWN_SECONDS,
                 currentShot = 0,
                 totalShots = total,
@@ -76,15 +76,21 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
 
         captureJob = viewModelScope.launch {
             try {
-                for (sec in Constants.COUNTDOWN_SECONDS downTo 1) {
-                    _uiState.update { it.copy(phase = CapturePhase.COUNTDOWN, countdownRemaining = sec) }
-                    delay(1000)
-                }
-
-                _uiState.update { it.copy(phase = CapturePhase.CAPTURING) }
-
                 for (i in 1..total) {
-                    _uiState.update { it.copy(currentShot = i, flash = true) }
+                    for (sec in Constants.COUNTDOWN_SECONDS downTo 1) {
+                        _uiState.update {
+                            it.copy(
+                                phase = CapturePhase.COUNTDOWN,
+                                countdownRemaining = sec,
+                                currentShot = i - 1,
+                                totalShots = total,
+                                flash = false,
+                            )
+                        }
+                        delay(1000)
+                    }
+
+                    _uiState.update { it.copy(phase = CapturePhase.CAPTURING, currentShot = i, flash = true) }
                     val file = storage.createCaptureFile(sessionId, i)
                     engine.takePictureToFile(file)
                     delay(300)
