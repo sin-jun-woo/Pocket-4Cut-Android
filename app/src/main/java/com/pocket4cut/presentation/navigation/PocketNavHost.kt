@@ -36,6 +36,10 @@ fun PocketNavHost(
         composable(Routes.GALLERY) {
             GalleryScreen(
                 onBack = { navController.popBackStack() },
+                onOpen = { resultPath ->
+                    val encoded = NavCodec.encodePath(resultPath)
+                    navController.navigate("${Routes.RESULT}/$encoded")
+                },
             )
         }
 

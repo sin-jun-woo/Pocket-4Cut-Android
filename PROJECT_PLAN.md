@@ -483,8 +483,8 @@ MVP가 안정된 이후 별도 로드맵(Phase 6 이후)으로 관리합니다.
 #### Day 1: ImageStorage & SessionStore
 
 - [x] **ImageStorage**: 결과 이미지 파일 저장 (FileManager, 세션 폴더 구조)
-- [ ] **SessionRepository**: 메타데이터 저장 (Room 또는 DataStore) — 세션 ID, 날짜, 프레임 ID, 썸네일 경로 등
-- [ ] DATA_STORAGE.md 구조와 일치하도록 경로/스키마 정의
+- [x] **SessionRepository**: 메타데이터 저장 (Room 또는 DataStore) — 세션 ID, 날짜, 프레임 ID, 썸네일 경로 등
+- [x] DATA_STORAGE.md 구조와 일치하도록 경로/스키마 정의
 
 **산출물**: 저장 레이어 구현
 
@@ -503,7 +503,7 @@ MVP가 안정된 이후 별도 로드맵(Phase 6 이후)으로 관리합니다.
 #### Day 3: 공유 시트
 
 - [x] **Intent.ACTION_SEND** 연동 (공유 버튼 탭 시)
-- [ ] 공유 대상: 최종 결과 이미지 (Uri 또는 임시 파일)
+- [x] 공유 대상: 최종 결과 이미지 (Uri 또는 임시 파일)
 - [ ] 공유 완료 후 ResultScreen 유지 또는 보관함으로 이동 옵션
 
 **산출물**: 공유 시트 동작
@@ -514,7 +514,7 @@ MVP가 안정된 이후 별도 로드맵(Phase 6 이후)으로 관리합니다.
 
 - [x] **GalleryScreen**: 보관함 결과물 **리스트** (세션 목록)
 - [x] 날짜별 정렬 (최신순)
-- [ ] 썸네일 표시, 탭 시 상세(ResultScreen 또는 큰 이미지) 표시
+- [x] 썸네일 표시, 탭 시 상세(ResultScreen 또는 큰 이미지) 표시
 
 **산출물**: 보관함 목록 화면
 
@@ -532,7 +532,7 @@ MVP가 안정된 이후 별도 로드맵(Phase 6 이후)으로 관리합니다.
 
 ### Phase 4 완료 체크리스트
 
-- [ ] ImageStorage + SessionStore 저장 구조
+- [x] ImageStorage + SessionStore 저장 구조
 - [x] 갤러리 저장 및 공유 시트 동작
 - [x] 보관함 리스트(날짜별), 삭제
 - [ ] 빌드 성공 및 실제 기기 테스트 통과

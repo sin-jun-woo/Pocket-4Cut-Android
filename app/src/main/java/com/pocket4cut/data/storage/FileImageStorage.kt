@@ -1,6 +1,7 @@
 package com.pocket4cut.data.storage
 
 import android.content.Context
+import android.os.Environment
 import android.graphics.Bitmap
 import com.pocket4cut.core.util.Constants
 import kotlinx.coroutines.Dispatchers
@@ -37,8 +38,8 @@ class FileImageStorage(
     }
 
     override suspend fun saveResult(bitmap: Bitmap, sessionId: String): String = withContext(Dispatchers.IO) {
-        val dir = File(context.filesDir, "results").apply { mkdirs() }
-        val file = File(dir, "result_$sessionId.jpg")
+        val dir = resultsDir().apply { mkdirs() }
+        val file = File(dir, "${sessionId}_result.jpg")
         FileOutputStream(file).use { out ->
             bitmap.compress(Bitmap.CompressFormat.JPEG, Constants.RESULT_IMAGE_QUALITY, out)
         }
@@ -47,9 +48,18 @@ class FileImageStorage(
 
     override suspend fun deleteSessionFiles(sessionId: String) = withContext(Dispatchers.IO) {
         captureDir(sessionId).deleteRecursively()
+        File(resultsDir(), "${sessionId}_result.jpg").delete()
         Unit
     }
 
-    private fun captureDir(sessionId: String): File = File(context.cacheDir, "captures/$sessionId")
+    private fun captureDir(sessionId: String): File = File(picturesBaseDir(), "captures/$sessionId")
+
+    private fun resultsDir(): File = File(picturesBaseDir(), "results")
+
+    private fun picturesBaseDir(): File =
+        File(
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "Pocket4Cut",
+        )
 }
 

@@ -5,7 +5,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.pocket4cut.data.local.SessionRepository
 import com.pocket4cut.data.storage.FileImageStorage
+import com.pocket4cut.domain.model.PhotoSession
 import com.pocket4cut.frame.CollageRenderer
 import com.pocket4cut.frame.FrameDefinitions
 import com.pocket4cut.frame.FrameTheme
@@ -34,12 +36,15 @@ data class EditUiState(
 
 class EditViewModel(app: Application) : AndroidViewModel(app) {
     private val storage = FileImageStorage(app.applicationContext)
+    private val sessions = SessionRepository(app.applicationContext)
 
     private val _uiState = MutableStateFlow(EditUiState())
     val uiState: StateFlow<EditUiState> = _uiState
 
     private var lastFrameType: FrameType? = null
     private var lastTheme: FrameTheme? = null
+    private var lastSelectedIndexes: List<Int> = emptyList()
+    private var lastSessionId: String? = null
 
     fun init(
         frameType: FrameType,
@@ -47,8 +52,10 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         selectedIndexes: List<Int>,
         themeId: String,
     ) {
+        lastSessionId = sessionId
         lastFrameType = frameType
         lastTheme = FrameDefinitions.byId(themeId)
+        lastSelectedIndexes = selectedIndexes
         _uiState.update { it.copy(isLoading = true, errorMessage = null, preview = null) }
         viewModelScope.launch {
             runCatching { storage.getCapturePaths(sessionId) }
@@ -175,7 +182,20 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
             dateText = dateText,
             targetWidth = 1920,
         )
-        storage.saveResult(result, sessionId)
+        val path = storage.saveResult(result, sessionId)
+
+        val session = PhotoSession(
+            id = sessionId,
+            captureCount = frameType.captureCount,
+            selectedCount = frameType.selectCount,
+            imagePaths = snapshot.imagePaths,
+            selectedIndexes = lastSelectedIndexes,
+            frameId = theme.id,
+            finalImagePath = path,
+            createdAt = System.currentTimeMillis(),
+        )
+        sessions.upsert(session)
+        path
     }
 }
 

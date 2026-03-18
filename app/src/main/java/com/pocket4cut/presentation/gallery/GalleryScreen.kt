@@ -1,7 +1,7 @@
 package com.pocket4cut.presentation.gallery
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,11 +39,12 @@ import java.io.File
 @Composable
 fun GalleryScreen(
     onBack: () -> Unit,
+    onOpen: (resultPath: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GalleryViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var deleteTarget by remember { mutableStateOf<String?>(null) }
+    var deleteTarget by remember { mutableStateOf<GalleryItem?>(null) }
 
     LaunchedEffect(Unit) { viewModel.load() }
 
@@ -83,13 +84,16 @@ fun GalleryScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     items(uiState.items) { item ->
-                        val file = File(item.path)
+                        val file = File(item.resultPath)
                         Box(
                             modifier = Modifier
                                 .aspectRatio(9f / 16f)
                                 .clip(RoundedCornerShape(14.dp))
                                 .background(Color.Black.copy(alpha = 0.06f))
-                                .clickable { deleteTarget = item.path },
+                                .combinedClickable(
+                                    onClick = { onOpen(item.resultPath) },
+                                    onLongClick = { deleteTarget = item },
+                                ),
                         ) {
                             AsyncImage(
                                 model = file,
@@ -108,11 +112,11 @@ fun GalleryScreen(
         AlertDialog(
             onDismissRequest = { deleteTarget = null },
             title = { Text("삭제할까?") },
-            text = { Text("이 결과물 지운다: ${File(target).name}") },
+            text = { Text("이 결과물 지운다: ${File(target.resultPath).name}") },
             confirmButton = {
                 Button(
                     onClick = {
-                        viewModel.delete(target)
+                        viewModel.delete(target.sessionId)
                         deleteTarget = null
                     },
                 ) { Text("삭제") }
