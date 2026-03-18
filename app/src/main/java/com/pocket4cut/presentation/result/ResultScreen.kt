@@ -36,6 +36,7 @@ import java.io.File
 fun ResultScreen(
     resultPath: String,
     onBack: () -> Unit,
+    onHome: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -56,6 +57,27 @@ fun ResultScreen(
         ) {
             OutlinedButton(onClick = onBack) { Text("뒤로") }
             Text("결과", style = MaterialTheme.typography.titleLarge)
+            Button(onClick = onHome) { Text("메인") }
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(9f / 16f),
+            contentAlignment = Alignment.Center,
+        ) {
+            AsyncImage(
+                model = uri,
+                contentDescription = "result",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit,
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
             Button(
                 onClick = {
                     saveMessage = runCatching {
@@ -90,27 +112,9 @@ fun ResultScreen(
                         "갤러리에 저장되었습니다."
                     }.getOrElse { t -> "저장에 실패했습니다: ${t.message}" }
                 },
+                modifier = Modifier.weight(1f),
             ) { Text("저장") }
-        }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(9f / 16f),
-            contentAlignment = Alignment.Center,
-        ) {
-            AsyncImage(
-                model = uri,
-                contentDescription = "result",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Fit,
-            )
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
             Button(
                 onClick = {
                     val intent = Intent(Intent.ACTION_SEND).apply {

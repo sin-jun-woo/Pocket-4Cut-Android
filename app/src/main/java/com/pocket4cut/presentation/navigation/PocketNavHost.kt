@@ -144,6 +144,12 @@ fun PocketNavHost(
             ResultScreen(
                 resultPath = NavCodec.decodePath(encoded),
                 onBack = { navController.popBackStack() },
+                onHome = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.HOME) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
             )
         }
     }

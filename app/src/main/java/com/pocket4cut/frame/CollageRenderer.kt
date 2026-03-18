@@ -39,10 +39,11 @@ object CollageRenderer {
         // background
         canvas.drawColor(theme.background.toArgb())
 
-        val padding = (targetWidth * 0.06f).roundToInt().toFloat()
-        val gap = (targetWidth * 0.03f).roundToInt().toFloat()
-        val header = (targetHeight * 0.08f).roundToInt().toFloat()
-        val footer = (targetHeight * 0.11f).roundToInt().toFloat()
+        // 여백이 과하면 프레임 안 사진이 작아 보이므로, 기본 여백을 최소화한다.
+        val padding = (targetWidth * 0.04f).roundToInt().toFloat()
+        val gap = (targetWidth * 0.02f).roundToInt().toFloat()
+        val header = (targetHeight * 0.03f).roundToInt().toFloat()
+        val footer = (targetHeight * 0.08f).roundToInt().toFloat()
 
         val contentLeft = padding
         val contentTop = padding + header
@@ -63,7 +64,7 @@ object CollageRenderer {
         }
         val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             style = Paint.Style.STROKE
-            strokeWidth = (targetWidth * 0.006f).coerceAtLeast(2f)
+            strokeWidth = (targetWidth * 0.005f).coerceAtLeast(2f)
             color = theme.border.toArgb()
         }
         val imagePaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
@@ -77,7 +78,8 @@ object CollageRenderer {
                 val left = contentLeft + c * (cellW + gap)
                 val top = contentTop + r * (cellH + gap)
                 val rect = RectF(left, top, left + cellW, top + cellH)
-                canvas.drawRoundRect(rect, 18f, 18f, slotBgPaint)
+                val radius = (targetWidth * 0.02f).coerceIn(12f, 28f)
+                canvas.drawRoundRect(rect, radius, radius, slotBgPaint)
 
                 val bmp = bitmaps.getOrNull(idx)
                 if (bmp != null) {
@@ -88,10 +90,11 @@ object CollageRenderer {
         }
 
         // outer border
+        val outerRadius = (targetWidth * 0.025f).coerceIn(14f, 34f)
         canvas.drawRoundRect(
             RectF(padding / 2f, padding / 2f, targetWidth - padding / 2f, targetHeight - padding / 2f),
-            22f,
-            22f,
+            outerRadius,
+            outerRadius,
             borderPaint,
         )
 
