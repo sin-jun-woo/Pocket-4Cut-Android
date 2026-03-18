@@ -9,12 +9,14 @@ object Routes {
     const val SELECTION = "selection"
     const val FRAME_THEME = "frameTheme"
     const val EDIT = "edit"
+    const val RESULT = "result"
 
     object Args {
         const val FRAME_TYPE = "frameType"
         const val SESSION_ID = "sessionId"
         const val SELECTED_INDEXES = "selectedIndexes"
         const val THEME_ID = "themeId"
+        const val RESULT_PATH = "resultPath"
     }
 }
 
@@ -39,5 +41,8 @@ object NavCodec {
     fun decodeIndexes(raw: String): List<Int> =
         raw.split(",")
             .mapNotNull { it.trim().takeIf { s -> s.isNotEmpty() }?.toIntOrNull() }
+
+    fun encodePath(path: String): String = java.net.URLEncoder.encode(path, Charsets.UTF_8.name())
+    fun decodePath(encoded: String): String = java.net.URLDecoder.decode(encoded, Charsets.UTF_8.name())
 }
 

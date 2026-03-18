@@ -441,10 +441,10 @@ MVP가 안정된 이후 별도 로드맵(Phase 6 이후)으로 관리합니다.
 
 #### Day 4: 고해상도 렌더링 & ResultView
 
-- [ ] 고해상도 결과 이미지 생성 (Retina 2x/3x 또는 목표 픽셀 폭)
-- [ ] **ResultScreen**: 최종 이미지 전체 화면 표시
-- [ ] 저장 버튼, 공유 버튼 (Intent.ACTION_SEND 연동 준비)
-- [ ] 편집 완료 시 ResultScreen으로 전환 (생성된 이미지 전달)
+- [x] 고해상도 결과 이미지 생성 (Retina 2x/3x 또는 목표 픽셀 폭)
+- [x] **ResultScreen**: 최종 이미지 전체 화면 표시
+- [x] 저장 버튼, 공유 버튼 (Intent.ACTION_SEND 연동 준비)
+- [x] 편집 완료 시 ResultScreen으로 전환 (생성된 이미지 전달)
 
 **산출물**: ResultView 및 저장/공유 액션
 
@@ -462,9 +462,9 @@ MVP가 안정된 이후 별도 로드맵(Phase 6 이후)으로 관리합니다.
 
 ### Phase 3 완료 체크리스트
 
-- [ ] 필터 3종, 텍스트, 날짜 옵션 및 순서 변경
-- [ ] CollageRenderer 고해상도 결과 이미지 생성
-- [ ] ResultView 표시 및 저장/공유 버튼 동작
+- [x] 필터 3종, 텍스트, 날짜 옵션 및 순서 변경
+- [x] CollageRenderer 고해상도 결과 이미지 생성
+- [x] ResultView 표시 및 저장/공유 버튼 동작
 - [ ] 빌드 성공 및 실제 기기 테스트 통과
 
 ---

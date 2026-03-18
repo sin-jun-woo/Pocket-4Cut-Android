@@ -12,6 +12,7 @@ import com.pocket4cut.presentation.edit.EditScreen
 import com.pocket4cut.presentation.frameTheme.FrameThemeScreen
 import com.pocket4cut.presentation.frameTypeSelect.FrameTypeSelectScreen
 import com.pocket4cut.presentation.home.HomeScreen
+import com.pocket4cut.presentation.result.ResultScreen
 import com.pocket4cut.presentation.selection.SelectionScreen
 
 @Composable
@@ -115,6 +116,21 @@ fun PocketNavHost(
                 sessionId = sessionId,
                 selectedIndexes = NavCodec.decodeIndexes(selectedRaw),
                 themeId = themeId,
+                onBack = { navController.popBackStack() },
+                onCompleted = { resultPath ->
+                    val encoded = NavCodec.encodePath(resultPath)
+                    navController.navigate("${Routes.RESULT}/$encoded")
+                },
+            )
+        }
+
+        composable(
+            route = "${Routes.RESULT}/{${Routes.Args.RESULT_PATH}}",
+            arguments = listOf(navArgument(Routes.Args.RESULT_PATH) { type = NavType.StringType }),
+        ) { entry ->
+            val encoded = entry.arguments?.getString(Routes.Args.RESULT_PATH).orEmpty()
+            ResultScreen(
+                resultPath = NavCodec.decodePath(encoded),
                 onBack = { navController.popBackStack() },
             )
         }

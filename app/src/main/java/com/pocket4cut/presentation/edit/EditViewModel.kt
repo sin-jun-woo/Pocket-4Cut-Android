@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.frame.CollageRenderer
 import com.pocket4cut.frame.FrameDefinitions
+import com.pocket4cut.frame.FrameTheme
 import com.pocket4cut.frame.RenderFilter
 import com.pocket4cut.presentation.navigation.FrameType
 import kotlinx.coroutines.Dispatchers
@@ -37,12 +38,17 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     private val _uiState = MutableStateFlow(EditUiState())
     val uiState: StateFlow<EditUiState> = _uiState
 
+    private var lastFrameType: FrameType? = null
+    private var lastTheme: FrameTheme? = null
+
     fun init(
         frameType: FrameType,
         sessionId: String,
         selectedIndexes: List<Int>,
         themeId: String,
     ) {
+        lastFrameType = frameType
+        lastTheme = FrameDefinitions.byId(themeId)
         _uiState.update { it.copy(isLoading = true, errorMessage = null, preview = null) }
         viewModelScope.launch {
             runCatching { storage.getCapturePaths(sessionId) }
@@ -92,6 +98,8 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         val snapshot = _uiState.value
         val theme = FrameDefinitions.byId(themeId)
         if (theme == null) return
+        lastFrameType = frameType
+        lastTheme = theme
         if (snapshot.imagePaths.isEmpty()) return
 
         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
@@ -146,6 +154,28 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
             }
         }
         return inSampleSize.coerceAtLeast(1)
+    }
+
+    suspend fun renderFinalAndSave(sessionId: String): String = withContext(Dispatchers.IO) {
+        val snapshot = _uiState.value
+        val frameType = lastFrameType ?: error("frameType missing")
+        val theme = lastTheme ?: error("theme missing")
+
+        val orderedPaths = snapshot.order.mapNotNull { idx -> snapshot.imagePaths.getOrNull(idx) }
+        val bitmaps = orderedPaths.mapNotNull { path ->
+            decodeSampledBitmap(path, reqSize = 1400)
+        }
+        val dateText = if (snapshot.showDate) todayString() else null
+        val result = CollageRenderer.render(
+            frameType = frameType,
+            theme = theme,
+            bitmaps = bitmaps,
+            filter = snapshot.filter,
+            text = snapshot.text.takeIf { it.isNotBlank() },
+            dateText = dateText,
+            targetWidth = 1920,
+        )
+        storage.saveResult(result, sessionId)
     }
 }
 

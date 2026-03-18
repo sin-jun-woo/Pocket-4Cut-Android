@@ -30,6 +30,11 @@ import androidx.compose.ui.unit.dp
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.frame.RenderFilter
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
 
 @Composable
 fun EditScreen(
@@ -38,6 +43,7 @@ fun EditScreen(
     selectedIndexes: List<Int>,
     themeId: String,
     onBack: () -> Unit,
+    onCompleted: (resultPath: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EditViewModel = viewModel(),
 ) {
@@ -50,6 +56,8 @@ fun EditScreen(
         )
     }
     val uiState by viewModel.uiState.collectAsState()
+    val scope = rememberCoroutineScope()
+    var isFinalizing by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -64,7 +72,18 @@ fun EditScreen(
         ) {
             OutlinedButton(onClick = onBack) { Text("뒤로") }
             Text("편집", style = MaterialTheme.typography.titleLarge)
-            Button(onClick = { /* Phase 4에서 저장/공유 */ }, enabled = false) { Text("완료") }
+            Button(
+                onClick = {
+                    if (isFinalizing) return@Button
+                    isFinalizing = true
+                    scope.launch {
+                        runCatching { viewModel.renderFinalAndSave(sessionId) }
+                            .onSuccess { path -> onCompleted(path) }
+                        isFinalizing = false
+                    }
+                },
+                enabled = !isFinalizing && uiState.errorMessage == null && uiState.imagePaths.isNotEmpty(),
+            ) { Text(if (isFinalizing) "생성중" else "완료") }
         }
 
         Box(
