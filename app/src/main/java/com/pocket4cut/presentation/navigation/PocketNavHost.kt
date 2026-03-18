@@ -11,6 +11,7 @@ import com.pocket4cut.presentation.capture.CaptureScreen
 import com.pocket4cut.presentation.edit.EditScreen
 import com.pocket4cut.presentation.frameTheme.FrameThemeScreen
 import com.pocket4cut.presentation.frameTypeSelect.FrameTypeSelectScreen
+import com.pocket4cut.presentation.gallery.GalleryScreen
 import com.pocket4cut.presentation.home.HomeScreen
 import com.pocket4cut.presentation.result.ResultScreen
 import com.pocket4cut.presentation.selection.SelectionScreen
@@ -28,6 +29,13 @@ fun PocketNavHost(
         composable(Routes.HOME) {
             HomeScreen(
                 onStart = { navController.navigate(Routes.FRAME_TYPE_SELECT) },
+                onGallery = { navController.navigate(Routes.GALLERY) },
+            )
+        }
+
+        composable(Routes.GALLERY) {
+            GalleryScreen(
+                onBack = { navController.popBackStack() },
             )
         }
 

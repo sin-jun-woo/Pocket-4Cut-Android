@@ -4,6 +4,7 @@ import com.pocket4cut.core.util.Constants
 
 object Routes {
     const val HOME = "home"
+    const val GALLERY = "gallery"
     const val FRAME_TYPE_SELECT = "frameTypeSelect"
     const val CAPTURE = "capture"
     const val SELECTION = "selection"

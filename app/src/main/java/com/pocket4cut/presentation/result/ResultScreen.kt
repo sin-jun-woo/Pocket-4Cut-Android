@@ -1,6 +1,9 @@
 package com.pocket4cut.presentation.result
 
 import android.content.Intent
+import android.content.ContentValues
+import android.os.Build
+import android.provider.MediaStore
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -16,11 +19,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.pocket4cut.core.util.FileUris
 import java.io.File
 
 @Composable
@@ -30,7 +38,9 @@ fun ResultScreen(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val uri = Uri.fromFile(File(resultPath))
+    val file = File(resultPath)
+    val uri = FileUris.contentUriForFile(context, file)
+    var saveMessage by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = modifier
@@ -45,7 +55,41 @@ fun ResultScreen(
         ) {
             OutlinedButton(onClick = onBack) { Text("뒤로") }
             Text("결과", style = MaterialTheme.typography.titleLarge)
-            Button(onClick = { /* Phase 4 MediaStore 저장으로 교체 */ }, enabled = false) { Text("저장") }
+            Button(
+                onClick = {
+                    saveMessage = runCatching {
+                        val resolver = context.contentResolver
+                        val name = file.nameWithoutExtension.ifBlank { "Pocket4Cut_${System.currentTimeMillis()}" }
+                        val displayName = "$name.jpg"
+
+                        val values = ContentValues().apply {
+                            put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
+                            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                            if (Build.VERSION.SDK_INT >= 29) {
+                                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Pocket4Cut")
+                                put(MediaStore.Images.Media.IS_PENDING, 1)
+                            }
+                        }
+
+                        val collection =
+                            if (Build.VERSION.SDK_INT >= 29) MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+                            else MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+
+                        val outUri = resolver.insert(collection, values) ?: error("MediaStore insert 실패")
+                        resolver.openOutputStream(outUri)?.use { out ->
+                            file.inputStream().use { input -> input.copyTo(out) }
+                        } ?: error("MediaStore openOutputStream 실패")
+
+                        if (Build.VERSION.SDK_INT >= 29) {
+                            values.clear()
+                            values.put(MediaStore.Images.Media.IS_PENDING, 0)
+                            resolver.update(outUri, values, null, null)
+                        }
+
+                        "갤러리 저장 완료"
+                    }.getOrElse { t -> "저장 실패: ${t.message}" }
+                },
+            ) { Text("저장") }
         }
 
         Box(
@@ -78,10 +122,18 @@ fun ResultScreen(
             ) { Text("공유") }
 
             OutlinedButton(
-                onClick = { /* Phase 4에서 처리 */ },
-                enabled = false,
+                onClick = { saveMessage = null },
+                enabled = saveMessage != null,
                 modifier = Modifier.weight(1f),
-            ) { Text("갤러리 저장") }
+            ) { Text("메시지 지우기") }
+        }
+
+        saveMessage?.let { msg ->
+            Text(
+                text = msg,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 4.dp),
+            )
         }
     }
 }
