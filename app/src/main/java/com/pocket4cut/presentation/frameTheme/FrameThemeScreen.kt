@@ -1,5 +1,6 @@
 package com.pocket4cut.presentation.frameTheme
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,16 +24,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.pocket4cut.core.util.BitmapDecoding
+import com.pocket4cut.frame.CollageRenderer
 import com.pocket4cut.frame.FrameDefinitions
 import com.pocket4cut.frame.FrameTheme
+import com.pocket4cut.frame.RenderFilter
 import com.pocket4cut.presentation.navigation.FrameType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun FrameThemeScreen(
@@ -47,6 +58,8 @@ fun FrameThemeScreen(
     LaunchedEffect(sessionId) { viewModel.load(sessionId) }
     val uiState by viewModel.uiState.collectAsState()
     val themes = FrameDefinitions.themesFor(frameType)
+    var previewBitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var isPreviewLoading by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.fillMaxSize()) {
         Row(
@@ -83,6 +96,28 @@ fun FrameThemeScreen(
                     .mapNotNull { idx -> uiState.imagePaths.getOrNull(idx) }
 
                 val activeTheme = uiState.selectedThemeId?.let { FrameDefinitions.byId(it) }
+                LaunchedEffect(frameType, selectedPaths, activeTheme?.id) {
+                    previewBitmap = null
+                    if (activeTheme == null || selectedPaths.isEmpty()) return@LaunchedEffect
+                    isPreviewLoading = true
+                    previewBitmap = runCatching {
+                        withContext(Dispatchers.IO) {
+                            val bitmaps = selectedPaths
+                                .take(frameType.selectCount)
+                                .mapNotNull { BitmapDecoding.decodeSampled(it, reqSize = 720) }
+                            CollageRenderer.render(
+                                frameType = frameType,
+                                theme = activeTheme,
+                                bitmaps = bitmaps,
+                                filter = RenderFilter.SOFT,
+                                text = null,
+                                dateText = null,
+                                targetWidth = 720,
+                            )
+                        }
+                    }.getOrNull()
+                    isPreviewLoading = false
+                }
 
                 Column(
                     modifier = Modifier
@@ -94,11 +129,28 @@ fun FrameThemeScreen(
                         style = MaterialTheme.typography.titleSmall,
                         modifier = Modifier.padding(bottom = 8.dp),
                     )
-                    FramePreview(
-                        frameType = frameType,
-                        theme = activeTheme,
-                        imagePaths = selectedPaths,
-                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(9f / 16f)
+                            .clip(RoundedCornerShape(18.dp))
+                            .background((activeTheme?.background ?: Color.Black.copy(alpha = 0.05f)))
+                            .padding(6.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        when {
+                            isPreviewLoading -> CircularProgressIndicator()
+                            previewBitmap != null -> {
+                                androidx.compose.foundation.Image(
+                                    bitmap = previewBitmap!!.asImageBitmap(),
+                                    contentDescription = "frame_preview",
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Fit,
+                                )
+                            }
+                            else -> Text("미리보기를 준비 중입니다.")
+                        }
+                    }
                 }
 
                 LazyColumn(
@@ -150,67 +202,4 @@ private fun ThemeRow(
     }
 }
 
-@Composable
-private fun FramePreview(
-    frameType: FrameType,
-    theme: FrameTheme?,
-    imagePaths: List<String>,
-) {
-    val bg = theme?.background ?: Color.Black.copy(alpha = 0.05f)
-    val border = theme?.border ?: Color.Black.copy(alpha = 0.25f)
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(9f / 16f)
-            .clip(RoundedCornerShape(18.dp))
-            .background(bg)
-            .padding(14.dp),
-    ) {
-        when (frameType) {
-            FrameType.TWO_CUT -> PreviewGrid(cols = 1, rows = 2, border = border, imagePaths = imagePaths)
-            FrameType.FOUR_CUT -> PreviewGrid(cols = 2, rows = 2, border = border, imagePaths = imagePaths)
-            FrameType.SIX_CUT -> PreviewGrid(cols = 2, rows = 3, border = border, imagePaths = imagePaths)
-        }
-    }
-}
-
-@Composable
-private fun PreviewGrid(
-    cols: Int,
-    rows: Int,
-    border: Color,
-    imagePaths: List<String>,
-) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        for (r in 0 until rows) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                for (c in 0 until cols) {
-                    val idx = r * cols + c
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .aspectRatio(1f)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Color.White.copy(alpha = 0.2f))
-                            .background(border.copy(alpha = 0.05f)),
-                    ) {
-                        val path = imagePaths.getOrNull(idx)
-                        if (path != null) {
-                            AsyncImage(
-                                model = path,
-                                contentDescription = "preview_$idx",
-                                modifier = Modifier.fillMaxSize(),
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-
+// (프리뷰는 CollageRenderer로 렌더링하여 기기별 레이아웃 깨짐을 방지합니다.)

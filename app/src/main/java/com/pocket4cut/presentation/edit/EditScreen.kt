@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.pocket4cut.presentation.navigation.FrameType
@@ -99,6 +100,7 @@ fun EditScreen(
                         bitmap = uiState.preview!!.asImageBitmap(),
                         contentDescription = "preview",
                         modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Fit,
                     )
                 }
                 uiState.errorMessage != null -> Text(uiState.errorMessage ?: "오류가 발생했습니다.")
