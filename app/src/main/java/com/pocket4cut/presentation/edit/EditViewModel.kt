@@ -2,9 +2,9 @@ package com.pocket4cut.presentation.edit
 
 import android.app.Application
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.data.local.SessionRepository
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.domain.model.PhotoSession
@@ -115,7 +115,7 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
                 withContext(Dispatchers.IO) {
                     val orderedPaths = snapshot.order.mapNotNull { idx -> snapshot.imagePaths.getOrNull(idx) }
                     val bitmaps = orderedPaths.mapNotNull { path ->
-                        decodeSampledBitmap(path, reqSize = 720)
+                        BitmapDecoding.decodeSampled(path, reqSize = 720)
                     }
                     val dateText = if (snapshot.showDate) todayString() else null
                     CollageRenderer.render(
@@ -139,30 +139,6 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     private fun todayString(): String =
         SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date())
 
-    private fun decodeSampledBitmap(path: String, reqSize: Int): Bitmap? {
-        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeFile(path, options)
-        if (options.outWidth <= 0 || options.outHeight <= 0) return null
-
-        options.inSampleSize = calculateInSampleSize(options, reqSize, reqSize)
-        options.inJustDecodeBounds = false
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888
-        return BitmapFactory.decodeFile(path, options)
-    }
-
-    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
-        val (height, width) = options.outHeight to options.outWidth
-        var inSampleSize = 1
-        if (height > reqHeight || width > reqWidth) {
-            var halfHeight = height / 2
-            var halfWidth = width / 2
-            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2
-            }
-        }
-        return inSampleSize.coerceAtLeast(1)
-    }
-
     suspend fun renderFinalAndSave(sessionId: String): String = withContext(Dispatchers.IO) {
         val snapshot = _uiState.value
         val frameType = lastFrameType ?: error("frameType missing")
@@ -170,7 +146,7 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
 
         val orderedPaths = snapshot.order.mapNotNull { idx -> snapshot.imagePaths.getOrNull(idx) }
         val bitmaps = orderedPaths.mapNotNull { path ->
-            decodeSampledBitmap(path, reqSize = 1400)
+            BitmapDecoding.decodeSampled(path, reqSize = 1400)
         }
         val dateText = if (snapshot.showDate) todayString() else null
         val result = CollageRenderer.render(
