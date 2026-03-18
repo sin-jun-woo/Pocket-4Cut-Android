@@ -20,6 +20,8 @@ enum class RenderFilter {
 }
 
 object CollageRenderer {
+    private const val BRAND_NAME = "Pocket 4 Cut"
+
     /**
      * targetWidth 기준으로 세로는 프레임 비율(9:16)로 고정한다.
      * 비트맵 개수가 부족하면 빈 슬롯은 그대로 둔다.
@@ -46,7 +48,7 @@ object CollageRenderer {
             FrameType.FOUR_CUT -> (targetWidth * 0.06f).roundToInt().toFloat()
             FrameType.SIX_CUT -> (targetWidth * 0.06f).roundToInt().toFloat()
         }
-        val header = (targetHeight * 0.02f).roundToInt().toFloat()
+        val header = (targetHeight * 0.05f).roundToInt().toFloat()
         val footer = (targetHeight * 0.07f).roundToInt().toFloat()
 
         val contentLeft = padding
@@ -81,6 +83,17 @@ object CollageRenderer {
         }
 
         val radius = (targetWidth * 0.02f).coerceIn(12f, 28f)
+
+        // brand name at header
+        val brandPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = theme.border.toArgb()
+            textSize = (header * 0.55f).coerceIn(16f, 48f)
+            typeface = Typeface.create("serif", Typeface.BOLD_ITALIC)
+            textAlign = Paint.Align.CENTER
+        }
+        val brandX = targetWidth / 2f
+        val brandY = padding + header * 0.72f
+        canvas.drawText(BRAND_NAME, brandX, brandY, brandPaint)
 
         // slots
         var idx = 0
