@@ -52,6 +52,9 @@ fun FrameTypeSelectScreen(
                 modifier = Modifier.padding(top = 24.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
+                Button(onClick = { onSelected(FrameType.TWO_CUT) }) {
+                    Text("2컷 (4장 촬영)")
+                }
                 Button(onClick = { onSelected(FrameType.FOUR_CUT) }) {
                     Text("4컷 (8장 촬영)")
                 }
