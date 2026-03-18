@@ -122,6 +122,7 @@ fun FrameThemeScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .weight(0.6f)
                         .padding(horizontal = 16.dp),
                 ) {
                     Text(
@@ -132,9 +133,9 @@ fun FrameThemeScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .aspectRatio(9f / 16f)
+                            .weight(1f)
                             .clip(RoundedCornerShape(18.dp))
-                            .background((activeTheme?.background ?: Color.Black.copy(alpha = 0.05f)))
+                            .background(activeTheme?.background ?: Color.Black.copy(alpha = 0.05f))
                             .padding(6.dp),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -155,7 +156,8 @@ fun FrameThemeScreen(
 
                 LazyColumn(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
+                        .weight(0.4f)
                         .padding(top = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {

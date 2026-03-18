@@ -6,6 +6,7 @@ import android.graphics.Color as AColor
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.RectF
 import android.graphics.Typeface
 import androidx.compose.ui.graphics.toArgb
@@ -83,7 +84,7 @@ object CollageRenderer {
 
                 val bmp = bitmaps.getOrNull(idx)
                 if (bmp != null) {
-                    drawCenterCrop(canvas, bmp, rect, imagePaint)
+                    drawCenterCropClipped(canvas, bmp, rect, radius, imagePaint)
                 }
                 idx++
             }
@@ -160,7 +161,19 @@ object CollageRenderer {
         return ColorMatrixColorFilter(matrix)
     }
 
-    private fun drawCenterCrop(canvas: Canvas, bitmap: Bitmap, dst: RectF, paint: Paint) {
+    private fun drawCenterCropClipped(
+        canvas: Canvas,
+        bitmap: Bitmap,
+        dst: RectF,
+        cornerRadius: Float,
+        paint: Paint,
+    ) {
+        canvas.save()
+        val clipPath = Path().apply {
+            addRoundRect(dst, cornerRadius, cornerRadius, Path.Direction.CW)
+        }
+        canvas.clipPath(clipPath)
+
         val bw = bitmap.width.toFloat()
         val bh = bitmap.height.toFloat()
         val scale = maxOf(dst.width() / bw, dst.height() / bh)
@@ -170,6 +183,7 @@ object CollageRenderer {
         val top = dst.top + (dst.height() - sh) / 2f
         val rect = RectF(left, top, left + sw, top + sh)
         canvas.drawBitmap(bitmap, null, rect, paint)
+        canvas.restore()
     }
 }
 
