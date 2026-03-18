@@ -2,6 +2,8 @@ package com.pocket4cut.core.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import androidx.exifinterface.media.ExifInterface
 
 object BitmapDecoding {
     fun decodeSampled(path: String, reqSize: Int): Bitmap? {
@@ -12,7 +14,8 @@ object BitmapDecoding {
         options.inSampleSize = calculateInSampleSize(options, reqSize, reqSize)
         options.inJustDecodeBounds = false
         options.inPreferredConfig = Bitmap.Config.ARGB_8888
-        return BitmapFactory.decodeFile(path, options)
+        val decoded = BitmapFactory.decodeFile(path, options) ?: return null
+        return applyExifOrientation(decoded, path)
     }
 
     private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
@@ -26,6 +29,40 @@ object BitmapDecoding {
             }
         }
         return inSampleSize.coerceAtLeast(1)
+    }
+
+    private fun applyExifOrientation(bitmap: Bitmap, path: String): Bitmap {
+        val orientation = runCatching {
+            ExifInterface(path).getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+        }.getOrDefault(ExifInterface.ORIENTATION_NORMAL)
+
+        val matrix = Matrix()
+        when (orientation) {
+            ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> matrix.preScale(-1f, 1f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+            ExifInterface.ORIENTATION_FLIP_VERTICAL -> {
+                matrix.postRotate(180f)
+                matrix.preScale(-1f, 1f)
+            }
+            ExifInterface.ORIENTATION_TRANSPOSE -> {
+                matrix.postRotate(90f)
+                matrix.preScale(-1f, 1f)
+            }
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+            ExifInterface.ORIENTATION_TRANSVERSE -> {
+                matrix.postRotate(-90f)
+                matrix.preScale(-1f, 1f)
+            }
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(-90f)
+            else -> return bitmap
+        }
+
+        val rotated = runCatching {
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        }.getOrElse { bitmap }
+
+        if (rotated !== bitmap) bitmap.recycle()
+        return rotated
     }
 }
 
