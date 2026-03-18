@@ -1,10 +1,13 @@
 package com.pocket4cut.camera
 
 import android.content.Context
+import android.util.Rational
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
+import androidx.camera.core.UseCaseGroup
+import androidx.camera.core.ViewPort
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
@@ -28,18 +31,30 @@ class CaptureEngine(
         val provider = getCameraProvider()
         cameraProvider = provider
 
+        awaitLaidOut(previewView)
+        val rotation = previewView.display.rotation
+
         val preview = Preview.Builder().build().also {
             it.setSurfaceProvider(previewView.surfaceProvider)
         }
 
         val capture = ImageCapture.Builder()
             .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+            .setTargetRotation(rotation)
             .build()
 
         val selector = CameraSelector.DEFAULT_FRONT_CAMERA
 
         provider.unbindAll()
-        provider.bindToLifecycle(lifecycleOwner, selector, preview, capture)
+        val viewPort = ViewPort.Builder(Rational(previewView.width, previewView.height), rotation)
+            .setScaleType(ViewPort.FILL_CENTER)
+            .build()
+        val group = UseCaseGroup.Builder()
+            .setViewPort(viewPort)
+            .addUseCase(preview)
+            .addUseCase(capture)
+            .build()
+        provider.bindToLifecycle(lifecycleOwner, selector, group)
 
         imageCapture = capture
     }
@@ -88,6 +103,13 @@ class CaptureEngine(
                 },
                 executor,
             )
+        }
+    }
+
+    private suspend fun awaitLaidOut(previewView: PreviewView) {
+        if (previewView.width > 0 && previewView.height > 0) return
+        suspendCoroutine { cont ->
+            previewView.post { cont.resume(Unit) }
         }
     }
 }
