@@ -7,10 +7,14 @@ object Routes {
     const val FRAME_TYPE_SELECT = "frameTypeSelect"
     const val CAPTURE = "capture"
     const val SELECTION = "selection"
+    const val FRAME_THEME = "frameTheme"
+    const val EDIT = "edit"
 
     object Args {
         const val FRAME_TYPE = "frameType"
         const val SESSION_ID = "sessionId"
+        const val SELECTED_INDEXES = "selectedIndexes"
+        const val THEME_ID = "themeId"
     }
 }
 
@@ -27,5 +31,13 @@ enum class FrameType(val id: String, val captureCount: Int, val selectCount: Int
             else -> FOUR_CUT
         }
     }
+}
+
+object NavCodec {
+    fun encodeIndexes(indexes: List<Int>): String = indexes.joinToString(separator = ",")
+
+    fun decodeIndexes(raw: String): List<Int> =
+        raw.split(",")
+            .mapNotNull { it.trim().takeIf { s -> s.isNotEmpty() }?.toIntOrNull() }
 }
 
