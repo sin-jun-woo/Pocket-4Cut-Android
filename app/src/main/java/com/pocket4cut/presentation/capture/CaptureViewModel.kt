@@ -53,7 +53,7 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
                 engine.bind(lifecycleOwner, previewView)
                 _uiState.update { it.copy(phase = CapturePhase.READY, errorMessage = null) }
             }.onFailure { t ->
-                _uiState.update { it.copy(phase = CapturePhase.FAILED, errorMessage = t.message ?: "카메라 바인딩 실패") }
+                _uiState.update { it.copy(phase = CapturePhase.FAILED, errorMessage = t.message ?: "카메라 연결에 실패했습니다.") }
             }
         }
     }
@@ -106,7 +106,7 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
 
                 _uiState.update { it.copy(phase = CapturePhase.COMPLETED, flash = false) }
             } catch (t: Throwable) {
-                _uiState.update { it.copy(phase = CapturePhase.FAILED, errorMessage = t.message ?: "촬영 실패", flash = false) }
+                _uiState.update { it.copy(phase = CapturePhase.FAILED, errorMessage = t.message ?: "촬영에 실패했습니다.", flash = false) }
             }
         }
     }

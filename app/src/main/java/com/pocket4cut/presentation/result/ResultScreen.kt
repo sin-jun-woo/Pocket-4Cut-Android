@@ -75,10 +75,10 @@ fun ResultScreen(
                             if (Build.VERSION.SDK_INT >= 29) MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
                             else MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
-                        val outUri = resolver.insert(collection, values) ?: error("MediaStore insert 실패")
+                        val outUri = resolver.insert(collection, values) ?: error("MediaStore에 저장할 수 없습니다.")
                         resolver.openOutputStream(outUri)?.use { out ->
                             file.inputStream().use { input -> input.copyTo(out) }
-                        } ?: error("MediaStore openOutputStream 실패")
+                        } ?: error("저장 스트림을 열 수 없습니다.")
 
                         if (Build.VERSION.SDK_INT >= 29) {
                             values.clear()
@@ -86,8 +86,8 @@ fun ResultScreen(
                             resolver.update(outUri, values, null, null)
                         }
 
-                        "갤러리 저장 완료"
-                    }.getOrElse { t -> "저장 실패: ${t.message}" }
+                        "갤러리에 저장되었습니다."
+                    }.getOrElse { t -> "저장에 실패했습니다: ${t.message}" }
                 },
             ) { Text("저장") }
         }
@@ -125,7 +125,7 @@ fun ResultScreen(
                 onClick = { saveMessage = null },
                 enabled = saveMessage != null,
                 modifier = Modifier.weight(1f),
-            ) { Text("메시지 지우기") }
+            ) { Text("메시지 삭제") }
         }
 
         saveMessage?.let { msg ->

@@ -27,7 +27,7 @@ class FrameThemeViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             runCatching { storage.getCapturePaths(sessionId) }
                 .onSuccess { paths -> _uiState.update { it.copy(isLoading = false, imagePaths = paths) } }
-                .onFailure { t -> _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "불러오기 실패") } }
+                .onFailure { t -> _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "불러오기에 실패했습니다.") } }
         }
     }
 

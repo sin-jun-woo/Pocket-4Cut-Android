@@ -67,11 +67,11 @@ fun GalleryScreen(
             }
 
             uiState.errorMessage != null -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(uiState.errorMessage ?: "에러")
+                Text(uiState.errorMessage ?: "오류가 발생했습니다.")
             }
 
             uiState.items.isEmpty() -> Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("아직 결과물이 없어")
+                Text("아직 결과물이 없습니다.")
             }
 
             else -> {
@@ -111,8 +111,8 @@ fun GalleryScreen(
     if (target != null) {
         AlertDialog(
             onDismissRequest = { deleteTarget = null },
-            title = { Text("삭제할까?") },
-            text = { Text("이 결과물 지운다: ${File(target.resultPath).name}") },
+            title = { Text("삭제하시겠어요?") },
+            text = { Text("이 결과물을 삭제합니다: ${File(target.resultPath).name}") },
             confirmButton = {
                 Button(
                     onClick = {

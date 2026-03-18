@@ -74,7 +74,7 @@ fun FrameThemeScreen(
 
             uiState.errorMessage != null -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(uiState.errorMessage ?: "에러")
+                    Text(uiState.errorMessage ?: "오류가 발생했습니다.")
                 }
             }
 

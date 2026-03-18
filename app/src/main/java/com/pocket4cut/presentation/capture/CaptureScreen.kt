@@ -88,7 +88,7 @@ fun CaptureScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text("카메라 권한이 필요해")
+                Text("카메라 권한이 필요합니다.")
                 Row(
                     modifier = Modifier.padding(top = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -145,7 +145,7 @@ fun CaptureScreen(
                         ),
                     ) {
                         OutlinedButton(onClick = { }, enabled = stopEnabled) {
-                            Text("길게눌러 종료")
+                            Text("길게 눌러 종료")
                         }
                     }
                 }

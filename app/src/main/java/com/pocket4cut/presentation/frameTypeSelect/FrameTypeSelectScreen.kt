@@ -45,7 +45,7 @@ fun FrameTypeSelectScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "뭘로 찍을래?",
+                text = "어떤 프레임으로 촬영하시겠어요?",
                 style = MaterialTheme.typography.headlineSmall,
             )
             Row(

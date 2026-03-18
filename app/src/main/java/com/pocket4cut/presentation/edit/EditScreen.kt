@@ -83,7 +83,7 @@ fun EditScreen(
                     }
                 },
                 enabled = !isFinalizing && uiState.errorMessage == null && uiState.imagePaths.isNotEmpty(),
-            ) { Text(if (isFinalizing) "생성중" else "완료") }
+            ) { Text(if (isFinalizing) "생성 중입니다" else "완료") }
         }
 
         Box(
@@ -101,8 +101,8 @@ fun EditScreen(
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
-                uiState.errorMessage != null -> Text(uiState.errorMessage ?: "에러")
-                else -> Text("미리보기 준비중")
+                uiState.errorMessage != null -> Text(uiState.errorMessage ?: "오류가 발생했습니다.")
+                else -> Text("미리보기를 준비 중입니다.")
             }
         }
 

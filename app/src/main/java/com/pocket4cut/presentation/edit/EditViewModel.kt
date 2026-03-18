@@ -66,7 +66,7 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
                     renderPreview(frameType = frameType, themeId = themeId)
                 }
                 .onFailure { t ->
-                    _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "불러오기 실패") }
+                    _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "불러오기에 실패했습니다.") }
                 }
         }
     }
@@ -131,7 +131,7 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
             }.onSuccess { bmp ->
                 _uiState.update { it.copy(isLoading = false, preview = bmp) }
             }.onFailure { t ->
-                _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "렌더링 실패") }
+                _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "렌더링에 실패했습니다.") }
             }
         }
     }

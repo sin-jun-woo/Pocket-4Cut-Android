@@ -30,7 +30,7 @@ class SelectionViewModel(app: Application) : AndroidViewModel(app) {
             }.onSuccess { paths ->
                 _uiState.update { it.copy(isLoading = false, imagePaths = paths) }
             }.onFailure { t ->
-                _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "불러오기 실패") }
+                _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "불러오기에 실패했습니다.") }
             }
         }
     }

@@ -40,7 +40,7 @@ class GalleryViewModel(app: Application) : AndroidViewModel(app) {
             }.onSuccess { items ->
                 _uiState.update { it.copy(isLoading = false, items = items.map { it.toItem() }) }
             }.onFailure { t ->
-                _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "불러오기 실패") }
+                _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "불러오기에 실패했습니다.") }
             }
         }
     }
