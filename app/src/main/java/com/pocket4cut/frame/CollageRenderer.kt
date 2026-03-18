@@ -6,7 +6,6 @@ import android.graphics.Color as AColor
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
-import android.graphics.Path
 import android.graphics.RectF
 import android.graphics.Typeface
 import androidx.compose.ui.graphics.toArgb
@@ -73,16 +72,9 @@ object CollageRenderer {
             strokeWidth = (targetWidth * 0.005f).coerceAtLeast(2f)
             color = theme.border.toArgb()
         }
-        val slotBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            style = Paint.Style.STROKE
-            strokeWidth = (targetWidth * 0.006f).coerceAtLeast(2f)
-            color = theme.border.toArgb()
-        }
         val imagePaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
             colorFilter = filterToColorFilter(filter)
         }
-
-        val radius = (targetWidth * 0.02f).coerceIn(12f, 28f)
 
         // brand name at header
         val brandPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -102,13 +94,12 @@ object CollageRenderer {
                 val left = contentLeft + c * (cellW + gap)
                 val top = contentTop + r * (cellH + gap)
                 val rect = RectF(left, top, left + cellW, top + cellH)
-                canvas.drawRoundRect(rect, radius, radius, slotBgPaint)
+                canvas.drawRect(rect, slotBgPaint)
 
                 val bmp = bitmaps.getOrNull(idx)
                 if (bmp != null) {
-                    drawCenterCropClipped(canvas, bmp, rect, radius, imagePaint)
+                    drawCenterCropClipped(canvas, bmp, rect, imagePaint)
                 }
-                canvas.drawRoundRect(rect, radius, radius, slotBorderPaint)
                 idx++
             }
         }
@@ -188,14 +179,10 @@ object CollageRenderer {
         canvas: Canvas,
         bitmap: Bitmap,
         dst: RectF,
-        cornerRadius: Float,
         paint: Paint,
     ) {
         canvas.save()
-        val clipPath = Path().apply {
-            addRoundRect(dst, cornerRadius, cornerRadius, Path.Direction.CW)
-        }
-        canvas.clipPath(clipPath)
+        canvas.clipRect(dst)
 
         val bw = bitmap.width.toFloat()
         val bh = bitmap.height.toFloat()
