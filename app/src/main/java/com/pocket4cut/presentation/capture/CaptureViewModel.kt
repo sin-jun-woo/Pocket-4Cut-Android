@@ -1,6 +1,7 @@
 package com.pocket4cut.presentation.capture
 
 import android.app.Application
+import android.media.MediaActionSound
 import androidx.camera.view.PreviewView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
@@ -39,6 +40,7 @@ enum class CapturePhase {
 class CaptureViewModel(app: Application) : AndroidViewModel(app) {
     private val engine = CaptureEngine(app.applicationContext)
     private val storage = FileImageStorage(app.applicationContext)
+    private val actionSound = MediaActionSound().apply { load(MediaActionSound.SHUTTER_CLICK) }
 
     private val _uiState = MutableStateFlow(CaptureUiState())
     val uiState: StateFlow<CaptureUiState> = _uiState
@@ -93,6 +95,7 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
                     _uiState.update { it.copy(phase = CapturePhase.CAPTURING, currentShot = i, flash = true) }
                     val file = storage.createCaptureFile(sessionId, i)
                     engine.takePictureToFile(file)
+                    actionSound.play(MediaActionSound.SHUTTER_CLICK)
                     delay(300)
                     _uiState.update { it.copy(flash = false) }
 
@@ -117,6 +120,7 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
     override fun onCleared() {
         super.onCleared()
         engine.unbind()
+        actionSound.release()
     }
 }
 
