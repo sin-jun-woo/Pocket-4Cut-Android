@@ -67,11 +67,6 @@ object CollageRenderer {
         val slotBgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = AColor.argb(28, 0, 0, 0)
         }
-        val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            style = Paint.Style.STROKE
-            strokeWidth = (targetWidth * 0.005f).coerceAtLeast(2f)
-            color = theme.border.toArgb()
-        }
         val imagePaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
             colorFilter = filterToColorFilter(filter)
         }
@@ -103,15 +98,6 @@ object CollageRenderer {
                 idx++
             }
         }
-
-        // outer border
-        val outerRadius = (targetWidth * 0.025f).coerceIn(14f, 34f)
-        canvas.drawRoundRect(
-            RectF(padding / 2f, padding / 2f, targetWidth - padding / 2f, targetHeight - padding / 2f),
-            outerRadius,
-            outerRadius,
-            borderPaint,
-        )
 
         // footer text/date
         val footerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
