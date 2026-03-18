@@ -150,6 +150,12 @@ fun PocketNavHost(
                         launchSingleTop = true
                     }
                 },
+                onGallery = {
+                    navController.navigate(Routes.GALLERY) {
+                        popUpTo(Routes.HOME) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                },
             )
         }
     }

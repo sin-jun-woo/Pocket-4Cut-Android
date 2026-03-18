@@ -39,6 +39,7 @@ fun ResultScreen(
     resultPath: String,
     onBack: () -> Unit,
     onHome: () -> Unit,
+    onGallery: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -131,10 +132,9 @@ fun ResultScreen(
             ) { Text("공유") }
 
             OutlinedButton(
-                onClick = { saveMessage = null },
-                enabled = saveMessage != null,
+                onClick = onGallery,
                 modifier = Modifier.weight(1f),
-            ) { Text("메시지 삭제") }
+            ) { Text("보관함") }
         }
 
         saveMessage?.let { msg ->
