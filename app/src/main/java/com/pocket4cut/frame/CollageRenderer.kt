@@ -40,9 +40,12 @@ object CollageRenderer {
         // background
         canvas.drawColor(theme.background.toArgb())
 
-        // 여백이 과하면 프레임 안 사진이 작아 보이므로, 기본 여백을 최소화한다.
         val padding = (targetWidth * 0.04f).roundToInt().toFloat()
-        val gap = (targetWidth * 0.02f).roundToInt().toFloat()
+        val gap = when (frameType) {
+            FrameType.TWO_CUT -> (targetWidth * 0.025f).roundToInt().toFloat()
+            FrameType.FOUR_CUT -> (targetWidth * 0.05f).roundToInt().toFloat()
+            FrameType.SIX_CUT -> (targetWidth * 0.04f).roundToInt().toFloat()
+        }
         val header = (targetHeight * 0.03f).roundToInt().toFloat()
         val footer = (targetHeight * 0.08f).roundToInt().toFloat()
 
@@ -68,9 +71,16 @@ object CollageRenderer {
             strokeWidth = (targetWidth * 0.005f).coerceAtLeast(2f)
             color = theme.border.toArgb()
         }
+        val slotBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            style = Paint.Style.STROKE
+            strokeWidth = (targetWidth * 0.004f).coerceAtLeast(1.5f)
+            color = theme.border.toArgb()
+        }
         val imagePaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
             colorFilter = filterToColorFilter(filter)
         }
+
+        val radius = (targetWidth * 0.02f).coerceIn(12f, 28f)
 
         // slots
         var idx = 0
@@ -79,13 +89,13 @@ object CollageRenderer {
                 val left = contentLeft + c * (cellW + gap)
                 val top = contentTop + r * (cellH + gap)
                 val rect = RectF(left, top, left + cellW, top + cellH)
-                val radius = (targetWidth * 0.02f).coerceIn(12f, 28f)
                 canvas.drawRoundRect(rect, radius, radius, slotBgPaint)
 
                 val bmp = bitmaps.getOrNull(idx)
                 if (bmp != null) {
                     drawCenterCropClipped(canvas, bmp, rect, radius, imagePaint)
                 }
+                canvas.drawRoundRect(rect, radius, radius, slotBorderPaint)
                 idx++
             }
         }
