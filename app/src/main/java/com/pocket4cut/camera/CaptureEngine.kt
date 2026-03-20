@@ -27,6 +27,7 @@ class CaptureEngine(
     suspend fun bind(
         lifecycleOwner: LifecycleOwner,
         previewView: PreviewView,
+        lensFacing: Int = CameraSelector.LENS_FACING_FRONT,
     ) {
         val provider = getCameraProvider()
         cameraProvider = provider
@@ -43,7 +44,9 @@ class CaptureEngine(
             .setTargetRotation(rotation)
             .build()
 
-        val selector = CameraSelector.DEFAULT_FRONT_CAMERA
+        val selector = CameraSelector.Builder()
+            .requireLensFacing(lensFacing)
+            .build()
 
         provider.unbindAll()
         val viewPort = ViewPort.Builder(Rational(previewView.width, previewView.height), rotation)

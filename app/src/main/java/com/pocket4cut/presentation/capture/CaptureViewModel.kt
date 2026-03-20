@@ -1,6 +1,7 @@
 package com.pocket4cut.presentation.capture
 
 import android.app.Application
+import androidx.camera.core.CameraSelector
 import androidx.camera.view.PreviewView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
@@ -24,6 +25,7 @@ data class CaptureUiState(
     val totalShots: Int = 0,
     val sessionId: String? = null,
     val flash: Boolean = false,
+    val isFrontCamera: Boolean = true,
     val errorMessage: String? = null,
 )
 
@@ -44,14 +46,58 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
     val uiState: StateFlow<CaptureUiState> = _uiState
 
     private var captureJob: Job? = null
+    private var boundLifecycleOwner: LifecycleOwner? = null
+    private var boundPreviewView: PreviewView? = null
 
     fun bindCamera(lifecycleOwner: LifecycleOwner, previewView: PreviewView) {
+        boundLifecycleOwner = lifecycleOwner
+        boundPreviewView = previewView
         viewModelScope.launch {
             runCatching {
-                engine.bind(lifecycleOwner, previewView)
+                val lensFacing = if (_uiState.value.isFrontCamera) {
+                    CameraSelector.LENS_FACING_FRONT
+                } else {
+                    CameraSelector.LENS_FACING_BACK
+                }
+                engine.bind(lifecycleOwner, previewView, lensFacing)
                 _uiState.update { it.copy(phase = CapturePhase.READY, errorMessage = null) }
             }.onFailure { t ->
                 _uiState.update { it.copy(phase = CapturePhase.FAILED, errorMessage = t.message ?: "카메라 연결에 실패했습니다.") }
+            }
+        }
+    }
+
+    fun switchCamera() {
+        if (captureJob?.isActive == true) return
+        val lifecycleOwner = boundLifecycleOwner ?: return
+        val previewView = boundPreviewView ?: return
+        val previous = _uiState.value.isFrontCamera
+        _uiState.update { it.copy(isFrontCamera = !previous) }
+        viewModelScope.launch {
+            runCatching {
+                val lensFacing = if (_uiState.value.isFrontCamera) {
+                    CameraSelector.LENS_FACING_FRONT
+                } else {
+                    CameraSelector.LENS_FACING_BACK
+                }
+                engine.bind(lifecycleOwner, previewView, lensFacing)
+                _uiState.update { it.copy(phase = CapturePhase.READY, errorMessage = null) }
+            }.onFailure { t ->
+                _uiState.update {
+                    it.copy(
+                        isFrontCamera = previous,
+                        phase = CapturePhase.FAILED,
+                        errorMessage = t.message ?: "카메라 전환에 실패했습니다.",
+                    )
+                }
+                runCatching {
+                    val fallbackFacing = if (previous) {
+                        CameraSelector.LENS_FACING_FRONT
+                    } else {
+                        CameraSelector.LENS_FACING_BACK
+                    }
+                    engine.bind(lifecycleOwner, previewView, fallbackFacing)
+                }
             }
         }
     }

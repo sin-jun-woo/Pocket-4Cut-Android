@@ -135,7 +135,19 @@ fun CaptureScreen(
                     verticalAlignment = Alignment.Top,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    OutlinedButton(onClick = onBack) { Text("뒤로") }
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        OutlinedButton(onClick = onBack) { Text("뒤로") }
+                        val canSwitch =
+                            uiState.phase == CapturePhase.READY ||
+                                uiState.phase == CapturePhase.IDLE ||
+                                uiState.phase == CapturePhase.FAILED
+                        OutlinedButton(
+                            onClick = { viewModel.switchCamera() },
+                            enabled = canSwitch,
+                        ) {
+                            Text(if (uiState.isFrontCamera) "후면" else "전면")
+                        }
+                    }
 
                     Text(
                         text = when (uiState.phase) {
