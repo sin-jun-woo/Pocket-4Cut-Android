@@ -8,11 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.pocket4cut.core.util.BitmapAdjustments
 import com.pocket4cut.data.local.SessionRepository
 import com.pocket4cut.data.storage.FileImageStorage
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -35,28 +38,26 @@ class ResultEditViewModel(app: Application) : AndroidViewModel(app) {
 
     private var sourcePath: String? = null
     private var decodedBase: Bitmap? = null
+    private var loadJob: Job? = null
+    private var refreshJob: Job? = null
 
     fun load(resultPath: String) {
         sourcePath = resultPath
+        loadJob?.cancel()
+        refreshJob?.cancel()
+
+        _state.value.preview?.let { p ->
+            if (p !== decodedBase) p.recycle()
+        }
         decodedBase?.recycle()
         decodedBase = null
+
         _state.value = ResultEditUiState(isLoading = true)
-        viewModelScope.launch {
-            runCatching {
-                withContext(Dispatchers.IO) {
-                    val opts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                    BitmapFactory.decodeFile(resultPath, opts)
-                    val maxSide = maxOf(opts.outWidth, opts.outHeight)
-                    val sample = when {
-                        maxSide <= 0 -> 1
-                        maxSide > 1600 -> maxSide / 1600
-                        else -> 1
-                    }.coerceAtLeast(1)
-                    val loadOpts = BitmapFactory.Options().apply { inSampleSize = sample }
-                    BitmapFactory.decodeFile(resultPath, loadOpts)
-                        ?: error("이미지를 불러올 수 없습니다.")
-                }
-            }.onSuccess { bmp ->
+
+        loadJob = viewModelScope.launch {
+            try {
+                val bmp = withContext(Dispatchers.IO) { decodeForEdit(resultPath) }
+                ensureActive()
                 decodedBase = bmp
                 val previewBmp = withContext(Dispatchers.IO) {
                     buildPreviewForBase(
@@ -69,6 +70,7 @@ class ResultEditViewModel(app: Application) : AndroidViewModel(app) {
                         ),
                     )
                 }
+                ensureActive()
                 _state.value = ResultEditUiState(
                     isLoading = false,
                     preview = previewBmp,
@@ -76,12 +78,33 @@ class ResultEditViewModel(app: Application) : AndroidViewModel(app) {
                     contrast = 1f,
                     rotationSteps90 = 0,
                 )
-            }.onFailure { t ->
+            } catch (e: CancellationException) {
+                decodedBase?.recycle()
+                decodedBase = null
+                throw e
+            } catch (t: Throwable) {
                 _state.update {
                     it.copy(isLoading = false, errorMessage = t.message ?: "불러오기 실패")
                 }
             }
         }
+    }
+
+    private fun decodeForEdit(path: String): Bitmap {
+        val opts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeFile(path, opts)
+        val maxSide = maxOf(opts.outWidth, opts.outHeight)
+        val sample = when {
+            maxSide <= 0 -> 1
+            maxSide > 1600 -> maxSide / 1600
+            else -> 1
+        }.coerceAtLeast(1)
+        val loadOpts = BitmapFactory.Options().apply {
+            inSampleSize = sample
+            inPreferredConfig = Bitmap.Config.ARGB_8888
+        }
+        return BitmapFactory.decodeFile(path, loadOpts)
+            ?: error("이미지를 불러올 수 없습니다.")
     }
 
     fun setBrightness(v: Float) {
@@ -101,12 +124,23 @@ class ResultEditViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun refreshPreview() {
         val base = decodedBase ?: return
-        viewModelScope.launch {
-            val bmp = withContext(Dispatchers.IO) { buildPreviewForBase(base, _state.value) }
-            _state.update { prev ->
-                prev.preview?.recycle()
-                prev.copy(preview = bmp)
+        refreshJob?.cancel()
+        refreshJob = viewModelScope.launch {
+            val snapshot = _state.value
+            val bmp = runCatching {
+                withContext(Dispatchers.IO) {
+                    buildPreviewForBase(base, snapshot)
+                }
+            }.getOrElse { t ->
+                _state.update { it.copy(errorMessage = t.message ?: "미리보기 실패") }
+                return@launch
             }
+            if (!isActive) {
+                bmp.recycle()
+                return@launch
+            }
+            // 이전 preview Bitmap은 Compose가 그리는 동안 recycle 하지 않음 (Canvas: recycled bitmap 크래시 방지)
+            _state.update { it.copy(preview = bmp, errorMessage = null) }
         }
     }
 
@@ -123,7 +157,11 @@ class ResultEditViewModel(app: Application) : AndroidViewModel(app) {
             if (step !== base) step.recycle()
             out
         } else {
-            if (step === base) step.copy(step.config ?: Bitmap.Config.ARGB_8888, false) else step
+            if (step === base) {
+                base.copy(Bitmap.Config.ARGB_8888, false)
+            } else {
+                step
+            }
         }
     }
 
@@ -131,7 +169,10 @@ class ResultEditViewModel(app: Application) : AndroidViewModel(app) {
         val path = sourcePath ?: error("경로 없음")
         val s = _state.value
         withContext(Dispatchers.IO) {
-            val base = BitmapFactory.decodeFile(path, BitmapFactory.Options().apply { inScaled = false })
+            val loadOpts = BitmapFactory.Options().apply {
+                inPreferredConfig = Bitmap.Config.ARGB_8888
+            }
+            val base = BitmapFactory.decodeFile(path, loadOpts)
                 ?: error("원본 디코딩 실패")
             var step = base
             repeat(s.rotationSteps90 % 4) {
@@ -156,7 +197,9 @@ class ResultEditViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     override fun onCleared() {
-        _state.value.preview?.recycle()
+        _state.value.preview?.let { p ->
+            if (p !== decodedBase) p.recycle()
+        }
         decodedBase?.recycle()
         decodedBase = null
         super.onCleared()

@@ -9,14 +9,23 @@ import android.graphics.Paint
 
 object BitmapAdjustments {
 
+    private fun asSoftwareArgb(source: Bitmap): Bitmap {
+        if (source.config != Bitmap.Config.HARDWARE) return source
+        return source.copy(Bitmap.Config.ARGB_8888, false)
+    }
+
     fun rotate90(source: Bitmap): Bitmap {
+        val safe = asSoftwareArgb(source)
         val m = Matrix().apply { postRotate(90f) }
-        return Bitmap.createBitmap(source, 0, 0, source.width, source.height, m, true)
+        val out = Bitmap.createBitmap(safe, 0, 0, safe.width, safe.height, m, true)
+        if (safe !== source) safe.recycle()
+        return out
     }
 
     /** brightness: roughly -0.35 .. 0.35, contrast: roughly 0.7 .. 1.5 (1 = unchanged) */
     fun applyBrightnessContrast(source: Bitmap, brightness: Float, contrast: Float): Bitmap {
-        val out = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
+        val safe = asSoftwareArgb(source)
+        val out = Bitmap.createBitmap(safe.width, safe.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(out)
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
         val cm = ColorMatrix()
@@ -30,7 +39,8 @@ object BitmapAdjustments {
             ),
         )
         paint.colorFilter = ColorMatrixColorFilter(cm)
-        canvas.drawBitmap(source, 0f, 0f, paint)
+        canvas.drawBitmap(safe, 0f, 0f, paint)
+        if (safe !== source) safe.recycle()
         return out
     }
 }
