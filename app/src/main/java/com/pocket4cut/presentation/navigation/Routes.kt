@@ -10,6 +10,7 @@ object Routes {
     const val SELECTION = "selection"
     const val FRAME_THEME = "frameTheme"
     const val EDIT = "edit"
+    const val DETAIL_EDIT = "detailEdit"
     const val RESULT = "result"
     const val RESULT_EDIT = "resultEdit"
 

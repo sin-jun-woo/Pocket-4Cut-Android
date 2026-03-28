@@ -57,7 +57,10 @@ class ResultEditViewModel(app: Application) : AndroidViewModel(app) {
         loadJob = viewModelScope.launch {
             try {
                 val bmp = withContext(Dispatchers.IO) { decodeForEdit(resultPath) }
-                ensureActive()
+                if (!isActive) {
+                    bmp.recycle()
+                    return@launch
+                }
                 decodedBase = bmp
                 val previewBmp = withContext(Dispatchers.IO) {
                     buildPreviewForBase(
@@ -70,7 +73,12 @@ class ResultEditViewModel(app: Application) : AndroidViewModel(app) {
                         ),
                     )
                 }
-                ensureActive()
+                if (!isActive) {
+                    previewBmp.recycle()
+                    decodedBase?.recycle()
+                    decodedBase = null
+                    return@launch
+                }
                 _state.value = ResultEditUiState(
                     isLoading = false,
                     preview = previewBmp,

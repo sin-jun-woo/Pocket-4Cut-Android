@@ -11,13 +11,14 @@ import com.pocket4cut.core.util.Constants
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.presentation.navigation.FrameType
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.UUID
-import kotlin.jvm.Volatile
 
 data class CaptureUiState(
     val phase: CapturePhase = CapturePhase.IDLE,
@@ -53,8 +54,8 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
     private var boundLifecycleOwner: LifecycleOwner? = null
     private var boundPreviewView: PreviewView? = null
 
-    @Volatile
-    private var skipCountdownRequested: Boolean = false
+    /** 카운트다운 중 수동 셔터 (남은 초는 버리고 즉시 촬영) */
+    private val manualShutter = Channel<Unit>(Channel.CONFLATED)
 
     fun bindCamera(lifecycleOwner: LifecycleOwner, previewView: PreviewView) {
         boundLifecycleOwner = lifecycleOwner
@@ -137,18 +138,19 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
         _uiState.update { it.copy(zoomRatio = applied.coerceIn(it.minZoom, it.maxZoom)) }
     }
 
-    fun skipCountdownNow() {
-        skipCountdownRequested = true
+    /** 카운트다운이 돌아가는 동안만 동작. 누르면 남은 대기 시간을 건너뛰고 바로 셔터. */
+    fun onManualShutter() {
+        if (_uiState.value.phase != CapturePhase.COUNTDOWN) return
+        manualShutter.trySend(Unit)
     }
 
-    /**
-     * @param quickShots true면 컷마다 10초 카운트다운 없이 바로 촬영 (컷 간 [Constants.CAPTURE_INTERVAL_SECONDS]는 유지)
-     */
-    fun start(frameType: FrameType, quickShots: Boolean = false) {
+    fun start(frameType: FrameType) {
         if (captureJob?.isActive == true) return
 
         val sessionId = UUID.randomUUID().toString()
         val total = frameType.captureCount
+
+        drainManualShutter()
 
         _uiState.update {
             it.copy(
@@ -165,29 +167,23 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
         captureJob = viewModelScope.launch {
             try {
                 for (i in 1..total) {
-                    if (!quickShots) {
-                        var sec = Constants.COUNTDOWN_SECONDS
-                        while (sec > 0) {
-                            if (skipCountdownRequested) {
-                                skipCountdownRequested = false
-                                break
-                            }
-                            _uiState.update {
-                                it.copy(
-                                    phase = CapturePhase.COUNTDOWN,
-                                    countdownRemaining = sec,
-                                    currentShot = i - 1,
-                                    totalShots = total,
-                                    flash = false,
-                                )
-                            }
-                            delay(1000)
-                            if (skipCountdownRequested) {
-                                skipCountdownRequested = false
-                                break
-                            }
-                            sec--
+                    drainManualShutter()
+                    var sec = Constants.COUNTDOWN_SECONDS
+                    while (sec > 0) {
+                        _uiState.update {
+                            it.copy(
+                                phase = CapturePhase.COUNTDOWN,
+                                countdownRemaining = sec,
+                                currentShot = i - 1,
+                                totalShots = total,
+                                flash = false,
+                            )
                         }
+                        val manual = withTimeoutOrNull(1000L) {
+                            manualShutter.receive()
+                        }
+                        if (manual != null) break
+                        sec--
                     }
 
                     _uiState.update { it.copy(phase = CapturePhase.CAPTURING, currentShot = i, flash = true) }
@@ -211,8 +207,12 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
     fun stop() {
         captureJob?.cancel()
         captureJob = null
-        skipCountdownRequested = false
+        drainManualShutter()
         _uiState.update { it.copy(phase = CapturePhase.IDLE, flash = false, errorMessage = null, currentShot = 0, totalShots = 0) }
+    }
+
+    private fun drainManualShutter() {
+        while (manualShutter.tryReceive().isSuccess) { }
     }
 
     override fun onCleared() {

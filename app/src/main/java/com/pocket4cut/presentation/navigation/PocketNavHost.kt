@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.pocket4cut.presentation.capture.CaptureScreen
+import com.pocket4cut.presentation.detailEdit.DetailEditScreen
 import com.pocket4cut.presentation.edit.EditScreen
 import com.pocket4cut.presentation.frameTheme.FrameThemeScreen
 import com.pocket4cut.presentation.frameTypeSelect.FrameTypeSelectScreen
@@ -127,6 +128,31 @@ fun PocketNavHost(
             val selectedRaw = entry.arguments?.getString(Routes.Args.SELECTED_INDEXES).orEmpty()
             val themeId = entry.arguments?.getString(Routes.Args.THEME_ID).orEmpty()
             EditScreen(
+                frameType = FrameType.fromId(frameTypeId),
+                sessionId = sessionId,
+                selectedIndexes = NavCodec.decodeIndexes(selectedRaw),
+                themeId = themeId,
+                onBack = { navController.popBackStack() },
+                onContinueToDetailEdit = {
+                    navController.navigate("${Routes.DETAIL_EDIT}/${frameTypeId}/$sessionId/$selectedRaw/$themeId")
+                },
+            )
+        }
+
+        composable(
+            route = "${Routes.DETAIL_EDIT}/{${Routes.Args.FRAME_TYPE}}/{${Routes.Args.SESSION_ID}}/{${Routes.Args.SELECTED_INDEXES}}/{${Routes.Args.THEME_ID}}",
+            arguments = listOf(
+                navArgument(Routes.Args.FRAME_TYPE) { type = NavType.StringType },
+                navArgument(Routes.Args.SESSION_ID) { type = NavType.StringType },
+                navArgument(Routes.Args.SELECTED_INDEXES) { type = NavType.StringType },
+                navArgument(Routes.Args.THEME_ID) { type = NavType.StringType },
+            ),
+        ) { entry ->
+            val frameTypeId = entry.arguments?.getString(Routes.Args.FRAME_TYPE).orEmpty()
+            val sessionId = entry.arguments?.getString(Routes.Args.SESSION_ID).orEmpty()
+            val selectedRaw = entry.arguments?.getString(Routes.Args.SELECTED_INDEXES).orEmpty()
+            val themeId = entry.arguments?.getString(Routes.Args.THEME_ID).orEmpty()
+            DetailEditScreen(
                 frameType = FrameType.fromId(frameTypeId),
                 sessionId = sessionId,
                 selectedIndexes = NavCodec.decodeIndexes(selectedRaw),

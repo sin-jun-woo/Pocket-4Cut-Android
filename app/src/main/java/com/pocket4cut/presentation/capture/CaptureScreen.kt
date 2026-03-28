@@ -8,6 +8,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,12 +18,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -241,24 +245,14 @@ fun CaptureScreen(
                         uiState.phase == CapturePhase.READY ||
                             uiState.phase == CapturePhase.IDLE ||
                             uiState.phase == CapturePhase.FAILED
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.padding(bottom = 8.dp),
+                    Button(
+                        onClick = { viewModel.start(frameType) },
+                        enabled = canStart,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
                     ) {
-                        Button(
-                            onClick = { viewModel.start(frameType, quickShots = false) },
-                            enabled = canStart,
-                            modifier = Modifier.weight(1f),
-                        ) {
-                            Text("촬영 시작\n(카운트다운)", maxLines = 2)
-                        }
-                        Button(
-                            onClick = { viewModel.start(frameType, quickShots = true) },
-                            enabled = canStart,
-                            modifier = Modifier.weight(1f),
-                        ) {
-                            Text("바로 촬영\n(대기 없음)", maxLines = 2)
-                        }
+                        Text("촬영 시작 (${frameType.captureCount}장)")
                     }
                 }
             }
@@ -268,20 +262,30 @@ fun CaptureScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(Color.Black.copy(alpha = 0.25f)),
-                    contentAlignment = Alignment.Center,
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = uiState.countdownRemaining.toString(),
-                            style = MaterialTheme.typography.displayLarge,
-                            color = Color.White,
+                    Text(
+                        text = uiState.countdownRemaining.toString(),
+                        style = MaterialTheme.typography.displayLarge,
+                        color = Color.White,
+                        modifier = Modifier.align(Alignment.Center),
+                    )
+                    // 기본 카메라 앱 스타일 셔터 — 카운트다운 중에만 누르면 남은 초 스킵하고 촬영
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 48.dp)
+                            .size(76.dp)
+                            .border(width = 4.dp, color = Color.White, shape = CircleShape)
+                            .clip(CircleShape)
+                            .clickable { viewModel.onManualShutter() },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(58.dp)
+                                .clip(CircleShape)
+                                .background(Color.White),
                         )
-                        TextButton(
-                            onClick = { viewModel.skipCountdownNow() },
-                            modifier = Modifier.padding(top = 16.dp),
-                        ) {
-                            Text("지금 찍기 (대기 건너뛰기)", color = Color.White)
-                        }
                     }
                 }
             }

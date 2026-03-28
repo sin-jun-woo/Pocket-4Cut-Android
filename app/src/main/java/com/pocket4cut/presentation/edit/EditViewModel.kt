@@ -5,9 +5,7 @@ import android.graphics.Bitmap
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.pocket4cut.core.util.BitmapDecoding
-import com.pocket4cut.data.local.SessionRepository
 import com.pocket4cut.data.storage.FileImageStorage
-import com.pocket4cut.domain.model.PhotoSession
 import com.pocket4cut.frame.CollageRenderer
 import com.pocket4cut.frame.FrameDefinitions
 import com.pocket4cut.frame.FrameTheme
@@ -36,7 +34,6 @@ data class EditUiState(
 
 class EditViewModel(app: Application) : AndroidViewModel(app) {
     private val storage = FileImageStorage(app.applicationContext)
-    private val sessions = SessionRepository(app.applicationContext)
 
     private val _uiState = MutableStateFlow(EditUiState())
     val uiState: StateFlow<EditUiState> = _uiState
@@ -44,15 +41,12 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     private var lastFrameType: FrameType? = null
     private var lastTheme: FrameTheme? = null
     private var lastSelectedIndexes: List<Int> = emptyList()
-    private var lastSessionId: String? = null
-
     fun init(
         frameType: FrameType,
         sessionId: String,
         selectedIndexes: List<Int>,
         themeId: String,
     ) {
-        lastSessionId = sessionId
         lastFrameType = frameType
         lastTheme = FrameDefinitions.byId(themeId)
         lastSelectedIndexes = selectedIndexes
@@ -139,39 +133,36 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     private fun todayString(): String =
         SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date())
 
-    suspend fun renderFinalAndSave(sessionId: String): String = withContext(Dispatchers.IO) {
-        val snapshot = _uiState.value
-        val frameType = lastFrameType ?: error("frameType missing")
-        val theme = lastTheme ?: error("theme missing")
-
-        val orderedPaths = snapshot.order.mapNotNull { idx -> snapshot.imagePaths.getOrNull(idx) }
-        val bitmaps = orderedPaths.mapNotNull { path ->
-            BitmapDecoding.decodeSampled(path, reqSize = 1400)
-        }
-        val dateText = if (snapshot.showDate) todayString() else null
-        val result = CollageRenderer.render(
-            frameType = frameType,
-            theme = theme,
-            bitmaps = bitmaps,
-            filter = snapshot.filter,
-            text = snapshot.text.takeIf { it.isNotBlank() },
-            dateText = dateText,
-            targetWidth = 1920,
+    fun persistPendingForDetailEdit(sessionId: String) {
+        val s = _uiState.value
+        PendingCollageStore.write(
+            getApplication(),
+            sessionId,
+            PendingCollageParams(
+                filter = s.filter,
+                text = s.text,
+                showDate = s.showDate,
+                order = s.order,
+            ),
         )
-        val path = storage.saveResult(result, sessionId)
+    }
 
-        val session = PhotoSession(
-            id = sessionId,
-            captureCount = frameType.captureCount,
-            selectedCount = frameType.selectCount,
-            imagePaths = snapshot.imagePaths,
-            selectedIndexes = lastSelectedIndexes,
-            frameId = theme.id,
-            finalImagePath = path,
-            createdAt = System.currentTimeMillis(),
+    suspend fun renderFinalAndSave(sessionId: String): String {
+        val s = _uiState.value
+        val params = PendingCollageParams(
+            filter = s.filter,
+            text = s.text,
+            showDate = s.showDate,
+            order = s.order,
         )
-        sessions.upsert(session)
-        path
+        return CollageFinalize.finalize(
+            getApplication(),
+            sessionId,
+            lastFrameType ?: error("frameType missing"),
+            lastTheme?.id ?: error("theme missing"),
+            lastSelectedIndexes,
+            params,
+        )
     }
 }
 
