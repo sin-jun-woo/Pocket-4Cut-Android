@@ -37,11 +37,9 @@ import java.io.File
 @Composable
 fun ResultScreen(
     resultPath: String,
-    imageReloadKey: Long = 0L,
     onBack: () -> Unit,
     onHome: () -> Unit,
     onGallery: () -> Unit = {},
-    onEdit: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -75,19 +73,12 @@ fun ResultScreen(
             AsyncImage(
                 model = ImageRequest.Builder(context)
                     .data(uri)
-                    .memoryCacheKey("${uri}_$imageReloadKey")
-                    .diskCacheKey("${uri}_$imageReloadKey")
                     .build(),
                 contentDescription = "result",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Fit,
             )
         }
-
-        OutlinedButton(
-            onClick = onEdit,
-            modifier = Modifier.fillMaxWidth(),
-        ) { Text("결과 편집 (밝기·대비·회전)") }
 
         Row(
             modifier = Modifier.fillMaxWidth(),

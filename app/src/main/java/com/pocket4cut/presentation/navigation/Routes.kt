@@ -12,7 +12,6 @@ object Routes {
     const val EDIT = "edit"
     const val DETAIL_EDIT = "detailEdit"
     const val RESULT = "result"
-    const val RESULT_EDIT = "resultEdit"
 
     object Args {
         const val FRAME_TYPE = "frameType"
