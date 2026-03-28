@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
+import kotlin.jvm.Volatile
 
 data class CaptureUiState(
     val phase: CapturePhase = CapturePhase.IDLE,
@@ -27,6 +28,9 @@ data class CaptureUiState(
     val flash: Boolean = false,
     val isFrontCamera: Boolean = true,
     val errorMessage: String? = null,
+    val minZoom: Float = 1f,
+    val maxZoom: Float = 1f,
+    val zoomRatio: Float = 1f,
 )
 
 enum class CapturePhase {
@@ -49,6 +53,9 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
     private var boundLifecycleOwner: LifecycleOwner? = null
     private var boundPreviewView: PreviewView? = null
 
+    @Volatile
+    private var skipCountdownRequested: Boolean = false
+
     fun bindCamera(lifecycleOwner: LifecycleOwner, previewView: PreviewView) {
         boundLifecycleOwner = lifecycleOwner
         boundPreviewView = previewView
@@ -60,7 +67,17 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
                     CameraSelector.LENS_FACING_BACK
                 }
                 engine.bind(lifecycleOwner, previewView, lensFacing)
-                _uiState.update { it.copy(phase = CapturePhase.READY, errorMessage = null) }
+                val range = engine.zoomRatioRange() ?: (1f to 1f)
+                val z = engine.currentZoomRatio()?.coerceIn(range.first, range.second) ?: range.first
+                _uiState.update {
+                    it.copy(
+                        phase = CapturePhase.READY,
+                        errorMessage = null,
+                        minZoom = range.first,
+                        maxZoom = range.second,
+                        zoomRatio = z,
+                    )
+                }
             }.onFailure { t ->
                 _uiState.update { it.copy(phase = CapturePhase.FAILED, errorMessage = t.message ?: "카메라 연결에 실패했습니다.") }
             }
@@ -81,7 +98,17 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
                     CameraSelector.LENS_FACING_BACK
                 }
                 engine.bind(lifecycleOwner, previewView, lensFacing)
-                _uiState.update { it.copy(phase = CapturePhase.READY, errorMessage = null) }
+                val range = engine.zoomRatioRange() ?: (1f to 1f)
+                val z = engine.currentZoomRatio()?.coerceIn(range.first, range.second) ?: range.first
+                _uiState.update {
+                    it.copy(
+                        phase = CapturePhase.READY,
+                        errorMessage = null,
+                        minZoom = range.first,
+                        maxZoom = range.second,
+                        zoomRatio = z,
+                    )
+                }
             }.onFailure { t ->
                 _uiState.update {
                     it.copy(
@@ -102,7 +129,22 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun start(frameType: FrameType) {
+    fun setZoomRatio(ratio: Float) {
+        val s = _uiState.value
+        val clamped = ratio.coerceIn(s.minZoom, s.maxZoom)
+        engine.setZoomRatio(clamped)
+        val applied = engine.currentZoomRatio() ?: clamped
+        _uiState.update { it.copy(zoomRatio = applied.coerceIn(it.minZoom, it.maxZoom)) }
+    }
+
+    fun skipCountdownNow() {
+        skipCountdownRequested = true
+    }
+
+    /**
+     * @param quickShots true면 컷마다 10초 카운트다운 없이 바로 촬영 (컷 간 [Constants.CAPTURE_INTERVAL_SECONDS]는 유지)
+     */
+    fun start(frameType: FrameType, quickShots: Boolean = false) {
         if (captureJob?.isActive == true) return
 
         val sessionId = UUID.randomUUID().toString()
@@ -123,17 +165,29 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
         captureJob = viewModelScope.launch {
             try {
                 for (i in 1..total) {
-                    for (sec in Constants.COUNTDOWN_SECONDS downTo 1) {
-                        _uiState.update {
-                            it.copy(
-                                phase = CapturePhase.COUNTDOWN,
-                                countdownRemaining = sec,
-                                currentShot = i - 1,
-                                totalShots = total,
-                                flash = false,
-                            )
+                    if (!quickShots) {
+                        var sec = Constants.COUNTDOWN_SECONDS
+                        while (sec > 0) {
+                            if (skipCountdownRequested) {
+                                skipCountdownRequested = false
+                                break
+                            }
+                            _uiState.update {
+                                it.copy(
+                                    phase = CapturePhase.COUNTDOWN,
+                                    countdownRemaining = sec,
+                                    currentShot = i - 1,
+                                    totalShots = total,
+                                    flash = false,
+                                )
+                            }
+                            delay(1000)
+                            if (skipCountdownRequested) {
+                                skipCountdownRequested = false
+                                break
+                            }
+                            sec--
                         }
-                        delay(1000)
                     }
 
                     _uiState.update { it.copy(phase = CapturePhase.CAPTURING, currentShot = i, flash = true) }
@@ -157,6 +211,7 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
     fun stop() {
         captureJob?.cancel()
         captureJob = null
+        skipCountdownRequested = false
         _uiState.update { it.copy(phase = CapturePhase.IDLE, flash = false, errorMessage = null, currentShot = 0, totalShots = 0) }
     }
 
@@ -165,4 +220,3 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
         engine.unbind()
     }
 }
-

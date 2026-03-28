@@ -1,6 +1,8 @@
 package com.pocket4cut.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -13,6 +15,7 @@ import com.pocket4cut.presentation.frameTheme.FrameThemeScreen
 import com.pocket4cut.presentation.frameTypeSelect.FrameTypeSelectScreen
 import com.pocket4cut.presentation.gallery.GalleryScreen
 import com.pocket4cut.presentation.home.HomeScreen
+import com.pocket4cut.presentation.result.ResultEditScreen
 import com.pocket4cut.presentation.result.ResultScreen
 import com.pocket4cut.presentation.selection.SelectionScreen
 
@@ -141,8 +144,12 @@ fun PocketNavHost(
             arguments = listOf(navArgument(Routes.Args.RESULT_PATH) { type = NavType.StringType }),
         ) { entry ->
             val encoded = entry.arguments?.getString(Routes.Args.RESULT_PATH).orEmpty()
+            val imageReload by entry.savedStateHandle
+                .getStateFlow("reload_image", 0L)
+                .collectAsStateWithLifecycle()
             ResultScreen(
                 resultPath = NavCodec.decodePath(encoded),
+                imageReloadKey = imageReload,
                 onBack = { navController.popBackStack() },
                 onHome = {
                     navController.navigate(Routes.HOME) {
@@ -155,6 +162,27 @@ fun PocketNavHost(
                         popUpTo(Routes.HOME) { inclusive = false }
                         launchSingleTop = true
                     }
+                },
+                onEdit = {
+                    navController.navigate("${Routes.RESULT_EDIT}/$encoded")
+                },
+            )
+        }
+
+        composable(
+            route = "${Routes.RESULT_EDIT}/{${Routes.Args.RESULT_PATH}}",
+            arguments = listOf(navArgument(Routes.Args.RESULT_PATH) { type = NavType.StringType }),
+        ) { entry ->
+            val encoded = entry.arguments?.getString(Routes.Args.RESULT_PATH).orEmpty()
+            ResultEditScreen(
+                resultPath = NavCodec.decodePath(encoded),
+                onBack = { navController.popBackStack() },
+                onSaved = {
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                        "reload_image",
+                        System.currentTimeMillis(),
+                    )
+                    navController.popBackStack()
                 },
             )
         }

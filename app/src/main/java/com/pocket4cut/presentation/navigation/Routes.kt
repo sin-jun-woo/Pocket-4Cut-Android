@@ -11,6 +11,7 @@ object Routes {
     const val FRAME_THEME = "frameTheme"
     const val EDIT = "edit"
     const val RESULT = "result"
+    const val RESULT_EDIT = "resultEdit"
 
     object Args {
         const val FRAME_TYPE = "frameType"

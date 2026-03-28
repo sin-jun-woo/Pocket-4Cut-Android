@@ -2,6 +2,7 @@ package com.pocket4cut.presentation.capture
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.view.ScaleGestureDetector
 import android.view.WindowManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,7 +19,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -80,6 +83,33 @@ fun CaptureScreen(
     LaunchedEffect(hasPermission) {
         if (hasPermission) {
             viewModel.bindCamera(lifecycleOwner, previewView)
+        }
+    }
+
+    LaunchedEffect(hasPermission, previewView) {
+        if (!hasPermission) return@LaunchedEffect
+        val detector = ScaleGestureDetector(
+            context,
+            object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                private var baseZoom = 1f
+                private var spanAccum = 1f
+
+                override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
+                    baseZoom = viewModel.uiState.value.zoomRatio
+                    spanAccum = 1f
+                    return true
+                }
+
+                override fun onScale(detector: ScaleGestureDetector): Boolean {
+                    spanAccum *= detector.scaleFactor
+                    viewModel.setZoomRatio(baseZoom * spanAccum)
+                    return true
+                }
+            },
+        )
+        previewView.setOnTouchListener { _, event ->
+            detector.onTouchEvent(event)
+            true
         }
     }
 
@@ -182,6 +212,23 @@ fun CaptureScreen(
                     verticalArrangement = Arrangement.Bottom,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    if (uiState.maxZoom > uiState.minZoom + 0.01f) {
+                        Text(
+                            "확대/축소 (핀치 또는 슬라이더)",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = Color.White,
+                            modifier = Modifier.padding(bottom = 4.dp),
+                        )
+                        Slider(
+                            value = uiState.zoomRatio,
+                            onValueChange = { viewModel.setZoomRatio(it) },
+                            valueRange = uiState.minZoom..uiState.maxZoom,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
+                        )
+                    }
+
                     uiState.errorMessage?.let { msg ->
                         Text(
                             text = msg,
@@ -194,11 +241,24 @@ fun CaptureScreen(
                         uiState.phase == CapturePhase.READY ||
                             uiState.phase == CapturePhase.IDLE ||
                             uiState.phase == CapturePhase.FAILED
-                    Button(
-                        onClick = { viewModel.start(frameType) },
-                        enabled = canStart,
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.padding(bottom = 8.dp),
                     ) {
-                        Text("촬영 시작 (${frameType.captureCount}장)")
+                        Button(
+                            onClick = { viewModel.start(frameType, quickShots = false) },
+                            enabled = canStart,
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            Text("촬영 시작\n(카운트다운)", maxLines = 2)
+                        }
+                        Button(
+                            onClick = { viewModel.start(frameType, quickShots = true) },
+                            enabled = canStart,
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            Text("바로 촬영\n(대기 없음)", maxLines = 2)
+                        }
                     }
                 }
             }
@@ -210,11 +270,19 @@ fun CaptureScreen(
                         .background(Color.Black.copy(alpha = 0.25f)),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(
-                        text = uiState.countdownRemaining.toString(),
-                        style = MaterialTheme.typography.displayLarge,
-                        color = Color.White,
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = uiState.countdownRemaining.toString(),
+                            style = MaterialTheme.typography.displayLarge,
+                            color = Color.White,
+                        )
+                        TextButton(
+                            onClick = { viewModel.skipCountdownNow() },
+                            modifier = Modifier.padding(top = 16.dp),
+                        ) {
+                            Text("지금 찍기 (대기 건너뛰기)", color = Color.White)
+                        }
+                    }
                 }
             }
         }

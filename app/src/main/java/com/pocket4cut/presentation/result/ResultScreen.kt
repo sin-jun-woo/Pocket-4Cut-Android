@@ -5,7 +5,6 @@ import android.content.ContentValues
 import android.os.Build
 import android.provider.MediaStore
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,15 +30,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.pocket4cut.core.util.FileUris
 import java.io.File
 
 @Composable
 fun ResultScreen(
     resultPath: String,
+    imageReloadKey: Long = 0L,
     onBack: () -> Unit,
     onHome: () -> Unit,
     onGallery: () -> Unit = {},
+    onEdit: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -71,12 +73,21 @@ fun ResultScreen(
             contentAlignment = Alignment.Center,
         ) {
             AsyncImage(
-                model = uri,
+                model = ImageRequest.Builder(context)
+                    .data(uri)
+                    .memoryCacheKey("${uri}_$imageReloadKey")
+                    .diskCacheKey("${uri}_$imageReloadKey")
+                    .build(),
                 contentDescription = "result",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Fit,
             )
         }
+
+        OutlinedButton(
+            onClick = onEdit,
+            modifier = Modifier.fillMaxWidth(),
+        ) { Text("결과 편집 (밝기·대비·회전)") }
 
         Row(
             modifier = Modifier.fillMaxWidth(),

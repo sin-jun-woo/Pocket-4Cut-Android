@@ -2,6 +2,7 @@ package com.pocket4cut.camera
 
 import android.content.Context
 import android.util.Rational
+import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -23,6 +24,7 @@ class CaptureEngine(
 ) {
     private var cameraProvider: ProcessCameraProvider? = null
     private var imageCapture: ImageCapture? = null
+    private var camera: Camera? = null
 
     suspend fun bind(
         lifecycleOwner: LifecycleOwner,
@@ -57,7 +59,7 @@ class CaptureEngine(
             .addUseCase(preview)
             .addUseCase(capture)
             .build()
-        provider.bindToLifecycle(lifecycleOwner, selector, group)
+        camera = provider.bindToLifecycle(lifecycleOwner, selector, group)
 
         imageCapture = capture
     }
@@ -65,6 +67,23 @@ class CaptureEngine(
     fun unbind() {
         cameraProvider?.unbindAll()
         imageCapture = null
+        camera = null
+    }
+
+    fun zoomRatioRange(): Pair<Float, Float>? {
+        val state = camera?.cameraInfo?.zoomState?.value ?: return null
+        return state.minZoomRatio to state.maxZoomRatio
+    }
+
+    fun currentZoomRatio(): Float? =
+        camera?.cameraInfo?.zoomState?.value?.zoomRatio
+
+    fun setZoomRatio(ratio: Float) {
+        val cam = camera ?: return
+        val state = cam.cameraInfo.zoomState.value ?: return
+        val clamped = ratio.coerceIn(state.minZoomRatio, state.maxZoomRatio)
+        val executor = ContextCompat.getMainExecutor(context)
+        cam.cameraControl.setZoomRatio(clamped).addListener({}, executor)
     }
 
     suspend fun takePictureToFile(targetFile: File): File {

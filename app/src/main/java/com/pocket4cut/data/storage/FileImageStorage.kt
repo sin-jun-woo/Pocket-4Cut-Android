@@ -46,6 +46,14 @@ class FileImageStorage(
         file.absolutePath
     }
 
+    suspend fun saveBitmapToPath(bitmap: Bitmap, absolutePath: String) = withContext(Dispatchers.IO) {
+        val file = File(absolutePath)
+        file.parentFile?.mkdirs()
+        FileOutputStream(file).use { out ->
+            bitmap.compress(Bitmap.CompressFormat.JPEG, Constants.RESULT_IMAGE_QUALITY, out)
+        }
+    }
+
     override suspend fun deleteSessionFiles(sessionId: String) = withContext(Dispatchers.IO) {
         captureDir(sessionId).deleteRecursively()
         File(resultsDir(), "${sessionId}_result.jpg").delete()
