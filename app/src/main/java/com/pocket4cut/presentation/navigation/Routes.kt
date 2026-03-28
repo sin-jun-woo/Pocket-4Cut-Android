@@ -44,7 +44,28 @@ object NavCodec {
         raw.split(",")
             .mapNotNull { it.trim().takeIf { s -> s.isNotEmpty() }?.toIntOrNull() }
 
-    fun encodePath(path: String): String = java.net.URLEncoder.encode(path, Charsets.UTF_8.name())
-    fun decodePath(encoded: String): String = java.net.URLDecoder.decode(encoded, Charsets.UTF_8.name())
+    /**
+     * Navigation 문자열 인자에 파일 경로를 넣을 때는 URL 인코딩보다 Base64(URL_SAFE)가 안전하다.
+     * (`+`, `/`, `%` 등이 Nav 파싱·디코딩 단계에서 깨지거나 잘리는 이슈 방지)
+     */
+    fun encodePath(path: String): String =
+        android.util.Base64.encodeToString(
+            path.toByteArray(Charsets.UTF_8),
+            android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP,
+        )
+
+    fun decodePath(encoded: String): String {
+        if (encoded.isBlank()) return ""
+        return runCatching {
+            val bytes = android.util.Base64.decode(
+                encoded,
+                android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP,
+            )
+            String(bytes, Charsets.UTF_8)
+        }.recoverCatching {
+            // 예전 URLEncoder 버전 호환
+            java.net.URLDecoder.decode(encoded, Charsets.UTF_8.name())
+        }.getOrElse { encoded }
+    }
 }
 
