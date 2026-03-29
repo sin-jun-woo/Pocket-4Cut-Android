@@ -10,11 +10,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.pocket4cut.presentation.navigation.PocketNavHost
+import com.pocket4cut.presentation.settings.AppSettings
+import com.pocket4cut.ui.designsystem.theme.ThemeManager
 import com.pocket4cut.ui.theme.Pocket4CutTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeManager.init(this)
+        AppSettings.init(this)
         enableEdgeToEdge()
         setContent {
             Pocket4CutTheme {

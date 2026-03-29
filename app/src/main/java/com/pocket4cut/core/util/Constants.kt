@@ -17,7 +17,7 @@ object Constants {
     const val CAPTURE_INTERVAL_SECONDS = 2
     
     // 결과 이미지 품질
-    const val RESULT_IMAGE_QUALITY = 90
+    const val RESULT_IMAGE_QUALITY = 95
     const val RESULT_IMAGE_MAX_WIDTH = 1920
 }
 

@@ -190,7 +190,7 @@ private fun GalleryHeader(
     showToggle: Boolean,
     onClose: () -> Unit,
 ) {
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
@@ -199,9 +199,12 @@ private fun GalleryHeader(
                 end = AppSpacing.Screen.horizontal,
                 bottom = AppSpacing.md,
             ),
-        verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconCircleButton(onClick = onClose, variant = IconButtonVariant.SOLID) {
+        IconCircleButton(
+            onClick = onClose,
+            variant = IconButtonVariant.SOLID,
+            modifier = Modifier.align(Alignment.CenterStart),
+        ) {
             Icon(
                 Icons.Default.Close,
                 contentDescription = null,
@@ -209,19 +212,28 @@ private fun GalleryHeader(
                 modifier = Modifier.size(20.dp),
             )
         }
-        Spacer(Modifier.width(AppSpacing.md))
-        Column(modifier = Modifier.weight(1f)) {
-            Text("보관함", style = AppTypography.title2, color = AppColors.Text.primary)
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                "보관함",
+                style = AppTypography.title2,
+                color = AppColors.Text.primary,
+                textAlign = TextAlign.Center,
+            )
             Text(
                 "${itemCount}개의 추억",
                 style = AppTypography.caption1,
                 color = AppColors.Text.tertiary,
+                textAlign = TextAlign.Center,
             )
         }
         if (showToggle) {
             GalleryViewModeToggle(
                 selectedMode = viewMode,
                 onModeSelected = onViewModeChanged,
+                modifier = Modifier.align(Alignment.CenterEnd),
             )
         }
     }
@@ -233,10 +245,11 @@ private fun GalleryHeader(
 private fun GalleryViewModeToggle(
     selectedMode: GalleryViewMode,
     onModeSelected: (GalleryViewMode) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val capsuleShape = RoundedCornerShape(AppLayout.Radius.full)
     Row(
-        modifier = Modifier
+        modifier = modifier
             .clip(capsuleShape)
             .background(AppColors.Background.tertiary)
             .border(1.dp, AppColors.Border.subtle, capsuleShape)
@@ -374,7 +387,7 @@ private fun SessionCell(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(3f / 4f)
+            .aspectRatio(1f)
             .clip(RoundedCornerShape(AppLayout.Radius.lg))
             .background(AppColors.Background.secondary)
             .combinedClickable(

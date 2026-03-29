@@ -1,39 +1,42 @@
 package com.pocket4cut.presentation.frameTypeSelect
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import com.pocket4cut.frame.FrameLayouts
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.ui.designsystem.*
-import com.pocket4cut.ui.designsystem.components.IconButtonVariant
-import com.pocket4cut.ui.designsystem.components.IconCircleButton
-import com.pocket4cut.ui.designsystem.components.PrimaryButton
-
-private data class TypeOption(
-    val type: FrameType,
-    val name: String,
-    val description: String,
-    val shots: Int,
-    val layoutCount: Int,
-)
+import com.pocket4cut.ui.designsystem.components.*
 
 @Composable
 fun FrameTypeSelectScreen(
@@ -41,15 +44,15 @@ fun FrameTypeSelectScreen(
     onSelected: (FrameType) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val options = remember {
-        listOf(
-            TypeOption(FrameType.TWO_CUT, "미니 2컷", "4장 촬영 후 2장 선택", 2, FrameLayouts.bySlots(2).size),
-            TypeOption(FrameType.FOUR_CUT, "클래식 4컷", "8장 촬영 후 4장 선택", 4, FrameLayouts.bySlots(4).size),
-            TypeOption(FrameType.SIX_CUT, "콜라주 6컷", "10장 촬영 후 6장 선택", 6, FrameLayouts.bySlots(6).size),
-        )
-    }
+    val types = remember { listOf(FrameType.TWO_CUT, FrameType.FOUR_CUT, FrameType.SIX_CUT) }
     var selectedType by remember { mutableStateOf(FrameType.FOUR_CUT) }
-    val currentOption = options.first { it.type == selectedType }
+
+    val cardShape = RoundedCornerShape(AppLayout.Radius.lg)
+    val footerShape = RoundedCornerShape(
+        bottomStart = AppLayout.Radius.lg,
+        bottomEnd = AppLayout.Radius.lg,
+    )
+    val badgeSize = IconCircleButtonSize.LG.toLayoutDp()
 
     Box(
         modifier = modifier
@@ -57,25 +60,48 @@ fun FrameTypeSelectScreen(
             .background(AppColors.Background.primary),
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            // Header
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = AppSpacing.xxxl, start = AppSpacing.Screen.horizontal, end = AppSpacing.Screen.horizontal, bottom = AppSpacing.xl),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top,
+                    .padding(
+                        top = AppSpacing.xxxl,
+                        start = AppSpacing.Screen.horizontal,
+                        end = AppSpacing.Screen.horizontal,
+                        bottom = AppSpacing.xl,
+                    ),
             ) {
-                Column {
-                    Text("사진 구성 선택", style = AppTypography.title1, color = AppColors.Text.primary)
-                    Spacer(Modifier.height(AppSpacing.xxs))
-                    Text("원하는 컷 수를 선택해주세요", style = AppTypography.callout, color = AppColors.Text.secondary)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top,
+                ) {
+                    Text(
+                        text = "사진 구성 선택",
+                        style = AppTypography.title1,
+                        color = AppColors.Text.primary,
+                        modifier = Modifier.weight(1f),
+                    )
+                    IconCircleButton(
+                        onClick = onBack,
+                        presetSize = IconCircleButtonSize.MD,
+                        variant = IconButtonVariant.SOLID,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = null,
+                            tint = AppColors.Text.primary,
+                            modifier = Modifier.size(IconCircleButtonSize.MD.toIconDp()),
+                        )
+                    }
                 }
-                IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
-                    Icon(Icons.Default.Close, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
-                }
+                Spacer(Modifier.height(AppSpacing.xxs))
+                Text(
+                    text = "원하는 컷 수를 선택해주세요",
+                    style = AppTypography.callout,
+                    color = AppColors.Text.secondary,
+                )
             }
 
-            // Options
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -84,77 +110,125 @@ fun FrameTypeSelectScreen(
                     .padding(bottom = 120.dp),
                 verticalArrangement = Arrangement.spacedBy(AppSpacing.md),
             ) {
-                options.forEach { option ->
-                    val isSelected = selectedType == option.type
-                    val bg = if (isSelected) AppColors.Accent.pinkSubtle else AppColors.Background.tertiary
-                    val borderColor = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle
-                    val borderWidth = if (isSelected) 2.dp else 1.dp
+                types.forEach { type ->
+                    val isSelected = selectedType == type
+                    val layoutCount = FrameLayouts.bySlots(type.selectCount).size
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(AppLayout.Radius.lg))
-                            .background(bg)
-                            .border(borderWidth, borderColor, RoundedCornerShape(AppLayout.Radius.lg))
-                            .clickable { selectedType = option.type }
-                            .padding(AppSpacing.lg),
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            // Number badge
-                            Box(
-                                modifier = Modifier
-                                    .size(56.dp)
-                                    .clip(RoundedCornerShape(AppLayout.Radius.md))
-                                    .background(if (isSelected) AppColors.Accent.pink else AppColors.Overlay.white),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text(
-                                    text = option.shots.toString(),
-                                    style = AppTypography.title1,
-                                    color = if (isSelected) AppColors.Text.primary else AppColors.Accent.pink,
+                    val cardBg by animateColorAsState(
+                        targetValue = if (isSelected) AppColors.Accent.pinkSubtle else AppColors.Background.tertiary,
+                        animationSpec = AppAnimation.defaultSpring(),
+                        label = "frameTypeCardBg",
+                    )
+                    val borderColor by animateColorAsState(
+                        targetValue = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle,
+                        animationSpec = AppAnimation.defaultSpring(),
+                        label = "frameTypeCardBorder",
+                    )
+                    val borderWidth by animateDpAsState(
+                        targetValue = if (isSelected) AppLayout.BorderWidth.medium else AppLayout.BorderWidth.thin,
+                        animationSpec = AppAnimation.defaultSpring(),
+                        label = "frameTypeCardBorderW",
+                    )
+
+                    val pinkGlow = AppColors.Accent.pink.copy(alpha = 0.42f)
+                    val cardModifier = Modifier
+                        .fillMaxWidth()
+                        .then(
+                            if (isSelected) {
+                                Modifier.shadow(
+                                    elevation = 16.dp,
+                                    shape = cardShape,
+                                    clip = false,
+                                    ambientColor = pinkGlow,
+                                    spotColor = pinkGlow,
                                 )
-                            }
-                            Spacer(Modifier.width(AppSpacing.md))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(option.name, style = AppTypography.headline, color = AppColors.Text.primary)
-                                Spacer(Modifier.height(AppSpacing.xxs))
-                                Text(option.description, style = AppTypography.subheadline, color = AppColors.Text.secondary)
-                                Spacer(Modifier.height(AppSpacing.sm))
-                                Box(
+                            } else {
+                                Modifier
+                            },
+                        )
+                        .clip(cardShape)
+                        .border(borderWidth, borderColor, cardShape)
+                        .background(cardBg)
+
+                    ScaleOnPress(onClick = { selectedType = type }, modifier = cardModifier) {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .clip(RoundedCornerShape(AppLayout.Radius.md))
-                                        .background(AppColors.Background.secondary)
-                                        .padding(AppSpacing.sm),
+                                        .padding(AppSpacing.lg)
+                                        .padding(end = if (isSelected) 36.dp else 0.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
                                 ) {
-                                    Text(
-                                        "촬영 후 ${option.layoutCount}가지 레이아웃 중 선택",
-                                        style = AppTypography.caption1,
-                                        color = AppColors.Text.tertiary,
+                                    Box(
+                                        modifier = Modifier
+                                            .size(badgeSize)
+                                            .clip(RoundedCornerShape(AppLayout.Radius.md))
+                                            .background(
+                                                if (isSelected) AppColors.Accent.pink
+                                                else AppColors.Overlay.white,
+                                            ),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Text(
+                                            text = type.selectCount.toString(),
+                                            style = AppTypography.title1,
+                                            color = if (isSelected) {
+                                                AppColors.Text.primary
+                                            } else {
+                                                AppColors.Accent.pink
+                                            },
+                                        )
+                                    }
+                                    Spacer(Modifier.width(AppSpacing.md))
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = type.description,
+                                            style = AppTypography.headline,
+                                            color = AppColors.Text.primary,
+                                        )
+                                        Spacer(Modifier.height(AppSpacing.xxs))
+                                        Text(
+                                            text = type.subtitle,
+                                            style = AppTypography.subheadline,
+                                            color = AppColors.Text.secondary,
+                                        )
+                                    }
+                                }
+                                if (isSelected) {
+                                    Icon(
+                                        imageVector = Icons.Filled.CheckCircle,
+                                        contentDescription = null,
+                                        tint = AppColors.Accent.pink,
+                                        modifier = Modifier
+                                            .align(Alignment.TopEnd)
+                                            .padding(
+                                                top = AppSpacing.md,
+                                                end = AppSpacing.md,
+                                            )
+                                            .size(28.dp),
                                     )
                                 }
                             }
-                            if (isSelected) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(28.dp)
-                                        .clip(CircleShape)
-                                        .background(AppColors.Accent.pink),
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    Icon(Icons.Default.Check, null, tint = AppColors.Text.primary, modifier = Modifier.size(16.dp))
-                                }
-                            }
+                            Text(
+                                text = "${layoutCount}가지 레이아웃 사용 가능 (사진 선택 후 고를 수 있어요)",
+                                style = AppTypography.caption1,
+                                color = AppColors.Text.tertiary,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(footerShape)
+                                    .background(AppColors.Background.secondary)
+                                    .padding(
+                                        horizontal = AppSpacing.lg,
+                                        vertical = AppSpacing.sm,
+                                    ),
+                            )
                         }
                     }
                 }
             }
         }
 
-        // Bottom CTA
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -164,7 +238,7 @@ fun FrameTypeSelectScreen(
                 .padding(bottom = AppSpacing.Layout.ctaBottomSpace, top = AppSpacing.md),
         ) {
             PrimaryButton(
-                text = "${currentOption.name} 촬영 시작",
+                text = "${selectedType.displayName} 선택",
                 onClick = { onSelected(selectedType) },
                 fullWidth = true,
             )

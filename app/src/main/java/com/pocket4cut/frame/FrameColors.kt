@@ -8,7 +8,9 @@ data class FrameColor(
     val name: String,
     val color: Color,
     val gradientBrush: Brush? = null,
-)
+) {
+    val isLight: Boolean get() = id != "black"
+}
 
 object FrameColors {
     val all: List<FrameColor> = listOf(
@@ -63,7 +65,7 @@ object FrameColors {
         FrameColor("ash", "애쉬", Color(0xFFE0E0E0)),
         FrameColor("dove", "비둘기", Color(0xFFD5D5D5)),
         // 특별 색상 (gradient)
-        FrameColor("hologram", "홀로그램", Color(0xFFFFE5E5),
+        FrameColor("hologram", "홀로그램", Color(0xFFF0E5FF),
             Brush.linearGradient(listOf(Color(0xFFFFE5E5), Color(0xFFE5F0FF), Color(0xFFF0E5FF)))),
         FrameColor("sunset", "석양", Color(0xFFFFE5D9),
             Brush.linearGradient(listOf(Color(0xFFFFE5D9), Color(0xFFFFD4E5)))),

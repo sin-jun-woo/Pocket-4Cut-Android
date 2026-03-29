@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.pocket4cut.camera.CaptureEngine
 import com.pocket4cut.core.util.Constants
 import com.pocket4cut.data.storage.FileImageStorage
+import com.pocket4cut.presentation.settings.AppSettings
 import com.pocket4cut.presentation.navigation.FrameType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -22,12 +23,12 @@ import java.util.UUID
 
 data class CaptureUiState(
     val phase: CapturePhase = CapturePhase.IDLE,
-    val countdownRemaining: Int = Constants.COUNTDOWN_SECONDS,
+    val countdownRemaining: Int = AppSettings.countdownSeconds,
     val currentShot: Int = 0,
     val totalShots: Int = 0,
     val sessionId: String? = null,
     val flash: Boolean = false,
-    val isFrontCamera: Boolean = true,
+    val isFrontCamera: Boolean = AppSettings.preferFrontCamera,
     val errorMessage: String? = null,
     val minZoom: Float = 1f,
     val maxZoom: Float = 1f,
@@ -155,7 +156,7 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
         _uiState.update {
             it.copy(
                 phase = CapturePhase.READY,
-                countdownRemaining = Constants.COUNTDOWN_SECONDS,
+                countdownRemaining = AppSettings.countdownSeconds,
                 currentShot = 0,
                 totalShots = total,
                 sessionId = sessionId,
@@ -168,7 +169,7 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 for (i in 1..total) {
                     drainManualShutter()
-                    var sec = Constants.COUNTDOWN_SECONDS
+                    var sec = AppSettings.countdownSeconds
                     while (sec > 0) {
                         _uiState.update {
                             it.copy(

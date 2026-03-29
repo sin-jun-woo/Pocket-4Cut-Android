@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -141,12 +142,22 @@ fun FrameThemeSelectScreen(
                     .background(AppColors.Background.primary)
                     .padding(horizontal = AppSpacing.Screen.horizontal),
             ) {
-                Text(
-                    text = "테마",
-                    style = AppTypography.headline,
-                    color = AppColors.Text.secondary,
+                Row(
                     modifier = Modifier.padding(bottom = AppSpacing.md),
-                )
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+                ) {
+                    Text(
+                        text = "테마",
+                        style = AppTypography.headline,
+                        color = AppColors.Text.secondary,
+                    )
+                    Text(
+                        text = selectedTheme?.name.orEmpty(),
+                        style = AppTypography.headline.copy(fontWeight = FontWeight.SemiBold),
+                        color = AppColors.Accent.pink,
+                    )
+                }
 
                 // Horizontal scrollable theme cards
                 Row(
@@ -197,7 +208,7 @@ private fun ThemeCard(
 
     Column(
         modifier = Modifier
-            .width(100.dp)
+            .width(140.dp)
             .then(
                 if (isSelected) {
                     Modifier.shadow(
@@ -221,8 +232,8 @@ private fun ThemeCard(
         // Mini CollagePreview
         Box(
             modifier = Modifier
-                .width(88.dp)
-                .height(110.dp)
+                .width(108.dp)
+                .height(132.dp)
                 .clip(RoundedCornerShape(AppLayout.Radius.xs)),
         ) {
             CollagePreviewScaledToFit(

@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -51,24 +53,37 @@ fun ConfirmDialog(
                 .clickable(onClick = onCancel),
             contentAlignment = Alignment.Center,
         ) {
+            val shape = RoundedCornerShape(AppLayout.Radius.xl)
             Column(
                 modifier = Modifier
                     .widthIn(max = 340.dp)
                     .fillMaxWidth()
-                    .padding(horizontal = AppSpacing.xl)
-                    .clip(RoundedCornerShape(AppLayout.Radius.xl))
-                    .background(AppColors.Background.tertiary)
-                    .border(1.dp, AppColors.Border.light, RoundedCornerShape(AppLayout.Radius.xl))
+                    .padding(horizontal = AppSpacing.Screen.horizontal)
+                    .shadow(
+                        elevation = 30.dp,
+                        shape = shape,
+                        clip = false,
+                        ambientColor = AppColors.Shadow.colorMd,
+                        spotColor = AppColors.Shadow.colorMd,
+                    )
+                    .clip(shape)
+                    .background(AppColors.Background.card)
+                    .border(AppLayout.BorderWidth.thin, AppColors.Border.light, shape)
                     .clickable(enabled = false, onClick = {})
                     .padding(AppSpacing.xl),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(text = title, style = AppTypography.title3, color = AppColors.Text.primary)
+                Text(
+                    text = title,
+                    style = AppTypography.title3,
+                    color = AppColors.Text.primary,
+                )
                 Spacer(Modifier.height(AppSpacing.sm))
                 Text(
                     text = message,
                     style = AppTypography.callout,
                     color = AppColors.Text.secondary,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(Modifier.height(AppSpacing.xl))

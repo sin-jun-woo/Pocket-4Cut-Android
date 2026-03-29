@@ -3,14 +3,14 @@ package com.pocket4cut.presentation.home
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,151 +18,262 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocket4cut.ui.designsystem.*
+import com.pocket4cut.ui.designsystem.components.*
+import com.pocket4cut.ui.designsystem.theme.ThemeManager
 
 @Composable
 fun HomeScreen(
     onStart: () -> Unit,
     onGallery: () -> Unit,
+    onSettings: () -> Unit = {},
     galleryCount: Int = 0,
     modifier: Modifier = Modifier,
 ) {
-    val pulseAnim = rememberInfiniteTransition(label = "pulse")
-    val pulseScale by pulseAnim.animateFloat(
-        initialValue = 1f, targetValue = 1.15f,
-        animationSpec = infiniteRepeatable(tween(2000, easing = EaseInOut), RepeatMode.Reverse),
-        label = "pulseScale",
+    val theme = ThemeManager.currentTheme
+    val floatAnim = rememberInfiniteTransition(label = "float")
+    val floatOffset1 by floatAnim.animateFloat(
+        initialValue = 0f, targetValue = -20f,
+        animationSpec = infiniteRepeatable(tween(4000, easing = EaseInOut), RepeatMode.Reverse),
+        label = "float1",
     )
-    val pulseAlpha by pulseAnim.animateFloat(
-        initialValue = 0.5f, targetValue = 0f,
+    val floatOffset2 by floatAnim.animateFloat(
+        initialValue = 0f, targetValue = 15f,
+        animationSpec = infiniteRepeatable(tween(5000, easing = EaseInOut), RepeatMode.Reverse),
+        label = "float2",
+    )
+    val cameraScale by floatAnim.animateFloat(
+        initialValue = 1f, targetValue = 1.1f,
         animationSpec = infiniteRepeatable(tween(2000, easing = EaseInOut), RepeatMode.Reverse),
-        label = "pulseAlpha",
+        label = "cameraScale",
     )
 
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(AppColors.Background.primary),
+            .background(
+                Brush.verticalGradient(
+                    listOf(AppColors.Background.primary, AppColors.Background.secondary),
+                ),
+            ),
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(500.dp)
-                .offset(y = (-100).dp)
-                .drawBehind {
-                    drawCircle(
-                        brush = Brush.radialGradient(
-                            colors = listOf(AppColors.Accent.pinkSubtle, Color.Transparent),
-                            radius = size.minDimension * 0.6f,
-                        ),
-                        radius = size.minDimension * 0.5f,
-                    )
-                },
-        )
+        val emojis = theme.decorationEmojis
+        if (emojis.size >= 4) {
+            FloatingEmoji(emojis[0], 40, -120f, -250f + floatOffset1)
+            FloatingEmoji(emojis[1], 35, 110f, -200f + floatOffset2)
+            FloatingEmoji(emojis[2], 38, -100f, 150f + floatOffset1)
+            FloatingEmoji(emojis[3], 42, 120f, 80f + floatOffset2)
+        }
 
-        Column(
-            modifier = Modifier.fillMaxSize(),
-        ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            // Settings button (top right)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = AppSpacing.xxxl, start = AppSpacing.Screen.horizontal, end = AppSpacing.Screen.horizontal, bottom = AppSpacing.xl),
-                verticalAlignment = Alignment.CenterVertically,
+                    .padding(
+                        top = AppSpacing.xxxl,
+                        start = AppSpacing.Screen.horizontal,
+                        end = AppSpacing.Screen.horizontal,
+                    ),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                IconCircleButton(onClick = onSettings, variant = IconButtonVariant.DEFAULT) {
+                    Icon(Icons.Default.Settings, null, tint = AppColors.Text.secondary, modifier = Modifier.size(20.dp))
+                }
+            }
+
+            Spacer(Modifier.height(AppSpacing.md))
+
+            // Camera icon + title
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(AppSpacing.md),
             ) {
                 Box(
                     modifier = Modifier
-                        .size(44.dp)
-                        .clip(RoundedCornerShape(AppLayout.Radius.md))
-                        .background(AppColors.Accent.pink),
+                        .scale(cameraScale)
+                        .shadow(
+                            elevation = 12.dp,
+                            shape = CircleShape,
+                            ambientColor = AppColors.Shadow.color,
+                            spotColor = AppColors.Shadow.color,
+                        )
+                        .size(72.dp)
+                        .clip(CircleShape)
+                        .background(AppColors.Gradient.candy),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Default.CameraAlt, null, tint = AppColors.Text.primary, modifier = Modifier.size(24.dp))
+                    Icon(Icons.Default.CameraAlt, null, tint = Color.White, modifier = Modifier.size(30.dp))
                 }
-                Spacer(Modifier.width(AppSpacing.sm))
+
                 Text(
                     text = "Pocket 4Cut",
-                    style = AppTypography.title2.copy(letterSpacing = (-0.5).sp),
-                    color = AppColors.Text.primary,
+                    style = AppTypography.title1.copy(
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = (-1).sp,
+                    ),
+                    color = AppColors.Text.accent,
+                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(AppSpacing.xs),
+                ) {
+                    Text(
+                        "나만의 인생네컷 만들기",
+                        style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
+                        color = AppColors.Text.secondary,
+                    )
+                    Icon(
+                        Icons.Default.AutoAwesome,
+                        null,
+                        tint = AppColors.Accent.pink,
+                        modifier = Modifier.size(14.dp),
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(AppSpacing.xl))
+
+            // Two card buttons
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = AppSpacing.Screen.horizontal),
+                horizontalArrangement = Arrangement.spacedBy(AppSpacing.md),
+            ) {
+                CardButton(
+                    title = "촬영하기",
+                    subtitle = "시작하기",
+                    icon = Icons.Default.CameraAlt,
+                    gradient = AppColors.Gradient.peachy,
+                    iconColor = AppColors.Accent.pink,
+                    onClick = onStart,
+                    modifier = Modifier.weight(1f),
+                )
+                CardButton(
+                    title = "보관함",
+                    subtitle = "추억 모음",
+                    icon = Icons.Default.PhotoLibrary,
+                    gradient = AppColors.Gradient.dreamy,
+                    iconColor = AppColors.Accent.sky,
+                    onClick = onGallery,
+                    modifier = Modifier.weight(1f),
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(bottom = 120.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Box(
-                            modifier = Modifier
-                                .size(216.dp)
-                                .scale(pulseScale)
-                                .border(2.dp, AppColors.Accent.pink.copy(alpha = pulseAlpha), CircleShape),
-                        )
-                        Box(
-                            modifier = Modifier
-                                .size(200.dp)
-                                .clip(CircleShape)
-                                .background(AppColors.Accent.pink)
-                                .border(8.dp, AppColors.Background.secondary, CircleShape)
-                                .clickable(onClick = onStart),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Icon(Icons.Default.CameraAlt, null, tint = AppColors.Text.primary, modifier = Modifier.size(64.dp))
-                                Spacer(Modifier.height(AppSpacing.sm))
-                                Text("촬영 시작", style = AppTypography.headline, color = AppColors.Text.primary)
-                            }
-                        }
-                    }
-                    Spacer(Modifier.height(AppSpacing.xl))
-                    Text("탭하여 나만의 인생네컷 만들기", style = AppTypography.callout, color = AppColors.Text.secondary)
+            Spacer(Modifier.height(AppSpacing.lg))
+
+            // Tip card
+            val tipText = buildAnnotatedString {
+                append("${theme.tipEmoji} ")
+                withStyle(SpanStyle(fontWeight = FontWeight.SemiBold, color = AppColors.Text.secondary)) {
+                    append("친구들과 함께 찍는 ")
+                }
+                withStyle(SpanStyle(fontWeight = FontWeight.ExtraBold, color = AppColors.Accent.pink)) {
+                    append("특별한 순간")
                 }
             }
-
+            val tipShape = RoundedCornerShape(AppLayout.Radius.lg)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = AppSpacing.Screen.horizontal)
-                    .padding(bottom = AppSpacing.Layout.ctaBottomSpace)
-                    .clip(RoundedCornerShape(AppLayout.Radius.lg))
-                    .background(AppColors.Background.tertiary)
-                    .border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.lg))
-                    .clickable(onClick = onGallery)
-                    .padding(AppSpacing.md),
+                    .clip(tipShape)
+                    .background(
+                        Brush.linearGradient(
+                            listOf(
+                                AppColors.Accent.yellow.copy(alpha = 0.5f),
+                                AppColors.Background.tertiary.copy(alpha = 0.5f),
+                            ),
+                        ),
+                    )
+                    .border(AppLayout.BorderWidth.thin, AppColors.Border.light, tipShape)
+                    .padding(AppSpacing.lg),
+                contentAlignment = Alignment.Center,
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(RoundedCornerShape(AppLayout.Radius.sm))
-                                .background(AppColors.Overlay.white),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Icon(Icons.Default.Image, null, tint = AppColors.Text.tertiary, modifier = Modifier.size(20.dp))
-                        }
-                        Spacer(Modifier.width(AppSpacing.sm))
-                        Column {
-                            Text("보관함", style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold), color = AppColors.Text.primary)
-                            Text("${galleryCount}개의 추억", style = AppTypography.caption1, color = AppColors.Text.secondary)
-                        }
-                    }
-                    Icon(Icons.Default.ChevronRight, null, tint = AppColors.Text.tertiary)
-                }
+                Text(tipText, style = AppTypography.callout)
+            }
+
+            Spacer(Modifier.weight(1f))
+        }
+    }
+}
+
+@Composable
+private fun FloatingEmoji(emoji: String, size: Int, x: Float, y: Float) {
+    Text(
+        text = emoji,
+        fontSize = size.sp,
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center)
+            .offset(x = x.dp, y = y.dp)
+            .graphicsLayer { alpha = 0.3f },
+    )
+}
+
+@Composable
+private fun CardButton(
+    title: String,
+    subtitle: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    gradient: Brush,
+    iconColor: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val shape = RoundedCornerShape(AppLayout.Radius.xl)
+    ScaleOnPress(onClick = onClick, modifier = modifier) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .shadow(
+                    elevation = 12.dp,
+                    shape = shape,
+                    ambientColor = AppColors.Shadow.color,
+                    spotColor = AppColors.Shadow.color,
+                )
+                .clip(shape)
+                .background(gradient)
+                .border(AppLayout.BorderWidth.thin, AppColors.Border.light, shape)
+                .padding(vertical = AppSpacing.xl),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+        ) {
+            Box(
+                modifier = Modifier
+                    .shadow(8.dp, CircleShape, ambientColor = AppColors.Shadow.color, spotColor = AppColors.Shadow.color)
+                    .size(56.dp)
+                    .clip(CircleShape)
+                    .background(Color.White),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(icon, null, tint = iconColor, modifier = Modifier.size(24.dp))
+            }
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    title,
+                    style = AppTypography.headline.copy(
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                    ),
+                    color = Color.White,
+                )
+                Text(subtitle, style = AppTypography.caption1, color = Color.White.copy(alpha = 0.9f))
             }
         }
     }

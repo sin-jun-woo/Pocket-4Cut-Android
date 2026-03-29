@@ -139,7 +139,7 @@ fun ResultScreen(
                 xFrac = random.nextFloat() * 0.92f + 0.04f,
                 yFrac = random.nextFloat() * 0.75f + 0.05f,
                 driftX = random.nextInt(-140, 140).dp,
-                driftY = random.nextInt(-420, -80).dp,
+                driftY = random.nextInt(-120, 320).dp,
                 rotStart = random.nextFloat() * 360f,
                 rotDelta = random.nextFloat() * 540f - 270f,
                 width = random.nextInt(6, 14).dp,
@@ -372,7 +372,6 @@ fun ResultScreen(
                             .size(spec.width, spec.height)
                             .graphicsLayer {
                                 rotationZ = spec.rotStart + spec.rotDelta * p
-                                alpha = 1f - p
                             }
                             .clip(RoundedCornerShape(4.dp))
                             .background(spec.color),

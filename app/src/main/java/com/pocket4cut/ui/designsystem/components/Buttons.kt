@@ -1,6 +1,7 @@
 package com.pocket4cut.ui.designsystem.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -56,18 +57,45 @@ fun IconCircleButtonSize.toIconDp(): Dp = when (this) {
 enum class IconButtonVariant { DEFAULT, SOLID }
 
 @Composable
+fun ScaleOnPress(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    content: @Composable () -> Unit,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) AppAnimation.Scale.pressed else 1f,
+        animationSpec = spring(dampingRatio = 0.7f, stiffness = 600f),
+        label = "scalePress",
+    )
+    Box(
+        modifier = modifier
+            .scale(scale)
+            .clickable(interactionSource = interactionSource, indication = null, enabled = enabled, onClick = onClick),
+    ) {
+        content()
+    }
+}
+
+@Composable
 fun PrimaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    fullWidth: Boolean = false,
+    fullWidth: Boolean = true,
     size: AppButtonSize = AppButtonSize.LG,
     icon: @Composable (() -> Unit)? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-    val scale by animateFloatAsState(if (isPressed) AppAnimation.Scale.pressed else 1f, label = "scale")
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) AppAnimation.Scale.pressed else 1f,
+        animationSpec = spring(dampingRatio = 0.7f, stiffness = 600f),
+        label = "scale",
+    )
 
     val bg = if (enabled) AppColors.Accent.pink else AppColors.Text.tertiary
     val shape = RoundedCornerShape(AppLayout.Radius.md)
@@ -78,11 +106,11 @@ fun PrimaryButton(
             .then(
                 if (enabled) {
                     Modifier.shadow(
-                        elevation = 20.dp,
+                        elevation = 16.dp,
                         shape = shape,
                         clip = false,
-                        ambientColor = AppColors.Accent.pink.copy(alpha = 0.25f),
-                        spotColor = AppColors.Accent.pink.copy(alpha = 0.4f),
+                        ambientColor = AppColors.Shadow.glow,
+                        spotColor = AppColors.Shadow.glow,
                     )
                 } else {
                     Modifier
@@ -103,7 +131,7 @@ fun PrimaryButton(
         Text(
             text = text,
             style = AppTypography.headline,
-            color = AppColors.Text.primary,
+            color = Color.White,
         )
     }
 }
@@ -114,13 +142,17 @@ fun SecondaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    fullWidth: Boolean = false,
+    fullWidth: Boolean = true,
     size: AppButtonSize = AppButtonSize.LG,
     icon: @Composable (() -> Unit)? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-    val scale by animateFloatAsState(if (isPressed) AppAnimation.Scale.pressed else 1f, label = "scale")
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) AppAnimation.Scale.pressed else 1f,
+        animationSpec = spring(dampingRatio = 0.7f, stiffness = 600f),
+        label = "scale",
+    )
 
     val shape = RoundedCornerShape(AppLayout.Radius.md)
 
@@ -130,8 +162,8 @@ fun SecondaryButton(
             .height(size.height())
             .scale(scale)
             .clip(shape)
-            .background(AppColors.Overlay.white)
-            .border(1.dp, AppColors.Border.medium, shape)
+            .background(AppColors.Background.card)
+            .border(AppLayout.BorderWidth.thin, AppColors.Border.medium, shape)
             .clickable(interactionSource = interactionSource, indication = null, enabled = enabled, onClick = onClick),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
@@ -154,13 +186,17 @@ fun DestructiveButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    fullWidth: Boolean = false,
+    fullWidth: Boolean = true,
     size: AppButtonSize = AppButtonSize.LG,
     icon: @Composable (() -> Unit)? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-    val scale by animateFloatAsState(if (isPressed) AppAnimation.Scale.pressed else 1f, label = "scale")
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) AppAnimation.Scale.pressed else 1f,
+        animationSpec = spring(dampingRatio = 0.7f, stiffness = 600f),
+        label = "scale",
+    )
 
     val shape = RoundedCornerShape(AppLayout.Radius.md)
 
@@ -179,7 +215,7 @@ fun DestructiveButton(
             icon()
             Spacer(Modifier.width(AppSpacing.xs))
         }
-        Text(text = text, style = AppTypography.headline, color = AppColors.Text.primary)
+        Text(text = text, style = AppTypography.headline, color = Color.White)
     }
 }
 
@@ -195,17 +231,17 @@ fun IconCircleButton(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
-    val scale by animateFloatAsState(if (isPressed) AppAnimation.Scale.pressed else 1f, label = "scale")
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) AppAnimation.Scale.pressed else 1f,
+        animationSpec = spring(dampingRatio = 0.7f, stiffness = 600f),
+        label = "scale",
+    )
 
     val resolvedSize = diameter ?: presetSize.toLayoutDp()
 
     val bg = when (variant) {
         IconButtonVariant.SOLID -> AppColors.Background.tertiary
-        IconButtonVariant.DEFAULT -> AppColors.Overlay.white
-    }
-    val borderColor = when (variant) {
-        IconButtonVariant.SOLID -> AppColors.Border.subtle
-        IconButtonVariant.DEFAULT -> AppColors.Border.light
+        IconButtonVariant.DEFAULT -> AppColors.Background.card
     }
 
     Box(
@@ -214,7 +250,7 @@ fun IconCircleButton(
             .scale(scale)
             .clip(CircleShape)
             .background(bg)
-            .border(1.dp, borderColor, CircleShape)
+            .border(AppLayout.BorderWidth.thin, AppColors.Border.light, CircleShape)
             .clickable(interactionSource = interactionSource, indication = null, enabled = enabled, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {

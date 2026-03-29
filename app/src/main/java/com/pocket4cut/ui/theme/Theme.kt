@@ -1,13 +1,13 @@
 package com.pocket4cut.ui.theme
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import com.pocket4cut.ui.designsystem.AppColors
 
-private val Pocket4CutColorScheme = darkColorScheme(
+private val Pocket4CutColorScheme = lightColorScheme(
     primary = AppColors.Accent.pink,
-    onPrimary = AppColors.Text.primary,
+    onPrimary = AppColors.Text.inverse,
     secondary = AppColors.Accent.pinkLight,
     onSecondary = AppColors.Text.primary,
     tertiary = AppColors.Accent.pinkDark,
@@ -18,7 +18,7 @@ private val Pocket4CutColorScheme = darkColorScheme(
     surfaceVariant = AppColors.Background.tertiary,
     onSurfaceVariant = AppColors.Text.secondary,
     error = AppColors.Semantic.error,
-    onError = AppColors.Text.primary,
+    onError = AppColors.Text.inverse,
     outline = AppColors.Border.light,
     outlineVariant = AppColors.Border.subtle,
 )

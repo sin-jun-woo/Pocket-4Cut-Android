@@ -30,6 +30,7 @@ import com.pocket4cut.presentation.launch.LaunchScreen
 import com.pocket4cut.presentation.layoutSelection.LayoutSelectionScreen
 import com.pocket4cut.presentation.result.ResultScreen
 import com.pocket4cut.presentation.selection.SelectionScreen
+import com.pocket4cut.presentation.settings.SettingsScreen
 
 @Composable
 fun PocketNavHost(
@@ -57,6 +58,14 @@ fun PocketNavHost(
             HomeScreen(
                 onStart = { navController.navigate(Routes.FRAME_TYPE_SELECT) },
                 onGallery = { navController.navigate(Routes.GALLERY) },
+                onSettings = { navController.navigate(Routes.SETTINGS) },
+            )
+        }
+
+        // Settings
+        composable(Routes.SETTINGS) {
+            SettingsScreen(
+                onBack = { navController.popBackStack() },
             )
         }
 

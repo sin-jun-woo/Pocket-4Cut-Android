@@ -131,6 +131,14 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
         rebuildPreviewImage(idx)
     }
 
+    fun resetAllSlots() {
+        val count = _uiState.value.slotAdjustments.size
+        if (count == 0) return
+        val next = List(count) { PhotoSlotAdjustment.neutral }
+        _uiState.update { it.copy(slotAdjustments = next, hasChanges = false) }
+        rebuildAllPreviewImages()
+    }
+
     fun rotateCurrentSlot() = updateCurrentSlot {
         it.copy(quarterTurnsClockwise = (it.quarterTurnsClockwise + 1) % 4)
     }

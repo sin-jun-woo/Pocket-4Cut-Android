@@ -3,11 +3,11 @@ package com.pocket4cut.frame
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 
-enum class FilterId(val displayName: String) {
-    ORIGINAL("원본"),
-    SOFT("소프트"),
-    FILM("필름"),
-    BW("흑백"),
+enum class FilterId(val displayName: String, val iconName: String) {
+    ORIGINAL("원본", "photo"),
+    SOFT("소프트", "sun.max"),
+    FILM("필름", "film"),
+    BW("흑백", "circle.lefthalf.filled"),
 }
 
 object FilterDefs {

@@ -117,6 +117,7 @@ fun EditScreen(
                 frameType = frameType,
                 frameStyle = frameStyle,
                 theme = frameTheme,
+                bottomCaption = buildBottomCaption(uiState),
             )
 
             Spacer(Modifier.height(AppSpacing.xl))
@@ -146,7 +147,11 @@ fun EditScreen(
             Spacer(Modifier.height(AppSpacing.xl))
 
             // ── 7. Order ──
-            OrderSection(uiState = uiState, onTapCell = viewModel::tapOrderCell)
+            OrderSection(
+                uiState = uiState,
+                frameStyle = frameStyle,
+                onTapCell = viewModel::tapOrderCell,
+            )
 
             Spacer(Modifier.height(AppSpacing.xl))
         }
@@ -186,6 +191,7 @@ private fun PreviewSection(
     frameType: FrameType,
     frameStyle: FrameStyle,
     theme: FrameTheme,
+    bottomCaption: String?,
 ) {
     Column(modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal)) {
         Text(
@@ -199,7 +205,7 @@ private fun PreviewSection(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(360.dp)
+                    .height(480.dp)
                     .clip(RoundedCornerShape(AppLayout.Radius.xl))
                     .background(uiState.selectedFrameColor.color),
                 contentAlignment = Alignment.Center,
@@ -210,7 +216,7 @@ private fun PreviewSection(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(360.dp)
+                    .height(480.dp)
                     .clip(RoundedCornerShape(AppLayout.Radius.xl)),
             ) {
                 CollagePreviewScaledToFit(
@@ -219,6 +225,7 @@ private fun PreviewSection(
                     frameStyle = frameStyle,
                     theme = theme,
                     overrideBackground = uiState.selectedFrameColor.color,
+                    bottomCaption = bottomCaption,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -244,6 +251,15 @@ private fun buildOverlayText(state: EditUiState): String {
         if (state.showDate) add(state.dateString)
     }
     return parts.joinToString("  ·  ")
+}
+
+private fun buildBottomCaption(state: EditUiState): String? {
+    val parts = buildList {
+        if (state.customText.isNotBlank()) add(state.customText.trim())
+        if (state.showDate) add(state.dateString)
+    }
+    if (parts.isEmpty()) return null
+    return parts.joinToString(" · ")
 }
 
 // ── Filter Section ───────────────────────────────────────────────────────────
@@ -472,7 +488,7 @@ private fun TextInputSection(
         TextField(
             value = uiState.customText,
             onValueChange = { if (it.length <= 30) onTextChange(it) },
-            placeholder = { Text("문구를 입력해주세요", color = AppColors.Text.tertiary) },
+            placeholder = { Text("메시지를 입력하세요", color = AppColors.Text.tertiary) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
@@ -511,10 +527,15 @@ private fun DateToggleSection(
     uiState: EditUiState,
     onToggle: () -> Unit,
 ) {
+    val cardShape = RoundedCornerShape(AppLayout.Radius.md)
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = AppSpacing.Screen.horizontal),
+            .padding(horizontal = AppSpacing.Screen.horizontal)
+            .clip(cardShape)
+            .background(AppColors.Background.tertiary, cardShape)
+            .border(1.dp, AppColors.Border.subtle, cardShape)
+            .padding(horizontal = AppSpacing.md, vertical = AppSpacing.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
@@ -584,6 +605,7 @@ private fun PinkToggle(
 @Composable
 private fun OrderSection(
     uiState: EditUiState,
+    frameStyle: FrameStyle,
     onTapCell: (Int) -> Unit,
 ) {
     val imageCount = uiState.orderedImages.size
@@ -623,6 +645,7 @@ private fun OrderSection(
                                 image = uiState.orderedImages[index],
                                 displayNumber = index + 1,
                                 isSelected = uiState.selectedSwapIndex == index,
+                                cellAspectWidthOverHeight = frameStyle.cellAspectWidthOverHeight,
                                 onClick = { onTapCell(index) },
                                 modifier = Modifier.weight(1f),
                             )
@@ -641,6 +664,7 @@ private fun OrderCell(
     image: Bitmap,
     displayNumber: Int,
     isSelected: Boolean,
+    cellAspectWidthOverHeight: Float,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -652,7 +676,7 @@ private fun OrderCell(
 
     Box(
         modifier = modifier
-            .aspectRatio(3f / 4f)
+            .aspectRatio(cellAspectWidthOverHeight)
             .clip(RoundedCornerShape(AppLayout.Radius.sm))
             .border(
                 width = if (isSelected) 3.dp else 0.dp,

@@ -13,7 +13,14 @@ data class FrameTheme(
     val cornerRadius: Float,
     val outerPadding: Float,
     val cellSpacing: Float,
-)
+) {
+    val subtitle: String
+        get() = when (frameType) {
+            FrameType.TWO_CUT -> "2컷 · 세로 2칸"
+            FrameType.FOUR_CUT -> "4컷 · 2x2"
+            FrameType.SIX_CUT -> "6컷 · 3x2"
+        }
+}
 
 object FrameCatalog {
     fun themes(frameType: FrameType): List<FrameTheme> = when (frameType) {
@@ -26,8 +33,8 @@ object FrameCatalog {
                 border = Color(0x26000000),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 14f,
-                cellSpacing = 10f,
+                outerPadding = 80f,
+                cellSpacing = 60f,
             ),
             FrameTheme(
                 id = "two_film_black",
@@ -37,8 +44,8 @@ object FrameCatalog {
                 border = Color(0x1FFFFFFF),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 14f,
-                cellSpacing = 10f,
+                outerPadding = 80f,
+                cellSpacing = 60f,
             ),
         )
         FrameType.FOUR_CUT -> listOf(
@@ -50,8 +57,8 @@ object FrameCatalog {
                 border = Color(0x26000000),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 14f,
-                cellSpacing = 10f,
+                outerPadding = 60f,
+                cellSpacing = 40f,
             ),
             FrameTheme(
                 id = "four_film_black",
@@ -61,8 +68,8 @@ object FrameCatalog {
                 border = Color(0x1FFFFFFF),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 14f,
-                cellSpacing = 10f,
+                outerPadding = 60f,
+                cellSpacing = 40f,
             ),
             FrameTheme(
                 id = "four_pastel_mint",
@@ -72,8 +79,8 @@ object FrameCatalog {
                 border = Color(0x59338C80),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 16f,
-                cellSpacing = 12f,
+                outerPadding = 60f,
+                cellSpacing = 40f,
             ),
         )
         FrameType.SIX_CUT -> listOf(
@@ -85,8 +92,8 @@ object FrameCatalog {
                 border = Color(0x26000000),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 12f,
-                cellSpacing = 8f,
+                outerPadding = 60f,
+                cellSpacing = 40f,
             ),
             FrameTheme(
                 id = "six_film_black",
@@ -96,8 +103,8 @@ object FrameCatalog {
                 border = Color(0x1FFFFFFF),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 12f,
-                cellSpacing = 8f,
+                outerPadding = 60f,
+                cellSpacing = 40f,
             ),
         )
     }

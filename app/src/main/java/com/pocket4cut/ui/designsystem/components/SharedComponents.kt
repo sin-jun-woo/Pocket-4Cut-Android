@@ -49,21 +49,21 @@ fun AppToast(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val shape = RoundedCornerShape(AppLayout.Radius.md)
+    val shape = RoundedCornerShape(AppLayout.Radius.lg)
     Row(
         modifier = modifier
             .fillMaxWidth()
             .shadow(
-                elevation = 12.dp,
+                elevation = 16.dp,
                 shape = shape,
                 clip = false,
-                ambientColor = Color.Black.copy(alpha = 0.35f),
-                spotColor = Color.Black.copy(alpha = 0.45f),
+                ambientColor = AppColors.Shadow.color,
+                spotColor = AppColors.Shadow.color,
             )
             .clip(shape)
-            .background(AppColors.Background.tertiary)
-            .border(1.dp, AppColors.Border.light, shape)
-            .padding(horizontal = AppSpacing.md, vertical = AppSpacing.sm),
+            .background(AppColors.Background.card)
+            .border(AppLayout.BorderWidth.thin, AppColors.Border.light, shape)
+            .padding(horizontal = AppSpacing.lg, vertical = AppSpacing.md),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
     ) {
@@ -78,11 +78,13 @@ fun AppToast(
             style = AppTypography.callout,
             color = AppColors.Text.primary,
             modifier = Modifier.weight(1f),
+            maxLines = 2,
         )
         Box(
             modifier = Modifier
-                .size(40.dp)
+                .size(24.dp)
                 .clip(CircleShape)
+                .background(AppColors.Background.tertiary)
                 .clickable(onClick = onDismiss),
             contentAlignment = Alignment.Center,
         ) {
@@ -90,7 +92,7 @@ fun AppToast(
                 imageVector = Icons.Filled.Close,
                 contentDescription = "닫기",
                 tint = AppColors.Text.secondary,
-                modifier = Modifier.size(18.dp),
+                modifier = Modifier.size(12.dp),
             )
         }
     }
@@ -119,8 +121,8 @@ fun LoadingOverlay(
             )
             Text(
                 text = message,
-                style = AppTypography.callout,
-                color = AppColors.Text.primary,
+                style = AppTypography.body,
+                color = Color.White,
             )
         }
     }
@@ -219,9 +221,9 @@ fun AppFilterChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val bg = if (selected) AppColors.Accent.pink else AppColors.Overlay.white
-    val borderColor = if (selected) androidx.compose.ui.graphics.Color.Transparent else AppColors.Border.light
-    val textColor = if (selected) AppColors.Text.primary else AppColors.Text.secondary
+    val bg = if (selected) AppColors.Accent.pink else AppColors.Background.card
+    val borderColor = if (selected) Color.Transparent else AppColors.Border.light
+    val textColor = if (selected) Color.White else AppColors.Text.secondary
     val fontWeight = if (selected) androidx.compose.ui.text.font.FontWeight.SemiBold else androidx.compose.ui.text.font.FontWeight.Normal
 
     Text(

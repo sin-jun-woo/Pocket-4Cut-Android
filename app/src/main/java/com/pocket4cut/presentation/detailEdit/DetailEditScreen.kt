@@ -192,12 +192,26 @@ fun DetailEditScreen(
                         theme = theme,
                         overrideBackground = frameColor.color,
                         modifier = Modifier
+                            .shadow(
+                                elevation = 60.dp,
+                                shape = RoundedCornerShape(AppLayout.Radius.xl),
+                                clip = false,
+                                ambientColor = Color.Black.copy(alpha = 0.3f),
+                                spotColor = Color.Black.copy(alpha = 0.3f),
+                            )
                             .widthIn(max = 360.dp)
                             .padding(horizontal = AppSpacing.Screen.horizontal),
                     )
                 } else {
                     Box(
                         modifier = Modifier
+                            .shadow(
+                                elevation = 60.dp,
+                                shape = RoundedCornerShape(AppLayout.Radius.xl),
+                                clip = false,
+                                ambientColor = Color.Black.copy(alpha = 0.3f),
+                                spotColor = Color.Black.copy(alpha = 0.3f),
+                            )
                             .widthIn(max = 360.dp)
                             .padding(horizontal = AppSpacing.Screen.horizontal)
                             .aspectRatio(3f / 4f)
@@ -300,7 +314,7 @@ fun DetailEditScreen(
                         .border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md))
                         .clickable { viewModel.rotateCurrentSlot() }
                         .padding(AppSpacing.md),
-                    horizontalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(Icons.Default.Refresh, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
@@ -336,7 +350,7 @@ fun DetailEditScreen(
                 Spacer(Modifier.height(AppSpacing.md))
 
                 PrimaryButton(
-                    text = if (uiState.isRendering) "생성 중..." else "적용",
+                    text = "적용",
                     onClick = {
                         if (uiState.isRendering) return@PrimaryButton
                         scope.launch {

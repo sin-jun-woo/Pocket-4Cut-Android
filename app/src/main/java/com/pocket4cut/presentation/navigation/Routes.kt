@@ -14,6 +14,7 @@ object Routes {
     const val DETAIL_EDIT = "detailEdit"
     const val RESULT = "result"
     const val FRAME_THEME_SELECT = "frameThemeSelect"
+    const val SETTINGS = "settings"
 
     object Args {
         const val FRAME_TYPE = "frameType"
@@ -25,10 +26,26 @@ object Routes {
     }
 }
 
-enum class FrameType(val id: String, val captureCount: Int, val selectCount: Int) {
-    TWO_CUT(id = "2", captureCount = Constants.CAPTURE_COUNT_2_CUT, selectCount = Constants.SELECT_COUNT_2_CUT),
-    FOUR_CUT(id = "4", captureCount = Constants.CAPTURE_COUNT_4_CUT, selectCount = Constants.SELECT_COUNT_4_CUT),
-    SIX_CUT(id = "6", captureCount = Constants.CAPTURE_COUNT_6_CUT, selectCount = Constants.SELECT_COUNT_6_CUT);
+enum class FrameType(
+    val id: String,
+    val captureCount: Int,
+    val selectCount: Int,
+    val displayName: String,
+    val description: String,
+    val subtitle: String,
+) {
+    TWO_CUT(
+        id = "2", captureCount = Constants.CAPTURE_COUNT_2_CUT, selectCount = Constants.SELECT_COUNT_2_CUT,
+        displayName = "2컷", description = "2컷 프레임", subtitle = "${Constants.CAPTURE_COUNT_2_CUT}장 촬영 → ${Constants.SELECT_COUNT_2_CUT}장 선택",
+    ),
+    FOUR_CUT(
+        id = "4", captureCount = Constants.CAPTURE_COUNT_4_CUT, selectCount = Constants.SELECT_COUNT_4_CUT,
+        displayName = "4컷", description = "4컷 프레임", subtitle = "${Constants.CAPTURE_COUNT_4_CUT}장 촬영 → ${Constants.SELECT_COUNT_4_CUT}장 선택",
+    ),
+    SIX_CUT(
+        id = "6", captureCount = Constants.CAPTURE_COUNT_6_CUT, selectCount = Constants.SELECT_COUNT_6_CUT,
+        displayName = "6컷", description = "6컷 프레임", subtitle = "${Constants.CAPTURE_COUNT_6_CUT}장 촬영 → ${Constants.SELECT_COUNT_6_CUT}장 선택",
+    );
 
     companion object {
         fun fromId(id: String): FrameType = when (id) {

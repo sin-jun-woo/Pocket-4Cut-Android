@@ -10,6 +10,7 @@ import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.frame.*
 import com.pocket4cut.presentation.navigation.FrameType
+import com.pocket4cut.presentation.settings.AppSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +26,7 @@ data class EditUiState(
     val errorMessage: String? = null,
     val selectedFilter: FilterId = FilterId.ORIGINAL,
     val customText: String = "",
-    val showDate: Boolean = true,
+    val showDate: Boolean = AppSettings.showDateByDefault,
     val selectedFrameColor: FrameColor = FrameColors.all.first(),
     val dateString: String = "",
     val order: List<Int> = emptyList(),

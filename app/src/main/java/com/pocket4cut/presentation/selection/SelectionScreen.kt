@@ -1,5 +1,10 @@
 package com.pocket4cut.presentation.selection
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -43,6 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -59,6 +65,11 @@ import com.pocket4cut.ui.designsystem.components.IconCircleButtonSize
 import com.pocket4cut.ui.designsystem.components.PrimaryButton
 import com.pocket4cut.ui.designsystem.components.toIconDp
 
+private val SelectionToggleEasing = CubicBezierEasing(0.42f, 0f, 0.58f, 1f)
+private val SelectionToggleSpec = tween<Float>(durationMillis = 220, easing = SelectionToggleEasing)
+private val SelectionToggleDpSpec = tween<Dp>(durationMillis = 220, easing = SelectionToggleEasing)
+private val SelectionToggleColorSpec = tween<Color>(durationMillis = 220, easing = SelectionToggleEasing)
+
 @Composable
 fun SelectionScreen(
     frameType: FrameType,
@@ -68,7 +79,7 @@ fun SelectionScreen(
     modifier: Modifier = Modifier,
     viewModel: SelectionViewModel = viewModel(),
 ) {
-    LaunchedEffect(sessionId) { viewModel.load(sessionId) }
+    LaunchedEffect(sessionId, frameType) { viewModel.load(sessionId, frameType.selectCount) }
     val uiState by viewModel.uiState.collectAsState()
     val max = frameType.selectCount
     val selectedCount = uiState.selectedIndexes.size
@@ -222,28 +233,45 @@ fun SelectionScreen(
                             val isSelected = order >= 0
                             val cellShape = RoundedCornerShape(AppLayout.Radius.lg)
 
+                            val imageAlpha by animateFloatAsState(
+                                targetValue = if (isSelected) 1f else 0.5f,
+                                animationSpec = SelectionToggleSpec,
+                                label = "selectionImageAlpha",
+                            )
+                            val overlayAlpha by animateFloatAsState(
+                                targetValue = if (isSelected) 0f else 0.6f,
+                                animationSpec = SelectionToggleSpec,
+                                label = "selectionOverlayAlpha",
+                            )
+                            val borderWidth by animateDpAsState(
+                                targetValue = if (isSelected) 3.dp else 1.dp,
+                                animationSpec = SelectionToggleDpSpec,
+                                label = "selectionBorderWidth",
+                            )
+                            val borderColor by animateColorAsState(
+                                targetValue = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle,
+                                animationSpec = SelectionToggleColorSpec,
+                                label = "selectionBorderColor",
+                            )
+                            val shadowElevation by animateDpAsState(
+                                targetValue = if (isSelected) 12.dp else 0.dp,
+                                animationSpec = SelectionToggleDpSpec,
+                                label = "selectionShadow",
+                            )
+
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .aspectRatio(3f / 4f)
-                                    .then(
-                                        if (isSelected) {
-                                            Modifier
-                                                .shadow(
-                                                    elevation = 12.dp,
-                                                    shape = cellShape,
-                                                    clip = false,
-                                                    ambientColor = AppColors.Accent.pink.copy(alpha = 0.45f),
-                                                    spotColor = AppColors.Accent.pink.copy(alpha = 0.55f),
-                                                )
-                                                .clip(cellShape)
-                                                .border(3.dp, AppColors.Accent.pink, cellShape)
-                                        } else {
-                                            Modifier
-                                                .clip(cellShape)
-                                                .border(1.dp, AppColors.Border.subtle, cellShape)
-                                        },
+                                    .shadow(
+                                        elevation = shadowElevation,
+                                        shape = cellShape,
+                                        clip = false,
+                                        ambientColor = AppColors.Accent.pink.copy(alpha = 0.45f),
+                                        spotColor = AppColors.Accent.pink.copy(alpha = 0.55f),
                                     )
+                                    .clip(cellShape)
+                                    .border(borderWidth, borderColor, cellShape)
                                     .background(AppColors.Background.secondary)
                                     .clickable { viewModel.toggle(index, max) },
                             ) {
@@ -252,15 +280,13 @@ fun SelectionScreen(
                                     contentDescription = null,
                                     modifier = Modifier.fillMaxSize(),
                                     contentScale = ContentScale.Crop,
-                                    alpha = if (isSelected) 1f else 0.5f,
+                                    alpha = imageAlpha,
                                 )
-                                if (!isSelected) {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .background(Color.Black.copy(alpha = 0.6f)),
-                                    )
-                                }
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(Color.Black.copy(alpha = overlayAlpha)),
+                                )
                                 Box(
                                     modifier = Modifier
                                         .align(Alignment.TopEnd)
@@ -277,7 +303,7 @@ fun SelectionScreen(
                                             Text(
                                                 text = "${order + 1}",
                                                 style = AppTypography.caption1.copy(fontWeight = FontWeight.Bold),
-                                                color = AppColors.Text.primary,
+                                                color = Color.White,
                                             )
                                         }
                                     } else {
@@ -285,15 +311,8 @@ fun SelectionScreen(
                                             modifier = Modifier
                                                 .size(28.dp)
                                                 .clip(CircleShape)
-                                                .background(Color.White.copy(alpha = 0.2f)),
-                                            contentAlignment = Alignment.Center,
-                                        ) {
-                                            Text(
-                                                text = "${index + 1}",
-                                                style = AppTypography.caption1.copy(fontWeight = FontWeight.Bold),
-                                                color = AppColors.Text.secondary,
-                                            )
-                                        }
+                                                .border(1.5.dp, Color.White.copy(alpha = 0.35f), CircleShape),
+                                        )
                                     }
                                 }
                             }

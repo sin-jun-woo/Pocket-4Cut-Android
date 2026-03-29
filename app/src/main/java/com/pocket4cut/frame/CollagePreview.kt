@@ -49,6 +49,7 @@ fun CollagePreview(
     frameStyle: FrameStyle,
     theme: FrameTheme,
     overrideBackground: Color? = null,
+    bottomCaption: String? = null,
     modifier: Modifier = Modifier,
 ) {
     val effectiveBackground = overrideBackground ?: theme.background
@@ -86,10 +87,26 @@ fun CollagePreview(
             frameStyle = frameStyle,
             cellOverlay = cellOverlay,
             horizontalPadding = outer,
-            bottomPadding = outer,
+            bottomPadding = if (bottomCaption.isNullOrBlank()) outer else 4.dp,
             spacing = spacing,
             brandColor = brandColor,
         )
+        if (!bottomCaption.isNullOrBlank()) {
+            Text(
+                text = bottomCaption,
+                style = TextStyle(
+                    fontSize = 10.sp,
+                    color = brandColor.copy(alpha = 0.7f),
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = outer, vertical = 6.dp)
+                    .padding(bottom = outer / 2),
+            )
+        }
     }
 }
 
@@ -104,6 +121,7 @@ fun CollagePreviewScaledToFit(
     frameStyle: FrameStyle,
     theme: FrameTheme,
     overrideBackground: Color? = null,
+    bottomCaption: String? = null,
     modifier: Modifier = Modifier,
 ) {
     SubcomposeLayout(modifier = modifier) { constraints ->
@@ -124,6 +142,7 @@ fun CollagePreviewScaledToFit(
                 frameStyle = frameStyle,
                 theme = theme,
                 overrideBackground = overrideBackground,
+                bottomCaption = bottomCaption,
                 modifier = Modifier.fillMaxWidth(),
             )
         }[0].measure(innerConstraints)

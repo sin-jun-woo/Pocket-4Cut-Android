@@ -163,7 +163,7 @@ fun LayoutSelectionScreen(
                                 ambientColor = Color.Black.copy(alpha = 0.35f),
                                 spotColor = Color.Black.copy(alpha = 0.45f),
                             )
-                            .size(width = 280.dp, height = 320.dp)
+                            .size(width = 300.dp, height = 520.dp)
                             .clip(previewShape),
                     ) {
                         AnimatedContent(

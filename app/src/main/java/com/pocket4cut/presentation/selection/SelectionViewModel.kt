@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 data class SelectionUiState(
     val imagePaths: List<String> = emptyList(),
     val selectedIndexes: List<Int> = emptyList(),
+    val maxSelection: Int = 0,
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
 )
@@ -22,8 +23,15 @@ class SelectionViewModel(app: Application) : AndroidViewModel(app) {
     private val _uiState = MutableStateFlow(SelectionUiState())
     val uiState: StateFlow<SelectionUiState> = _uiState
 
-    fun load(sessionId: String) {
-        _uiState.update { it.copy(isLoading = true, errorMessage = null, selectedIndexes = emptyList()) }
+    fun load(sessionId: String, maxSelection: Int) {
+        _uiState.update {
+            it.copy(
+                isLoading = true,
+                errorMessage = null,
+                selectedIndexes = emptyList(),
+                maxSelection = maxSelection,
+            )
+        }
         viewModelScope.launch {
             runCatching {
                 storage.getCapturePaths(sessionId)
@@ -47,5 +55,16 @@ class SelectionViewModel(app: Application) : AndroidViewModel(app) {
             state.copy(selectedIndexes = current)
         }
     }
+
+    fun selectionOrder(index: Int): Int? {
+        val pos = _uiState.value.selectedIndexes.indexOf(index)
+        return if (pos >= 0) pos + 1 else null
+    }
+
+    val canComplete: Boolean
+        get() {
+            val s = _uiState.value
+            return s.maxSelection > 0 && s.selectedIndexes.size == s.maxSelection
+        }
 }
 
