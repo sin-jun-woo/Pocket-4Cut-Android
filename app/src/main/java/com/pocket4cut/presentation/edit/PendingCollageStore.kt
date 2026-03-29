@@ -9,6 +9,7 @@ import java.io.File
 data class PendingCollageParams(
     val filterId: FilterId,
     val frameColorId: String,
+    val themeId: String = "",
     val text: String,
     val showDate: Boolean,
     val order: List<Int>,
@@ -22,6 +23,7 @@ object PendingCollageStore {
         val o = JSONObject().apply {
             put("filterId", params.filterId.name)
             put("frameColorId", params.frameColorId)
+            put("themeId", params.themeId)
             put("text", params.text)
             put("showDate", params.showDate)
             put("order", JSONArray(params.order))
@@ -39,6 +41,7 @@ object PendingCollageStore {
             PendingCollageParams(
                 filterId = runCatching { FilterId.valueOf(o.getString("filterId")) }.getOrElse { FilterId.ORIGINAL },
                 frameColorId = o.optString("frameColorId", "white"),
+                themeId = o.optString("themeId", ""),
                 text = o.optString("text", ""),
                 showDate = o.optBoolean("showDate", false),
                 order = order,

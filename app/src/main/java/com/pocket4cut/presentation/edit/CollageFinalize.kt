@@ -31,19 +31,22 @@ object CollageFinalize {
         val picked = selectedIndexes.mapNotNull { idx -> allPaths.getOrNull(idx) }
         val style = FrameLayouts.byId(frameLayoutId)
         val frameColor = FrameColors.byId(params.frameColorId)
+        val theme = FrameCatalog.themes(frameType).firstOrNull { it.id == params.themeId }
+            ?: FrameCatalog.themes(frameType).first()
         val orderedPaths = params.order.mapNotNull { i -> picked.getOrNull(i) }
         val targetWidth = if (frameLayoutId == FrameLayoutId.FOUR_VERTICAL) 1650 else 1920
         val bitmaps = orderedPaths.mapNotNull { BitmapDecoding.decodeSampled(it, reqSize = targetWidth) }
-        val dateText = if (params.showDate) todayString() else null
+        val dateString = if (params.showDate) todayString() else null
         val result = try {
             CollageRenderer.render(
+                images = bitmaps,
                 frameStyle = style,
-                backgroundColor = frameColor.color,
-                bitmaps = bitmaps,
+                theme = theme,
+                overrideBackground = frameColor.color,
                 filterId = params.filterId,
                 text = params.text.takeIf { it.isNotBlank() },
-                dateText = dateText,
-                targetWidth = targetWidth,
+                dateString = dateString,
+                outputWidth = targetWidth,
             )
         } finally {
             bitmaps.forEach { it.recycle() }
@@ -57,7 +60,7 @@ object CollageFinalize {
                     selectedCount = frameType.selectCount,
                     imagePaths = picked,
                     selectedIndexes = selectedIndexes,
-                    frameId = frameLayoutId.name,
+                    frameId = theme.id,
                     finalImagePath = path,
                     createdAt = System.currentTimeMillis(),
                 ),

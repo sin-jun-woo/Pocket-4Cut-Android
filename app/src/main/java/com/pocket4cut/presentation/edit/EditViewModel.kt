@@ -2,6 +2,8 @@ package com.pocket4cut.presentation.edit
 
 import android.app.Application
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.pocket4cut.core.util.BitmapDecoding
@@ -21,14 +23,16 @@ import java.util.Locale
 data class EditUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
-    val imagePaths: List<String> = emptyList(),
-    val order: List<Int> = emptyList(),
     val selectedFilter: FilterId = FilterId.ORIGINAL,
+    val customText: String = "",
+    val showDate: Boolean = true,
     val selectedFrameColor: FrameColor = FrameColors.all.first(),
-    val text: String = "",
-    val showDate: Boolean = false,
     val dateString: String = "",
-    val preview: Bitmap? = null,
+    val order: List<Int> = emptyList(),
+    val selectedSwapIndex: Int? = null,
+    val orderedImages: List<Bitmap> = emptyList(),
+    val filteredPreviewImages: List<Bitmap> = emptyList(),
+    val filterChipThumbnails: Map<FilterId, Bitmap> = emptyMap(),
 )
 
 class EditViewModel(app: Application) : AndroidViewModel(app) {
@@ -37,6 +41,8 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     private val _uiState = MutableStateFlow(EditUiState())
     val uiState: StateFlow<EditUiState> = _uiState
 
+    private var originalImages: List<Bitmap> = emptyList()
+    private var lastSessionId: String = ""
     private var lastFrameType: FrameType? = null
     private var lastFrameLayoutId: FrameLayoutId? = null
     private var lastSelectedIndexes: List<Int> = emptyList()
@@ -47,42 +53,73 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         selectedIndexes: List<Int>,
         frameLayoutId: FrameLayoutId,
     ) {
+        if (lastSessionId == sessionId && originalImages.isNotEmpty()) return
         lastFrameType = frameType
         lastFrameLayoutId = frameLayoutId
         lastSelectedIndexes = selectedIndexes
+        lastSessionId = sessionId
+
         val date = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date())
-        _uiState.update { it.copy(isLoading = true, errorMessage = null, preview = null, dateString = date) }
+        _uiState.update { it.copy(isLoading = true, errorMessage = null, dateString = date) }
+
         viewModelScope.launch {
-            runCatching { storage.getCapturePaths(sessionId) }
-                .onSuccess { allPaths ->
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    val allPaths = storage.getCapturePaths(sessionId)
                     val picked = selectedIndexes.mapNotNull { idx -> allPaths.getOrNull(idx) }
-                    _uiState.update { it.copy(isLoading = false, imagePaths = picked, order = picked.indices.toList()) }
-                    renderPreview()
+                    picked.mapNotNull { BitmapDecoding.decodeSampled(it, reqSize = 720) }
                 }
-                .onFailure { t ->
-                    _uiState.update { it.copy(isLoading = false, errorMessage = t.message) }
+            }.onSuccess { bitmaps ->
+                originalImages = bitmaps
+                val order = bitmaps.indices.toList()
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        order = order,
+                        orderedImages = bitmaps,
+                        filteredPreviewImages = bitmaps,
+                    )
                 }
+                buildFilterChipThumbnails()
+            }.onFailure { t ->
+                _uiState.update { it.copy(isLoading = false, errorMessage = t.message) }
+            }
         }
     }
 
     fun setFilter(filter: FilterId) {
+        if (_uiState.value.selectedFilter == filter) return
         _uiState.update { it.copy(selectedFilter = filter) }
-        renderPreview()
+        rebuildFilteredImages()
     }
 
     fun setFrameColor(color: FrameColor) {
         _uiState.update { it.copy(selectedFrameColor = color) }
-        renderPreview()
     }
 
     fun setText(text: String) {
-        _uiState.update { it.copy(text = text) }
-        renderPreview()
+        _uiState.update { it.copy(customText = text) }
     }
 
     fun toggleDate() {
         _uiState.update { it.copy(showDate = !it.showDate) }
-        renderPreview()
+    }
+
+    fun tapOrderCell(index: Int) {
+        val state = _uiState.value
+        val current = state.selectedSwapIndex
+        when {
+            current == null -> _uiState.update { it.copy(selectedSwapIndex = index) }
+            current == index -> _uiState.update { it.copy(selectedSwapIndex = null) }
+            else -> {
+                val newOrder = state.order.toMutableList()
+                val temp = newOrder[current]
+                newOrder[current] = newOrder[index]
+                newOrder[index] = temp
+                _uiState.update { it.copy(order = newOrder, selectedSwapIndex = null) }
+                rebuildOrderedAndFilteredImages()
+            }
+        }
     }
 
     fun persistPendingForDetailEdit(sessionId: String) {
@@ -92,41 +129,11 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
             PendingCollageParams(
                 filterId = s.selectedFilter,
                 frameColorId = s.selectedFrameColor.id,
-                text = s.text,
+                text = s.customText,
                 showDate = s.showDate,
                 order = s.order,
             ),
         )
-    }
-
-    private fun renderPreview() {
-        val s = _uiState.value
-        val layoutId = lastFrameLayoutId ?: return
-        if (s.imagePaths.isEmpty()) return
-        _uiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch {
-            runCatching {
-                withContext(Dispatchers.IO) {
-                    val orderedPaths = s.order.mapNotNull { idx -> s.imagePaths.getOrNull(idx) }
-                    val bitmaps = orderedPaths.mapNotNull { BitmapDecoding.decodeSampled(it, reqSize = 720) }
-                    val dateText = if (s.showDate) s.dateString else null
-                    val style = FrameLayouts.byId(layoutId)
-                    CollageRenderer.render(
-                        frameStyle = style,
-                        backgroundColor = s.selectedFrameColor.color,
-                        bitmaps = bitmaps,
-                        filterId = s.selectedFilter,
-                        text = s.text.takeIf { it.isNotBlank() },
-                        dateText = dateText,
-                        targetWidth = 720,
-                    )
-                }
-            }.onSuccess { bmp ->
-                _uiState.update { it.copy(isLoading = false, preview = bmp) }
-            }.onFailure { t ->
-                _uiState.update { it.copy(isLoading = false, errorMessage = t.message) }
-            }
-        }
     }
 
     suspend fun renderFinalAndSave(sessionId: String): String {
@@ -134,7 +141,7 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         val params = PendingCollageParams(
             filterId = s.selectedFilter,
             frameColorId = s.selectedFrameColor.id,
-            text = s.text,
+            text = s.customText,
             showDate = s.showDate,
             order = s.order,
         )
@@ -145,5 +152,67 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
             lastSelectedIndexes,
             params,
         )
+    }
+
+    private fun buildFilterChipThumbnails() {
+        val first = originalImages.firstOrNull() ?: return
+        viewModelScope.launch {
+            val thumbs = withContext(Dispatchers.Default) {
+                val smallThumb = scaleBitmap(first, 128)
+                FilterId.entries.associateWith { filterId ->
+                    applyFilterToBitmap(smallThumb, filterId)
+                }
+            }
+            _uiState.update { it.copy(filterChipThumbnails = thumbs) }
+        }
+    }
+
+    private fun rebuildOrderedAndFilteredImages() {
+        val order = _uiState.value.order
+        val ordered = order.mapNotNull { originalImages.getOrNull(it) }
+        val filter = _uiState.value.selectedFilter
+        val filtered = if (filter == FilterId.ORIGINAL) ordered
+        else ordered.map { applyFilterToBitmap(it, filter) }
+        _uiState.update { it.copy(orderedImages = ordered, filteredPreviewImages = filtered) }
+    }
+
+    private fun rebuildFilteredImages() {
+        val ordered = _uiState.value.orderedImages
+        if (ordered.isEmpty()) return
+        viewModelScope.launch {
+            val filter = _uiState.value.selectedFilter
+            val filtered = withContext(Dispatchers.Default) {
+                if (filter == FilterId.ORIGINAL) ordered
+                else ordered.map { applyFilterToBitmap(it, filter) }
+            }
+            _uiState.update { it.copy(filteredPreviewImages = filtered) }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        originalImages.forEach { runCatching { it.recycle() } }
+    }
+
+    companion object {
+        fun applyFilterToBitmap(source: Bitmap, filterId: FilterId): Bitmap {
+            if (filterId == FilterId.ORIGINAL) return source
+            val cf = FilterDefs.colorFilter(filterId) ?: return source
+            val result = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(result)
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
+                colorFilter = cf
+            }
+            canvas.drawBitmap(source, 0f, 0f, paint)
+            return result
+        }
+
+        private fun scaleBitmap(source: Bitmap, maxDim: Int): Bitmap {
+            val scale = maxDim.toFloat() / maxOf(source.width, source.height)
+            if (scale >= 1f) return source
+            val w = (source.width * scale).toInt().coerceAtLeast(1)
+            val h = (source.height * scale).toInt().coerceAtLeast(1)
+            return Bitmap.createScaledBitmap(source, w, h, true)
+        }
     }
 }
