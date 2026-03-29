@@ -6,10 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.data.storage.FileImageStorage
-import com.pocket4cut.frame.CollageRenderer
-import com.pocket4cut.frame.FrameDefinitions
-import com.pocket4cut.frame.FrameTheme
-import com.pocket4cut.frame.RenderFilter
+import com.pocket4cut.frame.*
 import com.pocket4cut.presentation.navigation.FrameType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,9 +23,11 @@ data class EditUiState(
     val errorMessage: String? = null,
     val imagePaths: List<String> = emptyList(),
     val order: List<Int> = emptyList(),
-    val filter: RenderFilter = RenderFilter.SOFT,
+    val selectedFilter: FilterId = FilterId.ORIGINAL,
+    val selectedFrameColor: FrameColor = FrameColors.all.first(),
     val text: String = "",
-    val showDate: Boolean = true,
+    val showDate: Boolean = false,
+    val dateString: String = "",
     val preview: Bitmap? = null,
 )
 
@@ -39,107 +38,60 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     val uiState: StateFlow<EditUiState> = _uiState
 
     private var lastFrameType: FrameType? = null
-    private var lastTheme: FrameTheme? = null
+    private var lastFrameLayoutId: FrameLayoutId? = null
     private var lastSelectedIndexes: List<Int> = emptyList()
+
     fun init(
         frameType: FrameType,
         sessionId: String,
         selectedIndexes: List<Int>,
-        themeId: String,
+        frameLayoutId: FrameLayoutId,
     ) {
         lastFrameType = frameType
-        lastTheme = FrameDefinitions.byId(themeId)
+        lastFrameLayoutId = frameLayoutId
         lastSelectedIndexes = selectedIndexes
-        _uiState.update { it.copy(isLoading = true, errorMessage = null, preview = null) }
+        val date = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date())
+        _uiState.update { it.copy(isLoading = true, errorMessage = null, preview = null, dateString = date) }
         viewModelScope.launch {
             runCatching { storage.getCapturePaths(sessionId) }
                 .onSuccess { allPaths ->
                     val picked = selectedIndexes.mapNotNull { idx -> allPaths.getOrNull(idx) }
-                    val order = picked.indices.toList()
-                    _uiState.update { it.copy(isLoading = false, imagePaths = picked, order = order) }
-                    renderPreview(frameType = frameType, themeId = themeId)
+                    _uiState.update { it.copy(isLoading = false, imagePaths = picked, order = picked.indices.toList()) }
+                    renderPreview()
                 }
                 .onFailure { t ->
-                    _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "불러오기에 실패했습니다.") }
+                    _uiState.update { it.copy(isLoading = false, errorMessage = t.message) }
                 }
         }
     }
 
-    fun setFilter(filter: RenderFilter, frameType: FrameType, themeId: String) {
-        _uiState.update { it.copy(filter = filter) }
-        renderPreview(frameType = frameType, themeId = themeId)
+    fun setFilter(filter: FilterId) {
+        _uiState.update { it.copy(selectedFilter = filter) }
+        renderPreview()
     }
 
-    fun setText(text: String, frameType: FrameType, themeId: String) {
+    fun setFrameColor(color: FrameColor) {
+        _uiState.update { it.copy(selectedFrameColor = color) }
+        renderPreview()
+    }
+
+    fun setText(text: String) {
         _uiState.update { it.copy(text = text) }
-        renderPreview(frameType = frameType, themeId = themeId)
+        renderPreview()
     }
 
-    fun toggleDate(frameType: FrameType, themeId: String) {
+    fun toggleDate() {
         _uiState.update { it.copy(showDate = !it.showDate) }
-        renderPreview(frameType = frameType, themeId = themeId)
+        renderPreview()
     }
-
-    fun swap(left: Int, right: Int, frameType: FrameType, themeId: String) {
-        _uiState.update { state ->
-            val mutable = state.order.toMutableList()
-            val li = mutable.indexOf(left)
-            val ri = mutable.indexOf(right)
-            if (li >= 0 && ri >= 0) {
-                val tmp = mutable[li]
-                mutable[li] = mutable[ri]
-                mutable[ri] = tmp
-            }
-            state.copy(order = mutable)
-        }
-        renderPreview(frameType = frameType, themeId = themeId)
-    }
-
-    private fun renderPreview(frameType: FrameType, themeId: String) {
-        val snapshot = _uiState.value
-        val theme = FrameDefinitions.byId(themeId)
-        if (theme == null) return
-        lastFrameType = frameType
-        lastTheme = theme
-        if (snapshot.imagePaths.isEmpty()) return
-
-        _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-        viewModelScope.launch {
-            runCatching {
-                withContext(Dispatchers.IO) {
-                    val orderedPaths = snapshot.order.mapNotNull { idx -> snapshot.imagePaths.getOrNull(idx) }
-                    val bitmaps = orderedPaths.mapNotNull { path ->
-                        BitmapDecoding.decodeSampled(path, reqSize = 720)
-                    }
-                    val dateText = if (snapshot.showDate) todayString() else null
-                    CollageRenderer.render(
-                        frameType = frameType,
-                        theme = theme,
-                        bitmaps = bitmaps,
-                        filter = snapshot.filter,
-                        text = snapshot.text.takeIf { it.isNotBlank() },
-                        dateText = dateText,
-                        targetWidth = 720,
-                    )
-                }
-            }.onSuccess { bmp ->
-                _uiState.update { it.copy(isLoading = false, preview = bmp) }
-            }.onFailure { t ->
-                _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "렌더링에 실패했습니다.") }
-            }
-        }
-    }
-
-    private fun todayString(): String =
-        SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date())
 
     fun persistPendingForDetailEdit(sessionId: String) {
         val s = _uiState.value
         PendingCollageStore.write(
-            getApplication(),
-            sessionId,
+            getApplication(), sessionId,
             PendingCollageParams(
-                filter = s.filter,
+                filterId = s.selectedFilter,
+                frameColorId = s.selectedFrameColor.id,
                 text = s.text,
                 showDate = s.showDate,
                 order = s.order,
@@ -147,22 +99,51 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         )
     }
 
+    private fun renderPreview() {
+        val s = _uiState.value
+        val layoutId = lastFrameLayoutId ?: return
+        if (s.imagePaths.isEmpty()) return
+        _uiState.update { it.copy(isLoading = true) }
+        viewModelScope.launch {
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    val orderedPaths = s.order.mapNotNull { idx -> s.imagePaths.getOrNull(idx) }
+                    val bitmaps = orderedPaths.mapNotNull { BitmapDecoding.decodeSampled(it, reqSize = 720) }
+                    val dateText = if (s.showDate) s.dateString else null
+                    val style = FrameLayouts.byId(layoutId)
+                    CollageRenderer.render(
+                        frameStyle = style,
+                        backgroundColor = s.selectedFrameColor.color,
+                        bitmaps = bitmaps,
+                        filterId = s.selectedFilter,
+                        text = s.text.takeIf { it.isNotBlank() },
+                        dateText = dateText,
+                        targetWidth = 720,
+                    )
+                }
+            }.onSuccess { bmp ->
+                _uiState.update { it.copy(isLoading = false, preview = bmp) }
+            }.onFailure { t ->
+                _uiState.update { it.copy(isLoading = false, errorMessage = t.message) }
+            }
+        }
+    }
+
     suspend fun renderFinalAndSave(sessionId: String): String {
         val s = _uiState.value
         val params = PendingCollageParams(
-            filter = s.filter,
+            filterId = s.selectedFilter,
+            frameColorId = s.selectedFrameColor.id,
             text = s.text,
             showDate = s.showDate,
             order = s.order,
         )
         return CollageFinalize.finalize(
-            getApplication(),
-            sessionId,
+            getApplication(), sessionId,
             lastFrameType ?: error("frameType missing"),
-            lastTheme?.id ?: error("theme missing"),
+            lastFrameLayoutId ?: error("layoutId missing"),
             lastSelectedIndexes,
             params,
         )
     }
 }
-

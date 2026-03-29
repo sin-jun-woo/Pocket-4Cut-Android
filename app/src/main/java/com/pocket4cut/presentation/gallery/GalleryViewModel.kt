@@ -6,17 +6,19 @@ import androidx.lifecycle.viewModelScope
 import com.pocket4cut.data.local.SessionRepository
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.domain.model.PhotoSession
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 data class GalleryItem(
     val sessionId: String,
     val resultPath: String,
     val createdAt: Long,
+    val dateLabel: String,
 )
 
 data class GalleryUiState(
@@ -54,10 +56,12 @@ class GalleryViewModel(app: Application) : AndroidViewModel(app) {
     }
 }
 
+private val dateLabelFormat = SimpleDateFormat("M월 d일", Locale.KOREA)
+
 private fun PhotoSession.toItem(): GalleryItem =
     GalleryItem(
         sessionId = id,
         resultPath = finalImagePath.orEmpty(),
         createdAt = createdAt,
+        dateLabel = dateLabelFormat.format(Date(createdAt)),
     )
-

@@ -1,13 +1,14 @@
 package com.pocket4cut.presentation.edit
 
 import android.content.Context
-import com.pocket4cut.frame.RenderFilter
+import com.pocket4cut.frame.FilterId
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 
 data class PendingCollageParams(
-    val filter: RenderFilter,
+    val filterId: FilterId,
+    val frameColorId: String,
     val text: String,
     val showDate: Boolean,
     val order: List<Int>,
@@ -19,7 +20,8 @@ object PendingCollageStore {
 
     fun write(ctx: Context, sessionId: String, params: PendingCollageParams) {
         val o = JSONObject().apply {
-            put("filter", params.filter.name)
+            put("filterId", params.filterId.name)
+            put("frameColorId", params.frameColorId)
             put("text", params.text)
             put("showDate", params.showDate)
             put("order", JSONArray(params.order))
@@ -33,23 +35,16 @@ object PendingCollageStore {
         return runCatching {
             val o = JSONObject(f.readText())
             val orderJson = o.getJSONArray("order")
-            val order = buildList {
-                for (i in 0 until orderJson.length()) {
-                    add(orderJson.getInt(i))
-                }
-            }
-            val filterName = o.getString("filter")
-            val filter = runCatching { RenderFilter.valueOf(filterName) }.getOrElse { RenderFilter.SOFT }
+            val order = buildList { for (i in 0 until orderJson.length()) add(orderJson.getInt(i)) }
             PendingCollageParams(
-                filter = filter,
+                filterId = runCatching { FilterId.valueOf(o.getString("filterId")) }.getOrElse { FilterId.ORIGINAL },
+                frameColorId = o.optString("frameColorId", "white"),
                 text = o.optString("text", ""),
-                showDate = o.optBoolean("showDate", true),
+                showDate = o.optBoolean("showDate", false),
                 order = order,
             )
         }.getOrNull()
     }
 
-    fun delete(ctx: Context, sessionId: String) {
-        file(ctx, sessionId).delete()
-    }
+    fun delete(ctx: Context, sessionId: String) { file(ctx, sessionId).delete() }
 }

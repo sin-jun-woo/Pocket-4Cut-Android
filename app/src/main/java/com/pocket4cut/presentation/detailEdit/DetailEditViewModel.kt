@@ -7,14 +7,15 @@ import androidx.lifecycle.viewModelScope
 import com.pocket4cut.core.util.BitmapAdjustments
 import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.data.storage.FileImageStorage
+import com.pocket4cut.frame.FrameLayoutId
 import com.pocket4cut.presentation.edit.CollageFinalize
 import com.pocket4cut.presentation.edit.PendingCollageStore
 import com.pocket4cut.presentation.navigation.FrameType
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,7 +25,10 @@ data class SlotAdjust(
     val contrast: Float = 1f,
     val saturation: Float = 1f,
     val rotationQuarters: Int = 0,
-)
+) {
+    val isDefault: Boolean
+        get() = brightness == 0f && contrast == 1f && saturation == 1f && rotationQuarters == 0
+}
 
 data class DetailEditUiState(
     val isLoading: Boolean = false,
@@ -34,6 +38,7 @@ data class DetailEditUiState(
     val selectedSlot: Int = 0,
     val slotAdjusts: List<SlotAdjust> = emptyList(),
     val preview: Bitmap? = null,
+    val hasChanges: Boolean = false,
 )
 
 class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
@@ -43,7 +48,7 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
     val uiState: StateFlow<DetailEditUiState> = _uiState
 
     private var lastFrameType: FrameType? = null
-    private var lastThemeId: String? = null
+    private var lastLayoutId: FrameLayoutId? = null
     private var lastSelectedIndexes: List<Int> = emptyList()
     private var previewJob: Job? = null
 
@@ -51,10 +56,10 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
         frameType: FrameType,
         sessionId: String,
         selectedIndexes: List<Int>,
-        themeId: String,
+        layoutId: String,
     ) {
         lastFrameType = frameType
-        lastThemeId = themeId
+        lastLayoutId = runCatching { FrameLayoutId.valueOf(layoutId) }.getOrNull()
         lastSelectedIndexes = selectedIndexes
         _uiState.value = DetailEditUiState(isLoading = true, errorMessage = null)
         viewModelScope.launch {
@@ -82,6 +87,7 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
                             orderedPaths = ordered,
                             selectedSlot = 0,
                             slotAdjusts = adjusts,
+                            hasChanges = false,
                             errorMessage = null,
                         )
                     }
@@ -101,7 +107,16 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
     fun selectSlot(index: Int) {
         val paths = _uiState.value.orderedPaths
         if (index !in paths.indices) return
-        _uiState.update { it.copy(selectedSlot = index) }
+        _uiState.update { it.copy(selectedSlot = index, hasChanges = computeHasChanges(it.slotAdjusts, index)) }
+        renderSelectedPreview()
+    }
+
+    fun resetCurrent() {
+        val s = _uiState.value
+        val idx = s.selectedSlot
+        if (idx !in s.slotAdjusts.indices) return
+        val next = s.slotAdjusts.toMutableList().also { it[idx] = SlotAdjust() }
+        _uiState.update { it.copy(slotAdjusts = next, hasChanges = false) }
         renderSelectedPreview()
     }
 
@@ -113,12 +128,17 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
         it.copy(rotationQuarters = (it.rotationQuarters + 1) % 4)
     }
 
+    private fun computeHasChanges(adjusts: List<SlotAdjust>, slotIndex: Int): Boolean {
+        val adj = adjusts.getOrNull(slotIndex) ?: return false
+        return !adj.isDefault
+    }
+
     private inline fun updateCurrentSlot(transform: (SlotAdjust) -> SlotAdjust) {
         val s = _uiState.value
         val idx = s.selectedSlot
         if (idx !in s.slotAdjusts.indices) return
         val next = s.slotAdjusts.toMutableList().also { it[idx] = transform(it[idx]) }
-        _uiState.update { it.copy(slotAdjusts = next) }
+        _uiState.update { it.copy(slotAdjusts = next, hasChanges = computeHasChanges(next, idx)) }
         renderSelectedPreview()
     }
 
@@ -171,7 +191,7 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
 
     suspend fun applyAndFinish(sessionId: String): String {
         val frameType = lastFrameType ?: error("frameType 없음")
-        val themeId = lastThemeId ?: error("theme 없음")
+        val layoutId = lastLayoutId ?: error("layoutId 없음")
         val pending = PendingCollageStore.read(getApplication(), sessionId)
             ?: error("편집 정보 없음")
         val paths = _uiState.value.orderedPaths
@@ -208,7 +228,7 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
             getApplication(),
             sessionId,
             frameType,
-            themeId,
+            layoutId,
             lastSelectedIndexes,
             pending,
         )

@@ -1,38 +1,32 @@
 package com.pocket4cut.presentation.detailEdit
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.pocket4cut.presentation.navigation.FrameType
+import com.pocket4cut.ui.designsystem.*
+import com.pocket4cut.ui.designsystem.components.*
 import kotlinx.coroutines.launch
 
 @Composable
@@ -40,37 +34,150 @@ fun DetailEditScreen(
     frameType: FrameType,
     sessionId: String,
     selectedIndexes: List<Int>,
-    themeId: String,
+    layoutId: String,
     onBack: () -> Unit,
     onCompleted: (resultPath: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DetailEditViewModel = viewModel(),
 ) {
-    LaunchedEffect(frameType, sessionId, selectedIndexes, themeId) {
-        viewModel.init(frameType, sessionId, selectedIndexes, themeId)
+    LaunchedEffect(frameType, sessionId, selectedIndexes, layoutId) {
+        viewModel.init(frameType, sessionId, selectedIndexes, layoutId)
     }
-
     val uiState by viewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
     var isSaving by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+    Box(modifier = modifier.fillMaxSize().background(AppColors.Background.primary)) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            // Header
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = AppSpacing.xxxl, start = AppSpacing.Screen.horizontal, end = AppSpacing.Screen.horizontal, bottom = AppSpacing.md),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
+                    Icon(Icons.Default.Close, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
+                }
+                Text("상세 편집", style = AppTypography.title2, color = AppColors.Text.primary)
+                IconCircleButton(
+                    onClick = { viewModel.resetCurrent() },
+                    variant = IconButtonVariant.SOLID,
+                    enabled = uiState.hasChanges,
+                ) {
+                    Icon(Icons.Default.Refresh, null, tint = AppColors.Text.secondary, modifier = Modifier.size(20.dp))
+                }
+            }
+
+            // Large preview
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(horizontal = AppSpacing.lg),
+                contentAlignment = Alignment.Center,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .widthIn(max = 360.dp)
+                        .aspectRatio(3f / 4f)
+                        .clip(RoundedCornerShape(AppLayout.Radius.xl))
+                        .background(AppColors.Background.secondary),
+                ) {
+                    if (uiState.preview != null) {
+                        androidx.compose.foundation.Image(
+                            bitmap = uiState.preview!!.asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Fit,
+                        )
+                    } else if (uiState.isLoading) {
+                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            androidx.compose.material3.CircularProgressIndicator(color = AppColors.Accent.pink)
+                        }
+                    }
+                }
+            }
+
+            // Thumbnail selector
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(AppColors.Background.secondary)
+                    .padding(vertical = AppSpacing.md, horizontal = AppSpacing.Screen.horizontal)
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+            ) {
+                uiState.orderedPaths.forEachIndexed { i, path ->
+                    val isSelected = uiState.selectedSlot == i
+                    val adj = uiState.slotAdjusts.getOrNull(i)
+                    val hasEdits = adj != null && (adj.brightness != 0f || adj.contrast != 1f || adj.saturation != 1f || adj.rotationQuarters != 0)
+                    Box(
+                        modifier = Modifier
+                            .width(72.dp)
+                            .height(96.dp)
+                            .clip(RoundedCornerShape(AppLayout.Radius.md))
+                            .border(3.dp, if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md))
+                            .clickable { viewModel.selectSlot(i) },
+                    ) {
+                        AsyncImage(model = path, contentDescription = null, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
+                        if (hasEdits) {
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(AppSpacing.xxs)
+                                    .size(20.dp)
+                                    .clip(CircleShape)
+                                    .background(AppColors.Accent.pink),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Icon(Icons.Default.Check, null, tint = AppColors.Text.primary, modifier = Modifier.size(12.dp))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Bottom controls
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .background(AppColors.Background.primary)
+                .padding(horizontal = AppSpacing.Screen.horizontal)
+                .padding(bottom = AppSpacing.Layout.ctaBottomSpace),
         ) {
-            OutlinedButton(onClick = onBack) { Text("뒤로") }
-            Text("상세 편집", style = MaterialTheme.typography.titleLarge)
-            Button(
+            // Rotate
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(AppLayout.Radius.md))
+                    .background(AppColors.Background.tertiary)
+                    .border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md))
+                    .clickable { viewModel.rotateQuarter() }
+                    .padding(AppSpacing.md),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(Icons.Default.Refresh, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
+                Spacer(Modifier.width(AppSpacing.sm))
+                Text("90° 회전", style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold), color = AppColors.Text.primary)
+            }
+            Spacer(Modifier.height(AppSpacing.lg))
+
+            val adj = uiState.slotAdjusts.getOrNull(uiState.selectedSlot)
+            if (adj != null) {
+                SliderRow("밝기", adj.brightness, -0.5f..0.5f) { viewModel.setBrightness(it) }
+                SliderRow("대비", adj.contrast - 1f, -0.5f..0.5f) { viewModel.setContrast(it + 1f) }
+                SliderRow("채도", adj.saturation - 1f, -1f..1f) { viewModel.setSaturation(it + 1f) }
+            }
+
+            PrimaryButton(
+                text = if (isSaving) "생성 중..." else "적용",
                 onClick = {
-                    if (isSaving) return@Button
+                    if (isSaving) return@PrimaryButton
                     isSaving = true
                     scope.launch {
                         runCatching { viewModel.applyAndFinish(sessionId) }
@@ -78,83 +185,36 @@ fun DetailEditScreen(
                         isSaving = false
                     }
                 },
-                enabled = !isSaving &&
-                    uiState.errorMessage == null &&
-                    uiState.orderedPaths.isNotEmpty() &&
-                    !uiState.isLoading,
-            ) {
-                Text(if (isSaving) "생성 중" else "완료")
-            }
-        }
-
-        if (uiState.orderedPaths.isNotEmpty()) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                uiState.orderedPaths.indices.forEach { i ->
-                    val label = "${i + 1}"
-                    TextButton(
-                        onClick = { viewModel.selectSlot(i) },
-                    ) {
-                        val prefix = if (i == uiState.selectedSlot) "▶ " else ""
-                        Text("$prefix$label")
-                    }
-                }
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(9f / 16f),
-            contentAlignment = Alignment.Center,
-        ) {
-            when {
-                uiState.isLoading && uiState.preview == null -> CircularProgressIndicator()
-                uiState.preview != null -> {
-                    androidx.compose.foundation.Image(
-                        bitmap = uiState.preview!!.asImageBitmap(),
-                        contentDescription = "preview",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Fit,
-                    )
-                }
-                uiState.errorMessage != null -> Text(uiState.errorMessage ?: "")
-            }
-        }
-
-        val adj = uiState.slotAdjusts.getOrNull(uiState.selectedSlot)
-        if (adj != null && uiState.orderedPaths.isNotEmpty()) {
-            Text("밝기", style = MaterialTheme.typography.titleSmall)
-            Slider(
-                value = adj.brightness,
-                onValueChange = { viewModel.setBrightness(it) },
-                valueRange = -0.35f..0.35f,
-                modifier = Modifier.fillMaxWidth(),
+                enabled = !isSaving,
+                fullWidth = true,
             )
-
-            Text("대비", style = MaterialTheme.typography.titleSmall)
-            Slider(
-                value = adj.contrast,
-                onValueChange = { viewModel.setContrast(it) },
-                valueRange = 0.7f..1.5f,
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            Text("채도", style = MaterialTheme.typography.titleSmall)
-            Slider(
-                value = adj.saturation,
-                onValueChange = { viewModel.setSaturation(it) },
-                valueRange = 0f..2f,
-                modifier = Modifier.fillMaxWidth(),
-            )
-
-            TextButton(onClick = { viewModel.rotateQuarter() }) {
-                Text("90° 회전")
-            }
         }
+    }
+}
+
+@Composable
+private fun SliderRow(label: String, value: Float, range: ClosedFloatingPointRange<Float>, onValueChange: (Float) -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(bottom = AppSpacing.sm),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(label, style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold), color = AppColors.Text.secondary, modifier = Modifier.width(40.dp))
+        Slider(
+            value = value,
+            onValueChange = onValueChange,
+            valueRange = range,
+            modifier = Modifier.weight(1f),
+            colors = SliderDefaults.colors(
+                thumbColor = AppColors.Accent.pink,
+                activeTrackColor = AppColors.Accent.pink,
+                inactiveTrackColor = AppColors.Background.secondary,
+            ),
+        )
+        Text(
+            "${(value * 100).toInt()}%",
+            style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
+            color = AppColors.Accent.pink,
+            modifier = Modifier.width(50.dp),
+        )
     }
 }
