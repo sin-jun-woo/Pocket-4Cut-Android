@@ -26,8 +26,8 @@ object CollageLayoutMath {
 
     private const val CLASSIC_W = COLLAGE_CLASSIC_WIDTH_PX
     private const val CLASSIC_H = 4920f
-    private const val HEADER_PT = 90f
-    private const val TEXT_BAND_PT = 80f
+    private const val HEADER_PT = 45f
+    private const val TEXT_BAND_PT = 40f
 
     fun compute(
         frameStyle: FrameStyle,
