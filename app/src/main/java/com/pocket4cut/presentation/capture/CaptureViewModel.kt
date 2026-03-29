@@ -7,11 +7,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.pocket4cut.camera.CaptureEngine
+import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.core.util.Constants
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.presentation.settings.AppSettings
 import com.pocket4cut.presentation.navigation.FrameType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -87,10 +90,10 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun switchCamera() {
-        if (captureJob?.isActive == true) return
         val lifecycleOwner = boundLifecycleOwner ?: return
         val previewView = boundPreviewView ?: return
         val previous = _uiState.value.isFrontCamera
+        val phaseBefore = _uiState.value.phase
         _uiState.update { it.copy(isFrontCamera = !previous) }
         viewModelScope.launch {
             runCatching {
@@ -101,14 +104,16 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
                 }
                 engine.bind(lifecycleOwner, previewView, lensFacing)
                 val range = engine.zoomRatioRange() ?: (1f to 1f)
-                val z = engine.currentZoomRatio()?.coerceIn(range.first, range.second) ?: range.first
+                val resetZoom = range.first
+                engine.setZoomRatio(resetZoom)
+                val applied = engine.currentZoomRatio()?.coerceIn(range.first, range.second) ?: resetZoom
                 _uiState.update {
                     it.copy(
-                        phase = CapturePhase.READY,
+                        phase = phaseBefore,
                         errorMessage = null,
                         minZoom = range.first,
                         maxZoom = range.second,
-                        zoomRatio = z,
+                        zoomRatio = applied,
                     )
                 }
             }.onFailure { t ->
@@ -190,6 +195,13 @@ class CaptureViewModel(app: Application) : AndroidViewModel(app) {
                     _uiState.update { it.copy(phase = CapturePhase.CAPTURING, currentShot = i, flash = true) }
                     val file = storage.createCaptureFile(sessionId, i)
                     engine.takePictureToFile(file)
+                    withContext(Dispatchers.IO) {
+                        BitmapDecoding.rewriteJpegMaxLongEdge(
+                            file.absolutePath,
+                            Constants.CAPTURE_LONG_EDGE_MAX,
+                            Constants.CAPTURE_JPEG_QUALITY,
+                        )
+                    }
                     delay(300)
                     _uiState.update { it.copy(flash = false) }
 

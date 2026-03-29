@@ -19,5 +19,10 @@ object Constants {
     // 결과 이미지 품질
     const val RESULT_IMAGE_QUALITY = 95
     const val RESULT_IMAGE_MAX_WIDTH = 1920
+
+    /** 촬영 세션 단일 컷 저장 후 long edge 상한 (iOS downscaleForSession 대응) */
+    const val CAPTURE_LONG_EDGE_MAX = 2048
+
+    const val CAPTURE_JPEG_QUALITY = 92
 }
 

@@ -33,8 +33,8 @@ object FrameCatalog {
                 border = Color(0x26000000),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 80f,
-                cellSpacing = 60f,
+                outerPadding = 56f,
+                cellSpacing = 44f,
             ),
             FrameTheme(
                 id = "two_film_black",
@@ -44,8 +44,8 @@ object FrameCatalog {
                 border = Color(0x1FFFFFFF),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 80f,
-                cellSpacing = 60f,
+                outerPadding = 56f,
+                cellSpacing = 44f,
             ),
         )
         FrameType.FOUR_CUT -> listOf(
@@ -57,8 +57,8 @@ object FrameCatalog {
                 border = Color(0x26000000),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 60f,
-                cellSpacing = 40f,
+                outerPadding = 44f,
+                cellSpacing = 28f,
             ),
             FrameTheme(
                 id = "four_film_black",
@@ -68,8 +68,8 @@ object FrameCatalog {
                 border = Color(0x1FFFFFFF),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 60f,
-                cellSpacing = 40f,
+                outerPadding = 44f,
+                cellSpacing = 28f,
             ),
             FrameTheme(
                 id = "four_pastel_mint",
@@ -79,8 +79,8 @@ object FrameCatalog {
                 border = Color(0x59338C80),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 60f,
-                cellSpacing = 40f,
+                outerPadding = 44f,
+                cellSpacing = 28f,
             ),
         )
         FrameType.SIX_CUT -> listOf(
@@ -92,8 +92,8 @@ object FrameCatalog {
                 border = Color(0x26000000),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 60f,
-                cellSpacing = 40f,
+                outerPadding = 44f,
+                cellSpacing = 28f,
             ),
             FrameTheme(
                 id = "six_film_black",
@@ -103,8 +103,8 @@ object FrameCatalog {
                 border = Color(0x1FFFFFFF),
                 borderWidth = 2f,
                 cornerRadius = 0f,
-                outerPadding = 60f,
-                cellSpacing = 40f,
+                outerPadding = 44f,
+                cellSpacing = 28f,
             ),
         )
     }

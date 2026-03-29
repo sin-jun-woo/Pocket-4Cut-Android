@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -30,9 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -151,6 +157,7 @@ fun EditScreen(
                 uiState = uiState,
                 frameStyle = frameStyle,
                 onTapCell = viewModel::tapOrderCell,
+                onMoveSlot = viewModel::moveOrderSlot,
             )
 
             Spacer(Modifier.height(AppSpacing.xl))
@@ -607,9 +614,17 @@ private fun OrderSection(
     uiState: EditUiState,
     frameStyle: FrameStyle,
     onTapCell: (Int) -> Unit,
+    onMoveSlot: (from: Int, to: Int) -> Unit,
 ) {
     val imageCount = uiState.orderedImages.size
     if (imageCount == 0) return
+
+    var cellBounds by remember(imageCount) { mutableStateOf<Map<Int, Rect>>(emptyMap()) }
+    var cellLayouts by remember(imageCount) { mutableStateOf<Map<Int, LayoutCoordinates>>(emptyMap()) }
+    var draggingIndex by remember(imageCount) { mutableStateOf<Int?>(null) }
+    val cellBoundsState = rememberUpdatedState(cellBounds)
+    val cellLayoutsState = rememberUpdatedState(cellLayouts)
+    val activeDragSlot = remember(imageCount) { intArrayOf(-1) }
 
     Column(modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal)) {
         Text(
@@ -619,7 +634,7 @@ private fun OrderSection(
         )
         Spacer(Modifier.height(AppSpacing.xxs))
         Text(
-            "사진을 탭해서 위치를 바꿀 수 있어요",
+            "길게 눌러 드래그하면 순서를 바꿀 수 있어요 · 번호를 누르면 두 칸 맞바꿈",
             style = AppTypography.caption1,
             color = AppColors.Text.tertiary,
         )
@@ -645,8 +660,45 @@ private fun OrderSection(
                                 image = uiState.orderedImages[index],
                                 displayNumber = index + 1,
                                 isSelected = uiState.selectedSwapIndex == index,
+                                isDragging = draggingIndex == index,
                                 cellAspectWidthOverHeight = frameStyle.cellAspectWidthOverHeight,
-                                onClick = { onTapCell(index) },
+                                onBadgeClick = { onTapCell(index) },
+                                dragModifier = Modifier.pointerInput(index, imageCount) {
+                                    detectDragGesturesAfterLongPress(
+                                        onDragStart = {
+                                            activeDragSlot[0] = index
+                                            draggingIndex = index
+                                        },
+                                        onDrag = { change, _ ->
+                                            change.consume()
+                                            val lc = cellLayoutsState.value[index] ?: return@detectDragGesturesAfterLongPress
+                                            val rootPos = lc.localToRoot(change.position)
+                                            val map = cellBoundsState.value
+                                            val target = map.entries.firstOrNull { (_, r) ->
+                                                rootPos.x >= r.left && rootPos.x < r.right &&
+                                                    rootPos.y >= r.top && rootPos.y < r.bottom
+                                            }?.key
+                                            val from = activeDragSlot[0]
+                                            if (target != null && from >= 0 && target != from) {
+                                                onMoveSlot(from, target)
+                                                activeDragSlot[0] = target
+                                                draggingIndex = target
+                                            }
+                                        },
+                                        onDragEnd = {
+                                            activeDragSlot[0] = -1
+                                            draggingIndex = null
+                                        },
+                                        onDragCancel = {
+                                            activeDragSlot[0] = -1
+                                            draggingIndex = null
+                                        },
+                                    )
+                                },
+                                onBoundsInRoot = { coords ->
+                                    cellBounds = cellBounds + (index to coords.boundsInRoot())
+                                    cellLayouts = cellLayouts + (index to coords)
+                                },
                                 modifier = Modifier.weight(1f),
                             )
                         } else {
@@ -664,12 +716,19 @@ private fun OrderCell(
     image: Bitmap,
     displayNumber: Int,
     isSelected: Boolean,
+    isDragging: Boolean,
     cellAspectWidthOverHeight: Float,
-    onClick: () -> Unit,
+    onBadgeClick: () -> Unit,
+    dragModifier: Modifier,
+    onBoundsInRoot: (LayoutCoordinates) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val borderColor by animateColorAsState(
-        targetValue = if (isSelected) AppColors.Accent.pink else Color.Transparent,
+        targetValue = when {
+            isDragging -> AppColors.Accent.pink
+            isSelected -> AppColors.Accent.pink
+            else -> Color.Transparent
+        },
         animationSpec = tween(AppAnimation.Duration.fast),
         label = "orderBorder",
     )
@@ -677,19 +736,21 @@ private fun OrderCell(
     Box(
         modifier = modifier
             .aspectRatio(cellAspectWidthOverHeight)
+            .onGloballyPositioned(onBoundsInRoot)
             .clip(RoundedCornerShape(AppLayout.Radius.sm))
             .border(
-                width = if (isSelected) 3.dp else 0.dp,
+                width = if (isSelected || isDragging) 3.dp else 0.dp,
                 color = borderColor,
                 shape = RoundedCornerShape(AppLayout.Radius.sm),
-            )
-            .clickable(onClick = onClick),
+            ),
     ) {
         Image(
             bitmap = image.asImageBitmap(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .then(dragModifier),
         )
 
         Box(
@@ -700,7 +761,8 @@ private fun OrderCell(
                 .background(
                     if (isSelected) AppColors.Accent.pink else AppColors.Background.primary.copy(alpha = 0.7f),
                 )
-                .align(Alignment.TopStart),
+                .align(Alignment.TopStart)
+                .clickable(onClick = onBadgeClick),
             contentAlignment = Alignment.Center,
         ) {
             Text(

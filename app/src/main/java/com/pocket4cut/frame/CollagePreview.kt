@@ -6,12 +6,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.material.icons.Icons
@@ -19,6 +23,7 @@ import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,9 +32,11 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
@@ -42,6 +49,9 @@ import kotlin.math.roundToInt
 
 private const val BrandTitle = "Pocket 4Cut"
 
+/**
+ * [CollageLayoutMath] / [CollageRenderer]와 동일한 기하로 미리보기 (WYSIWYG).
+ */
 @Composable
 fun CollagePreview(
     images: List<Bitmap>,
@@ -57,62 +67,117 @@ fun CollagePreview(
     val brandColor = brandTextColor(effectiveBackground)
     val cellOverlay = cellPlaceholderOverlay(effectiveBackground)
     val shape = RoundedCornerShape(theme.cornerRadius.dp)
-    val spacing = theme.cellSpacing.dp
-    val outer = theme.outerPadding.dp
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(shape)
-            .background(effectiveBackground, shape)
-            .border(theme.borderWidth.dp, theme.border, shape),
-    ) {
-        Text(
-            text = BrandTitle,
-            style = TextStyle(
-                fontFamily = FontFamily.Serif,
-                fontStyle = FontStyle.Italic,
-                fontSize = 24.sp,
-                color = brandColor,
-            ),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            textAlign = TextAlign.Center,
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+        val density = LocalDensity.current
+        val containerPx = with(density) { maxWidth.toPx() }.coerceAtLeast(1f)
+        val dim = remember(containerPx, frameStyle, theme, bottomCaption) {
+            CollageLayoutMath.computeForPreview(frameStyle, theme, bottomCaption, containerPx)
+        }
+
+        val brandFontSp = with(density) { (44f * dim.scale).toSp() }
+        val captionSp = with(density) { (16f * dim.scale).toSp() }
+
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = outer, start = outer, end = outer),
-        )
-        CollagePreviewGrid(
-            images = used,
-            frameStyle = frameStyle,
-            cellOverlay = cellOverlay,
-            horizontalPadding = outer,
-            bottomPadding = if (bottomCaption.isNullOrBlank()) outer else 4.dp,
-            spacing = spacing,
-            brandColor = brandColor,
-        )
-        if (!bottomCaption.isNullOrBlank()) {
-            Text(
-                text = bottomCaption,
-                style = TextStyle(
-                    fontSize = 10.sp,
-                    color = brandColor.copy(alpha = 0.7f),
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.Center,
+                .width(with(density) { dim.canvasWidth.toDp() })
+                .height(with(density) { dim.canvasHeight.toDp() })
+                .clip(shape)
+                .background(effectiveBackground, shape)
+                .border(theme.borderWidth.dp, theme.border, shape),
+        ) {
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = outer, vertical = 6.dp)
-                    .padding(bottom = outer / 2),
-            )
+                    .height(with(density) { dim.headerArea.height().toDp() }),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = BrandTitle,
+                    style = TextStyle(
+                        fontFamily = FontFamily.Serif,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = brandFontSp,
+                        color = brandColor,
+                    ),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Center,
+                )
+            }
+
+            val cols = frameStyle.columns
+            val rows = frameStyle.rows
+            val hGapPx = if (cols > 1) dim.cells[1].left - dim.cells[0].right else 0f
+            val vGapPx = if (rows > 1) dim.cells[cols].top - dim.cells[0].bottom else 0f
+            val hGap = with(density) { hGapPx.toDp() }
+            val vGap = with(density) { vGapPx.toDp() }
+            val sidePad = with(density) { dim.cells[0].left.toDp() }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = sidePad),
+                verticalArrangement = Arrangement.spacedBy(vGap),
+            ) {
+                for (r in 0 until rows) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(hGap),
+                    ) {
+                        for (c in 0 until cols) {
+                            val idx = r * cols + c
+                            val rect = dim.cells.getOrNull(idx) ?: continue
+                            CollagePreviewCell(
+                                bitmap = used.getOrNull(idx),
+                                cellOverlay = cellOverlay,
+                                iconTint = brandColor.copy(alpha = 0.35f),
+                                modifier = Modifier
+                                    .size(
+                                        width = with(density) { rect.width().toDp() },
+                                        height = with(density) { rect.height().toDp() },
+                                    ),
+                            )
+                        }
+                    }
+                }
+            }
+
+            dim.textArea?.let { ta ->
+                if (!bottomCaption.isNullOrBlank()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(with(density) { ta.height().toDp() }),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = bottomCaption,
+                            style = TextStyle(
+                                fontSize = captionSp,
+                                fontWeight = FontWeight.Medium,
+                                color = brandColor.copy(alpha = 0.95f),
+                            ),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+            }
+
+            val lastBottom = dim.cells.maxOfOrNull { it.bottom } ?: dim.headerArea.bottom
+            val bottomRemainPx = dim.canvasHeight - lastBottom -
+                if (dim.hasBottomText && dim.textArea != null) dim.textArea.height() else 0f
+            if (bottomRemainPx > 0.5f) {
+                Spacer(Modifier.height(with(density) { bottomRemainPx.toDp() }))
+            }
         }
     }
 }
 
 /**
- * [CollagePreview]를 부모 영역 안에 빠짐없이 보이도록 등비 축소한다 (결과 화면에서 비트맵을 Fit으로 넣는 것과 같은 효과).
- * 세로가 긴 레이아웃(클래식 4컷 등)도 잘리지 않는다.
+ * [CollagePreview]를 부모 영역 안에 빠짐없이 보이도록 등비 축소한다.
  */
 @Composable
 fun CollagePreviewScaledToFit(
@@ -176,44 +241,6 @@ fun CollagePreviewScaledToFit(
                 scaleX = scale
                 scaleY = scale
                 transformOrigin = TransformOrigin(0f, 0f)
-            }
-        }
-    }
-}
-
-@Composable
-private fun CollagePreviewGrid(
-    images: List<Bitmap>,
-    frameStyle: FrameStyle,
-    cellOverlay: Color,
-    horizontalPadding: Dp,
-    bottomPadding: Dp,
-    spacing: Dp,
-    brandColor: Color,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = horizontalPadding)
-            .padding(bottom = bottomPadding),
-        verticalArrangement = Arrangement.spacedBy(spacing),
-    ) {
-        repeat(frameStyle.rows) { row ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(spacing),
-            ) {
-                repeat(frameStyle.columns) { col ->
-                    val index = row * frameStyle.columns + col
-                    CollagePreviewCell(
-                        bitmap = images.getOrNull(index),
-                        cellOverlay = cellOverlay,
-                        iconTint = brandColor.copy(alpha = 0.35f),
-                        modifier = Modifier
-                            .weight(1f)
-                            .aspectRatio(frameStyle.cellAspectWidthOverHeight),
-                    )
-                }
             }
         }
     }

@@ -46,8 +46,10 @@ import com.pocket4cut.ui.designsystem.components.*
 import java.io.File
 
 private enum class GalleryViewMode {
-    BY_MONTH,
-    GRID,
+    /** iOS `byDate` — 일 단위 섹션 */
+    BY_DATE,
+    /** iOS `byKind` — 2/4/6컷 */
+    BY_KIND,
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -59,11 +61,12 @@ fun GalleryScreen(
     viewModel: GalleryViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var viewMode by remember { mutableStateOf(GalleryViewMode.BY_MONTH) }
+    var viewMode by remember { mutableStateOf(GalleryViewMode.BY_DATE) }
     var longPressedItemId by remember { mutableStateOf<String?>(null) }
     var deleteTarget by remember { mutableStateOf<GalleryItem?>(null) }
 
     LaunchedEffect(Unit) { viewModel.load() }
+    LaunchedEffect(viewMode) { longPressedItemId = null }
 
     val accentPink = AppColors.Accent.pink
 
@@ -256,7 +259,7 @@ private fun GalleryViewModeToggle(
             .padding(3.dp),
         horizontalArrangement = Arrangement.spacedBy(2.dp),
     ) {
-        GalleryViewMode.values().forEach { mode ->
+            listOf(GalleryViewMode.BY_DATE, GalleryViewMode.BY_KIND).forEach { mode ->
             val isSelected = mode == selectedMode
             Row(
                 modifier = Modifier
@@ -269,8 +272,8 @@ private fun GalleryViewModeToggle(
             ) {
                 Icon(
                     imageVector = when (mode) {
-                        GalleryViewMode.BY_MONTH -> Icons.Default.CalendarMonth
-                        GalleryViewMode.GRID -> Icons.Default.GridView
+                        GalleryViewMode.BY_DATE -> Icons.Default.CalendarMonth
+                        GalleryViewMode.BY_KIND -> Icons.Default.GridView
                     },
                     contentDescription = null,
                     tint = if (isSelected) AppColors.Text.primary else AppColors.Text.tertiary,
@@ -278,8 +281,8 @@ private fun GalleryViewModeToggle(
                 )
                 Text(
                     text = when (mode) {
-                        GalleryViewMode.BY_MONTH -> "월별"
-                        GalleryViewMode.GRID -> "전체"
+                        GalleryViewMode.BY_DATE -> "전체"
+                        GalleryViewMode.BY_KIND -> "종류"
                     },
                     style = AppTypography.caption2.copy(
                         fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
@@ -313,8 +316,8 @@ private fun GalleryContent(
         contentPadding = PaddingValues(bottom = AppSpacing.xxxl),
     ) {
         when (viewMode) {
-            GalleryViewMode.BY_MONTH -> {
-                uiState.monthBuckets.forEachIndexed { index, bucket ->
+            GalleryViewMode.BY_DATE -> {
+                uiState.dayBuckets.forEachIndexed { index, bucket ->
                     item(
                         key = "header_${bucket.key}",
                         span = { GridItemSpan(maxLineSpan) },
@@ -340,18 +343,30 @@ private fun GalleryContent(
                 }
             }
 
-            GalleryViewMode.GRID -> {
-                items(
-                    items = uiState.items,
-                    key = { it.sessionId },
-                ) { item ->
-                    SessionCell(
-                        item = item,
-                        isLongPressed = longPressedItemId == item.sessionId,
-                        onClick = { onItemClick(item) },
-                        onLongClick = { onItemLongPress(item) },
-                        onDeleteClick = { onDeleteClick(item) },
-                    )
+            GalleryViewMode.BY_KIND -> {
+                uiState.kindBuckets.forEachIndexed { index, bucket ->
+                    item(
+                        key = "kind_${bucket.key}",
+                        span = { GridItemSpan(maxLineSpan) },
+                    ) {
+                        SectionHeader(
+                            title = bucket.label,
+                            subtitle = "${bucket.items.size}장",
+                            modifier = if (index > 0) Modifier.padding(top = AppSpacing.lg) else Modifier,
+                        )
+                    }
+                    items(
+                        items = bucket.items,
+                        key = { it.sessionId },
+                    ) { item ->
+                        SessionCell(
+                            item = item,
+                            isLongPressed = longPressedItemId == item.sessionId,
+                            onClick = { onItemClick(item) },
+                            onLongClick = { onItemLongPress(item) },
+                            onDeleteClick = { onDeleteClick(item) },
+                        )
+                    }
                 }
             }
         }
@@ -426,7 +441,7 @@ private fun SessionCell(
             horizontalArrangement = Arrangement.spacedBy(AppSpacing.xxs),
         ) {
             Text(
-                text = "${item.selectedCount}컷",
+                text = item.frameKindLabel,
                 style = AppTypography.caption2.copy(fontWeight = FontWeight.Bold),
                 color = AppColors.Text.primary,
                 modifier = Modifier

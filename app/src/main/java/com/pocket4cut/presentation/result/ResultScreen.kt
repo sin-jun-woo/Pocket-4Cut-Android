@@ -67,6 +67,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.pocket4cut.core.util.FileUris
+import com.pocket4cut.presentation.settings.AppSettings
 import com.pocket4cut.ui.designsystem.AppColors
 import com.pocket4cut.ui.designsystem.AppLayout
 import com.pocket4cut.ui.designsystem.AppSpacing
@@ -217,6 +218,15 @@ fun ResultScreen(
                 },
             )
         }
+    }
+
+    var didAttemptAutoSave by remember(resultPath) { mutableStateOf(false) }
+    LaunchedEffect(resultPath) {
+        if (didAttemptAutoSave) return@LaunchedEffect
+        if (!AppSettings.autoSaveToGallery) return@LaunchedEffect
+        if (!file.exists()) return@LaunchedEffect
+        didAttemptAutoSave = true
+        performSave()
     }
 
     Box(

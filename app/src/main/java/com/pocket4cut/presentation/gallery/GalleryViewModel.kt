@@ -20,11 +20,15 @@ data class GalleryItem(
     val selectedCount: Int,
     val createdAt: Long,
     val shortDateLabel: String,
-    val monthKey: String,
-    val monthLabel: String,
+    /** iOS `byKind` 그룹 — "2", "4", "6" */
+    val frameKindKey: String,
+    val frameKindLabel: String,
+    /** iOS `byDate` 일 단위 섹션 */
+    val dayKey: String,
+    val daySectionTitle: String,
 )
 
-data class MonthBucket(
+data class GalleryBucket(
     val key: String,
     val label: String,
     val items: List<GalleryItem>,
@@ -35,16 +39,38 @@ data class GalleryUiState(
     val errorMessage: String? = null,
     val items: List<GalleryItem> = emptyList(),
 ) {
-    val monthBuckets: List<MonthBucket>
+    /** 종류별: 2컷 → 4컷 → 6컷 */
+    val kindBuckets: List<GalleryBucket>
         get() = items
-            .groupBy { it.monthKey }
+            .groupBy { it.frameKindKey }
+            .entries
+            .sortedBy { (k, _) ->
+                when (k) {
+                    "2" -> 0
+                    "4" -> 1
+                    "6" -> 2
+                    else -> 3
+                }
+            }
+            .map { (_, bucketItems) ->
+                GalleryBucket(
+                    key = bucketItems.first().frameKindKey,
+                    label = bucketItems.first().frameKindLabel,
+                    items = bucketItems.sortedByDescending { it.createdAt },
+                )
+            }
+
+    /** 날짜별(일): 최신 날짜 우선 */
+    val dayBuckets: List<GalleryBucket>
+        get() = items
+            .groupBy { it.dayKey }
             .entries
             .sortedByDescending { it.key }
-            .map { (key, bucketItems) ->
-                MonthBucket(
-                    key = key,
-                    label = bucketItems.first().monthLabel,
-                    items = bucketItems,
+            .map { (_, bucketItems) ->
+                GalleryBucket(
+                    key = bucketItems.first().dayKey,
+                    label = bucketItems.first().daySectionTitle,
+                    items = bucketItems.sortedByDescending { it.createdAt },
                 )
             }
 }
@@ -83,18 +109,29 @@ class GalleryViewModel(app: Application) : AndroidViewModel(app) {
 }
 
 private val shortDateFormat = SimpleDateFormat("M.d", Locale.KOREA)
-private val monthKeyFormat = SimpleDateFormat("yyyy-MM", Locale.KOREA)
-private val monthLabelFormat = SimpleDateFormat("yyyy년 M월", Locale.KOREA)
+private val dayKeyFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+private val daySectionFormat = SimpleDateFormat("yyyy년 M월 d일 EEEE", Locale.KOREA)
+
+private fun frameKindForSession(selectedCount: Int): Pair<String, String> =
+    when (selectedCount) {
+        2 -> "2" to "2컷"
+        4 -> "4" to "4컷"
+        6 -> "6" to "6컷"
+        else -> "x_$selectedCount" to "${selectedCount}컷"
+    }
 
 private fun PhotoSession.toGalleryItem(): GalleryItem {
     val date = Date(createdAt)
+    val (kindKey, kindLabel) = frameKindForSession(selectedCount)
     return GalleryItem(
         sessionId = id,
         resultPath = finalImagePath.orEmpty(),
         selectedCount = selectedCount,
         createdAt = createdAt,
         shortDateLabel = shortDateFormat.format(date),
-        monthKey = monthKeyFormat.format(date),
-        monthLabel = monthLabelFormat.format(date),
+        frameKindKey = kindKey,
+        frameKindLabel = kindLabel,
+        dayKey = dayKeyFormat.format(date),
+        daySectionTitle = daySectionFormat.format(date),
     )
 }

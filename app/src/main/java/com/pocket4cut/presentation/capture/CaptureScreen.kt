@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.Check
@@ -39,7 +40,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -139,6 +139,9 @@ fun CaptureScreen(
     val canControl = uiState.phase == CapturePhase.READY ||
         uiState.phase == CapturePhase.IDLE ||
         uiState.phase == CapturePhase.FAILED
+    val showSideCameraControls = hasPermission &&
+        uiState.phase != CapturePhase.IDLE &&
+        uiState.phase != CapturePhase.COMPLETED
 
     Box(modifier = modifier.fillMaxSize().background(Color.Black)) {
         if (!hasPermission) {
@@ -156,22 +159,7 @@ fun CaptureScreen(
         } else {
             AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
 
-            // Vignette: radial gradient clear → black(0.3)
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .drawBehind {
-                        drawRect(
-                            brush = Brush.radialGradient(
-                                colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.3f)),
-                                center = Offset(size.width / 2f, size.height / 2f),
-                                radius = size.minDimension * 0.8f,
-                            ),
-                        )
-                    },
-            )
-
-            // Bottom gradient: black(0.6) → clear, 220dp
+            // Bottom gradient: black(0.6) → clear, 220dp (iOS 동일)
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -180,18 +168,6 @@ fun CaptureScreen(
                     .background(
                         Brush.verticalGradient(
                             colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.6f)),
-                        ),
-                    ),
-            )
-
-            // Top gradient
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(Color.Black.copy(alpha = 0.5f), Color.Transparent),
                         ),
                     ),
             )
@@ -220,7 +196,16 @@ fun CaptureScreen(
                     },
                     diameter = 44.dp,
                 ) {
-                    Icon(Icons.Default.Close, contentDescription = "닫기", tint = Color.White, modifier = Modifier.size(20.dp))
+                    if (isCapturing) {
+                        Icon(Icons.Default.Close, contentDescription = "닫기", tint = Color.White, modifier = Modifier.size(20.dp))
+                    } else {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "뒤로",
+                            tint = Color.White,
+                            modifier = Modifier.size(22.dp),
+                        )
+                    }
                 }
 
                 if (isCapturing) {
@@ -240,7 +225,11 @@ fun CaptureScreen(
                     Spacer(Modifier.width(1.dp))
                 }
 
-                Spacer(Modifier.size(44.dp))
+                if (uiState.phase == CapturePhase.COUNTDOWN) {
+                    CountdownTopRightBadge(number = uiState.countdownRemaining)
+                } else {
+                    Spacer(Modifier.size(44.dp))
+                }
             }
 
             // Cancel-confirmed toast
@@ -262,16 +251,17 @@ fun CaptureScreen(
                 }
             }
 
-            // ── Side camera controls (ready / idle / failed only) ──
+            // ── Side camera controls (iOS: 촬영·카운트다운 중에도 표시) ──
             AnimatedVisibility(
-                visible = canControl,
+                visible = showSideCameraControls,
                 enter = fadeIn(tween(AppAnimation.Duration.normal)) + slideInHorizontally { it / 2 },
                 exit = fadeOut(tween(AppAnimation.Duration.fast)) + slideOutHorizontally { it / 2 },
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .padding(end = AppSpacing.md),
+                    .padding(end = AppSpacing.md)
+                    .padding(vertical = 120.dp),
             ) {
-                Column(verticalArrangement = Arrangement.spacedBy(AppSpacing.sm)) {
+                Column(verticalArrangement = Arrangement.spacedBy(AppSpacing.md)) {
                     GlassmorphismCircle(onClick = { viewModel.switchCamera() }, diameter = 52.dp) {
                         Icon(Icons.Default.Cameraswitch, contentDescription = "카메라 전환", tint = Color.White, modifier = Modifier.size(24.dp))
                     }
@@ -315,32 +305,21 @@ fun CaptureScreen(
                     )
                 }
 
-                // Status text
-                when (uiState.phase) {
-                    CapturePhase.COUNTDOWN -> {
-                        Text(
-                            "${uiState.countdownRemaining}초 후 촬영",
-                            style = AppTypography.headline,
-                            color = Color.White,
-                        )
-                        Spacer(Modifier.height(AppSpacing.sm))
-                    }
-                    CapturePhase.CAPTURING -> {
-                        Text(
-                            "${uiState.currentShot} / ${uiState.totalShots} 촬영 중",
-                            style = AppTypography.headline,
-                            color = Color.White,
-                        )
-                        Spacer(Modifier.height(AppSpacing.sm))
-                    }
-                    else -> {}
+                // Status text (iOS: 촬영 중일 때만 하단 문구 — 카운트다운 전용 문구 없음)
+                if (uiState.phase == CapturePhase.CAPTURING) {
+                    Text(
+                        "${uiState.currentShot} / ${uiState.totalShots} 촬영 중",
+                        style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
+                        color = Color.White,
+                    )
+                    Spacer(Modifier.height(AppSpacing.xs))
                 }
 
                 // Shot dots
                 if (isCapturing) {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        modifier = Modifier.padding(bottom = AppSpacing.md),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier.padding(bottom = AppSpacing.sm),
                     ) {
                         for (i in 1..uiState.totalShots) {
                             val dotColor = when {
@@ -351,9 +330,16 @@ fun CaptureScreen(
                             val isActive = i == uiState.currentShot + 1
                             Box(
                                 modifier = Modifier
-                                    .size(if (isActive) 10.dp else 6.dp)
+                                    .size(10.dp)
                                     .clip(CircleShape)
-                                    .background(dotColor),
+                                    .background(dotColor)
+                                    .then(
+                                        if (isActive) {
+                                            Modifier.border(2.dp, Color.White, CircleShape)
+                                        } else {
+                                            Modifier
+                                        },
+                                    ),
                             )
                         }
                     }
@@ -387,18 +373,7 @@ fun CaptureScreen(
                 // Shutter button (ready / idle / failed)
                 if (canControl) {
                     ShutterButton(onClick = { viewModel.start(frameType) })
-                    Spacer(Modifier.height(AppSpacing.sm))
-                    Text(
-                        "촬영 시작 (${frameType.captureCount}장)",
-                        style = AppTypography.caption1,
-                        color = Color.White,
-                    )
                 }
-            }
-
-            // ── Countdown overlay ──
-            if (uiState.phase == CapturePhase.COUNTDOWN) {
-                CountdownOverlay(number = uiState.countdownRemaining)
             }
 
             // ── Completion overlay ──
@@ -456,6 +431,30 @@ private fun GlassmorphismCapsule(
     }
 }
 
+/** iOS `countdownTopRightBadge` — 상단 바 우측 작은 숫자만 */
+@Composable
+private fun CountdownTopRightBadge(number: Int) {
+    val shape = RoundedCornerShape(AppLayout.Radius.full)
+    Box(
+        modifier = Modifier
+            .height(44.dp)
+            .clip(shape)
+            .background(Color.Black.copy(alpha = 0.5f))
+            .border(1.dp, Color.White.copy(alpha = 0.18f), shape)
+            .padding(horizontal = 10.dp, vertical = 5.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = number.toString(),
+            style = AppTypography.headline.copy(
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold,
+            ),
+            color = Color.White,
+        )
+    }
+}
+
 // ────────────────────────────────────────────────────────────────
 // Shutter button — 80dp pink circle + pulse ring + camera icon
 // ────────────────────────────────────────────────────────────────
@@ -485,10 +484,8 @@ private fun ShutterButton(onClick: () -> Unit) {
             modifier = Modifier
                 .size(80.dp)
                 .clip(CircleShape)
-                .background(
-                    Brush.linearGradient(listOf(AppColors.Accent.pink, AppColors.Accent.pinkLight)),
-                )
-                .border(4.dp, Color.White.copy(alpha = 0.2f), CircleShape)
+                .background(AppColors.Accent.pink)
+                .border(6.dp, Color.White.copy(alpha = 0.3f), CircleShape)
                 .clickable(onClick = onClick),
             contentAlignment = Alignment.Center,
         ) {
@@ -517,14 +514,14 @@ private fun ShootingProgressRing(modifier: Modifier = Modifier) {
 
     Box(
         modifier = modifier
-            .size(60.dp)
+            .size(80.dp)
             .drawBehind {
                 drawArc(
                     color = Color(0xFFFF6B9D),
                     startAngle = rotation,
                     sweepAngle = 120f,
                     useCenter = false,
-                    style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round),
+                    style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round),
                     size = Size(size.width, size.height),
                 )
             },
@@ -532,46 +529,7 @@ private fun ShootingProgressRing(modifier: Modifier = Modifier) {
 }
 
 // ────────────────────────────────────────────────────────────────
-// Countdown overlay — glassmorphism circle + large number (120sp)
-// ────────────────────────────────────────────────────────────────
-
-@Composable
-private fun CountdownOverlay(number: Int) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Box(
-            modifier = Modifier
-                .size(200.dp)
-                .clip(CircleShape)
-                .background(Color.Black.copy(alpha = 0.4f))
-                .border(1.dp, Color.White.copy(alpha = 0.15f), CircleShape)
-                .drawBehind {
-                    drawCircle(
-                        brush = Brush.radialGradient(
-                            colors = listOf(
-                                AppColors.Accent.pink.copy(alpha = 0.2f),
-                                Color.Transparent,
-                            ),
-                            center = Offset(size.width / 2f, size.height / 2f),
-                            radius = size.minDimension / 2f,
-                        ),
-                    )
-                },
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = number.toString(),
-                style = AppTypography.countdown.copy(fontSize = 120.sp),
-                color = Color.White,
-            )
-        }
-    }
-}
-
-// ────────────────────────────────────────────────────────────────
-// Completion overlay — dark bg + checkmark + spinning ring + text
+// Completion overlay — iOS: 체크 100 + 스피너 56 + 문구
 // ────────────────────────────────────────────────────────────────
 
 @Composable
@@ -579,51 +537,53 @@ private fun CompletionOverlay() {
     val transition = rememberInfiniteTransition(label = "completion_ring")
     val rotation by transition.animateFloat(
         0f, 360f,
-        infiniteRepeatable(tween(1500, easing = LinearEasing)),
+        infiniteRepeatable(tween(1200, easing = LinearEasing)),
         label = "completion_rotation",
     )
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.75f)),
+            .background(Color.Black.copy(alpha = 0.6f)),
         contentAlignment = Alignment.Center,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(AppSpacing.xl),
+            verticalArrangement = Arrangement.spacedBy(AppSpacing.lg),
         ) {
-            Box(contentAlignment = Alignment.Center) {
-                Box(
-                    modifier = Modifier
-                        .size(100.dp)
-                        .drawBehind {
-                            drawArc(
-                                color = Color(0xFFFF6B9D),
-                                startAngle = rotation,
-                                sweepAngle = 90f,
-                                useCenter = false,
-                                style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round),
-                                size = Size(size.width, size.height),
-                            )
-                        },
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .background(AppColors.Accent.pink),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    Icons.Default.Check,
+                    contentDescription = "완료",
+                    tint = Color.White,
+                    modifier = Modifier.size(44.dp),
                 )
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(CircleShape)
-                        .background(AppColors.Accent.pink),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        Icons.Default.Check,
-                        contentDescription = "완료",
-                        tint = Color.White,
-                        modifier = Modifier.size(40.dp),
-                    )
-                }
             }
-            Text("촬영 완료!", style = AppTypography.title2, color = Color.White)
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .drawBehind {
+                        drawArc(
+                            color = Color(0xFFFF6B9D),
+                            startAngle = rotation,
+                            sweepAngle = 100f,
+                            useCenter = false,
+                            style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round),
+                            size = Size(size.width, size.height),
+                        )
+                    },
+            )
+            Text(
+                "촬영 완료!",
+                style = AppTypography.title2.copy(fontWeight = FontWeight.Bold),
+                color = Color.White,
+            )
         }
     }
 }

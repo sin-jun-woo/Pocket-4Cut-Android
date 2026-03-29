@@ -123,6 +123,18 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /** 표시 순서 기준으로 [fromIndex] 칸을 [toIndex] 위치로 옮김 (iOS moveImage 대응). */
+    fun moveOrderSlot(fromIndex: Int, toIndex: Int) {
+        if (fromIndex == toIndex) return
+        val orderList = _uiState.value.order
+        if (fromIndex !in orderList.indices || toIndex !in orderList.indices) return
+        val newOrder = orderList.toMutableList()
+        val elem = newOrder.removeAt(fromIndex)
+        newOrder.add(toIndex, elem)
+        _uiState.update { it.copy(order = newOrder, selectedSwapIndex = null) }
+        rebuildOrderedAndFilteredImages()
+    }
+
     fun persistPendingForDetailEdit(sessionId: String) {
         val s = _uiState.value
         PendingCollageStore.write(

@@ -15,15 +15,6 @@ object CollageRenderer {
     private const val BRAND_TITLE = "Pocket 4Cut"
     private val brandTypeface: Typeface = Typeface.create("serif", Typeface.ITALIC)
 
-    private data class Layout(
-        val canvasWidth: Int,
-        val canvasHeight: Int,
-        val scale: Float,
-        val cells: List<RectF>,
-        val headerArea: RectF,
-        val textArea: RectF?,
-    )
-
     fun render(
         images: List<Bitmap>,
         frameStyle: FrameStyle,
@@ -34,13 +25,9 @@ object CollageRenderer {
         dateString: String?,
         outputWidth: Int,
     ): Bitmap {
-        val layout = if (frameStyle.id == FrameLayoutId.FOUR_VERTICAL) {
-            computeFourVerticalLayout(frameStyle, theme, text, dateString)
-        } else {
-            computeLayout(frameStyle, theme, text, dateString, outputWidth)
-        }
+        val layout = collageLayoutForRender(frameStyle, theme, text, dateString, outputWidth)
 
-        val bitmap = Bitmap.createBitmap(layout.canvasWidth, layout.canvasHeight, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(layout.canvasWidth.roundToInt(), layout.canvasHeight.roundToInt(), Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
         val bgColor = overrideBackground ?: theme.background
@@ -48,7 +35,7 @@ object CollageRenderer {
         val borderWidth = theme.borderWidth * layout.scale
 
         val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = bgColor.toArgb() }
-        val canvasRect = RectF(0f, 0f, layout.canvasWidth.toFloat(), layout.canvasHeight.toFloat())
+        val canvasRect = RectF(0f, 0f, layout.canvasWidth, layout.canvasHeight)
         if (cornerRadius > 0f) {
             canvas.drawRoundRect(canvasRect, cornerRadius, cornerRadius, bgPaint)
         } else {
@@ -71,7 +58,7 @@ object CollageRenderer {
             }
         }
 
-        drawBrandTitle(canvas, layout, bgColor)
+        drawBrandTitle(canvas, layout.scale, layout.headerArea, bgColor)
 
         val colorFilter = FilterDefs.colorFilter(filterId)
         val imgPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
@@ -89,106 +76,17 @@ object CollageRenderer {
         return bitmap
     }
 
-    /* ── Four-vertical fixed-size layout: 1650×4920 ─────────────────── */
-
-    private fun computeFourVerticalLayout(
-        style: FrameStyle,
-        theme: FrameTheme,
-        text: String?,
-        dateString: String?,
-    ): Layout {
-        val w = 1650f
-        val h = 4920f
-        val scale = w / 390f
-        val rows = style.rows
-
-        val hasText = !text.isNullOrBlank() || !dateString.isNullOrBlank()
-        val headerHeight = 90f * scale
-        val textAreaHeight = if (hasText) 80f * scale else 0f
-        val padding = theme.outerPadding * scale
-        val spacing = theme.cellSpacing * scale
-
-        val contentWidth = w - padding * 2f
-        val rowGaps = spacing * (rows - 1)
-        val chrome = headerHeight + padding * 2f + textAreaHeight + rowGaps
-        val cellHeight = (h - chrome) / rows
-
-        val cells = buildList {
-            for (r in 0 until rows) {
-                val x = padding
-                val y = padding + headerHeight + r * (cellHeight + spacing)
-                add(RectF(x, y, x + contentWidth, y + cellHeight))
-            }
-        }
-
-        return Layout(
-            canvasWidth = w.roundToInt(),
-            canvasHeight = h.roundToInt(),
-            scale = scale,
-            cells = cells,
-            headerArea = RectF(0f, 0f, w, padding + headerHeight),
-            textArea = if (hasText) RectF(0f, h - textAreaHeight - padding, w, h) else null,
-        )
-    }
-
-    /* ── Generic layout (all layouts except four-vertical) ──────────── */
-
-    private fun computeLayout(
-        style: FrameStyle,
-        theme: FrameTheme,
-        text: String?,
-        dateString: String?,
-        outputWidth: Int,
-    ): Layout {
-        val w = outputWidth.toFloat()
-        val scale = w / 390f
-        val rows = style.rows
-        val cols = style.columns
-
-        val hasText = !text.isNullOrBlank() || !dateString.isNullOrBlank()
-        val headerHeight = 90f * scale
-        val textAreaHeight = if (hasText) 80f * scale else 0f
-        val padding = theme.outerPadding * scale
-        val spacing = theme.cellSpacing * scale
-
-        val contentWidth = w - padding * 2f
-        val cellAspect = style.cellAspectWidthOverHeight
-        val cellWidth = (contentWidth - spacing * (cols - 1)) / cols
-        val cellHeight = cellWidth / cellAspect
-        val contentHeight = cellHeight * rows + spacing * (rows - 1)
-        val canvasHeight = headerHeight + contentHeight + padding * 2f + textAreaHeight
-
-        val cells = buildList {
-            for (r in 0 until rows) {
-                for (c in 0 until cols) {
-                    val x = padding + c * (cellWidth + spacing)
-                    val y = padding + headerHeight + r * (cellHeight + spacing)
-                    add(RectF(x, y, x + cellWidth, y + cellHeight))
-                }
-            }
-        }
-
-        return Layout(
-            canvasWidth = w.roundToInt(),
-            canvasHeight = canvasHeight.roundToInt(),
-            scale = scale,
-            cells = cells,
-            headerArea = RectF(0f, 0f, w, padding + headerHeight),
-            textArea = if (hasText) RectF(0f, canvasHeight - textAreaHeight - padding, w, canvasHeight) else null,
-        )
-    }
-
     /* ── Drawing helpers ────────────────────────────────────────────── */
 
-    private fun drawBrandTitle(canvas: Canvas, layout: Layout, bgColor: Color) {
+    private fun drawBrandTitle(canvas: Canvas, scale: Float, headerArea: RectF, bgColor: Color) {
         val textColor = if (isDark(bgColor)) AColor.WHITE else AColor.BLACK
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = textColor
-            textSize = 44f * layout.scale
+            textSize = 44f * scale
             typeface = brandTypeface
             textAlign = Paint.Align.CENTER
         }
-        val area = layout.headerArea
+        val area = headerArea
         val fm = paint.fontMetrics
         val y = area.top + (area.height() - fm.ascent - fm.descent) / 2f
         canvas.drawText(BRAND_TITLE, area.centerX(), y, paint)
