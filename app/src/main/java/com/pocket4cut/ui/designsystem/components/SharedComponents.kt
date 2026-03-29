@@ -6,13 +6,125 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.pocket4cut.ui.designsystem.*
+
+enum class AppToastType {
+    Success,
+    Error,
+    Warning,
+    Info,
+}
+
+private fun AppToastType.icon(): ImageVector = when (this) {
+    AppToastType.Success -> Icons.Filled.CheckCircle
+    AppToastType.Error -> Icons.Filled.Error
+    AppToastType.Warning -> Icons.Filled.Warning
+    AppToastType.Info -> Icons.Filled.Info
+}
+
+private fun AppToastType.tint(): Color = when (this) {
+    AppToastType.Success -> AppColors.Semantic.success
+    AppToastType.Error -> AppColors.Semantic.error
+    AppToastType.Warning -> AppColors.Semantic.warning
+    AppToastType.Info -> AppColors.Semantic.info
+}
+
+@Composable
+fun AppToast(
+    message: String,
+    type: AppToastType,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val shape = RoundedCornerShape(AppLayout.Radius.md)
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .shadow(
+                elevation = 12.dp,
+                shape = shape,
+                clip = false,
+                ambientColor = Color.Black.copy(alpha = 0.35f),
+                spotColor = Color.Black.copy(alpha = 0.45f),
+            )
+            .clip(shape)
+            .background(AppColors.Background.tertiary)
+            .border(1.dp, AppColors.Border.light, shape)
+            .padding(horizontal = AppSpacing.md, vertical = AppSpacing.sm),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+    ) {
+        Icon(
+            imageVector = type.icon(),
+            contentDescription = null,
+            tint = type.tint(),
+            modifier = Modifier.size(20.dp),
+        )
+        Text(
+            text = message,
+            style = AppTypography.callout,
+            color = AppColors.Text.primary,
+            modifier = Modifier.weight(1f),
+        )
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)
+                .clickable(onClick = onDismiss),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Close,
+                contentDescription = "닫기",
+                tint = AppColors.Text.secondary,
+                modifier = Modifier.size(18.dp),
+            )
+        }
+    }
+}
+
+@Composable
+fun LoadingOverlay(
+    visible: Boolean,
+    message: String = "처리 중...",
+) {
+    if (!visible) return
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AppColors.Overlay.heavy),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(AppSpacing.xl),
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(48.dp),
+                color = AppColors.Accent.pink,
+                strokeWidth = 3.dp,
+            )
+            Text(
+                text = message,
+                style = AppTypography.callout,
+                color = AppColors.Text.primary,
+            )
+        }
+    }
+}
 
 @Composable
 fun SectionHeader(
@@ -21,17 +133,34 @@ fun SectionHeader(
     subtitle: String? = null,
     trailing: @Composable (() -> Unit)? = null,
 ) {
-    Column(modifier = modifier.padding(bottom = AppSpacing.md)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(bottom = AppSpacing.md),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Top,
+    ) {
+        Column(
+            modifier = Modifier.weight(1f),
         ) {
-            Text(text = title, style = AppTypography.headline.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold), color = AppColors.Text.secondary)
-            if (trailing != null) trailing()
+            Text(
+                text = title,
+                style = AppTypography.title3,
+                color = AppColors.Text.primary,
+            )
+            if (subtitle != null) {
+                Text(
+                    text = subtitle,
+                    style = AppTypography.footnote,
+                    color = AppColors.Text.secondary,
+                    modifier = Modifier.padding(top = AppSpacing.xxs),
+                )
+            }
         }
-        if (subtitle != null) {
-            Text(text = subtitle, style = AppTypography.footnote, color = AppColors.Text.secondary, modifier = Modifier.padding(top = AppSpacing.xxs))
+        if (trailing != null) {
+            Box(modifier = Modifier.padding(start = AppSpacing.sm)) {
+                trailing()
+            }
         }
     }
 }

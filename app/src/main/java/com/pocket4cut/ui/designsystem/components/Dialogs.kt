@@ -4,9 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,6 +15,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.pocket4cut.ui.designsystem.*
 
+enum class ConfirmDialogVariant {
+    Default,
+    Destructive,
+}
+
 @Composable
 fun ConfirmDialog(
     visible: Boolean,
@@ -26,9 +29,17 @@ fun ConfirmDialog(
     cancelText: String,
     onConfirm: () -> Unit,
     onCancel: () -> Unit,
+    variant: ConfirmDialogVariant = ConfirmDialogVariant.Default,
     isDestructive: Boolean = false,
 ) {
     if (!visible) return
+    val effectiveVariant =
+        if (isDestructive || variant == ConfirmDialogVariant.Destructive) {
+            ConfirmDialogVariant.Destructive
+        } else {
+            ConfirmDialogVariant.Default
+        }
+
     Dialog(
         onDismissRequest = onCancel,
         properties = DialogProperties(usePlatformDefaultWidth = false),
@@ -54,9 +65,14 @@ fun ConfirmDialog(
             ) {
                 Text(text = title, style = AppTypography.title3, color = AppColors.Text.primary)
                 Spacer(Modifier.height(AppSpacing.sm))
-                Text(text = message, style = AppTypography.callout, color = AppColors.Text.secondary, modifier = Modifier.fillMaxWidth())
+                Text(
+                    text = message,
+                    style = AppTypography.callout,
+                    color = AppColors.Text.secondary,
+                    modifier = Modifier.fillMaxWidth(),
+                )
                 Spacer(Modifier.height(AppSpacing.xl))
-                if (isDestructive) {
+                if (effectiveVariant == ConfirmDialogVariant.Destructive) {
                     DestructiveButton(text = confirmText, onClick = onConfirm, fullWidth = true)
                 } else {
                     PrimaryButton(text = confirmText, onClick = onConfirm, fullWidth = true)
@@ -73,32 +89,6 @@ fun ConfirmDialog(
                     Text(text = cancelText, style = AppTypography.headline, color = AppColors.Text.secondary)
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun LoadingOverlay(
-    visible: Boolean,
-    message: String = "처리 중...",
-) {
-    if (!visible) return
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(AppColors.Overlay.heavy),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(AppSpacing.xl),
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(48.dp),
-                color = AppColors.Accent.pink,
-                strokeWidth = 3.dp,
-            )
-            Text(text = message, style = AppTypography.body, color = AppColors.Text.primary)
         }
     }
 }
