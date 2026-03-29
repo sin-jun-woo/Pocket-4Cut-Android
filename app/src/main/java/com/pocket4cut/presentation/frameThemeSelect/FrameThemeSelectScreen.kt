@@ -38,7 +38,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.pocket4cut.core.util.BitmapDecoding
-import com.pocket4cut.frame.CollagePreview
+import com.pocket4cut.frame.CollagePreviewScaledToFit
 import com.pocket4cut.frame.FrameCatalog
 import com.pocket4cut.frame.FrameStyle
 import com.pocket4cut.frame.FrameTheme
@@ -122,12 +122,12 @@ fun FrameThemeSelectScreen(
                 if (isLoading) {
                     CircularProgressIndicator(color = AppColors.Accent.pink)
                 } else if (selectedTheme != null) {
-                    CollagePreview(
+                    CollagePreviewScaledToFit(
                         images = bitmaps,
                         frameType = frameType,
                         frameStyle = frameStyle,
                         theme = selectedTheme!!,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxSize(),
                     )
                 }
             }
@@ -225,11 +225,12 @@ private fun ThemeCard(
                 .height(110.dp)
                 .clip(RoundedCornerShape(AppLayout.Radius.xs)),
         ) {
-            CollagePreview(
+            CollagePreviewScaledToFit(
                 images = images,
                 frameType = frameType,
                 frameStyle = frameStyle,
                 theme = theme,
+                modifier = Modifier.fillMaxSize(),
             )
 
             if (isSelected) {

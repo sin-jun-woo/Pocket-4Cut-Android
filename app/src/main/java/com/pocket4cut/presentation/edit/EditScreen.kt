@@ -207,16 +207,21 @@ private fun PreviewSection(
                 androidx.compose.material3.CircularProgressIndicator(color = AppColors.Accent.pink)
             }
         } else if (uiState.filteredPreviewImages.isNotEmpty()) {
-            CollagePreview(
-                images = uiState.filteredPreviewImages,
-                frameType = frameType,
-                frameStyle = frameStyle,
-                theme = theme,
-                overrideBackground = uiState.selectedFrameColor.color,
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 360.dp),
-            )
+                    .height(360.dp)
+                    .clip(RoundedCornerShape(AppLayout.Radius.xl)),
+            ) {
+                CollagePreviewScaledToFit(
+                    images = uiState.filteredPreviewImages,
+                    frameType = frameType,
+                    frameStyle = frameStyle,
+                    theme = theme,
+                    overrideBackground = uiState.selectedFrameColor.color,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
 
         val overlayText = buildOverlayText(uiState)

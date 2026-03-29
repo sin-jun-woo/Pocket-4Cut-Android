@@ -19,10 +19,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -49,7 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pocket4cut.core.util.BitmapDecoding
-import com.pocket4cut.frame.CollagePreview
+import com.pocket4cut.frame.CollagePreviewScaledToFit
 import com.pocket4cut.frame.FrameCatalog
 import com.pocket4cut.frame.FrameLayoutId
 import com.pocket4cut.frame.FrameLayouts
@@ -164,8 +163,7 @@ fun LayoutSelectionScreen(
                                 ambientColor = Color.Black.copy(alpha = 0.35f),
                                 spotColor = Color.Black.copy(alpha = 0.45f),
                             )
-                            .widthIn(max = 280.dp)
-                            .heightIn(max = 320.dp)
+                            .size(width = 280.dp, height = 320.dp)
                             .clip(previewShape),
                     ) {
                         AnimatedContent(
@@ -177,12 +175,12 @@ fun LayoutSelectionScreen(
                             label = "collagePreview",
                         ) { layoutId ->
                             val previewStyle = remember(layoutId) { FrameLayouts.byId(layoutId) }
-                            CollagePreview(
+                            CollagePreviewScaledToFit(
                                 images = bitmaps,
                                 frameType = frameType,
                                 frameStyle = previewStyle,
                                 theme = defaultTheme,
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier.fillMaxSize(),
                             )
                         }
                     }

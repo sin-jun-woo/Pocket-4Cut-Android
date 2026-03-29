@@ -56,7 +56,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.pocket4cut.frame.CollagePreview
+import com.pocket4cut.frame.CollagePreviewScaledToFit
 import com.pocket4cut.frame.FilterId
 import com.pocket4cut.frame.FrameColor
 import com.pocket4cut.frame.FrameStyle
@@ -185,7 +185,7 @@ fun DetailEditScreen(
                 Spacer(Modifier.height(AppSpacing.sm))
 
                 if (uiState.collagePreviewImages.isNotEmpty()) {
-                    CollagePreview(
+                    CollagePreviewScaledToFit(
                         images = uiState.collagePreviewImages,
                         frameType = frameType,
                         frameStyle = frameStyle,
