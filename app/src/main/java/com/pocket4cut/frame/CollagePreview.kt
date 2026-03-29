@@ -75,7 +75,7 @@ fun CollagePreview(
             CollageLayoutMath.computeForPreview(frameStyle, theme, bottomCaption, containerPx)
         }
 
-        val brandFontSp = with(density) { (44f * dim.scale).toSp() }
+        val brandFontSp = with(density) { (BRAND_TITLE_TEXT_PT * dim.scale).toSp() }
         val captionSp = with(density) { (16f * dim.scale).toSp() }
 
         Column(

@@ -82,7 +82,7 @@ object CollageRenderer {
         val textColor = if (isDark(bgColor)) AColor.WHITE else AColor.BLACK
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = textColor
-            textSize = 44f * scale
+            textSize = BRAND_TITLE_TEXT_PT * scale
             typeface = brandTypeface
             textAlign = Paint.Align.CENTER
         }

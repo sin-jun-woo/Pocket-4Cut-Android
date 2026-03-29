@@ -19,6 +19,9 @@ data class CollageLayoutDimensions(
 
 internal const val COLLAGE_CLASSIC_WIDTH_PX = 1650f
 
+/** 브랜드 "Pocket 4Cut" 기준 크기 — [CollageRenderer]·[CollagePreview]에서 scale 곱해 사용 */
+internal const val BRAND_TITLE_TEXT_PT = 22f
+
 object CollageLayoutMath {
 
     private const val CLASSIC_W = COLLAGE_CLASSIC_WIDTH_PX
@@ -136,8 +139,9 @@ object CollageLayoutMath {
         val cols = style.columns
         val headerHeight = HEADER_PT * scale
         val textAreaHeight = if (hasText) TEXT_BAND_PT * scale else 0f
-        val padding = theme.outerPadding * scale
-        val spacing = theme.cellSpacing * scale
+        val (padPt, gapPt) = effectiveOuterPaddingCellSpacing(style, theme)
+        val padding = padPt * scale
+        val spacing = gapPt * scale
         val contentWidth = w - padding * 2f
         val cellAspect = style.cellAspectWidthOverHeight
         val cellWidth = (contentWidth - spacing * (cols - 1)) / cols
@@ -169,6 +173,13 @@ object CollageLayoutMath {
             hasBottomText = hasText,
         )
     }
+
+    /**
+     * 2컷 가로 레이아웃만 여백을 20/10으로 — 세로 2컷·그 외는 [FrameTheme] 값 사용.
+     */
+    private fun effectiveOuterPaddingCellSpacing(style: FrameStyle, theme: FrameTheme): Pair<Float, Float> =
+        if (style.id == FrameLayoutId.TWO_HORIZONTAL) 20f to 10f
+        else theme.outerPadding to theme.cellSpacing
 }
 
 /** 렌더러에서 사용 — [CollageRenderer]가 내부 Layout 대신 이걸 쓰도록 연결 */
