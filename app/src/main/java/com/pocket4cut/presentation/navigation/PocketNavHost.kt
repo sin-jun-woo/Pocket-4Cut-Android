@@ -13,17 +13,23 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import android.graphics.Bitmap
+import com.pocket4cut.data.storage.FileImageStorage
+import com.pocket4cut.frame.FilterId
+import com.pocket4cut.frame.FrameCatalog
+import com.pocket4cut.frame.FrameLayoutId
+import com.pocket4cut.frame.FrameLayouts
 import com.pocket4cut.presentation.capture.CaptureScreen
 import com.pocket4cut.presentation.detailEdit.DetailEditScreen
 import com.pocket4cut.presentation.edit.EditScreen
+import com.pocket4cut.presentation.frameThemeSelect.FrameThemeSelectScreen
+import com.pocket4cut.presentation.frameTypeSelect.FrameTypeSelectScreen
 import com.pocket4cut.presentation.gallery.GalleryScreen
 import com.pocket4cut.presentation.home.HomeScreen
 import com.pocket4cut.presentation.launch.LaunchScreen
 import com.pocket4cut.presentation.layoutSelection.LayoutSelectionScreen
-import com.pocket4cut.presentation.frameTypeSelect.FrameTypeSelectScreen
 import com.pocket4cut.presentation.result.ResultScreen
 import com.pocket4cut.presentation.selection.SelectionScreen
-import com.pocket4cut.data.storage.FileImageStorage
 
 @Composable
 fun PocketNavHost(
@@ -113,7 +119,7 @@ fun PocketNavHost(
             )
         }
 
-        // Layout Selection
+        // Layout Selection → now navigates to Frame Theme Select
         composable(
             route = "${Routes.LAYOUT_SELECTION}/{${Routes.Args.FRAME_TYPE}}/{${Routes.Args.SESSION_ID}}/{${Routes.Args.SELECTED_INDEXES}}",
             arguments = listOf(
@@ -138,16 +144,19 @@ fun PocketNavHost(
             LayoutSelectionScreen(
                 selectedPhotoPaths = photoPaths,
                 requiredCount = frameType.selectCount,
+                frameType = frameType,
                 onSelectLayout = { layoutId ->
-                    navController.navigate("${Routes.EDIT}/${frameTypeId}/$sessionId/$selectedRaw/${layoutId.name}")
+                    navController.navigate(
+                        "${Routes.FRAME_THEME_SELECT}/${frameTypeId}/$sessionId/$selectedRaw/${layoutId.name}",
+                    )
                 },
                 onCancel = { navController.popBackStack() },
             )
         }
 
-        // Edit
+        // Frame Theme Select
         composable(
-            route = "${Routes.EDIT}/{${Routes.Args.FRAME_TYPE}}/{${Routes.Args.SESSION_ID}}/{${Routes.Args.SELECTED_INDEXES}}/{${Routes.Args.LAYOUT_ID}}",
+            route = "${Routes.FRAME_THEME_SELECT}/{${Routes.Args.FRAME_TYPE}}/{${Routes.Args.SESSION_ID}}/{${Routes.Args.SELECTED_INDEXES}}/{${Routes.Args.LAYOUT_ID}}",
             arguments = listOf(
                 navArgument(Routes.Args.FRAME_TYPE) { type = NavType.StringType },
                 navArgument(Routes.Args.SESSION_ID) { type = NavType.StringType },
@@ -158,15 +167,59 @@ fun PocketNavHost(
             val frameTypeId = entry.arguments?.getString(Routes.Args.FRAME_TYPE).orEmpty()
             val sessionId = entry.arguments?.getString(Routes.Args.SESSION_ID).orEmpty()
             val selectedRaw = entry.arguments?.getString(Routes.Args.SELECTED_INDEXES).orEmpty()
+            val layoutIdStr = entry.arguments?.getString(Routes.Args.LAYOUT_ID).orEmpty()
+            val frameType = FrameType.fromId(frameTypeId)
+            val storage = FileImageStorage(LocalContext.current)
+            val selectedIndexes = NavCodec.decodeIndexes(selectedRaw)
+            val frameLayoutId = remember(layoutIdStr) {
+                runCatching { FrameLayoutId.valueOf(layoutIdStr) }.getOrElse { FrameLayoutId.FOUR_VERTICAL }
+            }
+            val frameStyle = remember(frameLayoutId) { FrameLayouts.byId(frameLayoutId) }
+
+            var photoPaths by remember { mutableStateOf(emptyList<String>()) }
+            LaunchedEffect(sessionId) {
+                val allPaths = storage.getCapturePaths(sessionId)
+                photoPaths = selectedIndexes.mapNotNull { idx -> allPaths.getOrNull(idx) }
+            }
+
+            FrameThemeSelectScreen(
+                frameType = frameType,
+                selectedPhotoPaths = photoPaths,
+                frameStyle = frameStyle,
+                onSelectTheme = { theme ->
+                    navController.navigate(
+                        "${Routes.EDIT}/${frameTypeId}/$sessionId/$selectedRaw/$layoutIdStr/${theme.id}",
+                    )
+                },
+                onBack = { navController.popBackStack() },
+            )
+        }
+
+        // Edit (now receives themeId)
+        composable(
+            route = "${Routes.EDIT}/{${Routes.Args.FRAME_TYPE}}/{${Routes.Args.SESSION_ID}}/{${Routes.Args.SELECTED_INDEXES}}/{${Routes.Args.LAYOUT_ID}}/{${Routes.Args.THEME_ID}}",
+            arguments = listOf(
+                navArgument(Routes.Args.FRAME_TYPE) { type = NavType.StringType },
+                navArgument(Routes.Args.SESSION_ID) { type = NavType.StringType },
+                navArgument(Routes.Args.SELECTED_INDEXES) { type = NavType.StringType },
+                navArgument(Routes.Args.LAYOUT_ID) { type = NavType.StringType },
+                navArgument(Routes.Args.THEME_ID) { type = NavType.StringType },
+            ),
+        ) { entry ->
+            val frameTypeId = entry.arguments?.getString(Routes.Args.FRAME_TYPE).orEmpty()
+            val sessionId = entry.arguments?.getString(Routes.Args.SESSION_ID).orEmpty()
+            val selectedRaw = entry.arguments?.getString(Routes.Args.SELECTED_INDEXES).orEmpty()
             val layoutId = entry.arguments?.getString(Routes.Args.LAYOUT_ID).orEmpty()
+            val themeId = entry.arguments?.getString(Routes.Args.THEME_ID).orEmpty()
             EditScreen(
                 frameType = FrameType.fromId(frameTypeId),
                 sessionId = sessionId,
                 selectedIndexes = NavCodec.decodeIndexes(selectedRaw),
                 layoutId = layoutId,
+                themeId = themeId,
                 onBack = { navController.popBackStack() },
                 onContinueToDetailEdit = {
-                    navController.navigate("${Routes.DETAIL_EDIT}/${frameTypeId}/$sessionId/$selectedRaw/$layoutId")
+                    navController.navigate("${Routes.DETAIL_EDIT}/${frameTypeId}/$sessionId/$selectedRaw/$layoutId/$themeId")
                 },
                 onComplete = { resultPath ->
                     val encoded = NavCodec.encodePath(resultPath)
@@ -177,29 +230,60 @@ fun PocketNavHost(
 
         // Detail Edit
         composable(
-            route = "${Routes.DETAIL_EDIT}/{${Routes.Args.FRAME_TYPE}}/{${Routes.Args.SESSION_ID}}/{${Routes.Args.SELECTED_INDEXES}}/{${Routes.Args.LAYOUT_ID}}",
+            route = "${Routes.DETAIL_EDIT}/{${Routes.Args.FRAME_TYPE}}/{${Routes.Args.SESSION_ID}}/{${Routes.Args.SELECTED_INDEXES}}/{${Routes.Args.LAYOUT_ID}}/{${Routes.Args.THEME_ID}}",
             arguments = listOf(
                 navArgument(Routes.Args.FRAME_TYPE) { type = NavType.StringType },
                 navArgument(Routes.Args.SESSION_ID) { type = NavType.StringType },
                 navArgument(Routes.Args.SELECTED_INDEXES) { type = NavType.StringType },
                 navArgument(Routes.Args.LAYOUT_ID) { type = NavType.StringType },
+                navArgument(Routes.Args.THEME_ID) { type = NavType.StringType },
             ),
         ) { entry ->
             val frameTypeId = entry.arguments?.getString(Routes.Args.FRAME_TYPE).orEmpty()
             val sessionId = entry.arguments?.getString(Routes.Args.SESSION_ID).orEmpty()
             val selectedRaw = entry.arguments?.getString(Routes.Args.SELECTED_INDEXES).orEmpty()
-            val layoutId = entry.arguments?.getString(Routes.Args.LAYOUT_ID).orEmpty()
-            DetailEditScreen(
-                frameType = FrameType.fromId(frameTypeId),
-                sessionId = sessionId,
-                selectedIndexes = NavCodec.decodeIndexes(selectedRaw),
-                layoutId = layoutId,
-                onBack = { navController.popBackStack() },
-                onCompleted = { resultPath ->
-                    val encoded = NavCodec.encodePath(resultPath)
-                    navController.navigate("${Routes.RESULT}/$encoded")
-                },
-            )
+            val layoutIdStr = entry.arguments?.getString(Routes.Args.LAYOUT_ID).orEmpty()
+            val themeId = entry.arguments?.getString(Routes.Args.THEME_ID).orEmpty()
+            val frameType = FrameType.fromId(frameTypeId)
+            val frameLayoutId = runCatching { FrameLayoutId.valueOf(layoutIdStr) }.getOrElse { FrameLayoutId.FOUR_VERTICAL }
+            val frameStyle = FrameLayouts.byId(frameLayoutId)
+            val theme = FrameCatalog.themes(frameType).firstOrNull { it.id == themeId }
+                ?: FrameCatalog.themes(frameType).first()
+            val selectedIndexes = NavCodec.decodeIndexes(selectedRaw)
+
+            val context = LocalContext.current
+            val storage = FileImageStorage(context)
+            var photoBitmaps by remember { mutableStateOf(emptyList<Bitmap>()) }
+            var photoPaths by remember { mutableStateOf(emptyList<String>()) }
+            LaunchedEffect(sessionId) {
+                val allPaths = storage.getCapturePaths(sessionId)
+                val selected = selectedIndexes.mapNotNull { idx -> allPaths.getOrNull(idx) }
+                photoPaths = selected
+                photoBitmaps = selected.mapNotNull { path ->
+                    com.pocket4cut.core.util.BitmapDecoding.decodeSampled(path, 2048)
+                }
+            }
+
+            if (photoBitmaps.isNotEmpty()) {
+                DetailEditScreen(
+                    frameType = frameType,
+                    frameStyle = frameStyle,
+                    theme = theme,
+                    frameColor = com.pocket4cut.frame.FrameColors.all.first(),
+                    orderedImages = photoBitmaps,
+                    imagePaths = photoPaths,
+                    sessionId = sessionId,
+                    selectedIndexes = selectedIndexes,
+                    globalFilter = FilterId.ORIGINAL,
+                    customText = "",
+                    showDate = true,
+                    onBack = { navController.popBackStack() },
+                    onResult = { resultPath ->
+                        val encoded = NavCodec.encodePath(resultPath)
+                        navController.navigate("${Routes.RESULT}/$encoded")
+                    },
+                )
+            }
         }
 
         // Result
@@ -210,16 +294,9 @@ fun PocketNavHost(
             val encoded = entry.arguments?.getString(Routes.Args.RESULT_PATH).orEmpty()
             ResultScreen(
                 resultPath = NavCodec.decodePath(encoded),
-                onBack = { navController.popBackStack() },
                 onHome = {
                     navController.navigate(Routes.HOME) {
                         popUpTo(Routes.HOME) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                },
-                onGallery = {
-                    navController.navigate(Routes.GALLERY) {
-                        popUpTo(Routes.HOME) { inclusive = false }
                         launchSingleTop = true
                     }
                 },

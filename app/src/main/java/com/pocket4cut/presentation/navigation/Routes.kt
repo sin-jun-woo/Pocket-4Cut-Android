@@ -13,6 +13,7 @@ object Routes {
     const val EDIT = "edit"
     const val DETAIL_EDIT = "detailEdit"
     const val RESULT = "result"
+    const val FRAME_THEME_SELECT = "frameThemeSelect"
 
     object Args {
         const val FRAME_TYPE = "frameType"
@@ -20,6 +21,7 @@ object Routes {
         const val SELECTED_INDEXES = "selectedIndexes"
         const val LAYOUT_ID = "layoutId"
         const val RESULT_PATH = "resultPath"
+        const val THEME_ID = "themeId"
     }
 }
 
