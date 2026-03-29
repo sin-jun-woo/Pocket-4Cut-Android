@@ -17,15 +17,37 @@ import java.util.Locale
 data class GalleryItem(
     val sessionId: String,
     val resultPath: String,
+    val selectedCount: Int,
     val createdAt: Long,
-    val dateLabel: String,
+    val shortDateLabel: String,
+    val monthKey: String,
+    val monthLabel: String,
+)
+
+data class MonthBucket(
+    val key: String,
+    val label: String,
+    val items: List<GalleryItem>,
 )
 
 data class GalleryUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val items: List<GalleryItem> = emptyList(),
-)
+) {
+    val monthBuckets: List<MonthBucket>
+        get() = items
+            .groupBy { it.monthKey }
+            .entries
+            .sortedByDescending { it.key }
+            .map { (key, bucketItems) ->
+                MonthBucket(
+                    key = key,
+                    label = bucketItems.first().monthLabel,
+                    items = bucketItems,
+                )
+            }
+}
 
 class GalleryViewModel(app: Application) : AndroidViewModel(app) {
     private val sessions = SessionRepository(app.applicationContext)
@@ -39,10 +61,14 @@ class GalleryViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             runCatching {
                 sessions.getAll()
-            }.onSuccess { items ->
-                _uiState.update { it.copy(isLoading = false, items = items.map { it.toItem() }) }
+            }.onSuccess { list ->
+                _uiState.update {
+                    it.copy(isLoading = false, items = list.map { s -> s.toGalleryItem() })
+                }
             }.onFailure { t ->
-                _uiState.update { it.copy(isLoading = false, errorMessage = t.message ?: "불러오기에 실패했습니다.") }
+                _uiState.update {
+                    it.copy(isLoading = false, errorMessage = t.message ?: "불러오기에 실패했습니다.")
+                }
             }
         }
     }
@@ -56,12 +82,19 @@ class GalleryViewModel(app: Application) : AndroidViewModel(app) {
     }
 }
 
-private val dateLabelFormat = SimpleDateFormat("M월 d일", Locale.KOREA)
+private val shortDateFormat = SimpleDateFormat("M.d", Locale.KOREA)
+private val monthKeyFormat = SimpleDateFormat("yyyy-MM", Locale.KOREA)
+private val monthLabelFormat = SimpleDateFormat("yyyy년 M월", Locale.KOREA)
 
-private fun PhotoSession.toItem(): GalleryItem =
-    GalleryItem(
+private fun PhotoSession.toGalleryItem(): GalleryItem {
+    val date = Date(createdAt)
+    return GalleryItem(
         sessionId = id,
         resultPath = finalImagePath.orEmpty(),
+        selectedCount = selectedCount,
         createdAt = createdAt,
-        dateLabel = dateLabelFormat.format(Date(createdAt)),
+        shortDateLabel = shortDateFormat.format(date),
+        monthKey = monthKeyFormat.format(date),
+        monthLabel = monthLabelFormat.format(date),
     )
+}
