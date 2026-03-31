@@ -270,24 +270,10 @@ fun CustomFrameEditorScreen(
                                 scaleX = dec.scale
                                 scaleY = dec.scale
                             }
-                            .pointerInput(dec.id) {
-                                detectTapGestures(onTap = { selectedId = dec.id })
-                            }
-                            .then(
-                                if (dec.id == selectedId) {
-                                    Modifier
-                                } else Modifier,
-                            ),
+                            ,
                         contentAlignment = Alignment.Center,
                     ) {
                         DecorationPreviewContent(decoration = dec, context = context)
-                        if (dec.id == selectedId) {
-                            Box(
-                                Modifier
-                                    .matchParentSize()
-                                    .border(1.dp, AppColors.Accent.pink, RoundedCornerShape(8.dp)),
-                            )
-                        }
                     }
                 }
             }
