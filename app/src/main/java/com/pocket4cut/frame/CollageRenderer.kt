@@ -12,6 +12,7 @@ import android.graphics.Color as AColor
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.pocket4cut.core.util.AppFontCatalog
+import com.pocket4cut.core.util.CollageExportMetrics
 import com.pocket4cut.core.util.ColorRGB
 import com.pocket4cut.frame.rendering.AutumnFrameVectorDecor
 import com.pocket4cut.frame.rendering.SpringFrameVectorDecor
@@ -45,10 +46,15 @@ object CollageRenderer {
     )
 
     fun render(input: Input): Bitmap {
+        val preferredOutputWidth = if (input.frameStyle.id == FrameLayoutId.FOUR_VERTICAL) {
+            COLLAGE_CLASSIC_WIDTH_PX.toInt()
+        } else {
+            CollageExportMetrics.preferredOutputWidth.roundToInt()
+        }
         val layout = collageLayoutForRender(
             input.frameStyle, input.theme,
             input.text, input.dateString,
-            input.frameStyle.padding.coerceAtLeast(300),
+            preferredOutputWidth,
         )
         return render(input, layout)
     }
@@ -132,8 +138,20 @@ object CollageRenderer {
         }
 
         // 3. Brand title
-        val bgColor = input.overrideBackground ?: input.theme.background
-        drawBrandTitle(canvas, layout.scale, layout.headerArea, bgColor, input.overrideBackgroundImage != null)
+        val effectiveBgColor = when {
+            seasonHTML != null -> Color((0xFF000000 or SeasonHTMLFrameStyle.baseHex(seasonHTML)).toInt())
+            input.overrideBackground != null -> input.overrideBackground
+            input.customFrameDesign != null -> input.customFrameDesign.resolvedFillColor
+            else -> input.theme.background
+        }
+        drawBrandTitle(
+            canvas = canvas,
+            scale = layout.scale,
+            headerArea = layout.headerArea,
+            bgColor = effectiveBgColor,
+            hasBackgroundImage = input.overrideBackgroundImage != null,
+            isSeason = seasonHTML != null,
+        )
 
         // 4. Photo slots
         val colorFilter = FilterDefs.colorFilter(input.filterId)
@@ -183,7 +201,7 @@ object CollageRenderer {
 
         // 8. Overlay text
         layout.textArea?.let { textArea ->
-            drawOverlayText(canvas, textArea, layout.scale, bgColor, input)
+            drawOverlayText(canvas, textArea, layout.scale, effectiveBgColor, input)
         }
 
         return bitmap
@@ -260,9 +278,20 @@ object CollageRenderer {
         }
     }
 
-    private fun drawBrandTitle(canvas: Canvas, scale: Float, headerArea: RectF, bgColor: Color, hasBackgroundImage: Boolean) {
-        val textColor = if (hasBackgroundImage) AColor.WHITE
-        else if (isDark(bgColor)) AColor.WHITE else AColor.BLACK
+    private fun drawBrandTitle(
+        canvas: Canvas,
+        scale: Float,
+        headerArea: RectF,
+        bgColor: Color,
+        hasBackgroundImage: Boolean,
+        isSeason: Boolean,
+    ) {
+        val textColor = when {
+            hasBackgroundImage -> AColor.WHITE
+            isSeason -> AColor.argb((0.88f * 255).toInt(), 0, 0, 0)
+            isDark(bgColor) -> AColor.WHITE
+            else -> AColor.BLACK
+        }
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = textColor
             textSize = BRAND_TITLE_TEXT_PT * scale

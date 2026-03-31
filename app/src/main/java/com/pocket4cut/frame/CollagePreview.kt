@@ -1,6 +1,7 @@
 package com.pocket4cut.frame
 
 import android.graphics.Bitmap
+import android.graphics.RectF
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,7 +34,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
@@ -50,6 +53,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocket4cut.core.util.AppFontCatalog
+import com.pocket4cut.frame.rendering.AutumnFrameVectorDecor
+import com.pocket4cut.frame.rendering.SpringFrameVectorDecor
+import com.pocket4cut.frame.rendering.SummerFrameVectorDecor
+import com.pocket4cut.frame.rendering.WinterFrameVectorDecor
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.ui.designsystem.theme.Season
 import kotlin.math.min
@@ -225,7 +232,7 @@ fun CollagePreview(
                         val captionColor = if (captionColorRGB != null) {
                             Color((0xFF000000 or (captionColorRGB and 0xFFFFFF)).toInt())
                         } else {
-                            brandColor.copy(alpha = 0.95f)
+                            autoCaptionColor(effectiveBackground, hasImageBackground)
                         }
                         val baseStyle = TextStyle(
                             fontWeight = FontWeight.Medium,
@@ -288,6 +295,24 @@ fun CollagePreview(
                     if (dim.hasBottomText && dim.textArea != null) dim.textArea.height() else 0f
                 if (bottomRemainPx > 0.5f) {
                     Spacer(Modifier.height(with(density) { bottomRemainPx.toDp() }))
+                }
+            }
+
+            if (seasonHTML != null) {
+                androidx.compose.foundation.Canvas(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .clip(shape),
+                ) {
+                    val slotRects = dim.cells.map { RectF(it.left, it.top, it.right, it.bottom) }
+                    drawIntoCanvas { c ->
+                        when (seasonHTML) {
+                            Season.SPRING -> SpringFrameVectorDecor.draw(c.nativeCanvas, dim.canvasWidth, dim.canvasHeight, true, slotRects)
+                            Season.SUMMER -> SummerFrameVectorDecor.draw(c.nativeCanvas, dim.canvasWidth, dim.canvasHeight, true, slotRects)
+                            Season.AUTUMN -> AutumnFrameVectorDecor.draw(c.nativeCanvas, dim.canvasWidth, dim.canvasHeight, true, slotRects)
+                            Season.WINTER -> WinterFrameVectorDecor.draw(c.nativeCanvas, dim.canvasWidth, dim.canvasHeight, true, slotRects)
+                        }
+                    }
                 }
             }
 
@@ -512,6 +537,15 @@ private fun cellPlaceholderOverlay(
     isSeason -> Color.White.copy(alpha = 0.35f)
     isDark(effectiveBackground) -> Color.Black.copy(alpha = 0.25f)
     else -> Color.Black.copy(alpha = 0.06f)
+}
+
+private fun autoCaptionColor(
+    effectiveBackground: Color,
+    hasImageBackground: Boolean,
+): Color = when {
+    hasImageBackground -> Color.White
+    isDark(effectiveBackground) -> Color.White
+    else -> Color.Black
 }
 
 private fun isDark(color: Color): Boolean {

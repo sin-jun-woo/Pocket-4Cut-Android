@@ -333,7 +333,7 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Full-resolution variant that decodes from disk. */
     private fun processImageFromPath(path: String, adj: PhotoSlotAdjustment): Bitmap {
-        var bmp = BitmapDecoding.decodeSampled(path, reqSize = 2400)
+        var bmp = BitmapDecoding.decodeSampled(path, reqSize = 3072)
             ?: error("Failed to decode: $path")
 
         repeat(adj.quarterTurnsClockwise) {

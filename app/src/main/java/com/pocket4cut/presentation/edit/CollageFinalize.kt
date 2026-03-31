@@ -2,6 +2,7 @@ package com.pocket4cut.presentation.edit
 
 import android.app.Application
 import com.pocket4cut.core.util.BitmapDecoding
+import com.pocket4cut.core.util.Constants
 import com.pocket4cut.data.local.SessionRepository
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.domain.model.PhotoSession
@@ -34,7 +35,7 @@ object CollageFinalize {
         val theme = FrameCatalog.themes(frameType).firstOrNull { it.id == params.themeId }
             ?: FrameCatalog.themes(frameType).first()
         val orderedPaths = params.order.mapNotNull { i -> picked.getOrNull(i) }
-        val targetWidth = if (frameLayoutId == FrameLayoutId.FOUR_VERTICAL) 1650 else 1920
+        val targetWidth = if (frameLayoutId == FrameLayoutId.FOUR_VERTICAL) 1650 else Constants.RESULT_IMAGE_MAX_WIDTH
         val bitmaps = orderedPaths.mapNotNull { BitmapDecoding.decodeSampled(it, reqSize = targetWidth) }
         val dateString = if (params.showDate) todayString() else null
         val result = try {
