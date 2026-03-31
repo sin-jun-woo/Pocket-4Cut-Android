@@ -74,4 +74,16 @@ object FrameColors {
     )
 
     fun byId(id: String): FrameColor = all.firstOrNull { it.id == id } ?: all.first()
+
+    fun colorFramePalette(frameType: com.pocket4cut.presentation.navigation.FrameType): List<FrameColor> {
+        val themes = FrameCatalog.themes(frameType)
+        val fromCatalog = themes.map { theme ->
+            FrameColor(
+                id = "catalog_${theme.id}",
+                name = theme.name,
+                color = theme.background,
+            )
+        }
+        return fromCatalog + all
+    }
 }
