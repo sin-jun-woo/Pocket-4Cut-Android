@@ -206,12 +206,15 @@ fun DetailEditScreen(
                 Spacer(Modifier.height(AppSpacing.sm))
 
                 if (uiState.collagePreviewImages.isNotEmpty()) {
+                    val previewBackground = customFrameDesign?.resolvedFillColor ?: frameColor.color
                     CollagePreviewScaledToFit(
                         images = uiState.collagePreviewImages,
                         frameType = frameType,
                         frameStyle = frameStyle,
                         theme = theme,
-                        overrideBackground = frameColor.color,
+                        overrideBackground = previewBackground,
+                        customFrameDesign = customFrameDesign,
+                        customDecorations = customFrameDesign?.decorations ?: emptyList(),
                         bottomCaption = bottomCaptionForLayout,
                         captionTextPart = captionTextPart,
                         captionDatePart = captionDatePart,

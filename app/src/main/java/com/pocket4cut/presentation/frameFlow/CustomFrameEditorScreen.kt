@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.horizontalScroll
@@ -236,6 +235,22 @@ fun CustomFrameEditorScreen(
                                 }
                                 selectedId = hit
                             }
+                        }
+                        .pointerInput(selectedId, sw, sh) {
+                            detectTransformGestures { _, pan, zoomChange, rotationChange ->
+                                val sid = selectedId ?: return@detectTransformGestures
+                                decorations = decorations.map {
+                                    if (it.id != sid) it
+                                    else it.copy(
+                                        position = NormPoint(
+                                            x = (it.position.x + pan.x / sw).coerceIn(0.02f, 0.98f),
+                                            y = (it.position.y + pan.y / sh).coerceIn(0.02f, 0.98f),
+                                        ),
+                                        scale = (it.scale * zoomChange).coerceIn(0.25f, 5f),
+                                        rotationRadians = it.rotationRadians + rotationChange,
+                                    )
+                                }
+                            }
                         },
                 )
 
@@ -261,22 +276,6 @@ fun CustomFrameEditorScreen(
                             .then(
                                 if (dec.id == selectedId) {
                                     Modifier
-                                        .pointerInput(selectedId, sw, sh) {
-                                            detectTransformGestures { _, pan, zoomChange, rotationChange ->
-                                                val sid = selectedId ?: return@detectTransformGestures
-                                                decorations = decorations.map {
-                                                    if (it.id != sid) it
-                                                    else it.copy(
-                                                        position = NormPoint(
-                                                            x = (it.position.x + pan.x / sw).coerceIn(0.02f, 0.98f),
-                                                            y = (it.position.y + pan.y / sh).coerceIn(0.02f, 0.98f),
-                                                        ),
-                                                        scale = (it.scale * zoomChange).coerceIn(0.25f, 5f),
-                                                        rotationRadians = it.rotationRadians + rotationChange,
-                                                    )
-                                                }
-                                            }
-                                        }
                                 } else Modifier,
                             ),
                         contentAlignment = Alignment.Center,
