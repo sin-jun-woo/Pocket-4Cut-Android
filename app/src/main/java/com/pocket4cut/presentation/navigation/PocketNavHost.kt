@@ -17,12 +17,19 @@ import android.graphics.Bitmap
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.frame.FilterId
 import com.pocket4cut.frame.FrameCatalog
+import com.pocket4cut.frame.FrameColors
 import com.pocket4cut.frame.FrameLayoutId
 import com.pocket4cut.frame.FrameLayouts
 import com.pocket4cut.presentation.capture.CaptureScreen
 import com.pocket4cut.presentation.detailEdit.DetailEditScreen
 import com.pocket4cut.presentation.edit.EditScreen
-import com.pocket4cut.presentation.frameThemeSelect.FrameThemeSelectScreen
+import com.pocket4cut.presentation.edit.PendingCollageStore
+import com.pocket4cut.frame.CustomFrameDesign
+import com.pocket4cut.frame.SeasonBackgroundFrameFactory
+import com.pocket4cut.presentation.frameFlow.ColorFramePalettePickScreen
+import com.pocket4cut.presentation.frameFlow.CustomFrameEditorScreen
+import com.pocket4cut.presentation.frameFlow.FrameFlowCoordinatorScreen
+import com.pocket4cut.presentation.frameFlow.SeasonBackgroundFramePickScreen
 import com.pocket4cut.presentation.frameTypeSelect.FrameTypeSelectScreen
 import com.pocket4cut.presentation.gallery.GalleryScreen
 import com.pocket4cut.presentation.home.HomeScreen
@@ -30,6 +37,8 @@ import com.pocket4cut.presentation.launch.LaunchScreen
 import com.pocket4cut.presentation.layoutSelection.LayoutSelectionScreen
 import com.pocket4cut.presentation.result.ResultScreen
 import com.pocket4cut.presentation.selection.SelectionScreen
+import com.pocket4cut.presentation.settings.ContactFeedbackScreen
+import com.pocket4cut.presentation.settings.PrivacyPolicyScreen
 import com.pocket4cut.presentation.settings.SettingsScreen
 
 @Composable
@@ -66,7 +75,17 @@ fun PocketNavHost(
         composable(Routes.SETTINGS) {
             SettingsScreen(
                 onBack = { navController.popBackStack() },
+                onPrivacyPolicy = { navController.navigate(Routes.PRIVACY_POLICY) },
+                onContactFeedback = { navController.navigate(Routes.CONTACT_FEEDBACK) },
             )
+        }
+
+        composable(Routes.PRIVACY_POLICY) {
+            PrivacyPolicyScreen(onBack = { navController.popBackStack() })
+        }
+
+        composable(Routes.CONTACT_FEEDBACK) {
+            ContactFeedbackScreen(onBack = { navController.popBackStack() })
         }
 
         // Gallery
@@ -191,17 +210,63 @@ fun PocketNavHost(
                 photoPaths = selectedIndexes.mapNotNull { idx -> allPaths.getOrNull(idx) }
             }
 
-            FrameThemeSelectScreen(
-                frameType = frameType,
-                selectedPhotoPaths = photoPaths,
-                frameStyle = frameStyle,
-                onSelectTheme = { theme ->
-                    navController.navigate(
-                        "${Routes.EDIT}/${frameTypeId}/$sessionId/$selectedRaw/$layoutIdStr/${theme.id}",
-                    )
-                },
-                onBack = { navController.popBackStack() },
-            )
+            val theme = remember(frameType) { FrameCatalog.themes(frameType).first() }
+
+            var flowStep by remember { mutableStateOf("choose") }
+
+            when (flowStep) {
+                "choose" -> FrameFlowCoordinatorScreen(
+                    onColorPick = { flowStep = "color" },
+                    onSeasonPick = { flowStep = "season" },
+                    onCustomEditor = { flowStep = "custom" },
+                    onDismiss = { navController.popBackStack() },
+                )
+                "color" -> ColorFramePalettePickScreen(
+                    images = photoPaths.mapNotNull { path ->
+                        com.pocket4cut.core.util.BitmapDecoding.decodeSampled(path, 512)
+                    },
+                    frameType = frameType,
+                    frameStyle = frameStyle,
+                    theme = theme,
+                    onBack = { flowStep = "choose" },
+                    onDismiss = { navController.popBackStack() },
+                    onCompleted = { color ->
+                        navController.navigate(
+                            "${Routes.EDIT}/${frameTypeId}/$sessionId/$selectedRaw/$layoutIdStr/${theme.id}",
+                        )
+                    },
+                )
+                "season" -> SeasonBackgroundFramePickScreen(
+                    images = photoPaths.mapNotNull { path ->
+                        com.pocket4cut.core.util.BitmapDecoding.decodeSampled(path, 512)
+                    },
+                    frameType = frameType,
+                    frameStyle = frameStyle,
+                    theme = theme,
+                    onBack = { flowStep = "choose" },
+                    onDismiss = { navController.popBackStack() },
+                    onCompleted = { season ->
+                        navController.navigate(
+                            "${Routes.EDIT}/${frameTypeId}/$sessionId/$selectedRaw/$layoutIdStr/${theme.id}",
+                        )
+                    },
+                )
+                "custom" -> CustomFrameEditorScreen(
+                    images = photoPaths.mapNotNull { path ->
+                        com.pocket4cut.core.util.BitmapDecoding.decodeSampled(path, 512)
+                    },
+                    frameType = frameType,
+                    frameStyle = frameStyle,
+                    theme = theme,
+                    onBack = { flowStep = "choose" },
+                    onDismiss = { navController.popBackStack() },
+                    onCompleted = { design ->
+                        navController.navigate(
+                            "${Routes.EDIT}/${frameTypeId}/$sessionId/$selectedRaw/$layoutIdStr/${theme.id}",
+                        )
+                    },
+                )
+            }
         }
 
         // Edit (now receives themeId)
@@ -274,18 +339,23 @@ fun PocketNavHost(
             }
 
             if (photoBitmaps.isNotEmpty()) {
+                val pending = PendingCollageStore.read(context, sessionId)
                 DetailEditScreen(
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
-                    frameColor = com.pocket4cut.frame.FrameColors.all.first(),
+                    frameColor = FrameColors.byId(pending?.frameColorId ?: "white"),
                     orderedImages = photoBitmaps,
                     imagePaths = photoPaths,
                     sessionId = sessionId,
                     selectedIndexes = selectedIndexes,
-                    globalFilter = FilterId.ORIGINAL,
-                    customText = "",
-                    showDate = true,
+                    globalFilter = pending?.filterId ?: FilterId.ORIGINAL,
+                    customText = pending?.text.orEmpty(),
+                    showDate = pending?.showDate ?: true,
+                    textFontSize = pending?.textFontSize ?: 16f,
+                    dateFontSize = pending?.dateFontSize ?: 16f,
+                    captionFontName = pending?.captionFontName,
+                    captionColorRGB = pending?.captionColorRGB,
                     onBack = { navController.popBackStack() },
                     onResult = { resultPath ->
                         val encoded = NavCodec.encodePath(resultPath)

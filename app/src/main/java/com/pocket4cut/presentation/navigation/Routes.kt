@@ -14,7 +14,13 @@ object Routes {
     const val DETAIL_EDIT = "detailEdit"
     const val RESULT = "result"
     const val FRAME_THEME_SELECT = "frameThemeSelect"
+    const val FRAME_FLOW = "frameFlow"
+    const val COLOR_FRAME_PICK = "colorFramePick"
+    const val SEASON_FRAME_PICK = "seasonFramePick"
+    const val CUSTOM_FRAME_EDITOR = "customFrameEditor"
     const val SETTINGS = "settings"
+    const val PRIVACY_POLICY = "privacyPolicy"
+    const val CONTACT_FEEDBACK = "contactFeedback"
 
     object Args {
         const val FRAME_TYPE = "frameType"
