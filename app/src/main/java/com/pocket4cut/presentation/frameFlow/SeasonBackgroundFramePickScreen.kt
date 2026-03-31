@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.pocket4cut.frame.CollagePreviewScaledToFit
 import com.pocket4cut.frame.CustomFrameDesign
 import com.pocket4cut.frame.FrameStyle
@@ -164,9 +165,10 @@ fun SeasonBackgroundFramePickScreen(
                         horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
                     ) {
                         rowSeasons.forEach { season ->
+                            val subtitle = seasonDecoEmojis(season)
                             SeasonCard(
                                 season = season,
-                                themeSubtitle = theme.subtitle,
+                                themeSubtitle = subtitle,
                                 selected = season == selected,
                                 onClick = { selected = season },
                                 modifier = Modifier.weight(1f),
@@ -249,35 +251,47 @@ private fun SeasonCard(
     modifier: Modifier = Modifier,
 ) {
     val shape = RoundedCornerShape(AppLayout.Radius.lg)
-    Column(
+    val seasonBaseHex = com.pocket4cut.frame.SeasonHTMLFrameStyle.baseHex(season)
+    val seasonBgColor = Color((0xFF000000 or seasonBaseHex).toInt()).copy(alpha = 0.45f)
+    Row(
         modifier = modifier
             .clip(shape)
             .border(
-                width = if (selected) 2.dp else AppLayout.BorderWidth.thin,
+                width = if (selected) 2.5.dp else AppLayout.BorderWidth.thin,
                 color = if (selected) AppColors.Accent.pink else AppColors.Border.subtle,
                 shape = shape,
             )
-            .background(AppColors.Background.card)
+            .background(seasonBgColor)
             .clickable(onClick = onClick)
             .padding(AppSpacing.md),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
     ) {
         Text(
             text = season.emoji,
-            style = AppTypography.title2,
+            fontSize = 28.sp,
         )
-        Spacer(Modifier.height(AppSpacing.xxs))
-        Text(
-            text = season.displayName,
-            style = AppTypography.headline.copy(fontWeight = FontWeight.SemiBold),
-            color = AppColors.Text.primary,
-        )
-        Spacer(Modifier.height(AppSpacing.xxs))
-        Text(
-            text = themeSubtitle,
-            style = AppTypography.caption1,
-            color = AppColors.Text.secondary,
-            textAlign = TextAlign.Center,
-        )
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+        ) {
+            Text(
+                text = season.displayName,
+                style = AppTypography.headline.copy(fontWeight = FontWeight.SemiBold),
+                color = AppColors.Text.primary,
+            )
+            Text(
+                text = themeSubtitle,
+                style = AppTypography.caption2,
+                color = AppColors.Text.tertiary,
+            )
+        }
     }
+}
+
+private fun seasonDecoEmojis(season: Season): String = when (season) {
+    Season.SPRING -> "💕⭐✨💫"
+    Season.SUMMER -> "🌊☀️🐚🎐"
+    Season.AUTUMN -> "🍂🍁🌰🦊"
+    Season.WINTER -> "❄️⛄🌨️💎"
 }

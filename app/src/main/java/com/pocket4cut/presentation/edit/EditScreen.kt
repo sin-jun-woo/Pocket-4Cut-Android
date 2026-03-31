@@ -18,12 +18,13 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.TextFormat
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -154,7 +155,24 @@ fun EditScreen(
             Spacer(Modifier.height(AppSpacing.xl))
 
             // ── 4. Frame Color ──
-            FrameColorSection(uiState = uiState, onSelect = viewModel::setFrameColor)
+            if (uiState.allowsColorEditInEditor) {
+                FrameColorSection(uiState = uiState, onSelect = viewModel::setFrameColor)
+            } else if (uiState.seasonId != null) {
+                val seasonLabel = when (uiState.seasonId) {
+                    "spring" -> "봄"
+                    "summer" -> "여름"
+                    "autumn" -> "가을"
+                    "winter" -> "겨울"
+                    else -> ""
+                }
+                Column(modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal)) {
+                    Text(
+                        "배경 프레임 · $seasonLabel",
+                        style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
+                        color = AppColors.Text.secondary,
+                    )
+                }
+            }
 
             Spacer(Modifier.height(AppSpacing.xl))
 
@@ -165,6 +183,7 @@ fun EditScreen(
                 onTextFontSizeChange = viewModel::setTextFontSize,
                 onOpenFontSheet = { showFontSheet = true },
                 onCaptionColorAuto = { viewModel.setCaptionColorRGB(null) },
+                onCaptionColorPreset = { viewModel.setCaptionColorRGB(it) },
                 onOpenColorSheet = { showColorSheet = true },
                 focusManager = focusManager,
             )
@@ -208,7 +227,7 @@ fun EditScreen(
                 },
                 fullWidth = true,
                 icon = {
-                    Icon(Icons.Default.Edit, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
+                    Icon(Icons.Default.Refresh, null, tint = Color.White, modifier = Modifier.size(20.dp))
                 },
                 modifier = Modifier
                     .padding(horizontal = AppSpacing.Screen.horizontal)
@@ -386,7 +405,7 @@ private fun FilterChip(
                 .clip(CircleShape)
                 .background(AppColors.Background.tertiary)
                 .border(
-                    width = if (isSelected) 3.dp else 1.dp,
+                    width = if (isSelected) 4.dp else 1.dp,
                     color = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle,
                     shape = CircleShape,
                 )
@@ -530,6 +549,7 @@ private fun TextInputSection(
     onTextFontSizeChange: (Float) -> Unit,
     onOpenFontSheet: () -> Unit,
     onCaptionColorAuto: () -> Unit,
+    onCaptionColorPreset: (Long) -> Unit,
     onOpenColorSheet: () -> Unit,
     focusManager: androidx.compose.ui.focus.FocusManager,
 ) {
@@ -576,13 +596,13 @@ private fun TextInputSection(
                 focusedTextColor = AppColors.Text.primary,
                 unfocusedTextColor = AppColors.Text.primary,
             ),
-            shape = RoundedCornerShape(AppLayout.Radius.md),
+            shape = RoundedCornerShape(AppLayout.Radius.sm),
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { isFocused = it.isFocused }
                 .then(
-                    if (isFocused) Modifier.border(1.5.dp, AppColors.Accent.pink, RoundedCornerShape(AppLayout.Radius.md))
-                    else Modifier.border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md)),
+                    if (isFocused) Modifier.border(3.dp, AppColors.Accent.pink, RoundedCornerShape(AppLayout.Radius.sm))
+                    else Modifier.border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.sm)),
                 ),
         )
         Spacer(Modifier.height(AppSpacing.md))
@@ -603,81 +623,86 @@ private fun TextInputSection(
                 .padding(horizontal = AppSpacing.md, vertical = AppSpacing.sm),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            Icon(
+                Icons.Default.TextFormat,
+                null,
+                tint = AppColors.Text.secondary,
+                modifier = Modifier.size(18.dp),
+            )
+            Spacer(Modifier.width(AppSpacing.xs))
             Text(
-                "글꼴",
+                "선택된 글꼴: $fontLabel",
                 style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
                 color = AppColors.Text.primary,
             )
             Spacer(Modifier.weight(1f))
-            Text(
-                fontLabel,
-                style = AppTypography.subheadline,
-                color = AppColors.Accent.pink,
+            Icon(
+                Icons.Default.ChevronRight,
+                null,
+                tint = AppColors.Text.tertiary,
+                modifier = Modifier.size(16.dp),
             )
         }
         Spacer(Modifier.height(AppSpacing.md))
+        Text(
+            "글씨 색상",
+            style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
+            color = AppColors.Text.secondary,
+        )
+        Spacer(Modifier.height(AppSpacing.xs))
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
         ) {
-            Text(
-                "캡션 색",
-                style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
-                color = AppColors.Text.secondary,
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+            val autoShape = RoundedCornerShape(AppLayout.Radius.sm)
+            val autoSelected = uiState.captionColorRGB == null
+            Box(
+                modifier = Modifier
+                    .clip(autoShape)
+                    .then(
+                        if (autoSelected) Modifier.border(2.dp, AppColors.Accent.pink, autoShape)
+                        else Modifier.border(1.dp, AppColors.Border.subtle, autoShape),
+                    )
+                    .background(AppColors.Background.tertiary, autoShape)
+                    .clickable(onClick = onCaptionColorAuto)
+                    .padding(horizontal = AppSpacing.md, vertical = AppSpacing.xs),
+                contentAlignment = Alignment.Center,
             ) {
-                val autoShape = RoundedCornerShape(AppLayout.Radius.sm)
-                val autoSelected = uiState.captionColorRGB == null
+                Text(
+                    "자동",
+                    style = AppTypography.caption1.copy(
+                        fontWeight = if (autoSelected) FontWeight.SemiBold else FontWeight.Normal,
+                    ),
+                    color = if (autoSelected) AppColors.Accent.pink else AppColors.Text.secondary,
+                )
+            }
+            val presetColors = listOf(0x111111L, 0xFFFFFFL, 0xFF6B9DL, 0x4FC3F7L, 0x6BCF9FL, 0xFFD93DL)
+            presetColors.forEach { hex ->
+                val isPresetSel = uiState.captionColorRGB == hex
                 Box(
                     modifier = Modifier
-                        .clip(autoShape)
-                        .then(
-                            if (autoSelected) Modifier.border(2.dp, AppColors.Accent.pink, autoShape)
-                            else Modifier.border(1.dp, AppColors.Border.subtle, autoShape),
-                        )
-                        .background(AppColors.Background.tertiary, autoShape)
-                        .clickable(onClick = onCaptionColorAuto)
-                        .padding(horizontal = AppSpacing.md, vertical = AppSpacing.xs),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        "자동",
-                        style = AppTypography.caption1.copy(
-                            fontWeight = if (autoSelected) FontWeight.SemiBold else FontWeight.Normal,
-                        ),
-                        color = if (autoSelected) AppColors.Accent.pink else AppColors.Text.secondary,
-                    )
-                }
-                uiState.captionColorRGB?.let { rgb ->
-                    Box(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFF000000L or (rgb and 0xFFFFFFL)))
-                            .then(
-                                if ((rgb and 0xFFFFFFL) == 0xFFFFFFL) {
-                                    Modifier.border(1.dp, AppColors.Border.medium, CircleShape)
-                                } else {
-                                    Modifier
-                                },
-                            ),
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .size(44.dp)
+                        .size(24.dp)
                         .clip(CircleShape)
-                        .background(AppColors.Background.tertiary)
-                        .border(1.dp, AppColors.Border.subtle, CircleShape)
-                        .clickable(onClick = onOpenColorSheet),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(Icons.Default.Palette, null, tint = AppColors.Text.secondary, modifier = Modifier.size(22.dp))
-                }
+                        .background(Color(0xFF000000L or hex), CircleShape)
+                        .then(
+                            if (isPresetSel) Modifier.border(2.dp, AppColors.Accent.pink, CircleShape)
+                            else if (hex == 0xFFFFFFL) Modifier.border(1.dp, AppColors.Border.medium, CircleShape)
+                            else Modifier
+                        )
+                        .clickable { onCaptionColorPreset(hex) },
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(AppColors.Background.tertiary)
+                    .border(1.dp, AppColors.Border.subtle, CircleShape)
+                    .clickable(onClick = onOpenColorSheet),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(Icons.Default.Palette, null, tint = AppColors.Text.secondary, modifier = Modifier.size(22.dp))
             }
         }
         Spacer(Modifier.height(AppSpacing.xs))
@@ -685,7 +710,6 @@ private fun TextInputSection(
             "${uiState.customText.length} / 30",
             style = AppTypography.caption1,
             color = AppColors.Text.tertiary,
-            modifier = Modifier.align(Alignment.End),
         )
     }
 }

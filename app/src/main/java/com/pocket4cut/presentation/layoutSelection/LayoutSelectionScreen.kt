@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.size
@@ -163,14 +164,15 @@ fun LayoutSelectionScreen(
                                 ambientColor = Color.Black.copy(alpha = 0.35f),
                                 spotColor = Color.Black.copy(alpha = 0.45f),
                             )
-                            .size(width = 300.dp, height = 520.dp)
+                            .fillMaxWidth()
+                            .heightIn(max = 520.dp)
                             .clip(previewShape),
                     ) {
                         AnimatedContent(
                             targetState = selectedLayout,
                             transitionSpec = {
-                                fadeIn(animationSpec = tween(220)) togetherWith
-                                    fadeOut(animationSpec = tween(140))
+                                fadeIn(animationSpec = tween(300, easing = androidx.compose.animation.core.EaseInOut)) togetherWith
+                                    fadeOut(animationSpec = tween(300, easing = androidx.compose.animation.core.EaseInOut))
                             },
                             label = "collagePreview",
                         ) { layoutId ->
@@ -277,11 +279,11 @@ private fun LayoutCard(
             .then(
                 if (isSelected) {
                     Modifier.shadow(
-                        elevation = 16.dp,
+                        elevation = 12.dp,
                         shape = cardShape,
                         clip = false,
-                        ambientColor = AppColors.Accent.pink.copy(alpha = 0.22f),
-                        spotColor = AppColors.Accent.pink.copy(alpha = 0.38f),
+                        ambientColor = AppColors.Accent.pink.copy(alpha = 0.3f),
+                        spotColor = AppColors.Accent.pink.copy(alpha = 0.4f),
                     )
                 } else {
                     Modifier
@@ -290,7 +292,7 @@ private fun LayoutCard(
             .clip(cardShape)
             .background(bg)
             .border(
-                width = if (isSelected) 2.dp else 1.dp,
+                width = if (isSelected) 3.dp else 1.dp,
                 color = borderColor,
                 shape = cardShape,
             )

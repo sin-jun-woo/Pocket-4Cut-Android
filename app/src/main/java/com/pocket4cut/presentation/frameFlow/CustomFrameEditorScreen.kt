@@ -29,9 +29,14 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.EmojiEmotions
+import androidx.compose.material.icons.filled.TextFields
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -46,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -84,14 +90,9 @@ private enum class TrayMode {
 }
 
 private val stickerTintPalette = listOf(
-    0xFFE91E63L,
-    0xFFFF5722L,
-    0xFFFFC107L,
-    0xFF4CAF50L,
-    0xFF2196F3L,
-    0xFF9C27B0L,
-    0xFF000000L,
-    0xFFFFFFFFL,
+    0xFF6B9DL, 0xFFB4D6L, 0xE5527FL, 0x000000L, 0xFFFFFFL, 0x2D2D2DL,
+    0xFFD93DL, 0xFF7E67L, 0x4FC3F7L, 0x6BCF9FL, 0xB794F6L, 0xA8E6CFL,
+    0xC4A8D8L, 0x89CFF0L, 0xFF85C0L, 0x43A047L,
 )
 
 @Composable
@@ -206,6 +207,7 @@ fun CustomFrameEditorScreen(
                     frameStyle = frameStyle,
                     theme = theme,
                     customFrameDesign = design,
+                    customDecorations = decorations,
                     modifier = Modifier.fillMaxSize(),
                 )
 
@@ -257,18 +259,13 @@ fun CustomFrameEditorScreen(
                                             detectDragGestures { _, dragAmount ->
                                                 val sid = selectedId ?: return@detectDragGestures
                                                 decorations = decorations.map {
-                                                    if (it.id != sid) {
-                                                        it
-                                                    } else {
-                                                        it.copy(
-                                                            position = NormPoint(
-                                                                x = (it.position.x + dragAmount.x / sw)
-                                                                    .coerceIn(0.02f, 0.98f),
-                                                                y = (it.position.y + dragAmount.y / sh)
-                                                                    .coerceIn(0.02f, 0.98f),
-                                                            ),
-                                                        )
-                                                    }
+                                                    if (it.id != sid) it
+                                                    else it.copy(
+                                                        position = NormPoint(
+                                                            x = (it.position.x + dragAmount.x / sw).coerceIn(0.02f, 0.98f),
+                                                            y = (it.position.y + dragAmount.y / sh).coerceIn(0.02f, 0.98f),
+                                                        ),
+                                                    )
                                                 }
                                             }
                                         }
@@ -276,20 +273,15 @@ fun CustomFrameEditorScreen(
                                             detectTransformGestures { _, _, zoomChange, rotationChange ->
                                                 val sid = selectedId ?: return@detectTransformGestures
                                                 decorations = decorations.map {
-                                                    if (it.id != sid) {
-                                                        it
-                                                    } else {
-                                                        it.copy(
-                                                            scale = (it.scale * zoomChange).coerceIn(0.25f, 5f),
-                                                            rotationRadians = it.rotationRadians + rotationChange,
-                                                        )
-                                                    }
+                                                    if (it.id != sid) it
+                                                    else it.copy(
+                                                        scale = (it.scale * zoomChange).coerceIn(0.25f, 5f),
+                                                        rotationRadians = it.rotationRadians + rotationChange,
+                                                    )
                                                 }
                                             }
                                         }
-                                } else {
-                                    Modifier
-                                },
+                                } else Modifier,
                             ),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -306,14 +298,16 @@ fun CustomFrameEditorScreen(
             }
         }
 
+        // --- Bottom panel ---
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = AppSpacing.Screen.horizontal)
-                .heightIn(max = 320.dp),
+                .heightIn(max = 380.dp),
         ) {
             Text(
-                text = "배경",
+                text = "배경 색",
                 style = AppTypography.caption1,
                 color = AppColors.Text.secondary,
                 modifier = Modifier.padding(bottom = AppSpacing.xs),
@@ -335,41 +329,81 @@ fun CustomFrameEditorScreen(
 
             Spacer(Modifier.height(AppSpacing.md))
 
+            // Tool buttons row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
             ) {
-                ToolLabel("텍스트 추가") {
-                    textDraft = "텍스트"
-                    showTextDialog = true
-                    trayMode = TrayMode.Hidden
-                }
-                ToolLabel("이모지 추가") {
-                    trayMode = if (trayMode == TrayMode.Emoji) TrayMode.Hidden else TrayMode.Emoji
-                }
-                ToolLabel("스티커 추가") {
-                    trayMode = if (trayMode == TrayMode.Sticker) TrayMode.Hidden else TrayMode.Sticker
-                }
+                ToolButton(
+                    icon = Icons.Default.TextFields,
+                    label = "텍스트",
+                    isActive = false,
+                    onClick = {
+                        textDraft = "텍스트"
+                        showTextDialog = true
+                        trayMode = TrayMode.Hidden
+                    },
+                    modifier = Modifier.weight(1f),
+                )
+                ToolButton(
+                    icon = Icons.Default.EmojiEmotions,
+                    label = "이모지",
+                    isActive = trayMode == TrayMode.Emoji,
+                    onClick = {
+                        trayMode = if (trayMode == TrayMode.Emoji) TrayMode.Hidden else TrayMode.Emoji
+                    },
+                    modifier = Modifier.weight(1f),
+                )
+                ToolButton(
+                    icon = Icons.Default.AutoAwesome,
+                    label = "스티커",
+                    isActive = trayMode == TrayMode.Sticker,
+                    onClick = {
+                        trayMode = if (trayMode == TrayMode.Sticker) TrayMode.Hidden else TrayMode.Sticker
+                    },
+                    modifier = Modifier.weight(1f),
+                )
                 if (selectedId != null) {
-                    ToolLabel("삭제", emphasize = true) {
-                        decorations = decorations.filter { it.id != selectedId }
-                        selectedId = null
+                    Box(
+                        modifier = Modifier
+                            .size(44.dp)
+                            .clip(RoundedCornerShape(AppLayout.Radius.md))
+                            .background(AppColors.Background.tertiary)
+                            .clickable {
+                                decorations = decorations.filter { it.id != selectedId }
+                                selectedId = null
+                            },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            Icons.Default.Delete,
+                            null,
+                            tint = AppColors.Accent.pink,
+                            modifier = Modifier.size(18.dp),
+                        )
                     }
                 }
             }
 
+            // Trays
             when (trayMode) {
                 TrayMode.Hidden -> Unit
                 TrayMode.Emoji -> {
                     Spacer(Modifier.height(AppSpacing.sm))
+                    Text(
+                        "이모지 고르기",
+                        style = AppTypography.caption1,
+                        color = AppColors.Text.secondary,
+                        modifier = Modifier.padding(bottom = AppSpacing.xs),
+                    )
                     LazyVerticalGrid(
-                        columns = GridCells.Adaptive(minSize = 44.dp),
+                        columns = GridCells.Adaptive(minSize = 48.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(max = 160.dp),
+                            .heightIn(max = 240.dp),
                         contentPadding = PaddingValues(vertical = AppSpacing.xs),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(AppSpacing.xs),
+                        verticalArrangement = Arrangement.spacedBy(AppSpacing.xs),
                     ) {
                         items(
                             count = EmojiPicklist.all.size,
@@ -378,23 +412,31 @@ fun CustomFrameEditorScreen(
                             val emoji = EmojiPicklist.all[index]
                             Box(
                                 modifier = Modifier
-                                    .size(40.dp)
-                                    .clip(CircleShape)
+                                    .size(48.dp)
+                                    .clip(RoundedCornerShape(AppLayout.Radius.md))
+                                    .background(AppColors.Background.secondary)
                                     .clickable {
-                                        decorations = decorations + CustomFrameDecoration(
+                                        val newDec = CustomFrameDecoration(
                                             kind = CustomFrameDecoration.Kind.Emoji(emoji),
                                         )
-                                        selectedId = decorations.last().id
+                                        decorations = decorations + newDec
+                                        selectedId = newDec.id
                                     },
                                 contentAlignment = Alignment.Center,
                             ) {
-                                Text(text = emoji, fontSize = 22.sp)
+                                Text(text = emoji, fontSize = 32.sp)
                             }
                         }
                     }
                 }
                 TrayMode.Sticker -> {
                     Spacer(Modifier.height(AppSpacing.sm))
+                    Text(
+                        "스티커 색",
+                        style = AppTypography.caption1,
+                        color = AppColors.Text.secondary,
+                        modifier = Modifier.padding(bottom = AppSpacing.xs),
+                    )
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -405,7 +447,7 @@ fun CustomFrameEditorScreen(
                             val selected = rgb == selectedStickerColor
                             Box(
                                 modifier = Modifier
-                                    .size(32.dp)
+                                    .size(36.dp)
                                     .clip(CircleShape)
                                     .background(Color(0xFF000000L or rgb))
                                     .border(
@@ -413,33 +455,56 @@ fun CustomFrameEditorScreen(
                                         color = if (selected) AppColors.Accent.pink else AppColors.Border.medium,
                                         shape = CircleShape,
                                     )
-                                    .clickable { selectedStickerColor = rgb },
+                                    .clickable {
+                                        selectedStickerColor = rgb
+                                        val sid = selectedId
+                                        if (sid != null) {
+                                            decorations = decorations.map { dec ->
+                                                if (dec.id != sid) dec
+                                                else {
+                                                    val k = dec.kind
+                                                    if (k is CustomFrameDecoration.Kind.Sticker) {
+                                                        dec.copy(kind = k.copy(colorRGB = rgb and 0xFFFFFFL))
+                                                    } else dec
+                                                }
+                                            }
+                                        }
+                                    },
                             )
                         }
                     }
                     Spacer(Modifier.height(AppSpacing.sm))
+                    Text(
+                        "스티커 고르기",
+                        style = AppTypography.caption1,
+                        color = AppColors.Text.secondary,
+                        modifier = Modifier.padding(bottom = AppSpacing.xs),
+                    )
                     LazyVerticalGrid(
-                        columns = GridCells.Fixed(5),
+                        columns = GridCells.Adaptive(minSize = 56.dp),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(max = 140.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                            .heightIn(max = 200.dp),
+                        horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+                        verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
                     ) {
                         items(StickerPalette.entries.toList()) { sticker ->
                             Box(
                                 modifier = Modifier
-                                    .size(44.dp)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(AppColors.Background.card)
+                                    .size(52.dp)
+                                    .clip(RoundedCornerShape(AppLayout.Radius.md))
+                                    .background(AppColors.Background.secondary)
+                                    .border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md))
                                     .clickable {
-                                        decorations = decorations + CustomFrameDecoration(
+                                        val newDec = CustomFrameDecoration(
+                                            position = NormPoint(0.5f, 0.55f),
                                             kind = CustomFrameDecoration.Kind.Sticker(
                                                 assetId = sticker.assetId,
                                                 colorRGB = selectedStickerColor and 0xFFFFFFL,
                                             ),
                                         )
-                                        selectedId = decorations.last().id
+                                        decorations = decorations + newDec
+                                        selectedId = newDec.id
                                     },
                                 contentAlignment = Alignment.Center,
                             ) {
@@ -455,14 +520,17 @@ fun CustomFrameEditorScreen(
                 }
             }
 
+            // Decoration chips
             if (decorations.isNotEmpty()) {
                 Spacer(Modifier.height(AppSpacing.md))
-                Text(
-                    text = "추가한 꾸미기",
-                    style = AppTypography.caption1,
-                    color = AppColors.Text.secondary,
-                    modifier = Modifier.padding(bottom = AppSpacing.xs),
-                )
+                if (selectedId != null) {
+                    Text(
+                        text = "선택한 장식을 드래그, 핀치, 회전할 수 있어요",
+                        style = AppTypography.caption2,
+                        color = AppColors.Text.tertiary,
+                        modifier = Modifier.padding(bottom = AppSpacing.xs),
+                    )
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -471,22 +539,24 @@ fun CustomFrameEditorScreen(
                 ) {
                     decorations.forEach { dec ->
                         val sel = dec.id == selectedId
-                        Box(
+                        val chipShape = RoundedCornerShape(50)
+                        Row(
                             modifier = Modifier
-                                .size(48.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                                .border(
-                                    width = if (sel) 2.dp else 1.dp,
-                                    color = if (sel) AppColors.Accent.pink else AppColors.Border.light,
-                                    shape = RoundedCornerShape(8.dp),
+                                .height(36.dp)
+                                .clip(chipShape)
+                                .then(
+                                    if (sel) Modifier
+                                        .background(AppColors.Accent.pinkSubtle, chipShape)
+                                        .border(2.dp, AppColors.Accent.pink, chipShape)
+                                    else Modifier
+                                        .background(AppColors.Background.tertiary, chipShape)
+                                        .border(1.dp, AppColors.Border.subtle, chipShape)
                                 )
-                                .background(AppColors.Background.card)
-                                .clickable {
-                                    selectedId = dec.id
-                                },
-                            contentAlignment = Alignment.Center,
+                                .clickable { selectedId = dec.id }
+                                .padding(horizontal = AppSpacing.md),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            DecorationChipMini(decoration = dec, context = context)
+                            DecorationChipLabel(decoration = dec, context = context)
                         }
                     }
                 }
@@ -537,7 +607,7 @@ fun CustomFrameEditorScreen(
                     onValueChange = { textDraft = it },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
-                    label = { Text("텍스트 입력") },
+                    label = { Text("문구") },
                 )
                 Spacer(Modifier.height(AppSpacing.md))
 
@@ -597,10 +667,11 @@ fun CustomFrameEditorScreen(
                             text = "추가",
                             onClick = {
                                 val newDec = CustomFrameDecoration(
+                                    position = NormPoint(0.5f, 0.45f),
                                     kind = CustomFrameDecoration.Kind.Text(
                                         content = textDraft.ifBlank { "텍스트" },
                                         textColorARGB = 0xFF000000L or (draftTextColorHex and 0xFFFFFFL),
-                                        fontScale = 0.08f,
+                                        fontScale = 0.055f,
                                     ),
                                     fontName = draftTextFontName,
                                 )
@@ -634,6 +705,43 @@ fun CustomFrameEditorScreen(
 }
 
 @Composable
+private fun ToolButton(
+    icon: ImageVector,
+    label: String,
+    isActive: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val shape = RoundedCornerShape(AppLayout.Radius.md)
+    Column(
+        modifier = modifier
+            .height(56.dp)
+            .clip(shape)
+            .background(AppColors.Background.tertiary, shape)
+            .then(
+                if (isActive) Modifier.border(2.dp, AppColors.Accent.pink, shape)
+                else Modifier.border(1.dp, AppColors.Border.subtle, shape)
+            )
+            .clickable(onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Icon(
+            icon,
+            contentDescription = label,
+            tint = if (isActive) AppColors.Accent.pink else AppColors.Text.primary,
+            modifier = Modifier.size(20.dp),
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(
+            label,
+            style = AppTypography.caption2,
+            color = if (isActive) AppColors.Accent.pink else AppColors.Text.secondary,
+        )
+    }
+}
+
+@Composable
 private fun BackgroundColorChip(
     frameColor: FrameColor,
     selected: Boolean,
@@ -644,43 +752,19 @@ private fun BackgroundColorChip(
             .size(44.dp)
             .clip(CircleShape)
             .border(
-                width = if (selected) 2.dp else 1.dp,
-                color = if (selected) AppColors.Accent.pink else AppColors.Border.medium,
+                width = if (selected) 3.dp else 1.dp,
+                color = if (selected) AppColors.Accent.pink else AppColors.Border.subtle,
                 shape = CircleShape,
             )
             .clickable(onClick = onClick),
     ) {
         val brush = frameColor.gradientBrush
         if (brush != null) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(brush),
-            )
+            Box(Modifier.fillMaxSize().background(brush))
         } else {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(frameColor.color),
-            )
+            Box(Modifier.fillMaxSize().background(frameColor.color))
         }
     }
-}
-
-@Composable
-private fun ToolLabel(text: String, emphasize: Boolean = false, onClick: () -> Unit) {
-    Text(
-        text = text,
-        style = if (emphasize) {
-            AppTypography.subheadline.copy(color = AppColors.Semantic.error)
-        } else {
-            AppTypography.subheadline.copy(color = AppColors.Accent.pink)
-        },
-        modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .clickable(onClick = onClick)
-            .padding(vertical = AppSpacing.xs, horizontal = AppSpacing.sm),
-    )
 }
 
 @Composable
@@ -719,14 +803,15 @@ private fun DecorationPreviewContent(
 }
 
 @Composable
-private fun DecorationChipMini(
+private fun DecorationChipLabel(
     decoration: CustomFrameDecoration,
     context: android.content.Context,
 ) {
     when (val k = decoration.kind) {
         is CustomFrameDecoration.Kind.Text -> {
+            val display = if (k.content.length > 8) k.content.take(8) + "…" else k.content
             Text(
-                text = k.content.take(2),
+                text = display,
                 style = AppTypography.caption1,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -740,8 +825,10 @@ private fun DecorationChipMini(
                     imageVector = p.icon,
                     contentDescription = null,
                     tint = Color(0xFF000000L or (k.colorRGB and 0xFFFFFFL)),
-                    modifier = Modifier.size(22.dp),
+                    modifier = Modifier.size(18.dp),
                 )
+                Spacer(Modifier.width(4.dp))
+                Text(text = p.displayName, style = AppTypography.caption2)
             }
         }
     }

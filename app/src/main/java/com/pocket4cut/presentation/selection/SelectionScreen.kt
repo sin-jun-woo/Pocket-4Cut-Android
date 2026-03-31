@@ -151,16 +151,16 @@ fun SelectionScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = AppSpacing.Screen.horizontal)
-                    .clip(RoundedCornerShape(AppLayout.Radius.md))
+                    .clip(RoundedCornerShape(AppLayout.Radius.lg))
                     .then(
                         if (isDone) {
                             Modifier
                                 .background(AppColors.Accent.pinkSubtle)
-                                .border(1.dp, AppColors.Accent.pink, RoundedCornerShape(AppLayout.Radius.md))
+                                .border(2.dp, AppColors.Accent.pink, RoundedCornerShape(AppLayout.Radius.lg))
                         } else {
                             Modifier
                                 .background(AppColors.Background.secondary)
-                                .border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md))
+                                .border(2.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.lg))
                         },
                     )
                     .padding(horizontal = AppSpacing.md, vertical = AppSpacing.sm),
@@ -172,23 +172,23 @@ fun SelectionScreen(
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = null,
                         tint = AppColors.Accent.pink,
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(22.dp),
                     )
                     Spacer(Modifier.width(AppSpacing.xs))
                     Text(
                         text = "선택 완료!",
-                        style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
-                        color = AppColors.Accent.pink,
+                        style = AppTypography.headline.copy(fontWeight = FontWeight.SemiBold),
+                        color = AppColors.Text.primary,
                     )
                 } else {
                     Text(
                         text = "$selectedCount",
-                        style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
+                        style = AppTypography.title3.copy(fontWeight = FontWeight.SemiBold),
                         color = AppColors.Accent.pink,
                     )
                     Text(
                         text = " / $max 장",
-                        style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
+                        style = AppTypography.title3.copy(fontWeight = FontWeight.SemiBold),
                         color = AppColors.Text.secondary,
                     )
                 }
@@ -244,7 +244,7 @@ fun SelectionScreen(
                                 label = "selectionOverlayAlpha",
                             )
                             val borderWidth by animateDpAsState(
-                                targetValue = if (isSelected) 3.dp else 1.dp,
+                                targetValue = if (isSelected) 4.dp else 1.dp,
                                 animationSpec = SelectionToggleDpSpec,
                                 label = "selectionBorderWidth",
                             )
@@ -295,23 +295,23 @@ fun SelectionScreen(
                                     if (isSelected) {
                                         Box(
                                             modifier = Modifier
-                                                .size(28.dp)
+                                                .size(32.dp)
                                                 .clip(CircleShape)
                                                 .background(AppColors.Accent.pink),
                                             contentAlignment = Alignment.Center,
                                         ) {
                                             Text(
                                                 text = "${order + 1}",
-                                                style = AppTypography.caption1.copy(fontWeight = FontWeight.Bold),
+                                                style = AppTypography.footnote.copy(fontWeight = FontWeight.Bold),
                                                 color = Color.White,
                                             )
                                         }
                                     } else {
                                         Box(
                                             modifier = Modifier
-                                                .size(28.dp)
+                                                .size(32.dp)
                                                 .clip(CircleShape)
-                                                .border(1.5.dp, Color.White.copy(alpha = 0.35f), CircleShape),
+                                                .border(1.5.dp, Color.White.copy(alpha = 0.2f), CircleShape),
                                         )
                                     }
                                 }

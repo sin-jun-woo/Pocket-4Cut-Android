@@ -65,7 +65,7 @@ fun ColorFramePalettePickScreen(
     onCompleted: (FrameColor) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val palette = remember { FrameColors.all }
+    val palette = remember(frameType) { FrameColors.colorFramePalette(frameType) }
     var selected by remember(palette) { mutableStateOf(palette.first()) }
 
     Column(
@@ -136,11 +136,18 @@ fun ColorFramePalettePickScreen(
                     overrideBackground = selected.color,
                     modifier = Modifier
                         .shadow(
-                            elevation = 60.dp,
+                            elevation = 32.dp,
                             shape = RoundedCornerShape(AppLayout.Radius.xl),
                             clip = false,
-                            ambientColor = Color.Black.copy(alpha = 0.3f),
-                            spotColor = Color.Black.copy(alpha = 0.3f),
+                            ambientColor = Color.Black.copy(alpha = 0.28f),
+                            spotColor = Color.Black.copy(alpha = 0.45f),
+                        )
+                        .shadow(
+                            elevation = 12.dp,
+                            shape = RoundedCornerShape(AppLayout.Radius.xl),
+                            clip = false,
+                            ambientColor = Color.Black.copy(alpha = 0.18f),
+                            spotColor = Color.Black.copy(alpha = 0.28f),
                         )
                         .fillMaxWidth(),
                 )
@@ -219,36 +226,55 @@ private fun ColorChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier
-            .size(56.dp)
-            .clip(CircleShape)
-            .border(
-                width = if (selected) 2.dp else AppLayout.BorderWidth.thin,
-                color = if (selected) AppColors.Accent.pink else AppColors.Border.medium,
-                shape = CircleShape,
-            )
-            .clickable(onClick = onClick),
-    ) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(frameColor.color),
-        )
-        if (selected) {
+            modifier = modifier
+                .size(56.dp)
+                .clip(CircleShape)
+                .border(
+                    width = if (selected) 3.dp else 1.dp,
+                    color = if (selected) AppColors.Accent.pink else AppColors.Border.subtle,
+                    shape = CircleShape,
+                )
+                .clickable(onClick = onClick),
+            contentAlignment = Alignment.Center,
+        ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(AppColors.Accent.pink.copy(alpha = 0.35f)),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(28.dp),
-                )
+                    .background(frameColor.color),
+            )
+            if (selected) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(AppColors.Accent.pink.copy(alpha = 0.35f)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clip(CircleShape)
+                            .background(AppColors.Accent.pink),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(10.dp),
+                        )
+                    }
+                }
             }
         }
+        Spacer(Modifier.height(4.dp))
+        Text(
+            frameColor.name,
+            style = AppTypography.caption2.copy(
+                fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+            ),
+            color = if (selected) AppColors.Text.primary else AppColors.Text.tertiary,
+        )
     }
 }

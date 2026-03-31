@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -270,6 +271,7 @@ fun DetailEditScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .background(AppColors.Background.secondary)
                         .horizontalScroll(rememberScrollState())
                         .padding(horizontal = AppSpacing.Screen.horizontal, vertical = AppSpacing.sm),
                     horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
@@ -287,19 +289,19 @@ fun DetailEditScreen(
                                     if (isSelected) {
                                         Modifier.shadow(
                                             elevation = 12.dp,
-                                            shape = RoundedCornerShape(AppLayout.Radius.sm),
-                                            ambientColor = AppColors.Accent.pink.copy(alpha = 0.4f),
+                                            shape = RoundedCornerShape(AppLayout.Radius.md),
+                                            ambientColor = AppColors.Accent.pink.copy(alpha = 0.45f),
                                             spotColor = AppColors.Accent.pink.copy(alpha = 0.6f),
                                         )
                                     } else {
                                         Modifier
                                     },
                                 )
-                                .clip(RoundedCornerShape(AppLayout.Radius.sm))
+                                .clip(RoundedCornerShape(AppLayout.Radius.md))
                                 .border(
-                                    width = if (isSelected) 3.dp else 1.dp,
+                                    width = if (isSelected) 4.dp else 1.dp,
                                     color = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle,
-                                    shape = RoundedCornerShape(AppLayout.Radius.sm),
+                                    shape = RoundedCornerShape(AppLayout.Radius.md),
                                 )
                                 .clickable { viewModel.selectSlot(i) },
                         ) {
@@ -312,14 +314,14 @@ fun DetailEditScreen(
                             if (hasEdits) {
                                 Box(
                                     modifier = Modifier
-                                        .align(Alignment.TopEnd)
-                                        .padding(AppSpacing.xxs)
+                                        .align(Alignment.BottomEnd)
+                                        .offset(x = 4.dp, y = (-4).dp)
                                         .size(20.dp)
                                         .clip(CircleShape)
                                         .background(AppColors.Accent.pink),
                                     contentAlignment = Alignment.Center,
                                 ) {
-                                    Icon(Icons.Default.Check, null, tint = Color.White, modifier = Modifier.size(12.dp))
+                                    Icon(Icons.Default.Check, null, tint = Color.White, modifier = Modifier.size(10.dp))
                                 }
                             }
                         }
@@ -342,46 +344,49 @@ fun DetailEditScreen(
                     .padding(horizontal = AppSpacing.Screen.horizontal)
                     .padding(bottom = AppSpacing.Layout.ctaBottomSpace),
             ) {
+                val currentAdj = uiState.slotAdjustments.getOrNull(uiState.selectedSlotIndex)
+                val isFlipped = currentAdj?.isFlippedHorizontally == true
+                val flipTint = if (isFlipped) AppColors.Accent.pink else AppColors.Text.primary
+                val flipBorder = if (isFlipped) AppColors.Accent.pink.copy(alpha = 0.6f) else AppColors.Border.subtle
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
                 ) {
-                    Row(
+                    Column(
                         modifier = Modifier
                             .weight(1f)
                             .clip(RoundedCornerShape(AppLayout.Radius.md))
                             .background(AppColors.Background.tertiary)
                             .border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md))
                             .clickable { viewModel.rotateCurrentSlot() }
-                            .padding(AppSpacing.md),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically,
+                            .padding(vertical = AppSpacing.sm),
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Icon(Icons.Default.Refresh, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
-                        Spacer(Modifier.width(AppSpacing.sm))
+                        Icon(Icons.Default.Refresh, null, tint = AppColors.Text.primary, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.height(AppSpacing.xxs))
                         Text(
                             "90° 회전",
-                            style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
+                            style = AppTypography.caption1.copy(fontWeight = FontWeight.SemiBold),
                             color = AppColors.Text.primary,
                         )
                     }
-                    Row(
+                    Column(
                         modifier = Modifier
                             .weight(1f)
                             .clip(RoundedCornerShape(AppLayout.Radius.md))
                             .background(AppColors.Background.tertiary)
-                            .border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md))
+                            .border(1.dp, flipBorder, RoundedCornerShape(AppLayout.Radius.md))
                             .clickable { viewModel.flipCurrentHorizontally() }
-                            .padding(AppSpacing.md),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically,
+                            .padding(vertical = AppSpacing.sm),
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Icon(Icons.Filled.Flip, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
-                        Spacer(Modifier.width(AppSpacing.sm))
+                        Icon(Icons.Filled.Flip, null, tint = flipTint, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.height(AppSpacing.xxs))
                         Text(
                             "좌우 반전",
-                            style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
-                            color = AppColors.Text.primary,
+                            style = AppTypography.caption1.copy(fontWeight = FontWeight.SemiBold),
+                            color = flipTint,
                         )
                     }
                 }

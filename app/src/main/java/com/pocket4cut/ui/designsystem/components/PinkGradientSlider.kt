@@ -35,7 +35,7 @@ import com.pocket4cut.ui.designsystem.AppSpacing
 import com.pocket4cut.ui.designsystem.AppTypography
 import kotlin.math.roundToInt
 
-private val TrackHeight = 6.dp
+private val TrackHeight = 8.dp
 private val ThumbDp = 24.dp
 
 @Composable
@@ -143,7 +143,7 @@ fun PinkGradientSlider(
                         .size(ThumbDp)
                         .clip(CircleShape)
                         .background(AppColors.Accent.pink)
-                        .border(width = 2.dp, color = Color.White, shape = CircleShape),
+                        .border(width = 3.dp, color = Color.White, shape = CircleShape),
                 )
             }
         }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -28,15 +29,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalContext
@@ -50,6 +48,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.pocket4cut.core.util.AppFontCatalog
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.ui.designsystem.theme.Season
@@ -67,6 +66,7 @@ fun CollagePreview(
     overrideBackground: Color? = null,
     overrideBackgroundImage: Bitmap? = null,
     customFrameDesign: CustomFrameDesign? = null,
+    customDecorations: List<CustomFrameDecoration> = emptyList(),
     bottomCaption: String? = null,
     captionTextPart: String? = null,
     captionDatePart: String? = null,
@@ -87,14 +87,20 @@ fun CollagePreview(
         else -> theme.background
     }
     val used = images.take(frameType.selectCount)
-    val brandColor = brandTextColor(effectiveBackground)
-    val cellOverlay = cellPlaceholderOverlay(effectiveBackground)
+    val hasImageBackground = overrideBackgroundImage != null
     val useSeasonBackdrop = seasonHTML != null
+    val brandColor = brandTextColor(effectiveBackground, useSeasonBackdrop, hasImageBackground)
+    val cellOverlay = cellPlaceholderOverlay(effectiveBackground, useSeasonBackdrop)
     val shape = if (useSeasonBackdrop) RoundedCornerShape(0.dp)
     else RoundedCornerShape(theme.cornerRadius.dp)
 
+    val overlayDecorations = customDecorations.ifEmpty {
+        customFrameDesign?.decorations ?: emptyList()
+    }
+
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val density = LocalDensity.current
+        val context = LocalContext.current
         val containerPx = with(density) { maxWidth.toPx() }.coerceAtLeast(1f)
         val dim = remember(containerPx, frameStyle, theme, bottomCaption) {
             CollageLayoutMath.computeForPreview(frameStyle, theme, bottomCaption, containerPx)
@@ -114,168 +120,237 @@ fun CollagePreview(
             SeasonHTMLFrameStyle.outerBorderWidthPoints(seasonHTML)
         } else theme.borderWidth
 
-        Column(
+        val canvasWidthDp = with(density) { dim.canvasWidth.toDp() }
+        val canvasHeightDp = with(density) { dim.canvasHeight.toDp() }
+
+        Box(
             modifier = Modifier
-                .width(with(density) { dim.canvasWidth.toDp() })
-                .height(with(density) { dim.canvasHeight.toDp() })
-                .clip(shape)
-                .background(effectiveBackground, shape)
-                .then(
-                    if (seasonGradient != null) Modifier.drawBehind {
-                        drawRect(brush = seasonGradient)
-                    } else Modifier
-                )
-                .border(borderW.dp, borderColor, shape),
+                .width(canvasWidthDp)
+                .height(canvasHeightDp),
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(with(density) { dim.headerArea.height().toDp() }),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = BrandTitle,
-                    style = TextStyle(
-                        fontFamily = FontFamily.Serif,
-                        fontStyle = FontStyle.Italic,
-                        fontSize = brandFontSp,
-                        color = brandColor,
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center,
-                )
-            }
-
-            val cols = frameStyle.columns
-            val rows = frameStyle.rows
-            val hGapPx = if (cols > 1) dim.cells[1].left - dim.cells[0].right else 0f
-            val vGapPx = if (rows > 1) dim.cells[cols].top - dim.cells[0].bottom else 0f
-            val hGap = with(density) { hGapPx.toDp() }
-            val vGap = with(density) { vGapPx.toDp() }
-            val sidePad = with(density) { dim.cells[0].left.toDp() }
-
-            val cellCornerRatio = if (useSeasonBackdrop) SeasonHTMLFrameStyle.CELL_CORNER_RATIO else 0f
-            val cellStrokeColor = if (seasonHTML != null) {
-                Color((0xFF000000 or SeasonHTMLFrameStyle.cellStrokeHex(seasonHTML)).toInt())
-            } else Color.Transparent
-
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = sidePad),
-                verticalArrangement = Arrangement.spacedBy(vGap),
+                    .fillMaxSize()
+                    .clip(shape)
+                    .background(effectiveBackground, shape)
+                    .then(
+                        if (seasonGradient != null) Modifier.drawBehind {
+                            drawRect(brush = seasonGradient)
+                        } else Modifier
+                    )
+                    .border(borderW.dp, borderColor, shape),
             ) {
-                for (r in 0 until rows) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(hGap),
-                    ) {
-                        for (c in 0 until cols) {
-                            val idx = r * cols + c
-                            val rect = dim.cells.getOrNull(idx) ?: continue
-                            val cellCorner = rect.width() * cellCornerRatio
-                            val cellShape = if (cellCorner > 0f) RoundedCornerShape(with(density) { cellCorner.toDp() })
-                            else RectangleShape
-                            CollagePreviewCell(
-                                bitmap = used.getOrNull(idx),
-                                cellOverlay = cellOverlay,
-                                iconTint = brandColor.copy(alpha = 0.35f),
-                                cellShape = cellShape,
-                                seasonStrokeColor = cellStrokeColor,
-                                cellCornerPx = cellCorner,
-                                scale = dim.scale,
-                                modifier = Modifier
-                                    .size(
-                                        width = with(density) { rect.width().toDp() },
-                                        height = with(density) { rect.height().toDp() },
-                                    ),
-                            )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(with(density) { dim.headerArea.height().toDp() }),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = BrandTitle,
+                        style = TextStyle(
+                            fontFamily = FontFamily.Serif,
+                            fontStyle = FontStyle.Italic,
+                            fontSize = brandFontSp,
+                            color = brandColor,
+                        ),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+
+                val cols = frameStyle.columns
+                val rows = frameStyle.rows
+                val hGapPx = if (cols > 1) dim.cells[1].left - dim.cells[0].right else 0f
+                val vGapPx = if (rows > 1) dim.cells[cols].top - dim.cells[0].bottom else 0f
+                val hGap = with(density) { hGapPx.toDp() }
+                val vGap = with(density) { vGapPx.toDp() }
+                val sidePad = with(density) { dim.cells[0].left.toDp() }
+
+                val cellCornerRatio = if (useSeasonBackdrop) SeasonHTMLFrameStyle.CELL_CORNER_RATIO else 0f
+                val cellStrokeColor = if (seasonHTML != null) {
+                    Color((0xFF000000 or SeasonHTMLFrameStyle.cellStrokeHex(seasonHTML)).toInt())
+                } else Color.Transparent
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = sidePad),
+                    verticalArrangement = Arrangement.spacedBy(vGap),
+                ) {
+                    for (r in 0 until rows) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(hGap),
+                        ) {
+                            for (c in 0 until cols) {
+                                val idx = r * cols + c
+                                val rect = dim.cells.getOrNull(idx) ?: continue
+                                val cellCorner = rect.width() * cellCornerRatio
+                                val cellShape = if (cellCorner > 0f) RoundedCornerShape(with(density) { cellCorner.toDp() })
+                                else RectangleShape
+                                CollagePreviewCell(
+                                    bitmap = used.getOrNull(idx),
+                                    cellOverlay = cellOverlay,
+                                    iconTint = brandColor.copy(alpha = 0.35f),
+                                    cellShape = cellShape,
+                                    seasonStrokeColor = cellStrokeColor,
+                                    cellCornerPx = cellCorner,
+                                    scale = dim.scale,
+                                    modifier = Modifier
+                                        .size(
+                                            width = with(density) { rect.width().toDp() },
+                                            height = with(density) { rect.height().toDp() },
+                                        ),
+                                )
+                            }
                         }
                     }
                 }
+
+                dim.textArea?.let { ta ->
+                    val useSplit =
+                        captionTextPart != null || captionDatePart != null
+                    val hasSplitContent =
+                        !captionTextPart.isNullOrBlank() || !captionDatePart.isNullOrBlank()
+                    val legacyCaption = bottomCaption?.takeIf { it.isNotBlank() }
+                    val showCaption = (useSplit && hasSplitContent) || (!useSplit && legacyCaption != null)
+                    if (showCaption) {
+                        val captionFont = if (captionFontName != null) {
+                            AppFontCatalog.fontFamily(context, captionFontName)
+                        } else {
+                            null
+                        }
+                        val captionColor = if (captionColorRGB != null) {
+                            Color((0xFF000000 or (captionColorRGB and 0xFFFFFF)).toInt())
+                        } else {
+                            brandColor.copy(alpha = 0.95f)
+                        }
+                        val baseStyle = TextStyle(
+                            fontWeight = FontWeight.Medium,
+                            fontFamily = captionFont,
+                            color = captionColor,
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(with(density) { ta.height().toDp() }),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            if (useSplit && hasSplitContent) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center,
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+                                    if (!captionTextPart.isNullOrBlank()) {
+                                        Text(
+                                            text = captionTextPart,
+                                            style = baseStyle.copy(fontSize = captionTextSp),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
+                                    }
+                                    if (!captionTextPart.isNullOrBlank() && !captionDatePart.isNullOrBlank()) {
+                                        Text(
+                                            text = "  ·  ",
+                                            style = baseStyle.copy(fontSize = captionTextSp),
+                                            maxLines = 1,
+                                        )
+                                    }
+                                    if (!captionDatePart.isNullOrBlank()) {
+                                        Text(
+                                            text = captionDatePart,
+                                            style = baseStyle.copy(fontSize = captionDateSp),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
+                                    }
+                                }
+                            } else {
+                                Text(
+                                    text = legacyCaption.orEmpty(),
+                                    style = baseStyle.copy(fontSize = captionSpLegacy),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                            }
+                        }
+                    }
+                }
+
+                val lastBottom = dim.cells.maxOfOrNull { it.bottom } ?: dim.headerArea.bottom
+                val bottomRemainPx = dim.canvasHeight - lastBottom -
+                    if (dim.hasBottomText && dim.textArea != null) dim.textArea.height() else 0f
+                if (bottomRemainPx > 0.5f) {
+                    Spacer(Modifier.height(with(density) { bottomRemainPx.toDp() }))
+                }
             }
 
-            dim.textArea?.let { ta ->
-                val useSplit =
-                    captionTextPart != null || captionDatePart != null
-                val hasSplitContent =
-                    !captionTextPart.isNullOrBlank() || !captionDatePart.isNullOrBlank()
-                val legacyCaption = bottomCaption?.takeIf { it.isNotBlank() }
-                val showCaption = (useSplit && hasSplitContent) || (!useSplit && legacyCaption != null)
-                if (showCaption) {
-                    val context = LocalContext.current
-                    val captionFont = if (captionFontName != null) {
-                        AppFontCatalog.fontFamily(context, captionFontName)
-                    } else {
-                        null
-                    }
-                    val captionColor = if (captionColorRGB != null) {
-                        Color((0xFF000000 or (captionColorRGB and 0xFFFFFF)).toInt())
-                    } else {
-                        brandColor.copy(alpha = 0.95f)
-                    }
-                    val baseStyle = TextStyle(
-                        fontWeight = FontWeight.Medium,
-                        fontFamily = captionFont,
-                        color = captionColor,
-                    )
+            if (overlayDecorations.isNotEmpty()) {
+                val basePx = dim.canvasWidth
+                overlayDecorations.forEach { dec ->
+                    val posXDp = with(density) { (dec.position.x * dim.canvasWidth).toDp() }
+                    val posYDp = with(density) { (dec.position.y * dim.canvasHeight).toDp() }
 
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(with(density) { ta.height().toDp() }),
+                            .offset(x = posXDp, y = posYDp)
+                            .graphicsLayer {
+                                translationX = -size.width / 2f
+                                translationY = -size.height / 2f
+                                rotationZ = Math.toDegrees(dec.rotationRadians.toDouble()).toFloat()
+                                scaleX = dec.scale
+                                scaleY = dec.scale
+                                transformOrigin = TransformOrigin.Center
+                            },
                         contentAlignment = Alignment.Center,
                     ) {
-                        if (useSplit && hasSplitContent) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxWidth(),
-                            ) {
-                                if (!captionTextPart.isNullOrBlank()) {
-                                    Text(
-                                        text = captionTextPart,
-                                        style = baseStyle.copy(fontSize = captionTextSp),
-                                        maxLines = 2,
-                                        overflow = TextOverflow.Ellipsis,
-                                    )
-                                }
-                                if (!captionTextPart.isNullOrBlank() && !captionDatePart.isNullOrBlank()) {
-                                    Text(
-                                        text = " · ",
-                                        style = baseStyle.copy(fontSize = captionTextSp),
-                                        maxLines = 1,
-                                    )
-                                }
-                                if (!captionDatePart.isNullOrBlank()) {
-                                    Text(
-                                        text = captionDatePart,
-                                        style = baseStyle.copy(fontSize = captionDateSp),
-                                        maxLines = 2,
-                                        overflow = TextOverflow.Ellipsis,
+                        when (val k = dec.kind) {
+                            is CustomFrameDecoration.Kind.Text -> {
+                                val fontSizePx = k.fontScale * basePx * dec.scale
+                                val fontSizeSp = with(density) { fontSizePx.toSp() }
+                                val ff = AppFontCatalog.fontFamily(context, dec.fontName)
+                                Text(
+                                    text = k.content,
+                                    style = TextStyle(
+                                        fontFamily = ff,
+                                        fontSize = fontSizeSp,
+                                        color = Color((0xFF000000 or (k.textColorARGB and 0xFFFFFF)).toInt()),
+                                        fontWeight = FontWeight.Medium,
+                                    ),
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                            is CustomFrameDecoration.Kind.Emoji -> {
+                                val emojiSizePx = basePx * 0.11f * dec.scale
+                                val emojiSizeSp = with(density) { emojiSizePx.toSp() }
+                                Text(
+                                    text = k.content,
+                                    fontSize = emojiSizeSp,
+                                )
+                            }
+                            is CustomFrameDecoration.Kind.Sticker -> {
+                                val stickerSizePx = basePx * 0.12f * dec.scale
+                                val stickerSizeDp = with(density) { stickerSizePx.toDp() }
+                                val sticker = StickerPalette.fromAssetId(k.assetId)
+                                if (sticker != null) {
+                                    Icon(
+                                        imageVector = sticker.icon,
+                                        contentDescription = null,
+                                        tint = Color((0xFF000000 or (k.colorRGB and 0xFFFFFF)).toInt()),
+                                        modifier = Modifier.size(stickerSizeDp),
                                     )
                                 }
                             }
-                        } else {
-                            Text(
-                                text = legacyCaption.orEmpty(),
-                                style = baseStyle.copy(fontSize = captionSpLegacy),
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth(),
-                            )
                         }
                     }
                 }
-            }
-
-            val lastBottom = dim.cells.maxOfOrNull { it.bottom } ?: dim.headerArea.bottom
-            val bottomRemainPx = dim.canvasHeight - lastBottom -
-                if (dim.hasBottomText && dim.textArea != null) dim.textArea.height() else 0f
-            if (bottomRemainPx > 0.5f) {
-                Spacer(Modifier.height(with(density) { bottomRemainPx.toDp() }))
             }
         }
     }
@@ -290,6 +365,7 @@ fun CollagePreviewScaledToFit(
     overrideBackground: Color? = null,
     overrideBackgroundImage: Bitmap? = null,
     customFrameDesign: CustomFrameDesign? = null,
+    customDecorations: List<CustomFrameDecoration> = emptyList(),
     bottomCaption: String? = null,
     captionTextPart: String? = null,
     captionDatePart: String? = null,
@@ -319,6 +395,7 @@ fun CollagePreviewScaledToFit(
                 overrideBackground = overrideBackground,
                 overrideBackgroundImage = overrideBackgroundImage,
                 customFrameDesign = customFrameDesign,
+                customDecorations = customDecorations,
                 bottomCaption = bottomCaption,
                 captionTextPart = captionTextPart,
                 captionDatePart = captionDatePart,
@@ -417,13 +494,25 @@ private fun CollagePreviewCell(
     }
 }
 
-private fun brandTextColor(effectiveBackground: Color): Color =
-    if (isDark(effectiveBackground)) Color.White
-    else Color.Black.copy(alpha = 0.9f)
+private fun brandTextColor(
+    effectiveBackground: Color,
+    isSeason: Boolean = false,
+    hasImageBackground: Boolean = false,
+): Color = when {
+    hasImageBackground -> Color.White
+    isSeason -> Color.Black.copy(alpha = 0.88f)
+    isDark(effectiveBackground) -> Color.White
+    else -> Color.Black.copy(alpha = 0.9f)
+}
 
-private fun cellPlaceholderOverlay(effectiveBackground: Color): Color =
-    if (isDark(effectiveBackground)) Color.Black.copy(alpha = 0.25f)
-    else Color.Black.copy(alpha = 0.06f)
+private fun cellPlaceholderOverlay(
+    effectiveBackground: Color,
+    isSeason: Boolean = false,
+): Color = when {
+    isSeason -> Color.White.copy(alpha = 0.35f)
+    isDark(effectiveBackground) -> Color.Black.copy(alpha = 0.25f)
+    else -> Color.Black.copy(alpha = 0.06f)
+}
 
 private fun isDark(color: Color): Boolean {
     val luminance = 0.299f * color.red + 0.587f * color.green + 0.114f * color.blue
