@@ -419,7 +419,7 @@ fun ResultScreen(
                             Icon(
                                 imageVector = Icons.Filled.Download,
                                 contentDescription = null,
-                                tint = AppColors.Text.primary,
+                                tint = Color.White,
                                 modifier = Modifier.size(20.dp),
                             )
                         },

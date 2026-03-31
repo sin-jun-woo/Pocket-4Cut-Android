@@ -22,6 +22,14 @@ object BitmapAdjustments {
         return out
     }
 
+    fun flipHorizontal(source: Bitmap): Bitmap {
+        val safe = asSoftwareArgb(source)
+        val m = Matrix().apply { postScale(-1f, 1f, safe.width / 2f, safe.height / 2f) }
+        val out = Bitmap.createBitmap(safe, 0, 0, safe.width, safe.height, m, true)
+        if (safe !== source) safe.recycle()
+        return out
+    }
+
     /** brightness: roughly -0.35 .. 0.35, contrast: roughly 0.7 .. 1.5 (1 = unchanged) */
     fun applyBrightnessContrast(source: Bitmap, brightness: Float, contrast: Float): Bitmap {
         return applyColorAdjustments(source, brightness, contrast, saturation = 1f)

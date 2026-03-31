@@ -29,8 +29,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Flip
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -107,6 +109,10 @@ fun DetailEditScreen(
     globalFilter: FilterId,
     customText: String,
     showDate: Boolean,
+    textFontSize: Float = 16f,
+    dateFontSize: Float = 16f,
+    captionFontName: String? = null,
+    captionColorRGB: Long? = null,
     onBack: () -> Unit,
     onResult: (resultPath: String) -> Unit,
     modifier: Modifier = Modifier,
@@ -140,6 +146,14 @@ fun DetailEditScreen(
             if (showDate) add(dateString)
         }.joinToString(" · ")
     }
+    val bottomCaptionForLayout = remember(customText, showDate, dateString) {
+        buildList {
+            if (customText.isNotBlank()) add(customText.trim())
+            if (showDate) add(dateString)
+        }.takeIf { it.isNotEmpty() }?.joinToString(" · ")
+    }
+    val captionTextPart = remember(customText) { customText.trim().takeIf { it.isNotEmpty() } }
+    val captionDatePart = remember(showDate, dateString) { if (showDate) dateString else null }
 
     Box(modifier = modifier.fillMaxSize().background(AppColors.Background.primary)) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -191,6 +205,13 @@ fun DetailEditScreen(
                         frameStyle = frameStyle,
                         theme = theme,
                         overrideBackground = frameColor.color,
+                        bottomCaption = bottomCaptionForLayout,
+                        captionTextPart = captionTextPart,
+                        captionDatePart = captionDatePart,
+                        captionTextSizePt = textFontSize,
+                        captionDateSizePt = dateFontSize,
+                        captionFontName = captionFontName,
+                        captionColorRGB = captionColorRGB,
                         modifier = Modifier
                             .shadow(
                                 elevation = 60.dp,
@@ -235,6 +256,11 @@ fun DetailEditScreen(
                 Spacer(Modifier.height(AppSpacing.md))
 
                 /* ── Thumbnail strip ────────────────────────────── */
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = AppColors.Border.light,
+                )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -293,6 +319,11 @@ fun DetailEditScreen(
                         }
                     }
                 }
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = AppColors.Border.light,
+                )
 
                 Spacer(Modifier.height(AppSpacing.sm))
             }
@@ -305,25 +336,48 @@ fun DetailEditScreen(
                     .padding(horizontal = AppSpacing.Screen.horizontal)
                     .padding(bottom = AppSpacing.Layout.ctaBottomSpace),
             ) {
-                // Rotate
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(AppLayout.Radius.md))
-                        .background(AppColors.Background.tertiary)
-                        .border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md))
-                        .clickable { viewModel.rotateCurrentSlot() }
-                        .padding(AppSpacing.md),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
                 ) {
-                    Icon(Icons.Default.Refresh, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
-                    Spacer(Modifier.width(AppSpacing.sm))
-                    Text(
-                        "90° 회전",
-                        style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
-                        color = AppColors.Text.primary,
-                    )
+                    Row(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(AppLayout.Radius.md))
+                            .background(AppColors.Background.tertiary)
+                            .border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md))
+                            .clickable { viewModel.rotateCurrentSlot() }
+                            .padding(AppSpacing.md),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(Icons.Default.Refresh, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
+                        Spacer(Modifier.width(AppSpacing.sm))
+                        Text(
+                            "90° 회전",
+                            style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
+                            color = AppColors.Text.primary,
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(AppLayout.Radius.md))
+                            .background(AppColors.Background.tertiary)
+                            .border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md))
+                            .clickable { viewModel.flipCurrentHorizontally() }
+                            .padding(AppSpacing.md),
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(Icons.Filled.Flip, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
+                        Spacer(Modifier.width(AppSpacing.sm))
+                        Text(
+                            "좌우 반전",
+                            style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
+                            color = AppColors.Text.primary,
+                        )
+                    }
                 }
 
                 Spacer(Modifier.height(AppSpacing.lg))

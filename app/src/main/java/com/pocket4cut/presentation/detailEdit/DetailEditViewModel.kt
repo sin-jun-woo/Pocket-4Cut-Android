@@ -37,12 +37,17 @@ import java.util.Locale
 
 data class PhotoSlotAdjustment(
     val quarterTurnsClockwise: Int = 0,
+    val isFlippedHorizontally: Boolean = false,
     val brightness: Float = 0f,
     val contrast: Float = 1f,
     val saturation: Float = 1f,
 ) {
     val isNeutral: Boolean
-        get() = quarterTurnsClockwise == 0 && brightness == 0f && contrast == 1f && saturation == 1f
+        get() = quarterTurnsClockwise == 0 &&
+            !isFlippedHorizontally &&
+            brightness == 0f &&
+            contrast == 1f &&
+            saturation == 1f
 
     companion object {
         val neutral = PhotoSlotAdjustment()
@@ -141,6 +146,10 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
 
     fun rotateCurrentSlot() = updateCurrentSlot {
         it.copy(quarterTurnsClockwise = (it.quarterTurnsClockwise + 1) % 4)
+    }
+
+    fun flipCurrentHorizontally() = updateCurrentSlot {
+        it.copy(isFlippedHorizontally = !it.isFlippedHorizontally)
     }
 
     fun setBrightness(modelValue: Float) = updateCurrentSlot {
@@ -278,6 +287,12 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
             bmp = rotated
         }
 
+        if (adj.isFlippedHorizontally) {
+            val flipped = BitmapAdjustments.flipHorizontal(bmp)
+            if (flipped !== bmp) bmp.recycle()
+            bmp = flipped
+        }
+
         FilterDefs.colorFilter(globalFilter)?.let { cf ->
             val filtered = applyColorFilter(bmp, cf)
             bmp.recycle()
@@ -302,6 +317,12 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
             val rotated = BitmapAdjustments.rotate90(bmp)
             if (rotated !== bmp) bmp.recycle()
             bmp = rotated
+        }
+
+        if (adj.isFlippedHorizontally) {
+            val flipped = BitmapAdjustments.flipHorizontal(bmp)
+            if (flipped !== bmp) bmp.recycle()
+            bmp = flipped
         }
 
         FilterDefs.colorFilter(globalFilter)?.let { cf ->

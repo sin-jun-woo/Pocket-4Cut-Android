@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocket4cut.data.local.SessionRepository
+import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.ui.designsystem.*
 import com.pocket4cut.ui.designsystem.components.*
 import com.pocket4cut.ui.designsystem.theme.*
@@ -35,13 +36,15 @@ import kotlin.math.roundToInt
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
+    onPrivacyPolicy: () -> Unit,
+    onContactFeedback: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     var showDeleteConfirm by remember { mutableStateOf(false) }
-    var showDeleteDone by remember { mutableStateOf(false) }
     var galleryCount by remember { mutableIntStateOf(0) }
     val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         galleryCount = withContext(Dispatchers.IO) {
@@ -92,9 +95,17 @@ fun SettingsScreen(
                 CameraSection()
                 SaveSection()
                 DataSection(galleryCount) { showDeleteConfirm = true }
-                AboutSection()
+                AboutSection(
+                    onPrivacyPolicy = onPrivacyPolicy,
+                    onContactFeedback = onContactFeedback,
+                )
             }
         }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter),
+        )
 
         ConfirmDialog(
             visible = showDeleteConfirm,
@@ -107,11 +118,18 @@ fun SettingsScreen(
                 scope.launch {
                     withContext(Dispatchers.IO) {
                         val repo = SessionRepository(context)
-                        repo.getAll().forEach { repo.delete(it.id) }
+                        val imageStorage = FileImageStorage(context)
+                        repo.getAll().forEach { session ->
+                            imageStorage.deleteSessionFiles(session.id)
+                            repo.delete(session.id)
+                        }
                     }
                     galleryCount = 0
                     showDeleteConfirm = false
-                    showDeleteDone = true
+                    snackbarHostState.showSnackbar(
+                        message = "삭제 완료",
+                        duration = SnackbarDuration.Short,
+                    )
                 }
             },
             onCancel = { showDeleteConfirm = false },
@@ -321,7 +339,10 @@ private fun DataSection(galleryCount: Int, onDeleteRequest: () -> Unit) {
 }
 
 @Composable
-private fun AboutSection() {
+private fun AboutSection(
+    onPrivacyPolicy: () -> Unit,
+    onContactFeedback: () -> Unit,
+) {
     val context = LocalContext.current
     val version = remember {
         try {
@@ -357,12 +378,12 @@ private fun AboutSection() {
                 modifier = Modifier.padding(horizontal = AppSpacing.md),
                 color = AppColors.Border.subtle,
             )
-            LinkRow(title = "개인정보 처리방침", icon = Icons.Default.Lock) {}
+            LinkRow(title = "개인정보 처리방침", icon = Icons.Default.Lock, onClick = onPrivacyPolicy)
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = AppSpacing.md),
                 color = AppColors.Border.subtle,
             )
-            LinkRow(title = "문의 / 피드백", icon = Icons.Default.Email) {}
+            LinkRow(title = "문의 / 피드백", icon = Icons.Default.Email, onClick = onContactFeedback)
         }
     }
 }

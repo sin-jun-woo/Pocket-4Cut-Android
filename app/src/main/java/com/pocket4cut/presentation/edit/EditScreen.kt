@@ -2,7 +2,6 @@ package com.pocket4cut.presentation.edit
 
 import android.graphics.Bitmap
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,7 +9,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -19,7 +17,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.TextFormat
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -39,15 +43,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pocket4cut.core.util.AppFontCatalog
 import com.pocket4cut.frame.*
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.ui.designsystem.*
-import com.pocket4cut.ui.designsystem.components.*
+import com.pocket4cut.ui.designsystem.components.InAppColorPaletteSheet
+import com.pocket4cut.ui.designsystem.components.InAppFontPickerSheet
+import com.pocket4cut.ui.designsystem.components.IconButtonVariant
+import com.pocket4cut.ui.designsystem.components.IconCircleButton
+import com.pocket4cut.ui.designsystem.components.PinkGradientSlider
+import com.pocket4cut.ui.designsystem.components.PinkToggle
+import com.pocket4cut.ui.designsystem.components.PrimaryButton
 
 @Composable
 fun EditScreen(
@@ -77,6 +89,8 @@ fun EditScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
+    var showFontSheet by remember { mutableStateOf(false) }
+    var showColorSheet by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -124,6 +138,12 @@ fun EditScreen(
                 frameStyle = frameStyle,
                 theme = frameTheme,
                 bottomCaption = buildBottomCaption(uiState),
+                captionTextPart = uiState.customText.trim().takeIf { it.isNotEmpty() },
+                captionDatePart = if (uiState.showDate) uiState.dateString else null,
+                captionTextSizePt = uiState.textFontSize,
+                captionDateSizePt = uiState.dateFontSize,
+                captionFontName = uiState.captionFontName,
+                captionColorRGB = uiState.captionColorRGB,
             )
 
             Spacer(Modifier.height(AppSpacing.xl))
@@ -142,13 +162,21 @@ fun EditScreen(
             TextInputSection(
                 uiState = uiState,
                 onTextChange = viewModel::setText,
+                onTextFontSizeChange = viewModel::setTextFontSize,
+                onOpenFontSheet = { showFontSheet = true },
+                onCaptionColorAuto = { viewModel.setCaptionColorRGB(null) },
+                onOpenColorSheet = { showColorSheet = true },
                 focusManager = focusManager,
             )
 
             Spacer(Modifier.height(AppSpacing.xl))
 
             // ── 6. Date Toggle ──
-            DateToggleSection(uiState = uiState, onToggle = viewModel::toggleDate)
+            DateToggleSection(
+                uiState = uiState,
+                onShowDateChange = viewModel::setShowDate,
+                onDateFontSizeChange = viewModel::setDateFontSize,
+            )
 
             Spacer(Modifier.height(AppSpacing.xl))
 
@@ -187,6 +215,21 @@ fun EditScreen(
                     .padding(bottom = AppSpacing.Layout.ctaBottomSpace),
             )
         }
+
+        if (showFontSheet) {
+            InAppFontPickerSheet(
+                selectedFontName = uiState.captionFontName,
+                onFontSelected = { viewModel.setCaptionFontName(it) },
+                onDismiss = { showFontSheet = false },
+            )
+        }
+        if (showColorSheet) {
+            InAppColorPaletteSheet(
+                selectedColorRGB = uiState.captionColorRGB,
+                onColorSelected = { viewModel.setCaptionColorRGB(it) },
+                onDismiss = { showColorSheet = false },
+            )
+        }
     }
 }
 
@@ -199,6 +242,12 @@ private fun PreviewSection(
     frameStyle: FrameStyle,
     theme: FrameTheme,
     bottomCaption: String?,
+    captionTextPart: String?,
+    captionDatePart: String?,
+    captionTextSizePt: Float,
+    captionDateSizePt: Float,
+    captionFontName: String?,
+    captionColorRGB: Long?,
 ) {
     Column(modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal)) {
         Text(
@@ -233,6 +282,12 @@ private fun PreviewSection(
                     theme = theme,
                     overrideBackground = uiState.selectedFrameColor.color,
                     bottomCaption = bottomCaption,
+                    captionTextPart = captionTextPart,
+                    captionDatePart = captionDatePart,
+                    captionTextSizePt = captionTextSizePt,
+                    captionDateSizePt = captionDateSizePt,
+                    captionFontName = captionFontName,
+                    captionColorRGB = captionColorRGB,
                     modifier = Modifier.fillMaxSize(),
                 )
             }
@@ -472,9 +527,22 @@ private fun FrameColorChip(
 private fun TextInputSection(
     uiState: EditUiState,
     onTextChange: (String) -> Unit,
+    onTextFontSizeChange: (Float) -> Unit,
+    onOpenFontSheet: () -> Unit,
+    onCaptionColorAuto: () -> Unit,
+    onOpenColorSheet: () -> Unit,
     focusManager: androidx.compose.ui.focus.FocusManager,
 ) {
     var isFocused by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val fontLabel = remember(uiState.captionFontName, context) {
+        if (uiState.captionFontName.isNullOrEmpty()) {
+            "기본"
+        } else {
+            AppFontCatalog.options(context).firstOrNull { it.id == uiState.captionFontName }?.displayName
+                ?: uiState.captionFontName
+        }
+    }
 
     Column(modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -517,6 +585,101 @@ private fun TextInputSection(
                     else Modifier.border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md)),
                 ),
         )
+        Spacer(Modifier.height(AppSpacing.md))
+        PinkGradientSlider(
+            value = uiState.textFontSize,
+            onValueChange = onTextFontSizeChange,
+            valueRange = 1f..30f,
+            label = "글자 크기",
+        )
+        Spacer(Modifier.height(AppSpacing.md))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(AppLayout.Radius.md))
+                .background(AppColors.Background.tertiary, RoundedCornerShape(AppLayout.Radius.md))
+                .border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md))
+                .clickable(onClick = onOpenFontSheet)
+                .padding(horizontal = AppSpacing.md, vertical = AppSpacing.sm),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                "글꼴",
+                style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
+                color = AppColors.Text.primary,
+            )
+            Spacer(Modifier.weight(1f))
+            Text(
+                fontLabel,
+                style = AppTypography.subheadline,
+                color = AppColors.Accent.pink,
+            )
+        }
+        Spacer(Modifier.height(AppSpacing.md))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                "캡션 색",
+                style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
+                color = AppColors.Text.secondary,
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+            ) {
+                val autoShape = RoundedCornerShape(AppLayout.Radius.sm)
+                val autoSelected = uiState.captionColorRGB == null
+                Box(
+                    modifier = Modifier
+                        .clip(autoShape)
+                        .then(
+                            if (autoSelected) Modifier.border(2.dp, AppColors.Accent.pink, autoShape)
+                            else Modifier.border(1.dp, AppColors.Border.subtle, autoShape),
+                        )
+                        .background(AppColors.Background.tertiary, autoShape)
+                        .clickable(onClick = onCaptionColorAuto)
+                        .padding(horizontal = AppSpacing.md, vertical = AppSpacing.xs),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        "자동",
+                        style = AppTypography.caption1.copy(
+                            fontWeight = if (autoSelected) FontWeight.SemiBold else FontWeight.Normal,
+                        ),
+                        color = if (autoSelected) AppColors.Accent.pink else AppColors.Text.secondary,
+                    )
+                }
+                uiState.captionColorRGB?.let { rgb ->
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFF000000L or (rgb and 0xFFFFFFL)))
+                            .then(
+                                if ((rgb and 0xFFFFFFL) == 0xFFFFFFL) {
+                                    Modifier.border(1.dp, AppColors.Border.medium, CircleShape)
+                                } else {
+                                    Modifier
+                                },
+                            ),
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .background(AppColors.Background.tertiary)
+                        .border(1.dp, AppColors.Border.subtle, CircleShape)
+                        .clickable(onClick = onOpenColorSheet),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(Icons.Default.Palette, null, tint = AppColors.Text.secondary, modifier = Modifier.size(22.dp))
+                }
+            }
+        }
         Spacer(Modifier.height(AppSpacing.xs))
         Text(
             "${uiState.customText.length} / 30",
@@ -532,78 +695,50 @@ private fun TextInputSection(
 @Composable
 private fun DateToggleSection(
     uiState: EditUiState,
-    onToggle: () -> Unit,
+    onShowDateChange: (Boolean) -> Unit,
+    onDateFontSizeChange: (Float) -> Unit,
 ) {
     val cardShape = RoundedCornerShape(AppLayout.Radius.md)
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = AppSpacing.Screen.horizontal)
-            .clip(cardShape)
-            .background(AppColors.Background.tertiary, cardShape)
-            .border(1.dp, AppColors.Border.subtle, cardShape)
-            .padding(horizontal = AppSpacing.md, vertical = AppSpacing.sm),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Icon(
-            Icons.Default.DateRange,
-            null,
-            tint = AppColors.Text.secondary,
-            modifier = Modifier.size(20.dp),
-        )
-        Spacer(Modifier.width(AppSpacing.sm))
-        Text(
-            "날짜 표시",
-            style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
-            color = AppColors.Text.primary,
-        )
-        Spacer(Modifier.width(AppSpacing.xs))
-        Text(
-            uiState.dateString,
-            style = AppTypography.caption1,
-            color = AppColors.Text.tertiary,
-        )
-        Spacer(Modifier.weight(1f))
-        PinkToggle(checked = uiState.showDate, onCheckedChange = { onToggle() })
-    }
-}
-
-@Composable
-private fun PinkToggle(
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-) {
-    val trackColor by animateColorAsState(
-        targetValue = if (checked) AppColors.Accent.pink else AppColors.Background.secondary,
-        animationSpec = tween(AppAnimation.Duration.fast),
-        label = "trackColor",
-    )
-    val knobOffset by animateDpAsState(
-        targetValue = if (checked) 20.dp else 0.dp,
-        animationSpec = tween(AppAnimation.Duration.fast),
-        label = "knobOffset",
-    )
-
-    Box(
-        modifier = Modifier
-            .width(52.dp)
-            .height(32.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(trackColor)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = { onCheckedChange(!checked) },
-            ),
-    ) {
-        Box(
+    Column(modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal)) {
+        Row(
             modifier = Modifier
-                .padding(3.dp)
-                .offset(x = knobOffset)
-                .size(26.dp)
-                .clip(CircleShape)
-                .background(Color.White),
-        )
+                .fillMaxWidth()
+                .clip(cardShape)
+                .background(AppColors.Background.tertiary, cardShape)
+                .border(1.dp, AppColors.Border.subtle, cardShape)
+                .padding(horizontal = AppSpacing.md, vertical = AppSpacing.sm),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                Icons.Default.DateRange,
+                null,
+                tint = AppColors.Text.secondary,
+                modifier = Modifier.size(20.dp),
+            )
+            Spacer(Modifier.width(AppSpacing.sm))
+            Text(
+                "날짜 표시",
+                style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
+                color = AppColors.Text.primary,
+            )
+            Spacer(Modifier.width(AppSpacing.xs))
+            Text(
+                uiState.dateString,
+                style = AppTypography.caption1,
+                color = AppColors.Text.tertiary,
+            )
+            Spacer(Modifier.weight(1f))
+            PinkToggle(checked = uiState.showDate, onCheckedChange = onShowDateChange)
+        }
+        if (uiState.showDate) {
+            Spacer(Modifier.height(AppSpacing.md))
+            PinkGradientSlider(
+                value = uiState.dateFontSize,
+                onValueChange = onDateFontSizeChange,
+                valueRange = 1f..30f,
+                label = "날짜 크기",
+            )
+        }
     }
 }
 

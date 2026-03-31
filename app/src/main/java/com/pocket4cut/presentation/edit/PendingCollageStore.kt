@@ -13,6 +13,10 @@ data class PendingCollageParams(
     val text: String,
     val showDate: Boolean,
     val order: List<Int>,
+    val textFontSize: Float = 16f,
+    val dateFontSize: Float = 16f,
+    val captionFontName: String? = null,
+    val captionColorRGB: Long? = null,
 )
 
 object PendingCollageStore {
@@ -27,6 +31,12 @@ object PendingCollageStore {
             put("text", params.text)
             put("showDate", params.showDate)
             put("order", JSONArray(params.order))
+            put("textFontSize", params.textFontSize.toDouble())
+            put("dateFontSize", params.dateFontSize.toDouble())
+            put("captionFontName", params.captionFontName ?: JSONObject.NULL)
+            if (params.captionColorRGB != null) {
+                put("captionColorRGB", params.captionColorRGB!!)
+            }
         }
         file(ctx, sessionId).writeText(o.toString())
     }
@@ -45,6 +55,18 @@ object PendingCollageStore {
                 text = o.optString("text", ""),
                 showDate = o.optBoolean("showDate", false),
                 order = order,
+                textFontSize = o.optDouble("textFontSize", 16.0).toFloat(),
+                dateFontSize = o.optDouble("dateFontSize", 16.0).toFloat(),
+                captionFontName = if (!o.has("captionFontName") || o.isNull("captionFontName")) {
+                    null
+                } else {
+                    o.optString("captionFontName", "").takeIf { it.isNotEmpty() }
+                },
+                captionColorRGB = if (o.has("captionColorRGB") && !o.isNull("captionColorRGB")) {
+                    o.getLong("captionColorRGB")
+                } else {
+                    null
+                },
             )
         }.getOrNull()
     }

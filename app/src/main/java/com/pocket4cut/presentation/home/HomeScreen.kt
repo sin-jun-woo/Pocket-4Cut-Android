@@ -18,7 +18,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
@@ -31,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pocket4cut.ui.designsystem.*
 import com.pocket4cut.ui.designsystem.components.*
-import com.pocket4cut.ui.designsystem.theme.ThemeManager
 
 @Composable
 fun HomeScreen(
@@ -41,18 +39,7 @@ fun HomeScreen(
     galleryCount: Int = 0,
     modifier: Modifier = Modifier,
 ) {
-    val theme = ThemeManager.currentTheme
     val floatAnim = rememberInfiniteTransition(label = "float")
-    val floatOffset1 by floatAnim.animateFloat(
-        initialValue = 0f, targetValue = -20f,
-        animationSpec = infiniteRepeatable(tween(4000, easing = EaseInOut), RepeatMode.Reverse),
-        label = "float1",
-    )
-    val floatOffset2 by floatAnim.animateFloat(
-        initialValue = 0f, targetValue = 15f,
-        animationSpec = infiniteRepeatable(tween(5000, easing = EaseInOut), RepeatMode.Reverse),
-        label = "float2",
-    )
     val cameraScale by floatAnim.animateFloat(
         initialValue = 1f, targetValue = 1.1f,
         animationSpec = infiniteRepeatable(tween(2000, easing = EaseInOut), RepeatMode.Reverse),
@@ -68,14 +55,6 @@ fun HomeScreen(
                 ),
             ),
     ) {
-        val emojis = theme.decorationEmojis
-        if (emojis.size >= 4) {
-            FloatingEmoji(emojis[0], 40, -120f, -250f + floatOffset1)
-            FloatingEmoji(emojis[1], 35, 110f, -200f + floatOffset2)
-            FloatingEmoji(emojis[2], 38, -100f, 150f + floatOffset1)
-            FloatingEmoji(emojis[3], 42, 120f, 80f + floatOffset2)
-        }
-
         Column(modifier = Modifier.fillMaxSize()) {
             // Settings button (top right)
             Row(
@@ -179,7 +158,6 @@ fun HomeScreen(
 
             // Tip card
             val tipText = buildAnnotatedString {
-                append("${theme.tipEmoji} ")
                 withStyle(SpanStyle(fontWeight = FontWeight.SemiBold, color = AppColors.Text.secondary)) {
                     append("친구들과 함께 찍는 ")
                 }
@@ -211,19 +189,6 @@ fun HomeScreen(
             Spacer(Modifier.weight(1f))
         }
     }
-}
-
-@Composable
-private fun FloatingEmoji(emoji: String, size: Int, x: Float, y: Float) {
-    Text(
-        text = emoji,
-        fontSize = size.sp,
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
-            .offset(x = x.dp, y = y.dp)
-            .graphicsLayer { alpha = 0.3f },
-    )
 }
 
 @Composable

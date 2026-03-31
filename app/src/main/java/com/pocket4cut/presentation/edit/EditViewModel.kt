@@ -34,6 +34,10 @@ data class EditUiState(
     val orderedImages: List<Bitmap> = emptyList(),
     val filteredPreviewImages: List<Bitmap> = emptyList(),
     val filterChipThumbnails: Map<FilterId, Bitmap> = emptyMap(),
+    val textFontSize: Float = 16f,
+    val dateFontSize: Float = 16f,
+    val captionFontName: String? = null,
+    val captionColorRGB: Long? = null,
 )
 
 class EditViewModel(app: Application) : AndroidViewModel(app) {
@@ -106,6 +110,28 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         _uiState.update { it.copy(showDate = !it.showDate) }
     }
 
+    fun setShowDate(show: Boolean) {
+        _uiState.update { it.copy(showDate = show) }
+    }
+
+    fun setTextFontSize(size: Float) {
+        val v = size.coerceIn(1f, 30f)
+        _uiState.update { it.copy(textFontSize = v) }
+    }
+
+    fun setDateFontSize(size: Float) {
+        val v = size.coerceIn(1f, 30f)
+        _uiState.update { it.copy(dateFontSize = v) }
+    }
+
+    fun setCaptionFontName(name: String?) {
+        _uiState.update { it.copy(captionFontName = name) }
+    }
+
+    fun setCaptionColorRGB(rgb: Long?) {
+        _uiState.update { it.copy(captionColorRGB = rgb) }
+    }
+
     fun tapOrderCell(index: Int) {
         val state = _uiState.value
         val current = state.selectedSwapIndex
@@ -145,6 +171,10 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
                 text = s.customText,
                 showDate = s.showDate,
                 order = s.order,
+                textFontSize = s.textFontSize,
+                dateFontSize = s.dateFontSize,
+                captionFontName = s.captionFontName,
+                captionColorRGB = s.captionColorRGB,
             ),
         )
     }
@@ -157,6 +187,10 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
             text = s.customText,
             showDate = s.showDate,
             order = s.order,
+            textFontSize = s.textFontSize,
+            dateFontSize = s.dateFontSize,
+            captionFontName = s.captionFontName,
+            captionColorRGB = s.captionColorRGB,
         )
         return CollageFinalize.finalize(
             getApplication(), sessionId,

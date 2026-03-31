@@ -19,11 +19,9 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -94,11 +92,23 @@ fun GalleryScreen(
             },
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = AppSpacing.xxxl,
+                        start = AppSpacing.Screen.horizontal,
+                        end = AppSpacing.Screen.horizontal,
+                    ),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                GalleryViewModeToggle(
+                    selectedMode = viewMode,
+                    onModeSelected = { viewMode = it },
+                )
+            }
             GalleryHeader(
                 itemCount = uiState.items.size,
-                viewMode = viewMode,
-                onViewModeChanged = { viewMode = it },
-                showToggle = uiState.items.isNotEmpty(),
                 onClose = onBack,
             )
 
@@ -114,10 +124,10 @@ fun GalleryScreen(
                         EmptyState(
                             icon = {
                                 Icon(
-                                    Icons.Default.Image,
+                                    Icons.Default.PhotoCamera,
                                     contentDescription = null,
                                     tint = AppColors.Text.tertiary,
-                                    modifier = Modifier.size(48.dp),
+                                    modifier = Modifier.size(60.dp),
                                 )
                             },
                             title = "아직 저장된 콜라주가 없어요",
@@ -188,16 +198,13 @@ fun GalleryScreen(
 @Composable
 private fun GalleryHeader(
     itemCount: Int,
-    viewMode: GalleryViewMode,
-    onViewModeChanged: (GalleryViewMode) -> Unit,
-    showToggle: Boolean,
     onClose: () -> Unit,
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                top = AppSpacing.xxxl,
+                top = AppSpacing.md,
                 start = AppSpacing.Screen.horizontal,
                 end = AppSpacing.Screen.horizontal,
                 bottom = AppSpacing.md,
@@ -232,17 +239,10 @@ private fun GalleryHeader(
                 textAlign = TextAlign.Center,
             )
         }
-        if (showToggle) {
-            GalleryViewModeToggle(
-                selectedMode = viewMode,
-                onModeSelected = onViewModeChanged,
-                modifier = Modifier.align(Alignment.CenterEnd),
-            )
-        }
     }
 }
 
-/* ── View‑mode toggle (월별 / 전체) ── */
+/* ── View‑mode toggle (종류 / 전체) ── */
 
 @Composable
 private fun GalleryViewModeToggle(
@@ -251,6 +251,10 @@ private fun GalleryViewModeToggle(
     modifier: Modifier = Modifier,
 ) {
     val capsuleShape = RoundedCornerShape(AppLayout.Radius.full)
+    val segments = listOf(
+        GalleryViewMode.BY_KIND to "종류",
+        GalleryViewMode.BY_DATE to "전체",
+    )
     Row(
         modifier = modifier
             .clip(capsuleShape)
@@ -259,35 +263,22 @@ private fun GalleryViewModeToggle(
             .padding(3.dp),
         horizontalArrangement = Arrangement.spacedBy(2.dp),
     ) {
-            listOf(GalleryViewMode.BY_DATE, GalleryViewMode.BY_KIND).forEach { mode ->
+        segments.forEach { (mode, label) ->
             val isSelected = mode == selectedMode
-            Row(
+            Box(
                 modifier = Modifier
                     .clip(capsuleShape)
                     .background(if (isSelected) AppColors.Accent.pink else Color.Transparent)
                     .clickable { onModeSelected(mode) }
-                    .padding(horizontal = 10.dp, vertical = 6.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                contentAlignment = Alignment.Center,
             ) {
-                Icon(
-                    imageVector = when (mode) {
-                        GalleryViewMode.BY_DATE -> Icons.Default.CalendarMonth
-                        GalleryViewMode.BY_KIND -> Icons.Default.GridView
-                    },
-                    contentDescription = null,
-                    tint = if (isSelected) AppColors.Text.primary else AppColors.Text.tertiary,
-                    modifier = Modifier.size(14.dp),
-                )
                 Text(
-                    text = when (mode) {
-                        GalleryViewMode.BY_DATE -> "전체"
-                        GalleryViewMode.BY_KIND -> "종류"
-                    },
+                    text = label,
                     style = AppTypography.caption2.copy(
                         fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
                     ),
-                    color = if (isSelected) AppColors.Text.primary else AppColors.Text.tertiary,
+                    color = if (isSelected) Color.White else AppColors.Text.secondary,
                 )
             }
         }
