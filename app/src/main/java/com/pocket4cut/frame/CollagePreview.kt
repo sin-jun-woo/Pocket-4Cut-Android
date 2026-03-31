@@ -27,11 +27,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -40,18 +48,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.pocket4cut.core.util.AppFontCatalog
 import com.pocket4cut.presentation.navigation.FrameType
+import com.pocket4cut.ui.designsystem.theme.Season
 import kotlin.math.min
 import kotlin.math.roundToInt
 
 private const val BrandTitle = "Pocket 4Cut"
 
-/**
- * [CollageLayoutMath] / [CollageRenderer]와 동일한 기하로 미리보기 (WYSIWYG).
- */
 @Composable
 fun CollagePreview(
     images: List<Bitmap>,
@@ -59,14 +65,33 @@ fun CollagePreview(
     frameStyle: FrameStyle,
     theme: FrameTheme,
     overrideBackground: Color? = null,
+    overrideBackgroundImage: Bitmap? = null,
+    customFrameDesign: CustomFrameDesign? = null,
     bottomCaption: String? = null,
+    captionTextPart: String? = null,
+    captionDatePart: String? = null,
+    captionTextSizePt: Float = 16f,
+    captionDateSizePt: Float = 16f,
+    captionFontName: String? = null,
+    captionColorRGB: Long? = null,
     modifier: Modifier = Modifier,
 ) {
-    val effectiveBackground = overrideBackground ?: theme.background
+    val seasonHTML = customFrameDesign?.resolvedSeason
+    val effectiveBackground = when {
+        seasonHTML != null -> {
+            val hex = SeasonHTMLFrameStyle.baseHex(seasonHTML)
+            Color((0xFF000000 or hex).toInt())
+        }
+        overrideBackground != null -> overrideBackground
+        customFrameDesign != null -> customFrameDesign.resolvedFillColor
+        else -> theme.background
+    }
     val used = images.take(frameType.selectCount)
     val brandColor = brandTextColor(effectiveBackground)
     val cellOverlay = cellPlaceholderOverlay(effectiveBackground)
-    val shape = RoundedCornerShape(theme.cornerRadius.dp)
+    val useSeasonBackdrop = seasonHTML != null
+    val shape = if (useSeasonBackdrop) RoundedCornerShape(0.dp)
+    else RoundedCornerShape(theme.cornerRadius.dp)
 
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val density = LocalDensity.current
@@ -76,7 +101,18 @@ fun CollagePreview(
         }
 
         val brandFontSp = with(density) { (BRAND_TITLE_TEXT_PT * dim.scale).toSp() }
-        val captionSp = with(density) { (16f * dim.scale).toSp() }
+        val captionTextSp: TextUnit = with(density) { (captionTextSizePt * dim.scale).toSp() }
+        val captionDateSp: TextUnit = with(density) { (captionDateSizePt * dim.scale).toSp() }
+        val captionSpLegacy = with(density) { (captionTextSizePt * dim.scale).toSp() }
+
+        val seasonGradient = if (seasonHTML != null) SeasonHTMLFrameStyle.canvasGradientBrush(seasonHTML) else null
+
+        val borderColor = if (seasonHTML != null) {
+            Color((0xFF000000 or SeasonHTMLFrameStyle.outerStrokeHex(seasonHTML)).toInt())
+        } else theme.border
+        val borderW = if (seasonHTML != null) {
+            SeasonHTMLFrameStyle.outerBorderWidthPoints(seasonHTML)
+        } else theme.borderWidth
 
         Column(
             modifier = Modifier
@@ -84,7 +120,12 @@ fun CollagePreview(
                 .height(with(density) { dim.canvasHeight.toDp() })
                 .clip(shape)
                 .background(effectiveBackground, shape)
-                .border(theme.borderWidth.dp, theme.border, shape),
+                .then(
+                    if (seasonGradient != null) Modifier.drawBehind {
+                        drawRect(brush = seasonGradient)
+                    } else Modifier
+                )
+                .border(borderW.dp, borderColor, shape),
         ) {
             Box(
                 modifier = Modifier
@@ -114,6 +155,11 @@ fun CollagePreview(
             val vGap = with(density) { vGapPx.toDp() }
             val sidePad = with(density) { dim.cells[0].left.toDp() }
 
+            val cellCornerRatio = if (useSeasonBackdrop) SeasonHTMLFrameStyle.CELL_CORNER_RATIO else 0f
+            val cellStrokeColor = if (seasonHTML != null) {
+                Color((0xFF000000 or SeasonHTMLFrameStyle.cellStrokeHex(seasonHTML)).toInt())
+            } else Color.Transparent
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -128,10 +174,17 @@ fun CollagePreview(
                         for (c in 0 until cols) {
                             val idx = r * cols + c
                             val rect = dim.cells.getOrNull(idx) ?: continue
+                            val cellCorner = rect.width() * cellCornerRatio
+                            val cellShape = if (cellCorner > 0f) RoundedCornerShape(with(density) { cellCorner.toDp() })
+                            else RectangleShape
                             CollagePreviewCell(
                                 bitmap = used.getOrNull(idx),
                                 cellOverlay = cellOverlay,
                                 iconTint = brandColor.copy(alpha = 0.35f),
+                                cellShape = cellShape,
+                                seasonStrokeColor = cellStrokeColor,
+                                cellCornerPx = cellCorner,
+                                scale = dim.scale,
                                 modifier = Modifier
                                     .size(
                                         width = with(density) { rect.width().toDp() },
@@ -144,24 +197,76 @@ fun CollagePreview(
             }
 
             dim.textArea?.let { ta ->
-                if (!bottomCaption.isNullOrBlank()) {
+                val useSplit =
+                    captionTextPart != null || captionDatePart != null
+                val hasSplitContent =
+                    !captionTextPart.isNullOrBlank() || !captionDatePart.isNullOrBlank()
+                val legacyCaption = bottomCaption?.takeIf { it.isNotBlank() }
+                val showCaption = (useSplit && hasSplitContent) || (!useSplit && legacyCaption != null)
+                if (showCaption) {
+                    val context = LocalContext.current
+                    val captionFont = if (captionFontName != null) {
+                        AppFontCatalog.fontFamily(context, captionFontName)
+                    } else {
+                        null
+                    }
+                    val captionColor = if (captionColorRGB != null) {
+                        Color((0xFF000000 or (captionColorRGB and 0xFFFFFF)).toInt())
+                    } else {
+                        brandColor.copy(alpha = 0.95f)
+                    }
+                    val baseStyle = TextStyle(
+                        fontWeight = FontWeight.Medium,
+                        fontFamily = captionFont,
+                        color = captionColor,
+                    )
+
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(with(density) { ta.height().toDp() }),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text(
-                            text = bottomCaption,
-                            style = TextStyle(
-                                fontSize = captionSp,
-                                fontWeight = FontWeight.Medium,
-                                color = brandColor.copy(alpha = 0.95f),
-                            ),
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            textAlign = TextAlign.Center,
-                        )
+                        if (useSplit && hasSplitContent) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                if (!captionTextPart.isNullOrBlank()) {
+                                    Text(
+                                        text = captionTextPart,
+                                        style = baseStyle.copy(fontSize = captionTextSp),
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                                if (!captionTextPart.isNullOrBlank() && !captionDatePart.isNullOrBlank()) {
+                                    Text(
+                                        text = " · ",
+                                        style = baseStyle.copy(fontSize = captionTextSp),
+                                        maxLines = 1,
+                                    )
+                                }
+                                if (!captionDatePart.isNullOrBlank()) {
+                                    Text(
+                                        text = captionDatePart,
+                                        style = baseStyle.copy(fontSize = captionDateSp),
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                            }
+                        } else {
+                            Text(
+                                text = legacyCaption.orEmpty(),
+                                style = baseStyle.copy(fontSize = captionSpLegacy),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        }
                     }
                 }
             }
@@ -176,9 +281,6 @@ fun CollagePreview(
     }
 }
 
-/**
- * [CollagePreview]를 부모 영역 안에 빠짐없이 보이도록 등비 축소한다.
- */
 @Composable
 fun CollagePreviewScaledToFit(
     images: List<Bitmap>,
@@ -186,7 +288,15 @@ fun CollagePreviewScaledToFit(
     frameStyle: FrameStyle,
     theme: FrameTheme,
     overrideBackground: Color? = null,
+    overrideBackgroundImage: Bitmap? = null,
+    customFrameDesign: CustomFrameDesign? = null,
     bottomCaption: String? = null,
+    captionTextPart: String? = null,
+    captionDatePart: String? = null,
+    captionTextSizePt: Float = 16f,
+    captionDateSizePt: Float = 16f,
+    captionFontName: String? = null,
+    captionColorRGB: Long? = null,
     modifier: Modifier = Modifier,
 ) {
     SubcomposeLayout(modifier = modifier) { constraints ->
@@ -207,7 +317,15 @@ fun CollagePreviewScaledToFit(
                 frameStyle = frameStyle,
                 theme = theme,
                 overrideBackground = overrideBackground,
+                overrideBackgroundImage = overrideBackgroundImage,
+                customFrameDesign = customFrameDesign,
                 bottomCaption = bottomCaption,
+                captionTextPart = captionTextPart,
+                captionDatePart = captionDatePart,
+                captionTextSizePt = captionTextSizePt,
+                captionDateSizePt = captionDateSizePt,
+                captionFontName = captionFontName,
+                captionColorRGB = captionColorRGB,
                 modifier = Modifier.fillMaxWidth(),
             )
         }[0].measure(innerConstraints)
@@ -251,10 +369,29 @@ private fun CollagePreviewCell(
     bitmap: Bitmap?,
     cellOverlay: Color,
     iconTint: Color,
+    cellShape: androidx.compose.ui.graphics.Shape,
+    seasonStrokeColor: Color,
+    cellCornerPx: Float,
+    scale: Float,
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier.clip(RectangleShape),
+        modifier = modifier
+            .clip(cellShape)
+            .then(
+                if (seasonStrokeColor != Color.Transparent && cellCornerPx >= 0f) {
+                    Modifier.drawBehind {
+                        drawRoundRect(
+                            color = seasonStrokeColor,
+                            cornerRadius = androidx.compose.ui.geometry.CornerRadius(cellCornerPx, cellCornerPx),
+                            style = Stroke(
+                                width = 3f * scale,
+                                pathEffect = PathEffect.dashPathEffect(floatArrayOf(8f * scale, 6f * scale), 0f),
+                            ),
+                        )
+                    }
+                } else Modifier
+            ),
         contentAlignment = Alignment.Center,
     ) {
         Box(
@@ -281,18 +418,14 @@ private fun CollagePreviewCell(
 }
 
 private fun brandTextColor(effectiveBackground: Color): Color =
-    if (isBlackBackground(effectiveBackground)) {
-        Color.White
-    } else {
-        Color.Black.copy(alpha = 0.9f)
-    }
+    if (isDark(effectiveBackground)) Color.White
+    else Color.Black.copy(alpha = 0.9f)
 
 private fun cellPlaceholderOverlay(effectiveBackground: Color): Color =
-    if (isBlackBackground(effectiveBackground)) {
-        Color.Black.copy(alpha = 0.25f)
-    } else {
-        Color.Black.copy(alpha = 0.06f)
-    }
+    if (isDark(effectiveBackground)) Color.Black.copy(alpha = 0.25f)
+    else Color.Black.copy(alpha = 0.06f)
 
-private fun isBlackBackground(color: Color): Boolean =
-    color == Color.Black || color == Color(0xFF000000)
+private fun isDark(color: Color): Boolean {
+    val luminance = 0.299f * color.red + 0.587f * color.green + 0.114f * color.blue
+    return luminance <= 0.5f
+}
