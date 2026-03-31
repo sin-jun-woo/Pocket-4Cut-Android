@@ -32,12 +32,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ChevronLeft
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -116,6 +113,10 @@ fun CustomFrameEditorScreen(
     var selectedStickerColor by remember { mutableStateOf(stickerTintPalette.first()) }
     var showTextDialog by remember { mutableStateOf(false) }
     var textDraft by remember { mutableStateOf("텍스트") }
+    var draftTextColorHex by remember { mutableStateOf(0x000000L) }
+    var draftTextFontName by remember { mutableStateOf<String?>(null) }
+    var showTextFontSheet by remember { mutableStateOf(false) }
+    var showTextColorSheet by remember { mutableStateOf(false) }
 
     val design = remember(fillColorId, decorations) {
         CustomFrameDesign(fillColorId = fillColorId, decorations = decorations)
@@ -370,7 +371,11 @@ fun CustomFrameEditorScreen(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        items(EmojiPicklist.all, key = { it }) { emoji ->
+                        items(
+                            count = EmojiPicklist.all.size,
+                            key = { index -> "emoji_$index" },
+                        ) { index ->
+                            val emoji = EmojiPicklist.all[index]
                             Box(
                                 modifier = Modifier
                                     .size(40.dp)
@@ -498,42 +503,132 @@ fun CustomFrameEditorScreen(
     }
 
     if (showTextDialog) {
-        AlertDialog(
+        val fontOptions = remember { AppFontCatalog.options(context) }
+        val currentFontDisplay = fontOptions.firstOrNull { it.id == draftTextFontName }?.displayName ?: "기본"
+        val textColor = Color(0xFF000000L or (draftTextColorHex and 0xFFFFFFL))
+
+        @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+        androidx.compose.material3.ModalBottomSheet(
             onDismissRequest = { showTextDialog = false },
-            title = { Text("텍스트 추가", style = AppTypography.title3) },
-            text = {
-                OutlinedTextField(
+            containerColor = AppColors.Background.primary,
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = AppSpacing.Screen.horizontal)
+                    .padding(bottom = AppSpacing.Layout.ctaBottomSpace),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text("텍스트 추가", style = AppTypography.title3, color = AppColors.Text.primary)
+                Spacer(Modifier.height(AppSpacing.md))
+
+                Text(
+                    text = textDraft.ifBlank { "텍스트" },
+                    color = textColor,
+                    fontSize = 24.sp,
+                    fontFamily = draftTextFontName?.let { name ->
+                        fontOptions.firstOrNull { it.id == name }?.fontFamily
+                    } ?: androidx.compose.ui.text.font.FontFamily.Default,
+                    modifier = Modifier.padding(vertical = AppSpacing.md),
+                )
+
+                androidx.compose.material3.OutlinedTextField(
                     value = textDraft,
                     onValueChange = { textDraft = it },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
+                    label = { Text("텍스트 입력") },
                 )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val fontId = AppFontCatalog.options(context).firstOrNull { it.id != "system" }?.id
-                        decorations = decorations + CustomFrameDecoration(
-                            kind = CustomFrameDecoration.Kind.Text(
-                                content = textDraft.ifBlank { "텍스트" },
-                                textColorARGB = 0xFF000000L,
-                                fontScale = 0.08f,
-                            ),
-                            fontName = fontId,
-                        )
-                        selectedId = decorations.last().id
-                        showTextDialog = false
-                        trayMode = TrayMode.Hidden
-                    },
+                Spacer(Modifier.height(AppSpacing.md))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
                 ) {
-                    Text("추가", color = AppColors.Accent.pink)
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp)
+                            .clip(RoundedCornerShape(AppLayout.Radius.sm))
+                            .background(AppColors.Background.tertiary)
+                            .clickable { showTextFontSheet = true },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text("글꼴: $currentFontDisplay", style = AppTypography.callout, color = AppColors.Text.primary)
+                    }
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp)
+                            .clip(RoundedCornerShape(AppLayout.Radius.sm))
+                            .background(AppColors.Background.tertiary)
+                            .clickable { showTextColorSheet = true },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .clip(CircleShape)
+                                    .background(textColor)
+                                    .border(1.dp, AppColors.Border.medium, CircleShape),
+                            )
+                            Text("색상", style = AppTypography.callout, color = AppColors.Text.primary)
+                        }
+                    }
                 }
-            },
-            dismissButton = {
-                TextButton(onClick = { showTextDialog = false }) {
-                    Text("취소", color = AppColors.Text.secondary)
+                Spacer(Modifier.height(AppSpacing.lg))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+                ) {
+                    Box(modifier = Modifier.weight(1f)) {
+                        com.pocket4cut.ui.designsystem.components.SecondaryButton(
+                            text = "취소",
+                            onClick = { showTextDialog = false },
+                        )
+                    }
+                    Box(modifier = Modifier.weight(1f)) {
+                        PrimaryButton(
+                            text = "추가",
+                            onClick = {
+                                val newDec = CustomFrameDecoration(
+                                    kind = CustomFrameDecoration.Kind.Text(
+                                        content = textDraft.ifBlank { "텍스트" },
+                                        textColorARGB = 0xFF000000L or (draftTextColorHex and 0xFFFFFFL),
+                                        fontScale = 0.08f,
+                                    ),
+                                    fontName = draftTextFontName,
+                                )
+                                decorations = decorations + newDec
+                                selectedId = newDec.id
+                                showTextDialog = false
+                                trayMode = TrayMode.Hidden
+                            },
+                        )
+                    }
                 }
-            },
+            }
+        }
+    }
+
+    if (showTextFontSheet) {
+        com.pocket4cut.ui.designsystem.components.InAppFontPickerSheet(
+            selectedFontName = draftTextFontName,
+            onFontSelected = { draftTextFontName = it; showTextFontSheet = false },
+            onDismiss = { showTextFontSheet = false },
+        )
+    }
+
+    if (showTextColorSheet) {
+        com.pocket4cut.ui.designsystem.components.InAppColorPaletteSheet(
+            selectedColorRGB = draftTextColorHex,
+            onColorSelected = { rgb -> draftTextColorHex = rgb ?: 0x000000L; showTextColorSheet = false },
+            onDismiss = { showTextColorSheet = false },
         )
     }
 }
