@@ -122,6 +122,9 @@ fun CustomFrameEditorScreen(
     val design = remember(fillColorId, decorations) {
         CustomFrameDesign(fillColorId = fillColorId, decorations = decorations)
     }
+    val previewDesign = remember(fillColorId) {
+        CustomFrameDesign(fillColorId = fillColorId, decorations = emptyList())
+    }
 
     Column(
         modifier = modifier
@@ -206,8 +209,8 @@ fun CustomFrameEditorScreen(
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
-                    customFrameDesign = design,
-                    customDecorations = decorations,
+                    customFrameDesign = previewDesign,
+                    customDecorations = emptyList(),
                     modifier = Modifier.fillMaxSize(),
                 )
 
@@ -252,29 +255,22 @@ fun CustomFrameEditorScreen(
                                 scaleX = dec.scale
                                 scaleY = dec.scale
                             }
+                            .pointerInput(dec.id) {
+                                detectTapGestures(onTap = { selectedId = dec.id })
+                            }
                             .then(
                                 if (dec.id == selectedId) {
                                     Modifier
                                         .pointerInput(selectedId, sw, sh) {
-                                            detectDragGestures { _, dragAmount ->
-                                                val sid = selectedId ?: return@detectDragGestures
-                                                decorations = decorations.map {
-                                                    if (it.id != sid) it
-                                                    else it.copy(
-                                                        position = NormPoint(
-                                                            x = (it.position.x + dragAmount.x / sw).coerceIn(0.02f, 0.98f),
-                                                            y = (it.position.y + dragAmount.y / sh).coerceIn(0.02f, 0.98f),
-                                                        ),
-                                                    )
-                                                }
-                                            }
-                                        }
-                                        .pointerInput(selectedId, sw, sh) {
-                                            detectTransformGestures { _, _, zoomChange, rotationChange ->
+                                            detectTransformGestures { _, pan, zoomChange, rotationChange ->
                                                 val sid = selectedId ?: return@detectTransformGestures
                                                 decorations = decorations.map {
                                                     if (it.id != sid) it
                                                     else it.copy(
+                                                        position = NormPoint(
+                                                            x = (it.position.x + pan.x / sw).coerceIn(0.02f, 0.98f),
+                                                            y = (it.position.y + pan.y / sh).coerceIn(0.02f, 0.98f),
+                                                        ),
                                                         scale = (it.scale * zoomChange).coerceIn(0.25f, 5f),
                                                         rotationRadians = it.rotationRadians + rotationChange,
                                                     )
