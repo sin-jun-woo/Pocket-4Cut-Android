@@ -211,8 +211,22 @@ fun PocketNavHost(
             }
 
             val theme = remember(frameType) { FrameCatalog.themes(frameType).first() }
+            val context = LocalContext.current
 
             var flowStep by remember { mutableStateOf("choose") }
+
+            var previewBitmaps by remember { mutableStateOf(emptyList<Bitmap>()) }
+            LaunchedEffect(photoPaths) {
+                previewBitmaps = photoPaths.mapNotNull { path ->
+                    com.pocket4cut.core.util.BitmapDecoding.decodeSampled(path, 512)
+                }
+            }
+
+            fun navigateToEdit() {
+                navController.navigate(
+                    "${Routes.EDIT}/${frameTypeId}/$sessionId/$selectedRaw/$layoutIdStr/${theme.id}",
+                )
+            }
 
             when (flowStep) {
                 "choose" -> FrameFlowCoordinatorScreen(
@@ -222,48 +236,54 @@ fun PocketNavHost(
                     onDismiss = { navController.popBackStack() },
                 )
                 "color" -> ColorFramePalettePickScreen(
-                    images = photoPaths.mapNotNull { path ->
-                        com.pocket4cut.core.util.BitmapDecoding.decodeSampled(path, 512)
-                    },
+                    images = previewBitmaps,
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
                     onBack = { flowStep = "choose" },
                     onDismiss = { navController.popBackStack() },
                     onCompleted = { color ->
-                        navController.navigate(
-                            "${Routes.EDIT}/${frameTypeId}/$sessionId/$selectedRaw/$layoutIdStr/${theme.id}",
+                        PendingCollageStore.writeFrameSelection(
+                            context, sessionId,
+                            type = "solid",
+                            frameColorId = color.id,
                         )
+                        navigateToEdit()
                     },
                 )
                 "season" -> SeasonBackgroundFramePickScreen(
-                    images = photoPaths.mapNotNull { path ->
-                        com.pocket4cut.core.util.BitmapDecoding.decodeSampled(path, 512)
-                    },
+                    images = previewBitmaps,
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
                     onBack = { flowStep = "choose" },
                     onDismiss = { navController.popBackStack() },
                     onCompleted = { season ->
-                        navController.navigate(
-                            "${Routes.EDIT}/${frameTypeId}/$sessionId/$selectedRaw/$layoutIdStr/${theme.id}",
+                        val design = SeasonBackgroundFrameFactory.design(season)
+                        PendingCollageStore.writeFrameSelection(
+                            context, sessionId,
+                            type = "season",
+                            seasonId = season.name.lowercase(),
+                            customDesignJson = PendingCollageStore.serializeDesign(design),
                         )
+                        navigateToEdit()
                     },
                 )
                 "custom" -> CustomFrameEditorScreen(
-                    images = photoPaths.mapNotNull { path ->
-                        com.pocket4cut.core.util.BitmapDecoding.decodeSampled(path, 512)
-                    },
+                    images = previewBitmaps,
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
                     onBack = { flowStep = "choose" },
                     onDismiss = { navController.popBackStack() },
                     onCompleted = { design ->
-                        navController.navigate(
-                            "${Routes.EDIT}/${frameTypeId}/$sessionId/$selectedRaw/$layoutIdStr/${theme.id}",
+                        PendingCollageStore.writeFrameSelection(
+                            context, sessionId,
+                            type = "custom",
+                            frameColorId = design.fillColorId,
+                            customDesignJson = PendingCollageStore.serializeDesign(design),
                         )
+                        navigateToEdit()
                     },
                 )
             }
@@ -340,6 +360,7 @@ fun PocketNavHost(
 
             if (photoBitmaps.isNotEmpty()) {
                 val pending = PendingCollageStore.read(context, sessionId)
+                val design = pending?.customDesignJson?.let { PendingCollageStore.deserializeDesign(it) }
                 DetailEditScreen(
                     frameType = frameType,
                     frameStyle = frameStyle,
@@ -356,6 +377,7 @@ fun PocketNavHost(
                     dateFontSize = pending?.dateFontSize ?: 16f,
                     captionFontName = pending?.captionFontName,
                     captionColorRGB = pending?.captionColorRGB,
+                    customFrameDesign = design,
                     onBack = { navController.popBackStack() },
                     onResult = { resultPath ->
                         val encoded = NavCodec.encodePath(resultPath)

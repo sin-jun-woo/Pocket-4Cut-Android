@@ -113,6 +113,7 @@ fun DetailEditScreen(
     dateFontSize: Float = 16f,
     captionFontName: String? = null,
     captionColorRGB: Long? = null,
+    customFrameDesign: com.pocket4cut.frame.CustomFrameDesign? = null,
     onBack: () -> Unit,
     onResult: (resultPath: String) -> Unit,
     modifier: Modifier = Modifier,
@@ -131,6 +132,11 @@ fun DetailEditScreen(
             showDate = showDate,
             sessionId = sessionId,
             selectedIndexes = selectedIndexes,
+            textFontSize = textFontSize,
+            dateFontSize = dateFontSize,
+            captionFontName = captionFontName,
+            captionColorRGB = captionColorRGB,
+            customFrameDesign = customFrameDesign,
         )
     }
 

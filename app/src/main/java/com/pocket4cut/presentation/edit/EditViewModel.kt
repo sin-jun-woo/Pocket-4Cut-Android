@@ -8,7 +8,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.data.storage.FileImageStorage
-import com.pocket4cut.frame.*
+import com.pocket4cut.frame.CustomFrameDesign
+import com.pocket4cut.frame.FilterDefs
+import com.pocket4cut.frame.FilterId
+import com.pocket4cut.frame.FrameColor
+import com.pocket4cut.frame.FrameColors
+import com.pocket4cut.frame.FrameLayoutId
+import com.pocket4cut.frame.FrameLayouts
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.presentation.settings.AppSettings
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +44,10 @@ data class EditUiState(
     val dateFontSize: Float = 16f,
     val captionFontName: String? = null,
     val captionColorRGB: Long? = null,
+    val frameBackgroundType: String = "solid",
+    val seasonId: String? = null,
+    val customFrameDesign: CustomFrameDesign? = null,
+    val allowsColorEditInEditor: Boolean = true,
 )
 
 class EditViewModel(app: Application) : AndroidViewModel(app) {
@@ -65,7 +75,31 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         lastSessionId = sessionId
 
         val date = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date())
-        _uiState.update { it.copy(isLoading = true, errorMessage = null, dateString = date) }
+
+        val frameSel = PendingCollageStore.readFrameSelection(getApplication(), sessionId)
+        val bgType = frameSel?.type ?: "solid"
+        val seasonIdVal = frameSel?.seasonId
+        val designJson = frameSel?.customDesignJson
+        val design = designJson?.let { PendingCollageStore.deserializeDesign(it) }
+        val frameColor = frameSel?.frameColorId?.let { FrameColors.byId(it) } ?: FrameColors.all.first()
+        val allowsColor = when (bgType) {
+            "solid" -> true
+            "custom" -> design?.sourceSeason == null
+            else -> false
+        }
+
+        _uiState.update {
+            it.copy(
+                isLoading = true,
+                errorMessage = null,
+                dateString = date,
+                frameBackgroundType = bgType,
+                seasonId = seasonIdVal,
+                customFrameDesign = design,
+                selectedFrameColor = frameColor,
+                allowsColorEditInEditor = allowsColor,
+            )
+        }
 
         viewModelScope.launch {
             runCatching {
@@ -175,6 +209,9 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
                 dateFontSize = s.dateFontSize,
                 captionFontName = s.captionFontName,
                 captionColorRGB = s.captionColorRGB,
+                frameBackgroundType = s.frameBackgroundType,
+                seasonId = s.seasonId,
+                customDesignJson = s.customFrameDesign?.let { PendingCollageStore.serializeDesign(it) },
             ),
         )
     }

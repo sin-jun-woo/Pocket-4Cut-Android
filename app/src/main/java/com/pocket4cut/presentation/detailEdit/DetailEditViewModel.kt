@@ -13,6 +13,7 @@ import com.pocket4cut.data.local.SessionRepository
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.domain.model.PhotoSession
 import com.pocket4cut.frame.CollageRenderer
+import com.pocket4cut.frame.CustomFrameDesign
 import com.pocket4cut.frame.FilterDefs
 import com.pocket4cut.frame.FilterId
 import com.pocket4cut.frame.FrameCatalog
@@ -79,6 +80,11 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
     private var showDate: Boolean = false
     private var sessionId: String = ""
     private var selectedIndexes: List<Int> = emptyList()
+    private var textFontSize: Float = 16f
+    private var dateFontSize: Float = 16f
+    private var captionFontName: String? = null
+    private var captionColorRGB: Long? = null
+    private var customFrameDesign: CustomFrameDesign? = null
 
     private var initialized = false
     private val slotJobs = mutableMapOf<Int, Job>()
@@ -95,6 +101,11 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
         showDate: Boolean,
         sessionId: String,
         selectedIndexes: List<Int>,
+        textFontSize: Float = 16f,
+        dateFontSize: Float = 16f,
+        captionFontName: String? = null,
+        captionColorRGB: Long? = null,
+        customFrameDesign: CustomFrameDesign? = null,
     ) {
         if (initialized) return
         initialized = true
@@ -110,6 +121,11 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
         this.showDate = showDate
         this.sessionId = sessionId
         this.selectedIndexes = selectedIndexes
+        this.textFontSize = textFontSize
+        this.dateFontSize = dateFontSize
+        this.captionFontName = captionFontName
+        this.captionColorRGB = captionColorRGB
+        this.customFrameDesign = customFrameDesign
 
         val adjustments = List(baseImages.size) { PhotoSlotAdjustment.neutral }
         _uiState.value = DetailEditUiState(slotAdjustments = adjustments)
@@ -181,18 +197,25 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
                 } else {
                     null
                 }
-                val outputWidth = if (frameStyle.id == FrameLayoutId.FOUR_VERTICAL) 1650 else 1920
+                val bgColor = customFrameDesign?.resolvedFillColor ?: frameColor.color
+                val input = CollageRenderer.Input(
+                    images = processedBitmaps,
+                    frameStyle = frameStyle,
+                    theme = theme,
+                    overrideBackground = bgColor,
+                    customFrameDesign = customFrameDesign,
+                    customDecorations = customFrameDesign?.decorations ?: emptyList(),
+                    filterId = FilterId.ORIGINAL,
+                    text = customText.takeIf { it.isNotBlank() },
+                    dateString = dateString,
+                    textFontSize = textFontSize,
+                    dateFontSize = dateFontSize,
+                    textColorRGB = captionColorRGB,
+                    captionFontName = captionFontName,
+                    context = getApplication(),
+                )
                 val result = try {
-                    CollageRenderer.render(
-                        images = processedBitmaps,
-                        frameStyle = frameStyle,
-                        theme = theme,
-                        overrideBackground = frameColor.color,
-                        filterId = FilterId.ORIGINAL,
-                        text = customText.takeIf { it.isNotBlank() },
-                        dateString = dateString,
-                        outputWidth = outputWidth,
-                    )
+                    CollageRenderer.render(input)
                 } finally {
                     processedBitmaps.forEach { it.recycle() }
                 }
