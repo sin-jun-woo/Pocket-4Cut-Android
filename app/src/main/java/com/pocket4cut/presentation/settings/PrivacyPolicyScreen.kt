@@ -27,28 +27,9 @@ import com.pocket4cut.ui.designsystem.AppColors
 import com.pocket4cut.ui.designsystem.AppLayout
 import com.pocket4cut.ui.designsystem.AppSpacing
 import com.pocket4cut.ui.designsystem.AppTypography
+import com.pocket4cut.legal.PrivacyPolicyContent
 import com.pocket4cut.ui.designsystem.components.IconButtonVariant
 import com.pocket4cut.ui.designsystem.components.IconCircleButton
-
-private val POLICY_TEXT = """
-Pocket 4Cut 개인정보 처리방침
-
-1. 수집하는 개인정보
-본 앱은 사용자의 개인정보를 수집하지 않습니다.
-
-2. 카메라 및 사진 라이브러리
-카메라 접근: 사진 촬영을 위해서만 사용됩니다.
-사진 라이브러리: 완성된 사진을 저장하기 위해서만 사용됩니다.
-
-3. 데이터 저장
-모든 데이터는 기기 내부에만 저장되며, 외부 서버로 전송되지 않습니다.
-
-4. 제3자 제공
-사용자 데이터를 제3자에게 제공하지 않습니다.
-
-5. 문의
-sus3456@naver.com
-""".trimIndent()
 
 @Composable
 fun PrivacyPolicyScreen(onBack: () -> Unit) {
@@ -92,7 +73,7 @@ fun PrivacyPolicyScreen(onBack: () -> Unit) {
         Box(modifier = Modifier.weight(1f)) {
             SelectionContainer {
                 Text(
-                    text = POLICY_TEXT,
+                    text = PrivacyPolicyContent.fullTextKo,
                     style = AppTypography.body,
                     color = AppColors.Text.primary,
                     modifier = Modifier
