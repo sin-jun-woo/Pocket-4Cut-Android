@@ -1,8 +1,21 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.inputStream().use { keystoreProperties.load(it) }
+}
+
+fun Properties.requireSigningProperty(name: String): String =
+    getProperty(name)?.trim()
+        ?: error("keystore.properties missing property: $name")
 
 android {
     namespace = "com.pocket4cut"
@@ -18,8 +31,22 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias = keystoreProperties.requireSigningProperty("keyAlias")
+                keyPassword = keystoreProperties.requireSigningProperty("keyPassword")
+                storeFile = rootProject.file(keystoreProperties.requireSigningProperty("storeFile"))
+                storePassword = keystoreProperties.requireSigningProperty("storePassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (keystorePropertiesFile.exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

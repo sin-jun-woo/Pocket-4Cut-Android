@@ -8,3 +8,10 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Release signing (절대 커밋 금지)
+keystore.properties
+keystore/
+*.jks
+*.keystore
+SIGNING_CREDENTIALS.txt
