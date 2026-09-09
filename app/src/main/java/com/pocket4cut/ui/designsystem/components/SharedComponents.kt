@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -49,12 +48,12 @@ fun AppToast(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val shape = RoundedCornerShape(AppLayout.Radius.lg)
+    val shape = RoundedCornerShape(AppLayout.Radius.md)
     Row(
         modifier = modifier
             .fillMaxWidth()
             .shadow(
-                elevation = 16.dp,
+                elevation = 4.dp,
                 shape = shape,
                 clip = false,
                 ambientColor = AppColors.Shadow.color,
@@ -82,8 +81,8 @@ fun AppToast(
         )
         Box(
             modifier = Modifier
-                .size(24.dp)
-                .clip(CircleShape)
+                .size(28.dp)
+                .clip(RoundedCornerShape(AppLayout.Radius.xs))
                 .background(AppColors.Background.tertiary)
                 .clickable(onClick = onDismiss),
             contentAlignment = Alignment.Center,
@@ -181,8 +180,8 @@ fun EmptyState(
     ) {
         Box(
             modifier = Modifier
-                .size(80.dp)
-                .clip(CircleShape)
+                .size(72.dp)
+                .clip(RoundedCornerShape(AppLayout.Radius.md))
                 .background(AppColors.Overlay.white),
             contentAlignment = Alignment.Center,
         ) {
@@ -230,9 +229,9 @@ fun AppFilterChip(
         text = label,
         style = AppTypography.subheadline.copy(fontWeight = fontWeight, color = textColor),
         modifier = modifier
-            .clip(RoundedCornerShape(9999.dp))
+            .clip(RoundedCornerShape(AppLayout.Radius.sm))
             .background(bg)
-            .then(if (!selected) Modifier.border(1.dp, borderColor, RoundedCornerShape(9999.dp)) else Modifier)
+            .then(if (!selected) Modifier.border(1.dp, borderColor, RoundedCornerShape(AppLayout.Radius.sm)) else Modifier)
             .clickable(onClick = onClick)
             .padding(horizontal = AppSpacing.md, vertical = AppSpacing.xs),
     )

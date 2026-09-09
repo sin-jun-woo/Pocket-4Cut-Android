@@ -4,19 +4,11 @@ import android.content.ContentValues
 import android.content.Intent
 import android.os.Build
 import android.provider.MediaStore
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,7 +16,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -34,7 +25,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Home
@@ -46,7 +36,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,16 +43,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.pocket4cut.core.util.FileUris
@@ -79,25 +65,12 @@ import com.pocket4cut.ui.designsystem.components.IconCircleButton
 import com.pocket4cut.ui.designsystem.components.PrimaryButton
 import com.pocket4cut.ui.designsystem.components.SecondaryButton
 import java.io.File
-import kotlin.random.Random
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-private data class ConfettiSpec(
-    val xFrac: Float,
-    val yFrac: Float,
-    val driftX: Dp,
-    val driftY: Dp,
-    val rotStart: Float,
-    val rotDelta: Float,
-    val width: Dp,
-    val height: Dp,
-    val color: Color,
-)
-
-private val BottomChromeReserve = 240.dp
+private val BottomChromeReserve = 184.dp
 
 @Composable
 fun ResultScreen(
@@ -112,46 +85,11 @@ fun ResultScreen(
 
     var isSaving by remember { mutableStateOf(false) }
     var isSaved by remember { mutableStateOf(false) }
-    var showDeferredChrome by remember { mutableStateOf(false) }
-    var confettiPieces by remember { mutableStateOf<List<ConfettiSpec>>(emptyList()) }
-    var confettiTargetProgress by remember { mutableFloatStateOf(0f) }
-
-    val confettiProgress by animateFloatAsState(
-        targetValue = confettiTargetProgress,
-        animationSpec = tween(durationMillis = 1_500),
-        label = "confetti",
-    )
 
     var toastMessage by remember { mutableStateOf<String?>(null) }
     var toastType by remember { mutableStateOf(AppToastType.Success) }
 
     val scope = rememberCoroutineScope()
-
-    LaunchedEffect(Unit) {
-        delay(1_500)
-        showDeferredChrome = true
-    }
-
-    LaunchedEffect(isSaved) {
-        if (!isSaved) return@LaunchedEffect
-        val random = Random(System.currentTimeMillis())
-        confettiPieces = List(30) {
-            ConfettiSpec(
-                xFrac = random.nextFloat() * 0.92f + 0.04f,
-                yFrac = random.nextFloat() * 0.75f + 0.05f,
-                driftX = random.nextInt(-140, 140).dp,
-                driftY = random.nextInt(-120, 320).dp,
-                rotStart = random.nextFloat() * 360f,
-                rotDelta = random.nextFloat() * 540f - 270f,
-                width = random.nextInt(6, 14).dp,
-                height = random.nextInt(12, 28).dp,
-                color = if (random.nextBoolean()) AppColors.Accent.pink else AppColors.Accent.pinkLight,
-            )
-        }
-        confettiTargetProgress = 1f
-        delay(1_500)
-        confettiPieces = emptyList()
-    }
 
     LaunchedEffect(toastMessage) {
         val m = toastMessage ?: return@LaunchedEffect
@@ -232,16 +170,7 @@ fun ResultScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(AppColors.Background.primary)
-            .drawBehind {
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(AppColors.Accent.pink.copy(alpha = 0.06f), Color.Transparent),
-                        radius = size.minDimension * 0.7f,
-                    ),
-                    center = center.copy(y = size.height * 0.3f),
-                )
-            },
+            .background(AppColors.Background.primary),
     ) {
         Column(
             modifier = Modifier
@@ -260,29 +189,13 @@ fun ResultScreen(
                     ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                AnimatedVisibility(
-                    visible = showDeferredChrome,
-                    enter = scaleIn(
-                        initialScale = 0.6f,
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessMediumLow,
-                        ),
-                    ) + fadeIn(
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioNoBouncy,
-                            stiffness = Spring.StiffnessMediumLow,
-                        ),
-                    ),
-                ) {
-                    IconCircleButton(onClick = onHome, variant = IconButtonVariant.SOLID) {
-                        Icon(
-                            imageVector = Icons.Filled.Home,
-                            contentDescription = "홈",
-                            tint = AppColors.Text.secondary,
-                            modifier = Modifier.size(20.dp),
-                        )
-                    }
+                IconCircleButton(onClick = onHome, variant = IconButtonVariant.SOLID) {
+                    Icon(
+                        imageVector = Icons.Filled.Home,
+                        contentDescription = "홈",
+                        tint = AppColors.Text.secondary,
+                        modifier = Modifier.size(20.dp),
+                    )
                 }
             }
 
@@ -290,40 +203,33 @@ fun ResultScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = AppSpacing.xl),
-                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                    Icon(
-                        imageVector = Icons.Filled.AutoAwesome,
-                        contentDescription = null,
-                        tint = AppColors.Accent.pink,
-                        modifier = Modifier.size(24.dp),
-                    )
-                    Spacer(Modifier.width(AppSpacing.xs))
-                    Text(
-                        text = "완성!",
-                        style = AppTypography.largeTitle,
-                        color = AppColors.Text.primary,
-                    )
-                    Spacer(Modifier.width(AppSpacing.xs))
-                    Icon(
-                        imageVector = Icons.Filled.AutoAwesome,
-                        contentDescription = null,
-                        tint = AppColors.Accent.pink,
-                        modifier = Modifier.size(24.dp),
-                    )
-                }
-                Spacer(Modifier.height(AppSpacing.sm))
+                Text(
+                    text = "PRINT READY",
+                    style = AppTypography.caption1.copy(
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.6.sp,
+                    ),
+                    color = AppColors.Accent.pink,
+                    modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal),
+                )
+                Spacer(Modifier.height(AppSpacing.xs))
+                Text(
+                    text = "완성됐어요",
+                    style = AppTypography.largeTitle,
+                    color = AppColors.Text.primary,
+                    modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal),
+                )
+                Spacer(Modifier.height(AppSpacing.xxs))
                 Text(
                     text = "소중한 순간이 담긴 사진이 완성되었어요",
                     style = AppTypography.callout,
-                    color = AppColors.Text.tertiary,
-                    textAlign = TextAlign.Center,
+                    color = AppColors.Text.secondary,
                     modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal),
                 )
             }
 
-            val imageShape = RoundedCornerShape(AppLayout.Radius.xl)
+            val imageShape = RoundedCornerShape(AppLayout.Radius.xs)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -334,18 +240,11 @@ fun ResultScreen(
                     modifier = Modifier
                         .widthIn(max = 340.dp)
                         .shadow(
-                            elevation = 28.dp,
+                            elevation = 8.dp,
                             shape = imageShape,
                             clip = false,
-                            ambientColor = AppColors.Accent.pink.copy(alpha = 0.12f),
-                            spotColor = AppColors.Accent.pink.copy(alpha = 0.12f),
-                        )
-                        .shadow(
-                            elevation = 20.dp,
-                            shape = imageShape,
-                            clip = false,
-                            ambientColor = Color.Black.copy(alpha = 0.45f),
-                            spotColor = Color.Black.copy(alpha = 0.45f),
+                            ambientColor = Color.Black.copy(alpha = 0.16f),
+                            spotColor = Color.Black.copy(alpha = 0.16f),
                         )
                         .clip(imageShape),
                 ) {
@@ -356,35 +255,6 @@ fun ResultScreen(
                             .fillMaxWidth()
                             .aspectRatio(3f / 4f),
                         contentScale = ContentScale.Fit,
-                    )
-                }
-            }
-        }
-
-        if (confettiPieces.isNotEmpty()) {
-            BoxWithConstraints(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = BottomChromeReserve),
-            ) {
-                val w = maxWidth
-                val h = maxHeight
-                val p = confettiProgress
-                confettiPieces.forEach { spec ->
-                    val baseX = w * spec.xFrac
-                    val baseY = h * spec.yFrac
-                    Box(
-                        modifier = Modifier
-                            .offset(
-                                x = baseX + spec.driftX * p - spec.width / 2,
-                                y = baseY + spec.driftY * p - spec.height / 2,
-                            )
-                            .size(spec.width, spec.height)
-                            .graphicsLayer {
-                                rotationZ = spec.rotStart + spec.rotDelta * p
-                            }
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(spec.color),
                     )
                 }
             }
@@ -408,59 +278,60 @@ fun ResultScreen(
                     .padding(top = AppSpacing.md, bottom = AppSpacing.Layout.ctaBottomSpace),
                 verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
             ) {
-                when {
-                    isSaved -> SavedResultButton()
-                    isSaving -> SavingResultButton()
-                    else -> PrimaryButton(
-                        text = "갤러리에 저장",
-                        onClick = { performSave() },
-                        fullWidth = true,
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+                ) {
+                    when {
+                        isSaved -> SavedResultButton(modifier = Modifier.weight(1f))
+                        isSaving -> SavingResultButton(modifier = Modifier.weight(1f))
+                        else -> PrimaryButton(
+                            text = "저장",
+                            onClick = { performSave() },
+                            fullWidth = false,
+                            modifier = Modifier.weight(1f),
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Filled.Download,
+                                    contentDescription = null,
+                                    tint = Color.White,
+                                    modifier = Modifier.size(18.dp),
+                                )
+                            },
+                        )
+                    }
+
+                    SecondaryButton(
+                        text = "공유",
+                        onClick = { performShare() },
+                        fullWidth = false,
+                        modifier = Modifier.weight(1f),
                         icon = {
                             Icon(
-                                imageVector = Icons.Filled.Download,
+                                imageVector = Icons.Filled.Share,
                                 contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(20.dp),
+                                tint = AppColors.Text.primary,
+                                modifier = Modifier.size(18.dp),
                             )
                         },
                     )
                 }
-
-                SecondaryButton(
-                    text = "공유하기",
-                    onClick = { performShare() },
-                    fullWidth = true,
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Share,
-                            contentDescription = null,
-                            tint = AppColors.Text.primary,
-                            modifier = Modifier.size(20.dp),
-                        )
-                    },
-                )
-
-                AnimatedVisibility(
-                    visible = showDeferredChrome,
-                    enter = fadeIn(animationSpec = tween(300)),
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(AppLayout.Height.Button.md)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = onHome,
+                        ),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(AppLayout.Height.Button.lg)
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                onClick = onHome,
-                            ),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = "홈으로 돌아가기",
-                            style = AppTypography.callout,
-                            color = AppColors.Text.tertiary,
-                        )
-                    }
+                    Text(
+                        text = "홈으로 돌아가기",
+                        style = AppTypography.callout,
+                        color = AppColors.Text.tertiary,
+                    )
                 }
             }
         }
@@ -481,10 +352,10 @@ fun ResultScreen(
 }
 
 @Composable
-private fun SavingResultButton() {
+private fun SavingResultButton(modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(AppLayout.Radius.md)
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(AppLayout.Height.Button.lg)
             .clip(shape)
@@ -494,23 +365,23 @@ private fun SavingResultButton() {
     ) {
         CircularProgressIndicator(
             modifier = Modifier.size(20.dp),
-            color = AppColors.Text.primary,
+            color = Color.White,
             strokeWidth = 2.dp,
         )
         Spacer(Modifier.width(AppSpacing.xs))
         Text(
             text = "저장 중...",
             style = AppTypography.headline,
-            color = AppColors.Text.primary,
+            color = Color.White,
         )
     }
 }
 
 @Composable
-private fun SavedResultButton() {
+private fun SavedResultButton(modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(AppLayout.Radius.md)
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(AppLayout.Height.Button.lg)
             .clip(shape)
@@ -521,14 +392,14 @@ private fun SavedResultButton() {
         Icon(
             imageVector = Icons.Filled.Check,
             contentDescription = null,
-            tint = AppColors.Text.primary,
+            tint = Color.White,
             modifier = Modifier.size(20.dp),
         )
         Spacer(Modifier.width(AppSpacing.xs))
         Text(
             text = "저장 완료",
             style = AppTypography.headline,
-            color = AppColors.Text.primary,
+            color = Color.White,
         )
     }
 }

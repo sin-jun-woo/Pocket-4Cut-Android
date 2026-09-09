@@ -4,6 +4,39 @@
 
 `docs/`는 GitHub Pages 배포 대상이므로 공개 가능한 요약만 기록한다. 비밀값, 사용자 사진, 기기 serial, 개인 로컬 경로, 원시 실행 로그를 넣지 않는다. 세부 실행 산출물은 로컬 build/캐시 영역에 두고 필요한 명령·결과만 남긴다.
 
+## 2026-09-10 — 미커밋 전체 작업 통합 및 main 반영 (Asia/Seoul)
+
+### 요청과 반영 범위
+
+- 요청: GitHub에 반영하지 않은 작업 전부의 내용을 정리하여 커밋하고 `main`으로 push. 사용자가 기존 미커밋 작업 전체의 포함을 명시적으로 승인했다.
+- 기준: 시작 브랜치 `codex/setup-project-guidance`, HEAD `317b711`; fetch 후 `origin/main`은 `95140a0`이며 기존 개발 지침·Java 안내 커밋 2개가 앞서 있었다. 사용자 이력을 재작성하지 않는 일반 커밋과 fast-forward 통합을 사용한다.
+- 앱 버전은 현재 실제 설정인 **1.3 (versionCode 4)**를 반영한다. 초기 조사와 이전 출시 초안의 1.2 표기는 역사적 기록으로 구분했다.
+- UI: Compose 화면 16개·디자인 시스템 10개를 종이색/잉크색, 계절 강조색, 간격·글꼴·작은 모서리로 정리했다. 홈·컷 수·프레임 선택·배치·보관함 구성을 갱신하고 결과 저장/공유를 가로 배치했다. 시작 지연을 1.15초로 줄이고 결과 액션의 지연·confetti를 제거한 기존 로컬 작업을 포함한다.
+- 브랜드/스토어: Film Strip v4 런처 PNG·adaptive/monochrome XML·브랜드 PNG/SVG, Play 아이콘 **512×512 RGBA**, 피처 그래픽 **1024×500 RGB**, 기존 휴대전화 소개 이미지 **1080×1920 8장**을 포함한다. `design/`의 최종 원본, 프롬프트, 마스크 검토, 제작 스크립트, 가상 성인 사진 fixture, 미채택 초안·이전 아이콘 백업·ZIP도 제작 이력으로 함께 보존한다. 최종본과 미채택 자료는 각 폴더 README로 구분한다. 이번 Git 통합에서 새 이미지를 생성하지 않았다.
+- 문서: 프로젝트 인수 분석과 파일 지도·알려진 문제·검증 기록, UI/자산 작업 로그, 이미지 가이드, 기존 출시 준비 초안 및 실제 아키텍처의 현재 반영 상태를 포함한다.
+- 검증 도구: ADB smoke 스크립트와 명시적으로 실행할 때만 사용하는 Paparazzi init script/fixture를 포함한다. 공개 전에 ADB 스크립트의 개인 기기 serial 기본값과 로컬 경로를 제거하고, 세션 JSON·사진 파일 목록 출력은 개수/읽기 가능 여부로 바꿨다. 검증 문서의 개인 설치 경로는 환경 변수 기반 재실행 예시로 일반화했다.
+- `.gitignore`에 Kotlin 컴파일러의 로컬 세션 캐시 `/.kotlin/`을 추가했다. 기존 규칙으로 제외된 서명키·서명 암호 파일·SDK 로컬 설정·빌드 캐시는 포함하지 않는다. 자격증명 패턴 검사에서 발견한 Gradle 항목은 속성 조회 코드였고 실제 비밀값은 아니었다.
+
+### 실행한 검증
+
+```powershell
+./gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:lintDebug --continue --offline --console=plain
+```
+
+- 저장된 사용자 JBR 21.0.10 및 기존 Gradle 캐시로 실행했다. 전체 52개 태스크 중 **17개 실행 / 35개 UP-TO-DATE**, 소요 2분 12초. 결합 명령의 종료 코드는 Lint 실패로 **1**이다.
+- `assembleDebug`: **성공**. 리소스 처리와 APK 패키징을 실행했으며 출력 metadata의 버전 **1.3 (4)**가 현재 설정과 일치한다. Kotlin 앱 컴파일 등은 캐시를 재사용했다.
+- `testDebugUnitTest`: **실제 실행 성공**, 1개 / 실패 0 / 오류 0 / 건너뜀 0. XML 시각은 `2026-09-09T16:46:08.589Z`. 기본 산술 테스트이므로 제품 기능 커버리지를 의미하지 않는다.
+- `lintDebug`: **실패**, Error 1 / Warning 91 / Hint 2. 기존 `AndroidManifest.xml:6`의 `PermissionImpliesUnsupportedChromeOsHardware`가 원인이다. CAMERA 권한에 대응하는 hardware feature 선언 문제이며, 이번 통합에서는 Manifest 변경이나 오류 억제를 하지 않았다.
+- JavaScript 제작 도구 6개는 `node --check` 구문 검사 통과. ADB smoke 스크립트는 PowerShell Parser 구문 오류 0개. 실제 ADB·촬영·앱 설치·기기 데이터 변경이나 새 Paparazzi 렌더는 실행하지 않았다.
+- `design/`은 203개 파일 / 54,869,311 bytes이며 100 MB 초과 파일이 없다. 변경된 파일 목록과 staged diff를 검토하고 Git에서 추적할 대상만 정확한 경로 목록으로 stage한다.
+- staged 공백 검사에서 출시 초안의 Markdown 줄바꿈은 동일한 의미의 명시적 줄바꿈으로 정리했다. 보관된 이전 브랜드 SVG의 마지막 공백/빈 줄은 기존 원본 보존을 위해 유지했다. 전체 `git diff --cached --check`는 이 백업 파일 한 개 때문에 종료 코드 2이며, 해당 파일을 제외한 나머지 변경은 공백 검사를 통과했다. 디자인 ZIP 3개의 44개 항목은 대응 원본과 SHA-256이 일치한다.
+
+### 남은 확인과 배포 경계
+
+- 기존 선택 순서 전달·캡션 위치·초안 저장·복원 문제는 [알려진 문제](../engineering/KNOWN_ISSUES.md)에 남아 있다. 이번 UI/자산 통합을 이 결함들의 해결로 간주하지 않는다.
+- 실제 기기의 카메라/저장/공유, 다양한 화면·접근성·런처 마스크는 추가 확인 대상이다. 좌표 기반 ADB smoke는 ADB 실패·시간초과·결과 미생성을 모두 실패로 판정하지 않으므로 성공 표시만으로 제품 E2E 통과를 주장할 수 없다. Paparazzi export도 전체 화면 수 검증을 보강할 여지가 있다.
+- `main`의 `docs/**` 변경은 저장소의 GitHub Pages 워크플로 대상이다. Git push 성공, Pages 배포 성공, Play Store 게시/심사는 별개이며 스토어 업로드는 이 작업에 포함하지 않는다. 최종 커밋 SHA·원격 반영 결과는 완료 보고와 Git 이력에서 확인한다.
+
 ## 2026-09-10 — Windows JAVA_HOME 오류 해결 (Asia/Seoul)
 
 - 요청: 터미널의 `JAVA_HOME is not set` 및 Java PATH 미발견 오류 해결.
@@ -14,6 +47,87 @@
 - 검증: 저장된 사용자 환경 변수를 별도 PowerShell 실행에서 다시 읽고, `PATH`의 JDK 항목이 한 개이며 `java`가 해당 JDK로 해석되는 것을 확인했다. `java -version`과 `javac -version`은 21.0.10, `./gradlew.bat --version --console=plain`은 Gradle 8.13 / Launcher JVM 21.0.10으로 성공했다.
 - `./gradlew.bat :app:assembleDebug --offline --console=plain`: **성공**, 36개 태스크 중 8개 실행 / 28개 UP-TO-DATE. 기존 사용자 Gradle 캐시를 이번 검증 프로세스에서 지정해 사용했다. 완전한 재컴파일이나 새 기능 테스트로 간주하지 않는다.
 - 범위/잔여 확인: Java 실행 환경 수정이므로 단위 테스트·Lint·실기기 검사는 재실행하지 않았다. 이전 CAMERA Lint 오류를 수정한 작업이 아니다. 이미 실행 중인 터미널/IDE는 재시작하거나 문서의 PowerShell 갱신 명령을 적용해야 한다.
+
+## 2026-09-10 — Film Strip v4 아이콘 적용·피처 그래픽 제작 (Asia/Seoul)
+
+- 기준: `codex/setup-project-guidance`, HEAD `ac42903`과 기존 미커밋 UI/버전 변경을 포함한 작업 트리. 사용자는 앞선 웹 조사 방향의 이미지 제작·새 아이콘 적용·Play 아이콘/그래픽 파일을 요청했고, 작업 중 인화지 하단에 소문자 `pocket4cut` 추가를 요청했다.
+- 내장 image_gen으로 가상의 성인 두 사람이 담긴 네 컷 인화지, 좁은 필름 가장자리와 빨간 표식을 제작했다. 최초 투명 요청은 RGB 체크무늬로 출력되어 검사에서 제외하고 도구로 차콜 배경으로 수정했다. 아이콘과 피처 그래픽 모두 후속 도구 편집으로 하단 `pocket4cut`을 넣었다. 프롬프트와 미채택 원본은 `design/branding/film-strip-v4/source/`에 구분 보관했다. 사용자 사진·타사 이미지 파일을 가져오지 않았다.
+- 실제 적용: adaptive 일반/원형 XML의 foreground를 새 density PNG로 전환, 배경차콜, 호환 전경alias, 단색벡터, density PNG15개, 브랜드PNG/SVG wrapper 갱신. 사진 표현을 위한 래스터 전환이며 앱 UI/Manifest/Gradle/촬영·콜라주 코드는 수정하지 않았다. 이전 v1 파일21개는 별도 backup으로 보존했다.
+- 스토어 등록 출력: `design/play-store/film-strip-v4/`의 512px RGBA8 아이콘344,668B와 1024×500 RGB8 피처그래픽793,055B. 모두sRGB ICC 및8bit, 아이콘픽셀알파255/피처알파없음. 보관용master, 한국어대체텍스트, 업로드안내, 전체프롬프트도 제공한다. 등록 가이드에는 내장 AI 생성/편집 사실과 현재 Play의 자산별 신고 안내를 포함했다.
+- `node design/branding/film-strip-v4/export-assets.cjs`: 출력23개 생성/검사 성공. 처음 시스템Node에서sharp탐색실패는 제공된 런타임 패키지경로 설정으로 해결했다. 마스크검토판 렌더링의 fontconfig 캐시 쓰기 경고는 있었으나 출력 생성과 글자 표시를 직접 확인했다. 등록문구는 생성 이미지에 포함되어 별도 시스템폰트 렌더가 아니다.
+- 시각검사: 각 인화지4프레임, 하단표기철자, 체크무늬제거, 사진/문구잘림없음 확인. 원형·사각·둥근사각·squircle 및48/72/96/144px 축소 검토. 작은크기에서는얼굴·글씨·천공세부식별이제한된다. 독립 검토에서도 중요 수정 문제는 발견하지 못했다.
+- 컬러전경은 차콜backing을 포함한 불투명RGBA다. 대비>20 픽셀의 최대반경31.2824dp<33dp를 보조검사했고, 낮은대비의 실루엣을포함하는 완전한알파경계검사로 주장하지 않는다. 단색벡터는 SVG/XML path일치, 사진창4개·천공6개투명, 외곽반경30.017dp 확인.
+- `./gradlew.bat :app:assembleDebug --offline --console=plain`: 성공, 36태스크 중10실행/26UP-TO-DATE. 리소스컴파일과packageDebug를 실행해 새APK 생성. APK ZIP에서 브랜드PNG/SVG와15개런처PNG,5개아이콘XML이 포함된 것을 확인했다. 배포release서명이나기기설치는하지 않았다.
+- 최종 패키지 `design/play-store/Pocket4Cut-PlayStore-Film-v4.zip`: 4,616,601 bytes, 파일 7개. ZIP 내부 7개 항목이 원본과 SHA-256 일치한다. APK에 포함된 런처 PNG 15개도 현재 리소스와 해시가 일치한다. 기존 휴대전화 소개 이미지 8장과 이전 ZIP의 해시가 변경되지 않은 것을 확인했다.
+- 단위 테스트·Lint·실기기 런처·촬영/저장/공유 E2E는 이번 이미지 교체에서 재실행하지 않았다. 앞선 CAMERA Lint 오류를 해결한 작업이 아니다. 스토어 등록 규격 검증과 심사 승인은 별개다. 새 아이콘/피처 ZIP만 추가했으며 commit/push/스토어 업로드는 하지 않았다.
+
+## 2026-09-10 — 아이콘 방향 재검토와 필름 레퍼런스 조사 (Asia/Seoul)
+
+- 기준: `codex/setup-project-guidance`, HEAD `ac42903` 및 기존 미커밋 변경 포함. 사용자 피드백은 단순 인화지 아이콘 → 카메라 일러스트도 부적합 → 숫자 4 중심도 부적합 → 실제 네 컷/필름 사진을 웹에서 참고하라는 순서로 추가되었다.
+- `design/branding/print-booth-v2/`에 카메라와 인화지 벡터 초안·PNG·검증 코드를 만들었다. 512px PNG 33,316B, RGBA8/sRGB ICC, 66dp 안전원 검사 및 Android 리소스 빌드는 통과했지만 **사용자가 방향을 거절해 최종 채택하지 않았다.**
+- `design/branding/print-booth-v3/`의 숫자 4 심볼 SVG/PNG도 **미채택 비교용 초안**이다. v3 밀도별 PNG/배포 ZIP 생성은 중단했다. 두 폴더의 README에 현행 아이콘이 아님을 표시했다.
+- 거절된 초안이 SVG/XML/PNG에 혼재하지 않도록 앱 아이콘을 마지막 납품본 v1으로 복구했다. `v2/previous-icon/` 기준 PNG 15개 SHA-256 일치, SVG/XML 6개 줄바꿈 정규화 후 내용 일치를 확인했다. 최초 바이트 비교의 배경 XML 불일치는 줄바꿈 차이였으며 전체 파일이 바이트 단위로 동일하다고 보고하지 않는다.
+- 복구 후 `./gradlew.bat :app:assembleDebug --offline --console=plain` 성공: 36개 태스크 중 10개 실행/26개 UP-TO-DATE. 새 단위 테스트·Lint·실기기 검증은 실행하지 않았다. 앞선 Lint 오류를 해결한 작업도 아니다.
+- 스토어 아이콘 사본, 기존 소개 PNG 8장, 기존 다운로드 ZIP은 변경하지 않았다. 초안에 실제 사용자 사진을 쓰거나 기기 데이터를 변경하지 않았다.
+- 웹 조사: [Photo Pronto 실제 네 컷 인화지](https://www.photo-pronto.com/gallery), [Photoautomat 아날로그 사진 스트립](https://photoautomat.de/vermietung), [Kodak 필름 참고서](https://www.kodak.com/content/products-brochures/Film/kodak-essential-reference-guide-for-filmmakers.pdf), [ILFORD 흑백 필름 가이드](https://www.ilfordphoto.com/wp/wp-content/uploads/2017/04/Processing-your-first-black-and-white-film.pdf). 인생네컷 공식 클래식 프레임 페이지는 검색 색인에서 확인했으나 직접 열기는 403이므로 세부 이미지 확인 자료로 사용하지 않았다.
+- 도출한 방향은 제작 제안이며 아직 구현하지 않았다: 세로로 이어진 네 사진과 인화지 여백을 중심에 두고, 실제 필름의 반복 천공·프레임 경계를 절제해서 참조한다. 포토부스 인화지와 네거티브 필름은 서로 다른 매체임을 구분하며 타사 로고/프레임을 복제하지 않는다.
+- commit/push/스토어 업로드는 하지 않았다.
+
+## 2026-09-10 — Print Booth 앱 아이콘 및 Play 휴대전화 등록 이미지 (Asia/Seoul)
+
+### 범위와 기준
+
+- 요청: 기존 UI 디자인에 맞춘 새 앱 아이콘 적용, 스토어 아이콘 파일, 앱 소개와 사용법을 설명하는 휴대전화 스크린샷 10장 이내 제작.
+- 기준: 브랜치 `codex/setup-project-guidance`, HEAD `ac42903`과 이전부터 존재한 미커밋 UI·버전 변경을 포함한 로컬 작업 트리.
+- Google Play의 기기 유형별 최대 8장 규격을 확인해 등록 이미지 8장으로 구성했다. 앱 아이콘은 별도 파일이다. 등록정보 업로드·게시·심사·release 서명 작업은 하지 않았다.
+- 기존 README, 앱 버전, UI 재설계, `engineering/`, 이전 HTML 시안과 이미지, 출시 메모는 유지했다. 이번 아이콘/스토어 이미지 작업에서는 프로덕션 화면 코드와 기존 Gradle 설정을 추가 변경하지 않았다.
+
+### 변경 파일과 산출물
+
+- `app/src/main/assets/branding/pocket_4cut_app_icon.svg`: 종이색 네 컷 인화지, 잉크색 네 칸, 빨간 배경을 사용한 단순 벡터 아이콘.
+- `app/src/main/res/`: 런처 전경/배경/monochrome XML, 일반/원형 adaptive 연결, 밀도별 PNG 15개. Manifest의 기존 아이콘 참조를 유지하며 새 자산으로 교체했다.
+- `design/branding/print-booth-v1/`: SVG 원본, 512px 스토어 아이콘, 1024px 마스터, 마스크 확인 이미지와 검증 JSON, 재생성 스크립트. 교체 전 기존 아이콘 파일 19개는 `previous-icon/`에 보관했다.
+- `design/play-store/print-booth-v1/`: `phone-screenshots/`에 번호순 개별 PNG 8장, 앱 아이콘, 전체 미리보기, 한국어 대체 텍스트, 업로드 안내와 검증 메모. 생성 사진·실제 Compose 원본·제작 코드는 하위 폴더로 분리했다.
+- `scripts/store-screenshots.init.gradle`와 `design/play-store/print-booth-v1/capture/`: 명시적인 init script 실행에서만 붙는 Paparazzi 화면 렌더 도구. 앱의 기존 Screen 함수에 예시 상태를 공급하며 일반/release 앱에는 포함하지 않는다.
+- `docs/IMAGE_ASSET_GUIDE.md`: 최초 조사 당시 아이콘 정보와 이번 갱신을 구분해 현행 아이콘 자산·안전 영역·검증 정보를 추가했다.
+
+### 디자인과 이미지 검증
+
+- 아이콘은 512×512 RGBA8, sRGB ICC, 14,882 bytes, 알파 255의 정사각형 PNG다. 미리 둥근 외곽/그림자를 넣지 않았다. 원본 SVG와 스토어 사본의 일치, 전경/단색 레이어, 밀도별 크기, 네 칸의 단색 투명 구멍을 확인했다.
+- 화면 구성: 완성 예시 → 컷 수 → 사진 선택 → 레이아웃 → 프레임 색 → 필터 → 사진별 상세 편집 → 보관함.
+- 등록 PNG는 8장 모두 1080×1920, 알파 없는 24-bit RGB PNG다. 추가 문구를 실제 앱 UI 밖에 배치하고 크기·색 채널·경계·SHA-256을 `asset-validation.json`에 기록했다.
+- 실제 앱 Compose 함수를 1080×2400으로 렌더한 원본을 사용했다. 이전 HTML 시안을 Android 실행 캡처로 바꾸어 표기하지 않았다. 이미지 생성 도구는 가상의 성인 예시 사진에만 사용했고 UI나 문구는 생성 모델로 그리지 않았다.
+- 초기 캡처의 빈 사진·로딩 상태를 시각 검사에서 발견해 테스트 전용 파일 경로/I/O와 예시 상태를 수정한 뒤 재캡처했다. 필터·레이아웃·사진별 선택지는 실제 스크롤 상태로 노출했다. 스크롤 위쪽의 긴 미리보기가 부분적으로 보이는 상태와 이미지 제작 과정의 잘림을 구분한다.
+- 사진 선택 번호 1–4, 레이아웃 3종, 필터 4종, 사진별 썸네일과 보정 조작부, 보관함의 실제 Renderer 결과 4개를 확인했다. 생성 사진과 테스트 fixture는 앱에 번들하지 않았다.
+
+### 실행한 검사와 결과
+
+```powershell
+./gradlew.bat :app:assembleDebug :app:testDebugUnitTest :app:lintDebug --offline --console=plain
+```
+
+- `assembleDebug`: 성공. `packageDebug`를 실제 실행해 새 아이콘이 포함된 APK를 생성했다. 리소스 컴파일 등 일부 입력은 앞선 렌더 빌드의 결과를 재사용했다.
+- 기본 `testDebugUnitTest`: 실제 실행 성공, tests=1/failures=0/errors=0/skipped=0. 기본 산술 테스트이며 앱 사용 흐름 테스트는 아니다. 실행 시각 KST 00:33:15.947.
+- `lintDebug`: 실패, 오류 1개/경고 91개/힌트 2개. 기존 CAMERA의 `PermissionImpliesUnsupportedChromeOsHardware`이며 이 작업에서 Manifest를 수정하거나 suppress하지 않았다.
+- 결합 명령 exit code 1, 52개 태스크 중 15개 실행/37개 UP-TO-DATE. Lint 실패와 APK·단위 테스트 결과를 구분한다.
+
+```powershell
+./gradlew.bat -I scripts/store-screenshots.init.gradle :app:testDebugUnitTest --tests com.pocket4cut.storecapture.StoreScreenshotsTest --offline --console=plain
+node design/play-store/print-booth-v1/source/render-listing.cjs
+```
+
+- Compose 화면 렌더 테스트 9개 성공, 실패/오류/건너뜀 0개. Home 1장을 추가로 렌더했지만 스토어 등록 구성은 요청한 8종이다.
+- PNG 제작 스크립트 성공, 등록 이미지 8개 출력 및 크기·알파·색 채널·문구/이미지 경계 검사 통과. 최종 화면은 별도 시각 검사를 수행했다.
+- 최종 원본 생성 완료 KST 00:45:13. 결과 화면은 실제 120px 스크롤로 인화지 하단·홈·저장·공유가 모두 보이도록 확인했다.
+- `design/play-store/Pocket4Cut-PlayStore-Assets.zip` 생성: 4,290,390 bytes, 파일 13개. 휴대전화 PNG 8개와 아이콘 2개·대체 텍스트·업로드 안내·전체 미리보기로 구성했다. ZIP을 다시 열어 내부 파일 13개가 원본과 SHA-256 일치함을 확인했고 제작용 원본/fixture/코드는 포함하지 않았다.
+- 정확한 렌더 실행 시각·화면별 테스트는 `capture/capture-manifest.json`, 이미지 파일 해시는 `asset-validation.json`, 상세 한계는 `VERIFICATION.md`에서 확인한다.
+
+### 미검증과 남은 사항
+
+- 연결된 기기/AVD가 없어 실기기 런처, 카메라 촬영, 사진첩 저장·공유, Android E2E는 미실행이다. 호스트 렌더 성공을 이 기능들의 성공으로 해석하지 않는다.
+- 사진 재정렬 최종 출력, 커스텀 스티커 내보내기 등 기존 결함은 이번 소개 소재로 삼지 않았으며 수정하지 않았다.
+- 스토어 이미지 규격 준수와 Play 심사 승인은 별개다. 실제 배포할 앱이 변경되면 등록 이미지를 해당 버전으로 다시 생성해야 한다.
+- 사용자 사진 삭제, 앱 데이터 초기화, stage/commit/push는 수행하지 않았다.
 
 ## 2026-09-10 — 프로젝트 개발 지침과 기준 문서 구성
 

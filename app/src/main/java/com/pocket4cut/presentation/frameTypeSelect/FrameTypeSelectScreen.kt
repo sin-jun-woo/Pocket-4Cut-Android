@@ -1,25 +1,14 @@
 package com.pocket4cut.presentation.frameTypeSelect
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -31,12 +20,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.pocket4cut.frame.FrameLayouts
 import com.pocket4cut.presentation.navigation.FrameType
-import com.pocket4cut.ui.designsystem.*
-import com.pocket4cut.ui.designsystem.components.*
+import com.pocket4cut.ui.designsystem.AppColors
+import com.pocket4cut.ui.designsystem.AppLayout
+import com.pocket4cut.ui.designsystem.AppSpacing
+import com.pocket4cut.ui.designsystem.AppTypography
+import com.pocket4cut.ui.designsystem.components.IconButtonVariant
+import com.pocket4cut.ui.designsystem.components.IconCircleButton
+import com.pocket4cut.ui.designsystem.components.PrimaryButton
 
 @Composable
 fun FrameTypeSelectScreen(
@@ -47,59 +42,47 @@ fun FrameTypeSelectScreen(
     val types = remember { listOf(FrameType.TWO_CUT, FrameType.FOUR_CUT, FrameType.SIX_CUT) }
     var selectedType by remember { mutableStateOf(FrameType.FOUR_CUT) }
 
-    val cardShape = RoundedCornerShape(AppLayout.Radius.lg)
-    val footerShape = RoundedCornerShape(
-        bottomStart = AppLayout.Radius.lg,
-        bottomEnd = AppLayout.Radius.lg,
-    )
-    val badgeSize = IconCircleButtonSize.LG.toLayoutDp()
-
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(AppColors.Background.primary),
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            Column(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
                         top = AppSpacing.xxxl,
                         start = AppSpacing.Screen.horizontal,
                         end = AppSpacing.Screen.horizontal,
-                        bottom = AppSpacing.xl,
+                        bottom = AppSpacing.xxl,
                     ),
+                verticalAlignment = Alignment.Top,
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top,
-                ) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "사진 구성 선택",
+                        text = "사진 구성",
                         style = AppTypography.title1,
                         color = AppColors.Text.primary,
-                        modifier = Modifier.weight(1f),
                     )
-                    IconCircleButton(
-                        onClick = onBack,
-                        presetSize = IconCircleButtonSize.MD,
-                        variant = IconButtonVariant.SOLID,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = null,
-                            tint = AppColors.Text.primary,
-                            modifier = Modifier.size(IconCircleButtonSize.MD.toIconDp()),
-                        )
-                    }
+                    Spacer(Modifier.height(AppSpacing.xxs))
+                    Text(
+                        text = "완성할 인화지의 컷 수를 고르세요.",
+                        style = AppTypography.callout,
+                        color = AppColors.Text.secondary,
+                    )
                 }
-                Spacer(Modifier.height(AppSpacing.xxs))
-                Text(
-                    text = "원하는 컷 수를 선택해주세요",
-                    style = AppTypography.callout,
-                    color = AppColors.Text.secondary,
-                )
+                IconCircleButton(
+                    onClick = onBack,
+                    variant = IconButtonVariant.SOLID,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "닫기",
+                        tint = AppColors.Text.primary,
+                        modifier = Modifier.size(20.dp),
+                    )
+                }
             }
 
             Column(
@@ -107,124 +90,17 @@ fun FrameTypeSelectScreen(
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = AppSpacing.Screen.horizontal)
-                    .padding(bottom = 120.dp),
-                verticalArrangement = Arrangement.spacedBy(AppSpacing.md),
+                    .padding(bottom = 116.dp),
+                verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
             ) {
-                types.forEach { type ->
-                    val isSelected = selectedType == type
-                    val layoutCount = FrameLayouts.bySlots(type.selectCount).size
-
-                    val cardBg by animateColorAsState(
-                        targetValue = if (isSelected) AppColors.Accent.pinkSubtle else AppColors.Background.tertiary,
-                        animationSpec = AppAnimation.defaultSpring(),
-                        label = "frameTypeCardBg",
+                types.forEachIndexed { index, type ->
+                    FrameTypeRow(
+                        index = index + 1,
+                        type = type,
+                        layoutCount = FrameLayouts.bySlots(type.selectCount).size,
+                        selected = selectedType == type,
+                        onClick = { selectedType = type },
                     )
-                    val borderColor by animateColorAsState(
-                        targetValue = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle,
-                        animationSpec = AppAnimation.defaultSpring(),
-                        label = "frameTypeCardBorder",
-                    )
-                    val borderWidth by animateDpAsState(
-                        targetValue = if (isSelected) AppLayout.BorderWidth.medium else AppLayout.BorderWidth.thin,
-                        animationSpec = AppAnimation.defaultSpring(),
-                        label = "frameTypeCardBorderW",
-                    )
-
-                    val pinkGlow = AppColors.Accent.pink.copy(alpha = 0.42f)
-                    val cardModifier = Modifier
-                        .fillMaxWidth()
-                        .then(
-                            if (isSelected) {
-                                Modifier.shadow(
-                                    elevation = 16.dp,
-                                    shape = cardShape,
-                                    clip = false,
-                                    ambientColor = pinkGlow,
-                                    spotColor = pinkGlow,
-                                )
-                            } else {
-                                Modifier
-                            },
-                        )
-                        .clip(cardShape)
-                        .border(borderWidth, borderColor, cardShape)
-                        .background(cardBg)
-
-                    ScaleOnPress(onClick = { selectedType = type }, modifier = cardModifier) {
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            Box(modifier = Modifier.fillMaxWidth()) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(AppSpacing.lg)
-                                        .padding(end = if (isSelected) 36.dp else 0.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(badgeSize)
-                                            .clip(RoundedCornerShape(AppLayout.Radius.md))
-                                            .background(
-                                                if (isSelected) AppColors.Accent.pink
-                                                else AppColors.Overlay.white,
-                                            ),
-                                        contentAlignment = Alignment.Center,
-                                    ) {
-                                        Text(
-                                            text = type.selectCount.toString(),
-                                            style = AppTypography.title1,
-                                            color = if (isSelected) {
-                                                AppColors.Text.primary
-                                            } else {
-                                                AppColors.Accent.pink
-                                            },
-                                        )
-                                    }
-                                    Spacer(Modifier.width(AppSpacing.md))
-                                    Column(modifier = Modifier.weight(1f)) {
-                                        Text(
-                                            text = type.description,
-                                            style = AppTypography.headline,
-                                            color = AppColors.Text.primary,
-                                        )
-                                        Spacer(Modifier.height(AppSpacing.xxs))
-                                        Text(
-                                            text = type.subtitle,
-                                            style = AppTypography.subheadline,
-                                            color = AppColors.Text.secondary,
-                                        )
-                                    }
-                                }
-                                if (isSelected) {
-                                    Icon(
-                                        imageVector = Icons.Filled.CheckCircle,
-                                        contentDescription = null,
-                                        tint = AppColors.Accent.pink,
-                                        modifier = Modifier
-                                            .align(Alignment.TopEnd)
-                                            .padding(
-                                                top = AppSpacing.md,
-                                                end = AppSpacing.md,
-                                            )
-                                            .size(28.dp),
-                                    )
-                                }
-                            }
-                            Text(
-                                text = "${layoutCount}가지 레이아웃 사용 가능 (사진 선택 후 고를 수 있어요)",
-                                style = AppTypography.caption1,
-                                color = AppColors.Text.tertiary,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(footerShape)
-                                    .background(AppColors.Background.secondary)
-                                    .padding(
-                                        horizontal = AppSpacing.lg,
-                                        vertical = AppSpacing.sm,
-                                    ),
-                            )
-                        }
-                    }
                 }
             }
         }
@@ -235,12 +111,110 @@ fun FrameTypeSelectScreen(
                 .fillMaxWidth()
                 .background(AppColors.Background.primary)
                 .padding(horizontal = AppSpacing.Screen.horizontal)
-                .padding(bottom = AppSpacing.Layout.ctaBottomSpace, top = AppSpacing.md),
+                .padding(top = AppSpacing.md, bottom = AppSpacing.Layout.ctaBottomSpace),
         ) {
             PrimaryButton(
-                text = "${selectedType.displayName} 선택",
+                text = "${selectedType.displayName}으로 촬영",
                 onClick = { onSelected(selectedType) },
-                fullWidth = true,
+            )
+        }
+    }
+}
+
+@Composable
+private fun FrameTypeRow(
+    index: Int,
+    type: FrameType,
+    layoutCount: Int,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    val shape = RoundedCornerShape(AppLayout.Radius.md)
+    val background by animateColorAsState(
+        targetValue = if (selected) AppColors.Accent.pinkSubtle else AppColors.Background.card,
+        label = "frameTypeBackground",
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(shape)
+            .background(background)
+            .border(
+                width = if (selected) 2.dp else 1.dp,
+                color = if (selected) AppColors.Accent.pink else AppColors.Border.subtle,
+                shape = shape,
+            )
+            .clickable(onClick = onClick)
+            .padding(horizontal = AppSpacing.md, vertical = AppSpacing.md),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            modifier = Modifier
+                .width(30.dp)
+                .height(64.dp),
+            contentAlignment = Alignment.TopStart,
+        ) {
+            if (selected) {
+                Box(
+                    modifier = Modifier
+                        .width(3.dp)
+                        .fillMaxHeight()
+                        .background(AppColors.Accent.pink),
+                )
+            }
+            Text(
+                text = index.toString().padStart(2, '0'),
+                style = AppTypography.caption1.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.8.sp,
+                ),
+                color = if (selected) AppColors.Accent.pink else AppColors.Text.tertiary,
+                modifier = Modifier.padding(start = 9.dp),
+            )
+        }
+
+        Spacer(Modifier.width(AppSpacing.md))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = "${type.selectCount} CUT",
+                style = AppTypography.title2.copy(fontWeight = FontWeight.Bold),
+                color = AppColors.Text.primary,
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = type.subtitle,
+                style = AppTypography.subheadline,
+                color = AppColors.Text.secondary,
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = "레이아웃 ${layoutCount}종",
+                style = AppTypography.caption1,
+                color = AppColors.Text.tertiary,
+            )
+        }
+        MiniPrintLayout(type.selectCount, selected)
+    }
+}
+
+@Composable
+private fun MiniPrintLayout(slotCount: Int, selected: Boolean) {
+    val line = if (selected) AppColors.Accent.pink else AppColors.Border.medium
+    Column(
+        modifier = Modifier
+            .size(width = 42.dp, height = 64.dp)
+            .border(1.dp, line)
+            .padding(3.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        repeat(slotCount.coerceAtMost(6)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(AppColors.Background.secondary)
+                    .border(1.dp, line.copy(alpha = 0.6f)),
             )
         }
     }

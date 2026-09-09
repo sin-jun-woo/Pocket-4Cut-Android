@@ -136,18 +136,11 @@ fun ColorFramePalettePickScreen(
                     overrideBackground = selected.color,
                     modifier = Modifier
                         .shadow(
-                            elevation = 32.dp,
-                            shape = RoundedCornerShape(AppLayout.Radius.xl),
+                            elevation = 8.dp,
+                            shape = RoundedCornerShape(AppLayout.Radius.xs),
                             clip = false,
-                            ambientColor = Color.Black.copy(alpha = 0.28f),
-                            spotColor = Color.Black.copy(alpha = 0.45f),
-                        )
-                        .shadow(
-                            elevation = 12.dp,
-                            shape = RoundedCornerShape(AppLayout.Radius.xl),
-                            clip = false,
-                            ambientColor = Color.Black.copy(alpha = 0.18f),
-                            spotColor = Color.Black.copy(alpha = 0.28f),
+                            ambientColor = AppColors.Shadow.color,
+                            spotColor = AppColors.Shadow.colorMd,
                         )
                         .fillMaxWidth(),
                 )
@@ -155,15 +148,15 @@ fun ColorFramePalettePickScreen(
                 Box(
                     modifier = Modifier
                         .shadow(
-                            elevation = 60.dp,
-                            shape = RoundedCornerShape(AppLayout.Radius.xl),
+                            elevation = 8.dp,
+                            shape = RoundedCornerShape(AppLayout.Radius.xs),
                             clip = false,
-                            ambientColor = Color.Black.copy(alpha = 0.3f),
-                            spotColor = Color.Black.copy(alpha = 0.3f),
+                            ambientColor = AppColors.Shadow.color,
+                            spotColor = AppColors.Shadow.colorMd,
                         )
                         .fillMaxWidth()
                         .aspectRatio(3f / 4f)
-                        .clip(RoundedCornerShape(AppLayout.Radius.xl))
+                        .clip(RoundedCornerShape(AppLayout.Radius.xs))
                         .background(selected.color),
                 )
             }
@@ -232,7 +225,7 @@ private fun ColorChip(
                 .size(56.dp)
                 .clip(CircleShape)
                 .border(
-                    width = if (selected) 3.dp else 1.dp,
+                    width = if (selected) 2.dp else 1.dp,
                     color = if (selected) AppColors.Accent.pink else AppColors.Border.subtle,
                     shape = CircleShape,
                 )
@@ -246,15 +239,13 @@ private fun ColorChip(
             )
             if (selected) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(AppColors.Accent.pink.copy(alpha = 0.35f)),
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
                     Box(
                         modifier = Modifier
                             .size(20.dp)
-                            .clip(CircleShape)
+                            .clip(RoundedCornerShape(AppLayout.Radius.xs))
                             .background(AppColors.Accent.pink),
                         contentAlignment = Alignment.Center,
                     ) {

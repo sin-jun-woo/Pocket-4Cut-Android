@@ -1,6 +1,5 @@
 package com.pocket4cut.presentation.gallery
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -16,7 +15,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -29,9 +27,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -66,24 +61,10 @@ fun GalleryScreen(
     LaunchedEffect(Unit) { viewModel.load() }
     LaunchedEffect(viewMode) { longPressedItemId = null }
 
-    val accentPink = AppColors.Accent.pink
-
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(AppColors.Background.primary)
-            .drawBehind {
-                drawRect(
-                    brush = Brush.radialGradient(
-                        colors = listOf(
-                            accentPink.copy(alpha = 0.07f),
-                            Color.Transparent,
-                        ),
-                        center = Offset(size.width / 2f, 0f),
-                        radius = size.width * 0.8f,
-                    ),
-                )
-            }
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
@@ -92,14 +73,15 @@ fun GalleryScreen(
             },
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
+            GalleryHeader(
+                itemCount = uiState.items.size,
+                onClose = onBack,
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(
-                        top = AppSpacing.xxxl,
-                        start = AppSpacing.Screen.horizontal,
-                        end = AppSpacing.Screen.horizontal,
-                    ),
+                    .padding(horizontal = AppSpacing.Screen.horizontal)
+                    .padding(bottom = AppSpacing.md),
                 horizontalArrangement = Arrangement.Center,
             ) {
                 GalleryViewModeToggle(
@@ -107,11 +89,6 @@ fun GalleryScreen(
                     onModeSelected = { viewMode = it },
                 )
             }
-            GalleryHeader(
-                itemCount = uiState.items.size,
-                onClose = onBack,
-            )
-
             when {
                 uiState.isLoading -> {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -250,36 +227,43 @@ private fun GalleryViewModeToggle(
     onModeSelected: (GalleryViewMode) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val capsuleShape = RoundedCornerShape(AppLayout.Radius.full)
+    val tabShape = RoundedCornerShape(AppLayout.Radius.sm)
     val segments = listOf(
         GalleryViewMode.BY_KIND to "종류",
         GalleryViewMode.BY_DATE to "전체",
     )
     Row(
         modifier = modifier
-            .clip(capsuleShape)
-            .background(AppColors.Background.tertiary)
-            .border(1.dp, AppColors.Border.subtle, capsuleShape)
-            .padding(3.dp),
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
+            .padding(bottom = 2.dp),
+        horizontalArrangement = Arrangement.spacedBy(AppSpacing.lg),
     ) {
         segments.forEach { (mode, label) ->
             val isSelected = mode == selectedMode
             Box(
                 modifier = Modifier
-                    .clip(capsuleShape)
-                    .background(if (isSelected) AppColors.Accent.pink else Color.Transparent)
+                    .clip(tabShape)
+                    .background(Color.Transparent)
                     .clickable { onModeSelected(mode) }
-                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                    .padding(horizontal = AppSpacing.xs, vertical = AppSpacing.xs),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(
-                    text = label,
-                    style = AppTypography.caption2.copy(
-                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
-                    ),
-                    color = if (isSelected) Color.White else AppColors.Text.secondary,
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = label,
+                        style = AppTypography.caption2.copy(
+                            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                        ),
+                        color = if (isSelected) AppColors.Accent.pink else AppColors.Text.secondary,
+                    )
+                    if (isSelected) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(2.dp)
+                                .background(AppColors.Accent.pink),
+                        )
+                    }
+                }
             }
         }
     }
@@ -390,86 +374,69 @@ private fun SessionCell(
     onLongClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(1f)
-            .clip(RoundedCornerShape(AppLayout.Radius.lg))
-            .background(AppColors.Background.secondary)
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick,
             ),
     ) {
-        AsyncImage(
-            model = File(item.resultPath),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop,
-        )
-
         Box(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .fillMaxHeight(0.5f)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Black.copy(alpha = 0.35f),
-                            Color.Black.copy(alpha = 0.72f),
-                        ),
-                    ),
-                ),
-        )
-
+                .aspectRatio(3f / 4f)
+                .clip(RoundedCornerShape(AppLayout.Radius.xs))
+                .background(AppColors.Background.secondary),
+        ) {
+            AsyncImage(
+                model = File(item.resultPath),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit,
+            )
+            androidx.compose.animation.AnimatedVisibility(
+                visible = isLongPressed,
+                enter = scaleIn() + fadeIn(),
+                exit = scaleOut() + fadeOut(),
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(AppSpacing.xs),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(RoundedCornerShape(AppLayout.Radius.xs))
+                        .background(AppColors.Semantic.error)
+                        .clickable(onClick = onDeleteClick),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        Icons.Default.Delete,
+                        contentDescription = "삭제",
+                        tint = Color.White,
+                        modifier = Modifier.size(16.dp),
+                    )
+                }
+            }
+        }
         Row(
             modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(AppSpacing.sm),
+                .fillMaxWidth()
+                .padding(top = AppSpacing.xs),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(AppSpacing.xxs),
         ) {
             Text(
                 text = item.frameKindLabel,
-                style = AppTypography.caption2.copy(fontWeight = FontWeight.Bold),
+                style = AppTypography.caption2.copy(fontWeight = FontWeight.SemiBold),
                 color = AppColors.Text.primary,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(AppLayout.Radius.full))
-                    .background(AppColors.Accent.pink.copy(alpha = 0.92f))
-                    .padding(horizontal = AppSpacing.xs, vertical = 2.dp),
             )
             Text(
                 text = item.shortDateLabel,
                 style = AppTypography.caption2,
-                color = AppColors.Text.primary.copy(alpha = 0.8f),
+                color = AppColors.Text.tertiary,
             )
-        }
-
-        AnimatedVisibility(
-            visible = isLongPressed,
-            enter = scaleIn() + fadeIn(),
-            exit = scaleOut() + fadeOut(),
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(AppSpacing.xs),
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .background(AppColors.Semantic.error)
-                    .clickable(onClick = onDeleteClick),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    Icons.Default.Delete,
-                    contentDescription = "삭제",
-                    tint = Color.White,
-                    modifier = Modifier.size(16.dp),
-                )
-            }
         }
     }
 }

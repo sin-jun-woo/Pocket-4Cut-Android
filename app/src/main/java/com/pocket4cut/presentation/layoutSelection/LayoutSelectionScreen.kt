@@ -12,7 +12,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -22,12 +21,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
@@ -48,6 +44,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.ui.unit.Dp
+import kotlin.math.min
 import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.frame.CollagePreviewScaledToFit
 import com.pocket4cut.frame.FrameCatalog
@@ -138,105 +137,118 @@ fun LayoutSelectionScreen(
                 color = AppColors.Border.subtle,
             )
 
+            val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
+                    .weight(1f)
                     .fillMaxWidth()
-                    .padding(horizontal = AppSpacing.Screen.horizontal)
-                    .padding(top = AppSpacing.lg),
+                    .verticalScroll(scrollState),
             ) {
-                Text(
-                    text = "미리보기",
-                    style = AppTypography.subheadline,
-                    color = AppColors.Text.secondary,
-                )
-                Spacer(Modifier.height(AppSpacing.sm))
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center,
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = AppSpacing.Screen.horizontal)
+                        .padding(top = AppSpacing.lg),
                 ) {
-                    val previewShape = RoundedCornerShape(AppLayout.Radius.lg)
+                    Text(
+                        text = "미리보기",
+                        style = AppTypography.subheadline,
+                        color = AppColors.Text.secondary,
+                    )
+                    Spacer(Modifier.height(AppSpacing.sm))
                     Box(
-                        modifier = Modifier
-                            .shadow(
-                                elevation = 14.dp,
-                                shape = previewShape,
-                                clip = false,
-                                ambientColor = Color.Black.copy(alpha = 0.35f),
-                                spotColor = Color.Black.copy(alpha = 0.45f),
-                            )
-                            .fillMaxWidth()
-                            .heightIn(max = 520.dp)
-                            .clip(previewShape),
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        AnimatedContent(
-                            targetState = selectedLayout,
-                            transitionSpec = {
-                                fadeIn(animationSpec = tween(300, easing = androidx.compose.animation.core.EaseInOut)) togetherWith
-                                    fadeOut(animationSpec = tween(300, easing = androidx.compose.animation.core.EaseInOut))
-                            },
-                            label = "collagePreview",
-                        ) { layoutId ->
-                            val previewStyle = remember(layoutId) { FrameLayouts.byId(layoutId) }
-                            CollagePreviewScaledToFit(
-                                images = bitmaps,
-                                frameType = frameType,
-                                frameStyle = previewStyle,
-                                theme = defaultTheme,
-                                modifier = Modifier.fillMaxSize(),
-                            )
+                        val previewShape = RoundedCornerShape(AppLayout.Radius.xs)
+                        Box(
+                            modifier = Modifier
+                                .shadow(
+                                    elevation = 8.dp,
+                                    shape = previewShape,
+                                    clip = false,
+                                    ambientColor = Color.Black.copy(alpha = 0.16f),
+                                    spotColor = Color.Black.copy(alpha = 0.16f),
+                                )
+                                .fillMaxWidth()
+                                .heightIn(max = 360.dp)
+                                .clip(previewShape),
+                        ) {
+                            AnimatedContent(
+                                targetState = selectedLayout,
+                                transitionSpec = {
+                                    fadeIn(animationSpec = tween(300, easing = androidx.compose.animation.core.EaseInOut)) togetherWith
+                                        fadeOut(animationSpec = tween(300, easing = androidx.compose.animation.core.EaseInOut))
+                                },
+                                label = "collagePreview",
+                            ) { layoutId ->
+                                val previewStyle = remember(layoutId) { FrameLayouts.byId(layoutId) }
+                                CollagePreviewScaledToFit(
+                                    images = bitmaps,
+                                    frameType = frameType,
+                                    frameStyle = previewStyle,
+                                    theme = defaultTheme,
+                                    modifier = Modifier.fillMaxSize(),
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            Spacer(Modifier.height(AppSpacing.xl))
+                Spacer(Modifier.height(AppSpacing.xl))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = AppSpacing.Screen.horizontal),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "배치 선택",
-                    style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
-                    color = AppColors.Text.primary,
-                )
-                Text(
-                    text = selectedName,
-                    style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
-                    color = AppColors.Accent.pink,
-                )
-            }
-            Spacer(Modifier.height(AppSpacing.xxs))
-            Text(
-                text = "마음에 드는 배치를 골라주세요",
-                style = AppTypography.caption1,
-                color = AppColors.Text.tertiary,
-                modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal),
-            )
-            Spacer(Modifier.height(AppSpacing.md))
-
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                contentPadding = PaddingValues(
-                    start = AppSpacing.Screen.horizontal,
-                    end = AppSpacing.Screen.horizontal,
-                    bottom = 120.dp,
-                ),
-                horizontalArrangement = Arrangement.spacedBy(AppSpacing.md),
-                verticalArrangement = Arrangement.spacedBy(AppSpacing.md),
-            ) {
-                items(layouts, key = { it.id }) { style ->
-                    LayoutCard(
-                        frameStyle = style,
-                        isSelected = selectedLayout == style.id,
-                        onSelect = { selectedLayout = style.id },
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = AppSpacing.Screen.horizontal),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "배치 선택",
+                        style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
+                        color = AppColors.Text.primary,
                     )
+                    Text(
+                        text = selectedName,
+                        style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
+                        color = AppColors.Accent.pink,
+                    )
+                }
+                Spacer(Modifier.height(AppSpacing.xxs))
+                Text(
+                    text = "마음에 드는 배치를 골라주세요",
+                    style = AppTypography.caption1,
+                    color = AppColors.Text.tertiary,
+                    modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal),
+                )
+                Spacer(Modifier.height(AppSpacing.md))
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = AppSpacing.Screen.horizontal)
+                        .padding(bottom = 120.dp),
+                    verticalArrangement = Arrangement.spacedBy(AppSpacing.md),
+                ) {
+                    layouts.chunked(2).forEach { rowLayouts ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(AppSpacing.md),
+                        ) {
+                            rowLayouts.forEach { style ->
+                                LayoutCard(
+                                    frameStyle = style,
+                                    isSelected = selectedLayout == style.id,
+                                    onSelect = { selectedLayout = style.id },
+                                    modifier = Modifier.weight(1f),
+                                )
+                            }
+                            if (rowLayouts.size == 1) {
+                                Spacer(Modifier.weight(1f))
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -268,31 +280,19 @@ private fun LayoutCard(
     frameStyle: FrameStyle,
     isSelected: Boolean,
     onSelect: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val bg = if (isSelected) AppColors.Accent.pinkSubtle else AppColors.Background.tertiary
     val borderColor = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle
     val cardShape = RoundedCornerShape(AppLayout.Radius.lg)
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .then(
-                if (isSelected) {
-                    Modifier.shadow(
-                        elevation = 12.dp,
-                        shape = cardShape,
-                        clip = false,
-                        ambientColor = AppColors.Accent.pink.copy(alpha = 0.3f),
-                        spotColor = AppColors.Accent.pink.copy(alpha = 0.4f),
-                    )
-                } else {
-                    Modifier
-                },
-            )
             .clip(cardShape)
             .background(bg)
             .border(
-                width = if (isSelected) 3.dp else 1.dp,
+                width = if (isSelected) 2.dp else 1.dp,
                 color = borderColor,
                 shape = cardShape,
             )
@@ -326,14 +326,14 @@ private fun LayoutCard(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .size(28.dp)
-                    .clip(CircleShape)
+                    .clip(RoundedCornerShape(AppLayout.Radius.xs))
                     .background(AppColors.Accent.pink),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = null,
-                    tint = AppColors.Text.primary,
+                    tint = Color.White,
                     modifier = Modifier.size(16.dp),
                 )
             }

@@ -1,0 +1,10 @@
+[
+  {"id":"01_intro","screen":"result","title":["오늘의 표정,","한 장의 추억."],"description":"촬영부터 꾸미기, 저장까지 Pocket 4Cut.","theme":"red","alt":"네 컷 결과 화면과 저장, 공유 버튼. 촬영한 사진으로 한 장의 콜라주를 만들 수 있습니다."},
+  {"id":"02_choose_cuts","screen":"frame_count","title":["두 컷, 네 컷,","여섯 컷."],"description":"원하는 구성을 고르고 카운트다운으로 촬영해요.","theme":"paper","alt":"2컷, 4컷, 6컷 선택 화면. 각각 4장, 8장, 10장을 촬영한 뒤 원하는 사진을 고릅니다."},
+  {"id":"03_select_photos","screen":"selection","title":["마음에 드는","표정만 골라요."],"description":"여러 장을 촬영하고, 원하는 사진을 선택해요.","theme":"paper","alt":"촬영한 사진 중 네 장을 선택하는 화면. 선택한 사진에는 번호가 표시됩니다."},
+  {"id":"04_layout","screen":"layout","title":["사진이 달라지는","배치의 차이."],"description":"세로로 길게, 격자로 나란히. 배치를 골라요.","theme":"paper","alt":"클래식 세로, 격자, 가로 네 컷 레이아웃을 선택하는 화면과 미리보기."},
+  {"id":"05_frame_color","screen":"color","title":["오늘의 분위기에","어울리는 색."],"description":"프레임 색을 바꾸며 어울리는 조합을 찾아요.","theme":"paper","alt":"사진 콜라주 미리보기 아래에서 프레임 배경색을 선택하는 화면."},
+  {"id":"06_filters","screen":"edit","title":["같은 순간도,","다른 느낌으로."],"description":"원본·소프트·필름·흑백으로 분위기를 바꿔요.","theme":"paper","alt":"콜라주 편집 화면. 원본, 소프트, 필름, 흑백 필터를 선택할 수 있습니다."},
+  {"id":"07_fine_tune","screen":"detail","title":["한 컷씩,","조금 더 내 취향."],"description":"밝기·대비·채도, 회전과 반전으로 다듬어요.","theme":"paper","alt":"사진별 상세 편집 화면. 밝기, 대비, 채도 슬라이더와 회전, 좌우 반전 기능."},
+  {"id":"08_collection","screen":"gallery","title":["완성한 순간을","차곡차곡."],"description":"보관함에서 다시 보고, 저장하거나 공유해요.","theme":"red","alt":"완성한 콜라주를 모아 보는 보관함 화면. 사진을 열어 저장하거나 공유할 수 있습니다."}
+]

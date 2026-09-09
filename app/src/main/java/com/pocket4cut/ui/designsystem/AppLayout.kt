@@ -5,27 +5,27 @@ import androidx.compose.ui.unit.dp
 object AppLayout {
     object Radius {
         val none = 0.dp
-        val xs = 12.dp
-        val sm = 16.dp
-        val md = 20.dp
-        val lg = 24.dp
-        val xl = 28.dp
-        val xxl = 36.dp
+        val xs = 2.dp
+        val sm = 4.dp
+        val md = 6.dp
+        val lg = 8.dp
+        val xl = 12.dp
+        val xxl = 16.dp
         val full = 9999.dp
     }
 
     object BorderWidth {
         val none = 0.dp
-        val thin = 2.dp
-        val medium = 3.dp
-        val thick = 4.dp
+        val thin = 1.dp
+        val medium = 1.dp
+        val thick = 1.dp
     }
 
     object Height {
         object Button {
             val sm = 40.dp
             val md = 48.dp
-            val lg = 60.dp
+            val lg = 52.dp
         }
         object Input {
             val default = 48.dp

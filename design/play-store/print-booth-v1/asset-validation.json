@@ -1,0 +1,206 @@
+{
+  "phoneScreenshotCount": 8,
+  "renderMethod": "Actual app Compose screenshots, with typography added outside app UI",
+  "validation": [
+    {
+      "file": "01_intro.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb",
+      "bytes": 459220,
+      "sha256": "95042d03031ef24913780a3222e7191552c88621cd00944a4e00ab4ed45856cd",
+      "source": {
+        "file": "result.png",
+        "width": 1080,
+        "height": 2400,
+        "sha256": "8cabc56126adb96aa86e8a08266e337f468615fc66c52fc6cee9aa4e68aa3f6d"
+      },
+      "textBottom": 316,
+      "imageBounds": {
+        "x": 206,
+        "y": 358,
+        "width": 668,
+        "height": 1482,
+        "bottom": 1840
+      },
+      "copyFits": true,
+      "rootFits": true
+    },
+    {
+      "file": "02_choose_cuts.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb",
+      "bytes": 93425,
+      "sha256": "384642261edc132658481ac845307f18cdd0b0804333b5add67a9f65ebd6c348",
+      "source": {
+        "file": "frame_count.png",
+        "width": 1080,
+        "height": 2400,
+        "sha256": "bd868aa2bb9739e31b34d51a8fe18f3e28ab44646fe8fb804d60f27f14f21ced"
+      },
+      "textBottom": 316,
+      "imageBounds": {
+        "x": 206,
+        "y": 358,
+        "width": 668,
+        "height": 1482,
+        "bottom": 1840
+      },
+      "copyFits": true,
+      "rootFits": true
+    },
+    {
+      "file": "03_select_photos.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb",
+      "bytes": 931424,
+      "sha256": "b7375a41288408285d522955915bc5dab64d4b2563f3d522b4b768486af86b54",
+      "source": {
+        "file": "selection.png",
+        "width": 1080,
+        "height": 2400,
+        "sha256": "ef1cb83994fa7e2dbcc561bce133eb99cd0a3f26a3ec1cb3417e6dea6a72182c"
+      },
+      "textBottom": 316,
+      "imageBounds": {
+        "x": 206,
+        "y": 358,
+        "width": 668,
+        "height": 1482,
+        "bottom": 1840
+      },
+      "copyFits": true,
+      "rootFits": true
+    },
+    {
+      "file": "04_layout.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb",
+      "bytes": 166901,
+      "sha256": "4973340fca478784f17660a00c5c434d1c49500004c84227b6cc155b13dee5b1",
+      "source": {
+        "file": "layout.png",
+        "width": 1080,
+        "height": 2400,
+        "sha256": "3f64aeee84b3f6194fd1022bb12e91e09c932a172ada7b32400a5c8c72749d32"
+      },
+      "textBottom": 316,
+      "imageBounds": {
+        "x": 206,
+        "y": 358,
+        "width": 668,
+        "height": 1482,
+        "bottom": 1840
+      },
+      "copyFits": true,
+      "rootFits": true
+    },
+    {
+      "file": "05_frame_color.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb",
+      "bytes": 541498,
+      "sha256": "008dccafee3bd453abf99fb8efbf1092bf4500f0ebd819630cd8433fd87a39fe",
+      "source": {
+        "file": "color.png",
+        "width": 1080,
+        "height": 2400,
+        "sha256": "53c3baa5578982d209c3e27256c9a14574096f71a16e0afc60e385ab4aaf4528"
+      },
+      "textBottom": 316,
+      "imageBounds": {
+        "x": 206,
+        "y": 358,
+        "width": 668,
+        "height": 1482,
+        "bottom": 1840
+      },
+      "copyFits": true,
+      "rootFits": true
+    },
+    {
+      "file": "06_filters.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb",
+      "bytes": 656047,
+      "sha256": "e7ed263dccec4fafea8261df933fbce2124b7298259ca8cda62435cc8656a717",
+      "source": {
+        "file": "edit.png",
+        "width": 1080,
+        "height": 2400,
+        "sha256": "bfe7bfc7527a38f151a5a6133d446085f1289d8b34a7a261b28f7ff0f7f08c65"
+      },
+      "textBottom": 316,
+      "imageBounds": {
+        "x": 206,
+        "y": 358,
+        "width": 668,
+        "height": 1482,
+        "bottom": 1840
+      },
+      "copyFits": true,
+      "rootFits": true
+    },
+    {
+      "file": "07_fine_tune.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb",
+      "bytes": 528424,
+      "sha256": "a00b6c46405d3228e1ec8f7d2deea4f5162e2c26906a8d00134ea6f154c9a72f",
+      "source": {
+        "file": "detail.png",
+        "width": 1080,
+        "height": 2400,
+        "sha256": "6ca727aeaa09935ce54be3ae7c5355a69c4153c7623fb31fa50b74e15533753d"
+      },
+      "textBottom": 316,
+      "imageBounds": {
+        "x": 206,
+        "y": 358,
+        "width": 668,
+        "height": 1482,
+        "bottom": 1840
+      },
+      "copyFits": true,
+      "rootFits": true
+    },
+    {
+      "file": "08_collection.png",
+      "width": 1080,
+      "height": 1920,
+      "channels": 3,
+      "space": "srgb",
+      "bytes": 449561,
+      "sha256": "06e46ece92f8b87f044d2f7e8c8b1d08d5fdad76d0927f68a992a25d5f9b25d6",
+      "source": {
+        "file": "gallery.png",
+        "width": 1080,
+        "height": 2400,
+        "sha256": "9076daf36a42ce74f2e955897eaca85213c934e2b2373cc2e482874694b19aed"
+      },
+      "textBottom": 316,
+      "imageBounds": {
+        "x": 206,
+        "y": 358,
+        "width": 668,
+        "height": 1482,
+        "bottom": 1840
+      },
+      "copyFits": true,
+      "rootFits": true
+    }
+  ]
+}

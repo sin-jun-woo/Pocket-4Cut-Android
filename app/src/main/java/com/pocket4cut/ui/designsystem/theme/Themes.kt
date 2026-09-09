@@ -2,105 +2,116 @@ package com.pocket4cut.ui.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 
-val SpringTheme = object : AppThemeData {
-    override val season = Season.SPRING
-    override val background = ThemeBackgroundColors(Color(0xFFFFF9F5), Color(0xFFFFF5F0), Color(0xFFFFEBE5), Color.White)
-    override val text = ThemeTextColors(Color(0xFF2D2D2D), Color(0xFF6B6B6B), Color(0xFFA0A0A0), Color(0xFFFF8FB8), Color.White)
-    override val accent = ThemeAccentColors(
-        pink = Color(0xFFFFB4D6), coral = Color(0xFFFFCDB8), peach = Color(0xFFFFD4B8),
-        yellow = Color(0xFFFFF4C4), mint = Color(0xFFC4F5E1), sky = Color(0xFFC4E5FF),
-        lavender = Color(0xFFE5D4FF), rose = Color(0xFFFFD4E5),
-        pinkLight = Color(0xFFFFD4E5), pinkDark = Color(0xFFFF8FB3),
-    )
-    override val gradient = ThemeGradients(
-        sunsetColors = listOf(Color(0xFFFFB4D6), Color(0xFFFFCDB8), Color(0xFFFFF4C4)),
-        candyColors = listOf(Color(0xFFFFB4D6), Color(0xFFE5D4FF)),
-        peachyColors = listOf(Color(0xFFFFD4B8), Color(0xFFFFB4D6)),
-        dreamyColors = listOf(Color(0xFFC4E5FF), Color(0xFFE5D4FF)),
-        freshColors = listOf(Color(0xFFC4F5E1), Color(0xFFC4E5FF)),
-    )
-    override val border = ThemeBorderColors(Color(0xFFFFE5DD), Color(0xFFFFD4C4), Color(0xFFFFB4D6), Color(0x33FFB4D6))
-    override val shadow = ThemeShadowColors(Color(0x33FFB4D6), Color(0x40FFB4D6), Color(0x66FFB4D6))
-    override val semantic = ThemeSemanticColors(Color(0xFFA8E6CF), Color(0xFFFFD4A3), Color(0xFFFFB4B4), Color(0xFFB4D4FF))
-    override val overlay = ThemeOverlayColors(Color(0x1AFFFFFF), Color(0x80000000), Color(0xB3000000), Color(0x99FFFFFF))
-    override val decorationEmojis = listOf("💕", "⭐", "✨", "🌸")
-    override val tipEmoji = "💫"
+/*
+ * The app shell uses a shared paper/ink base in every season. Seasonal colour
+ * remains available for frames and small accents, so changing a theme never
+ * turns the whole product into a different pastel gradient.
+ */
+
+private val Paper = Color(0xFFF3F0E8)
+private val PaperAlt = Color(0xFFEFEAE0)
+private val Surface = Color(0xFFFBFAF6)
+private val PaperLine = Color(0xFFD0CBC1)
+private val Ink = Color(0xFF1B1B19)
+private val Muted = Color(0xFF6E6A63)
+private val Quiet = Color(0xFF706B63)
+
+private fun shellTheme(
+    themeSeason: Season,
+    accentColor: Color,
+    accentDark: Color,
+    secondaryAccents: List<Color>,
+    decorations: List<String>,
+    tipMarker: String,
+): AppThemeData {
+    require(secondaryAccents.size == 7)
+    val coral = secondaryAccents[0]
+    val peach = secondaryAccents[1]
+    val yellow = secondaryAccents[2]
+    val mint = secondaryAccents[3]
+    val sky = secondaryAccents[4]
+    val lavender = secondaryAccents[5]
+    val rose = secondaryAccents[6]
+    return object : AppThemeData {
+        override val season = themeSeason
+        override val background = ThemeBackgroundColors(Paper, PaperAlt, Color(0xFFE7E1D7), Surface)
+        override val text = ThemeTextColors(Ink, Muted, Quiet, accentColor, Surface)
+        override val accent = ThemeAccentColors(
+            pink = accentColor,
+            coral = coral,
+            peach = peach,
+            yellow = yellow,
+            mint = mint,
+            sky = sky,
+            lavender = lavender,
+            rose = rose,
+            pinkLight = rose,
+            pinkDark = accentDark,
+        )
+        // Kept for frame APIs; all stops are intentionally close to one hue.
+        override val gradient = ThemeGradients(
+            sunsetColors = listOf(accentColor, peach),
+            candyColors = listOf(accentColor, rose),
+            peachyColors = listOf(peach, coral),
+            dreamyColors = listOf(sky, lavender),
+            freshColors = listOf(mint, sky),
+        )
+        override val border = ThemeBorderColors(PaperLine, Color(0xFFADA59A), accentColor, Color(0x26ADA59A))
+        override val shadow = ThemeShadowColors(Color(0x261B1B19), Color(0x331B1B19), Color(0x291B1B19))
+        override val semantic = ThemeSemanticColors(Color(0xFF3E7653), Color(0xFF996D2B), Color(0xFFB3372B), Color(0xFF3E6983))
+        override val overlay = ThemeOverlayColors(Color(0x1AFFFFFF), Color(0x80000000), Color(0xB3000000), Color(0x99FFFFFF))
+        override val decorationEmojis = decorations
+        override val tipEmoji = tipMarker
+    }
 }
 
-val SummerTheme = object : AppThemeData {
-    override val season = Season.SUMMER
-    override val background = ThemeBackgroundColors(Color(0xFFE6F7FF), Color(0xFFCCF0FF), Color(0xFFB3E8FF), Color.White)
-    override val text = ThemeTextColors(Color(0xFF2D2D2D), Color(0xFF5A5A5A), Color(0xFF8A8A8A), Color(0xFFFF6B9D), Color.White)
-    override val accent = ThemeAccentColors(
-        pink = Color(0xFFFF6B9D), coral = Color(0xFFFF7E67), peach = Color(0xFFFFB347),
-        yellow = Color(0xFFFFD93D), mint = Color(0xFF6BCF9F), sky = Color(0xFF4FC3F7),
-        lavender = Color(0xFF9B8CFF), rose = Color(0xFFFF85A1),
-        pinkLight = Color(0xFFFF85A1), pinkDark = Color(0xFFE5527F),
-    )
-    override val gradient = ThemeGradients(
-        sunsetColors = listOf(Color(0xFFFFD93D), Color(0xFFFF7E67), Color(0xFFFF6B9D)),
-        candyColors = listOf(Color(0xFFFF85A1), Color(0xFF9B8CFF)),
-        peachyColors = listOf(Color(0xFFFFB347), Color(0xFFFF7E67)),
-        dreamyColors = listOf(Color(0xFF4FC3F7), Color(0xFF9B8CFF)),
-        freshColors = listOf(Color(0xFF6BCF9F), Color(0xFF4FC3F7)),
-    )
-    override val border = ThemeBorderColors(Color(0xFFB3E8FF), Color(0xFF4FC3F7), Color(0xFFFF7E67), Color(0x334FC3F7))
-    override val shadow = ThemeShadowColors(Color(0x334FC3F7), Color(0x404FC3F7), Color(0x66FF7E67))
-    override val semantic = ThemeSemanticColors(Color(0xFF6BCF9F), Color(0xFFFFB347), Color(0xFFFF6B6B), Color(0xFF4FC3F7))
-    override val overlay = ThemeOverlayColors(Color(0x1AFFFFFF), Color(0x80000000), Color(0xB3000000), Color(0x99FFFFFF))
-    override val decorationEmojis = listOf("🌊", "☀️", "🐚", "🎐")
-    override val tipEmoji = "🌊"
-}
+val SpringTheme = shellTheme(
+    themeSeason = Season.SPRING,
+    accentColor = Color(0xFFC83D2D),
+    accentDark = Color(0xFF9E2C22),
+    secondaryAccents = listOf(
+        Color(0xFFB94A3B), Color(0xFFD8A276), Color(0xFFD7B04A),
+        Color(0xFF6D8D7A), Color(0xFF537A9A), Color(0xFF777091), Color(0xFFC97968),
+    ),
+    decorations = listOf("봄", "01", "04", "꽃"),
+    tipMarker = "※",
+)
 
-val AutumnTheme = object : AppThemeData {
-    override val season = Season.AUTUMN
-    override val background = ThemeBackgroundColors(Color(0xFFFFF8F0), Color(0xFFFFF3E8), Color(0xFFFFE8D6), Color(0xFFFFFDF9))
-    override val text = ThemeTextColors(Color(0xFF3D2F2F), Color(0xFF6B5B4F), Color(0xFF9B8B7E), Color(0xFFD97D54), Color.White)
-    override val accent = ThemeAccentColors(
-        pink = Color(0xFFE8956B), coral = Color(0xFFD97D54), peach = Color(0xFFF4A76B),
-        yellow = Color(0xFFF4D58D), mint = Color(0xFFA8B89B), sky = Color(0xFF9AADBD),
-        lavender = Color(0xFFB8A8C4), rose = Color(0xFFD99B87),
-        pinkLight = Color(0xFFD99B87), pinkDark = Color(0xFFC06030),
-    )
-    override val gradient = ThemeGradients(
-        sunsetColors = listOf(Color(0xFFE8956B), Color(0xFFF4A76B), Color(0xFFF4D58D)),
-        candyColors = listOf(Color(0xFFE8956B), Color(0xFFD97D54)),
-        peachyColors = listOf(Color(0xFFF4A76B), Color(0xFFE8956B)),
-        dreamyColors = listOf(Color(0xFF9AADBD), Color(0xFFB8A8C4)),
-        freshColors = listOf(Color(0xFFA8B89B), Color(0xFF9AADBD)),
-    )
-    override val border = ThemeBorderColors(Color(0xFFFFE8D6), Color(0xFFF4D5C4), Color(0xFFE8956B), Color(0x33E8956B))
-    override val shadow = ThemeShadowColors(Color(0x33D97D54), Color(0x40D97D54), Color(0x66E8956B))
-    override val semantic = ThemeSemanticColors(Color(0xFFA8B89B), Color(0xFFF4A76B), Color(0xFFD97D7D), Color(0xFF9AADBD))
-    override val overlay = ThemeOverlayColors(Color(0x1AFFFFFF), Color(0x80000000), Color(0xB3000000), Color(0x99FFFFFF))
-    override val decorationEmojis = listOf("🍂", "🍁", "🌰", "🦊")
-    override val tipEmoji = "🍂"
-}
+val SummerTheme = shellTheme(
+    themeSeason = Season.SUMMER,
+    accentColor = Color(0xFF006D77),
+    accentDark = Color(0xFF004B52),
+    secondaryAccents = listOf(
+        Color(0xFF0B7A75), Color(0xFFE09850), Color(0xFFC4A33A),
+        Color(0xFF4F856A), Color(0xFF3D7190), Color(0xFF6C6792), Color(0xFF6DA3A0),
+    ),
+    decorations = listOf("여름", "02", "04", "바다"),
+    tipMarker = "※",
+)
 
-val WinterTheme = object : AppThemeData {
-    override val season = Season.WINTER
-    override val background = ThemeBackgroundColors(Color(0xFFF0F8FF), Color(0xFFE6F4FF), Color(0xFFD6EFFF), Color.White)
-    override val text = ThemeTextColors(Color(0xFF2D3E50), Color(0xFF5A6C7D), Color(0xFF8B9AAA), Color(0xFF5B9BD5), Color.White)
-    override val accent = ThemeAccentColors(
-        pink = Color(0xFFA8D8EA), coral = Color(0xFFB8E1F5), peach = Color(0xFFC8E8FF),
-        yellow = Color(0xFFE0F4FF), mint = Color(0xFFA8E6CF), sky = Color(0xFF89CFF0),
-        lavender = Color(0xFFC4D7F2), rose = Color(0xFFB8D8E8),
-        pinkLight = Color(0xFFB8D8E8), pinkDark = Color(0xFF6BAACC),
-    )
-    override val gradient = ThemeGradients(
-        sunsetColors = listOf(Color(0xFF89CFF0), Color(0xFFA8D8EA), Color(0xFFC8E8FF)),
-        candyColors = listOf(Color(0xFFA8D8EA), Color(0xFFC4D7F2)),
-        peachyColors = listOf(Color(0xFFB8E1F5), Color(0xFFA8D8EA)),
-        dreamyColors = listOf(Color(0xFF89CFF0), Color(0xFFC4D7F2)),
-        freshColors = listOf(Color(0xFFA8E6CF), Color(0xFF89CFF0)),
-    )
-    override val border = ThemeBorderColors(Color(0xFFD6EFFF), Color(0xFFC8E8FF), Color(0xFFA8D8EA), Color(0x33A8D8EA))
-    override val shadow = ThemeShadowColors(Color(0x3389CFF0), Color(0x4089CFF0), Color(0x66A8D8EA))
-    override val semantic = ThemeSemanticColors(Color(0xFFA8E6CF), Color(0xFFB8D8E8), Color(0xFFC4A8D8), Color(0xFF89CFF0))
-    override val overlay = ThemeOverlayColors(Color(0x1AFFFFFF), Color(0x80000000), Color(0xB3000000), Color(0x99FFFFFF))
-    override val decorationEmojis = listOf("❄️", "⛄", "🌨️", "💎")
-    override val tipEmoji = "❄️"
-}
+val AutumnTheme = shellTheme(
+    themeSeason = Season.AUTUMN,
+    accentColor = Color(0xFFA64B2B),
+    accentDark = Color(0xFF7A321D),
+    secondaryAccents = listOf(
+        Color(0xFF8E4027), Color(0xFFD1844C), Color(0xFFBF963F),
+        Color(0xFF71806B), Color(0xFF5B7684), Color(0xFF75667B), Color(0xFFBB735B),
+    ),
+    decorations = listOf("가을", "03", "04", "나뭇잎"),
+    tipMarker = "※",
+)
+
+val WinterTheme = shellTheme(
+    themeSeason = Season.WINTER,
+    accentColor = Color(0xFF345D82),
+    accentDark = Color(0xFF203F5C),
+    secondaryAccents = listOf(
+        Color(0xFF446E8B), Color(0xFFA8B2BA), Color(0xFFB4A866),
+        Color(0xFF5F857B), Color(0xFF4E769C), Color(0xFF6F7391), Color(0xFF7A98A9),
+    ),
+    decorations = listOf("겨울", "04", "02", "눈"),
+    tipMarker = "※",
+)
 
 fun Season.theme(): AppThemeData = when (this) {
     Season.SPRING -> SpringTheme

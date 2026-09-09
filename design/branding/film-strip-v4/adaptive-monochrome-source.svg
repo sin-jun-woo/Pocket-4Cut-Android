@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="432" height="432" viewBox="0 0 108 108">
+  <title>Pocket 4Cut — four-cut print and film themed icon</title>
+  <desc>Single-color adaptation with four transparent photo windows, six film perforations, and a narrow transparent seam. The print is tilted minus five degrees and the film plus five degrees. All outer vertices stay within a 30.017 dp radius around 54,54.</desc>
+  <!-- Only the exposed rear film is drawn; it cannot fill the photo-window holes. -->
+  <path fill="#000000" fill-rule="evenodd" d="M60.1294,33.4560L70.7732,34.3872L66.9383,78.2198L64.0234,77.9648Z M67.0250,37.0708L69.3163,37.2712L69.1071,39.6621L66.8159,39.4617Z M66.5021,43.0480L68.7934,43.2484L68.5842,45.6393L66.2929,45.4388Z M65.9792,49.0251L68.2704,49.2256L68.0612,51.6164L65.7700,51.4160Z M65.4562,55.0023L67.7475,55.2027L67.5383,57.5936L65.2471,57.3932Z M64.9333,60.9795L67.2246,61.1799L67.0154,63.5708L64.7241,63.3703Z M64.4104,66.9566L66.7016,67.1571L66.4924,69.5480L64.2012,69.3475Z"/>
+  <path fill="#000000" fill-rule="evenodd" d="M36.7910,29.4063L58.7073,27.4888L63.2394,79.2910L41.3231,81.2084Z M39.0013,31.7224L56.9328,30.1536L57.8305,40.4145L39.8990,41.9833Z M40.0995,44.2745L58.0310,42.7057L58.9287,52.9665L40.9972,54.5353Z M41.1976,56.8266L59.1291,55.2578L60.0268,65.5186L42.0953,67.0874Z M42.2958,69.3786L60.2273,67.8098L61.0291,76.9748L43.0976,78.5436Z"/>
+</svg>

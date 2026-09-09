@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -43,7 +42,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -231,7 +229,7 @@ fun SelectionScreen(
                         itemsIndexed(uiState.imagePaths) { index, path ->
                             val order = uiState.selectedIndexes.indexOf(index)
                             val isSelected = order >= 0
-                            val cellShape = RoundedCornerShape(AppLayout.Radius.lg)
+                            val cellShape = RoundedCornerShape(AppLayout.Radius.xs)
 
                             val imageAlpha by animateFloatAsState(
                                 targetValue = if (isSelected) 1f else 0.5f,
@@ -244,7 +242,7 @@ fun SelectionScreen(
                                 label = "selectionOverlayAlpha",
                             )
                             val borderWidth by animateDpAsState(
-                                targetValue = if (isSelected) 4.dp else 1.dp,
+                                targetValue = if (isSelected) 2.dp else 1.dp,
                                 animationSpec = SelectionToggleDpSpec,
                                 label = "selectionBorderWidth",
                             )
@@ -253,23 +251,10 @@ fun SelectionScreen(
                                 animationSpec = SelectionToggleColorSpec,
                                 label = "selectionBorderColor",
                             )
-                            val shadowElevation by animateDpAsState(
-                                targetValue = if (isSelected) 12.dp else 0.dp,
-                                animationSpec = SelectionToggleDpSpec,
-                                label = "selectionShadow",
-                            )
-
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .aspectRatio(3f / 4f)
-                                    .shadow(
-                                        elevation = shadowElevation,
-                                        shape = cellShape,
-                                        clip = false,
-                                        ambientColor = AppColors.Accent.pink.copy(alpha = 0.45f),
-                                        spotColor = AppColors.Accent.pink.copy(alpha = 0.55f),
-                                    )
                                     .clip(cellShape)
                                     .border(borderWidth, borderColor, cellShape)
                                     .background(AppColors.Background.secondary)
@@ -296,7 +281,7 @@ fun SelectionScreen(
                                         Box(
                                             modifier = Modifier
                                                 .size(32.dp)
-                                                .clip(CircleShape)
+                                                .clip(RoundedCornerShape(AppLayout.Radius.xs))
                                                 .background(AppColors.Accent.pink),
                                             contentAlignment = Alignment.Center,
                                         ) {
@@ -310,8 +295,8 @@ fun SelectionScreen(
                                         Box(
                                             modifier = Modifier
                                                 .size(32.dp)
-                                                .clip(CircleShape)
-                                                .border(1.5.dp, Color.White.copy(alpha = 0.2f), CircleShape),
+                                                .clip(RoundedCornerShape(AppLayout.Radius.xs))
+                                                .border(1.dp, Color.White.copy(alpha = 0.5f), RoundedCornerShape(AppLayout.Radius.xs)),
                                         )
                                     }
                                 }

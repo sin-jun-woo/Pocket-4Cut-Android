@@ -3,19 +3,8 @@ package com.pocket4cut.presentation.frameFlow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -24,17 +13,17 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Photo
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.pocket4cut.ui.designsystem.AppColors
-import com.pocket4cut.ui.designsystem.AppLayout
 import com.pocket4cut.ui.designsystem.AppSpacing
 import com.pocket4cut.ui.designsystem.AppTypography
 import com.pocket4cut.ui.designsystem.components.IconButtonVariant
@@ -60,31 +49,31 @@ fun FrameFlowCoordinatorScreen(
                     top = AppSpacing.xxxl,
                     start = AppSpacing.Screen.horizontal,
                     end = AppSpacing.Screen.horizontal,
-                    bottom = AppSpacing.md,
+                    bottom = AppSpacing.xxl,
                 ),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Top,
         ) {
-            Box(
-                modifier = Modifier.width(AppLayout.Height.IconButton.md),
-                contentAlignment = Alignment.CenterStart,
-            ) {
-                IconCircleButton(onClick = onDismiss, variant = IconButtonVariant.SOLID) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = null,
-                        tint = AppColors.Text.primary,
-                        modifier = Modifier.size(20.dp),
-                    )
-                }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "프레임 방식",
+                    style = AppTypography.title1,
+                    color = AppColors.Text.primary,
+                )
+                Spacer(Modifier.height(AppSpacing.xxs))
+                Text(
+                    text = "사진에 어울리는 마감 방식을 고르세요.",
+                    style = AppTypography.callout,
+                    color = AppColors.Text.secondary,
+                )
             }
-            Text(
-                text = "프레임 선택",
-                style = AppTypography.title2,
-                color = AppColors.Text.primary,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1f),
-            )
-            Spacer(Modifier.width(AppLayout.Height.IconButton.md))
+            IconCircleButton(onClick = onDismiss, variant = IconButtonVariant.SOLID) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "닫기",
+                    tint = AppColors.Text.primary,
+                    modifier = Modifier.size(20.dp),
+                )
+            }
         }
 
         Column(
@@ -92,73 +81,87 @@ fun FrameFlowCoordinatorScreen(
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = AppSpacing.Screen.horizontal),
-            verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
         ) {
-            Spacer(Modifier.height(AppSpacing.sm))
-            FrameFlowOptionCard(
+            FrameModeRow(
+                code = "A",
                 icon = Icons.Default.Palette,
-                title = "색 프레임",
-                subtitle = "단색·테마 색으로 배경을 채워요",
+                title = "COLOR",
+                subtitle = "한 가지 색으로 또렷하게",
                 onClick = onColorPick,
             )
-            FrameFlowOptionCard(
+            HorizontalDivider(color = AppColors.Border.subtle)
+            FrameModeRow(
+                code = "B",
                 icon = Icons.Default.Photo,
-                title = "배경 프레임",
-                subtitle = "다양한 프레임으로 꾸며요",
+                title = "SEASON",
+                subtitle = "계절의 질감과 작은 장식",
                 onClick = onSeasonPick,
             )
-            FrameFlowOptionCard(
+            HorizontalDivider(color = AppColors.Border.subtle)
+            FrameModeRow(
+                code = "C",
                 icon = Icons.Default.Edit,
-                title = "커스텀 프레임",
-                subtitle = "배경 색·스티커·글자로 꾸며요",
+                title = "CUSTOM",
+                subtitle = "색, 문구, 스티커를 직접 편집",
                 onClick = onCustomEditor,
             )
-            Spacer(Modifier.height(AppSpacing.xl))
+            HorizontalDivider(color = AppColors.Border.subtle)
         }
     }
 }
 
 @Composable
-private fun FrameFlowOptionCard(
+private fun FrameModeRow(
+    code: String,
     icon: ImageVector,
     title: String,
     subtitle: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    val shape = RoundedCornerShape(AppLayout.Radius.lg)
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .clip(shape)
-            .border(AppLayout.BorderWidth.thin, AppColors.Border.subtle, shape)
-            .background(AppColors.Background.card)
             .clickable(onClick = onClick)
-            .padding(AppSpacing.md),
+            .padding(vertical = AppSpacing.lg),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(AppSpacing.md),
     ) {
+        Text(
+            text = code,
+            style = AppTypography.caption1.copy(
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp,
+            ),
+            color = AppColors.Accent.pink,
+            modifier = Modifier.width(28.dp),
+        )
         Box(
             modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(AppColors.Accent.pinkSubtle),
+                .size(44.dp)
+                .background(
+                    color = AppColors.Background.card,
+                    shape = RoundedCornerShape(2.dp),
+                )
+                .border(1.dp, AppColors.Border.medium, RoundedCornerShape(2.dp)),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = AppColors.Accent.pink,
-                modifier = Modifier.size(24.dp),
+                tint = AppColors.Text.primary,
+                modifier = Modifier.size(20.dp),
             )
         }
+        Spacer(Modifier.width(AppSpacing.md))
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                style = AppTypography.headline,
+                style = AppTypography.headline.copy(
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.5.sp,
+                ),
                 color = AppColors.Text.primary,
             )
-            Spacer(Modifier.height(AppSpacing.xxs))
+            Spacer(Modifier.height(2.dp))
             Text(
                 text = subtitle,
                 style = AppTypography.subheadline,

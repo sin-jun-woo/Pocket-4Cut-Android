@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -224,11 +223,11 @@ fun DetailEditScreen(
                         captionColorRGB = captionColorRGB,
                         modifier = Modifier
                             .shadow(
-                                elevation = 60.dp,
-                                shape = RoundedCornerShape(AppLayout.Radius.xl),
+                                elevation = 8.dp,
+                                shape = RoundedCornerShape(AppLayout.Radius.xs),
                                 clip = false,
-                                ambientColor = Color.Black.copy(alpha = 0.3f),
-                                spotColor = Color.Black.copy(alpha = 0.3f),
+                                ambientColor = AppColors.Shadow.color,
+                                spotColor = AppColors.Shadow.colorMd,
                             )
                             .widthIn(max = 360.dp)
                             .padding(horizontal = AppSpacing.Screen.horizontal),
@@ -237,16 +236,16 @@ fun DetailEditScreen(
                     Box(
                         modifier = Modifier
                             .shadow(
-                                elevation = 60.dp,
-                                shape = RoundedCornerShape(AppLayout.Radius.xl),
+                                elevation = 8.dp,
+                                shape = RoundedCornerShape(AppLayout.Radius.xs),
                                 clip = false,
-                                ambientColor = Color.Black.copy(alpha = 0.3f),
-                                spotColor = Color.Black.copy(alpha = 0.3f),
+                                ambientColor = AppColors.Shadow.color,
+                                spotColor = AppColors.Shadow.colorMd,
                             )
                             .widthIn(max = 360.dp)
                             .padding(horizontal = AppSpacing.Screen.horizontal)
                             .aspectRatio(3f / 4f)
-                            .clip(RoundedCornerShape(AppLayout.Radius.xl))
+                            .clip(RoundedCornerShape(AppLayout.Radius.xs))
                             .background(AppColors.Background.secondary),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -288,23 +287,11 @@ fun DetailEditScreen(
                             modifier = Modifier
                                 .width(72.dp)
                                 .height(96.dp)
-                                .then(
-                                    if (isSelected) {
-                                        Modifier.shadow(
-                                            elevation = 12.dp,
-                                            shape = RoundedCornerShape(AppLayout.Radius.md),
-                                            ambientColor = AppColors.Accent.pink.copy(alpha = 0.45f),
-                                            spotColor = AppColors.Accent.pink.copy(alpha = 0.6f),
-                                        )
-                                    } else {
-                                        Modifier
-                                    },
-                                )
-                                .clip(RoundedCornerShape(AppLayout.Radius.md))
+                                .clip(RoundedCornerShape(AppLayout.Radius.xs))
                                 .border(
-                                    width = if (isSelected) 4.dp else 1.dp,
+                                    width = if (isSelected) 2.dp else 1.dp,
                                     color = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle,
-                                    shape = RoundedCornerShape(AppLayout.Radius.md),
+                                    shape = RoundedCornerShape(AppLayout.Radius.xs),
                                 )
                                 .clickable { viewModel.selectSlot(i) },
                         ) {
@@ -320,7 +307,7 @@ fun DetailEditScreen(
                                         .align(Alignment.BottomEnd)
                                         .offset(x = 4.dp, y = (-4).dp)
                                         .size(20.dp)
-                                        .clip(CircleShape)
+                                        .clip(RoundedCornerShape(AppLayout.Radius.xs))
                                         .background(AppColors.Accent.pink),
                                     contentAlignment = Alignment.Center,
                                 ) {

@@ -1,0 +1,293 @@
+{
+  "kind": "design mockups; not Android device screenshots",
+  "screenCount": 17,
+  "pngSize": [
+    1080,
+    2400
+  ],
+  "checks": [
+    {
+      "file": "01_launch.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": []
+      }
+    },
+    {
+      "file": "02_home.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": [
+          {
+            "label": "▣   촬영 시작",
+            "height": 52,
+            "visible": true
+          },
+          {
+            "label": "▤   보관함",
+            "height": 52,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "file": "03_frame_count.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": [
+          {
+            "label": "4컷으로 촬영",
+            "height": 52,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "file": "04_camera.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": []
+      }
+    },
+    {
+      "file": "05_photo_select.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": [
+          {
+            "label": "1장 더 선택하세요",
+            "height": 52,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "file": "06_layout_select.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": [
+          {
+            "label": "이 배치로 계속",
+            "height": 52,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "file": "07_frame_mode.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": []
+      }
+    },
+    {
+      "file": "08_color_frame.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": [
+          {
+            "label": "화이트로 계속",
+            "height": 52,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "file": "09_season_frame.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": [
+          {
+            "label": "봄 프레임으로 계속",
+            "height": 52,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "file": "10_custom_frame.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": [
+          {
+            "label": "이 프레임으로 계속",
+            "height": 52,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "file": "11_edit.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": [
+          {
+            "label": "상세 편집으로",
+            "height": 52,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "file": "12_detail_edit.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": [
+          {
+            "label": "↶ 90° 회전",
+            "height": 40,
+            "visible": true
+          },
+          {
+            "label": "⇄ 좌우 반전",
+            "height": 40,
+            "visible": true
+          },
+          {
+            "label": "적용",
+            "height": 52,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "file": "13_result.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": [
+          {
+            "label": "↓   저장",
+            "height": 52,
+            "visible": true
+          },
+          {
+            "label": "↗   공유",
+            "height": 52,
+            "visible": true
+          },
+          {
+            "label": "홈으로 돌아가기",
+            "height": 42,
+            "visible": true
+          }
+        ]
+      }
+    },
+    {
+      "file": "14_gallery.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": []
+      }
+    },
+    {
+      "file": "15_settings.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": []
+      }
+    },
+    {
+      "file": "16_privacy_policy.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": []
+      }
+    },
+    {
+      "file": "17_contact_feedback.png",
+      "pngWidth": 1080,
+      "pngHeight": 2400,
+      "layout": {
+        "width": 360,
+        "height": 800,
+        "overflow": false,
+        "buttons": [
+          {
+            "label": "주소 복사",
+            "height": 52,
+            "visible": true
+          },
+          {
+            "label": "메일 앱에서 열기",
+            "height": 52,
+            "visible": true
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -39,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -349,7 +348,7 @@ fun CaptureScreen(
                 if (uiState.phase == CapturePhase.COUNTDOWN) {
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(AppLayout.Radius.full))
+                            .clip(RoundedCornerShape(AppLayout.Radius.sm))
                             .background(AppColors.Accent.pink)
                             .clickable { viewModel.onManualShutter() }
                             .padding(horizontal = AppSpacing.lg, vertical = AppSpacing.xs),
@@ -390,7 +389,7 @@ fun CaptureScreen(
 }
 
 // ────────────────────────────────────────────────────────────────
-// Glassmorphism primitives (ultraThinMaterial + black(0.5) 근사)
+// Camera controls retain a dark backing for contrast over the live preview.
 // ────────────────────────────────────────────────────────────────
 
 @Composable
@@ -400,12 +399,13 @@ private fun GlassmorphismCircle(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
+    val shape = RoundedCornerShape(AppLayout.Radius.sm)
     Box(
         modifier = modifier
             .size(diameter)
-            .clip(CircleShape)
+            .clip(shape)
             .background(Color.Black.copy(alpha = 0.5f))
-            .border(1.dp, Color.White.copy(alpha = 0.15f), CircleShape)
+            .border(1.dp, Color.White.copy(alpha = 0.15f), shape)
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
@@ -418,7 +418,7 @@ private fun GlassmorphismCapsule(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    val shape = RoundedCornerShape(AppLayout.Radius.full)
+    val shape = RoundedCornerShape(AppLayout.Radius.sm)
     Box(
         modifier = modifier
             .clip(shape)
@@ -434,7 +434,7 @@ private fun GlassmorphismCapsule(
 /** iOS `countdownTopRightBadge` — 상단 바 우측 작은 숫자만 */
 @Composable
 private fun CountdownTopRightBadge(number: Int) {
-    val shape = RoundedCornerShape(AppLayout.Radius.full)
+    val shape = RoundedCornerShape(AppLayout.Radius.sm)
     Box(
         modifier = Modifier
             .height(44.dp)
@@ -456,36 +456,18 @@ private fun CountdownTopRightBadge(number: Int) {
 }
 
 // ────────────────────────────────────────────────────────────────
-// Shutter button — 80dp pink circle + pulse ring + camera icon
+// The shutter keeps the familiar circular capture target.
 // ────────────────────────────────────────────────────────────────
 
 @Composable
 private fun ShutterButton(onClick: () -> Unit) {
-    val pulseTransition = rememberInfiniteTransition(label = "shutter_pulse")
-    val pulseScale by pulseTransition.animateFloat(
-        1f, 1.12f,
-        infiniteRepeatable(tween(1500, easing = EaseInOut), RepeatMode.Reverse),
-        label = "pulse_scale",
-    )
-    val pulseAlpha by pulseTransition.animateFloat(
-        0.4f, 0f,
-        infiniteRepeatable(tween(1500, easing = EaseInOut), RepeatMode.Reverse),
-        label = "pulse_alpha",
-    )
-
-    Box(contentAlignment = Alignment.Center) {
-        Box(
-            Modifier
-                .size(96.dp)
-                .scale(pulseScale)
-                .border(2.dp, AppColors.Accent.pink.copy(alpha = pulseAlpha), CircleShape),
-        )
+    Box(modifier = Modifier.size(96.dp), contentAlignment = Alignment.Center) {
         Box(
             modifier = Modifier
                 .size(80.dp)
                 .clip(CircleShape)
                 .background(AppColors.Accent.pink)
-                .border(6.dp, Color.White.copy(alpha = 0.3f), CircleShape)
+                .border(2.dp, Color.White, CircleShape)
                 .clickable(onClick = onClick),
             contentAlignment = Alignment.Center,
         ) {
@@ -517,7 +499,7 @@ private fun ShootingProgressRing(modifier: Modifier = Modifier) {
             .size(80.dp)
             .drawBehind {
                 drawArc(
-                    color = Color(0xFFFF6B9D),
+                    color = AppColors.Accent.pink,
                     startAngle = rotation,
                     sweepAngle = 120f,
                     useCenter = false,
@@ -529,7 +511,7 @@ private fun ShootingProgressRing(modifier: Modifier = Modifier) {
 }
 
 // ────────────────────────────────────────────────────────────────
-// Completion overlay — iOS: 체크 100 + 스피너 56 + 문구
+// Completion state while the captured photos are prepared.
 // ────────────────────────────────────────────────────────────────
 
 @Composable
@@ -553,8 +535,8 @@ private fun CompletionOverlay() {
         ) {
             Box(
                 modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
+                    .size(64.dp)
+                    .clip(RoundedCornerShape(AppLayout.Radius.sm))
                     .background(AppColors.Accent.pink),
                 contentAlignment = Alignment.Center,
             ) {
@@ -562,15 +544,15 @@ private fun CompletionOverlay() {
                     Icons.Default.Check,
                     contentDescription = "완료",
                     tint = Color.White,
-                    modifier = Modifier.size(44.dp),
+                    modifier = Modifier.size(32.dp),
                 )
             }
             Box(
                 modifier = Modifier
-                    .size(56.dp)
+                    .size(32.dp)
                     .drawBehind {
                         drawArc(
-                            color = Color(0xFFFF6B9D),
+                            color = AppColors.Accent.pink,
                             startAngle = rotation,
                             sweepAngle = 100f,
                             useCenter = false,

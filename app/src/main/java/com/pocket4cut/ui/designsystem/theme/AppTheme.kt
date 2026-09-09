@@ -31,7 +31,7 @@ data class ThemeAccentColors(
     val pinkLight: Color,
     val pinkDark: Color,
 ) {
-    val pinkSubtle: Color get() = pink.copy(alpha = 0.2f)
+    val pinkSubtle: Color get() = pink.copy(alpha = 0.10f)
 }
 
 data class ThemeGradients(

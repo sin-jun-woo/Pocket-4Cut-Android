@@ -1,6 +1,7 @@
 package com.pocket4cut.ui.designsystem.components
 
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.pocket4cut.ui.designsystem.AppAnimation
 import com.pocket4cut.ui.designsystem.AppColors
 
 private val ToggleWidth = 52.dp
@@ -37,7 +37,7 @@ fun PinkToggle(
     }
     val thumbX by animateDpAsState(
         targetValue = thumbTargetX,
-        animationSpec = AppAnimation.bouncySpring(),
+        animationSpec = tween(durationMillis = 160),
         label = "pinkToggleThumb",
     )
     val trackColor = if (checked) AppColors.Accent.pink else AppColors.Border.medium

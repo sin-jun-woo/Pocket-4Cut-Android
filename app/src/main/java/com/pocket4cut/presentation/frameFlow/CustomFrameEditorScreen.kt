@@ -520,7 +520,7 @@ fun CustomFrameEditorScreen(
                 ) {
                     decorations.forEach { dec ->
                         val sel = dec.id == selectedId
-                        val chipShape = RoundedCornerShape(50)
+                        val chipShape = RoundedCornerShape(AppLayout.Radius.sm)
                         Row(
                             modifier = Modifier
                                 .height(36.dp)
@@ -733,7 +733,7 @@ private fun BackgroundColorChip(
             .size(44.dp)
             .clip(CircleShape)
             .border(
-                width = if (selected) 3.dp else 1.dp,
+                width = if (selected) 2.dp else 1.dp,
                 color = if (selected) AppColors.Accent.pink else AppColors.Border.subtle,
                 shape = CircleShape,
             )

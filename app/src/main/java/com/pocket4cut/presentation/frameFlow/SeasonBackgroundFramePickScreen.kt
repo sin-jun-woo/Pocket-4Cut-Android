@@ -33,11 +33,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.pocket4cut.frame.CollagePreviewScaledToFit
 import com.pocket4cut.frame.CustomFrameDesign
 import com.pocket4cut.frame.FrameStyle
@@ -216,11 +214,11 @@ private fun SeasonPreviewContent(
             customFrameDesign = customFrameDesign,
             modifier = Modifier
                 .shadow(
-                    elevation = 60.dp,
-                    shape = RoundedCornerShape(AppLayout.Radius.xl),
+                    elevation = 8.dp,
+                    shape = RoundedCornerShape(AppLayout.Radius.xs),
                     clip = false,
-                    ambientColor = Color.Black.copy(alpha = 0.3f),
-                    spotColor = Color.Black.copy(alpha = 0.3f),
+                    ambientColor = AppColors.Shadow.color,
+                    spotColor = AppColors.Shadow.colorMd,
                 )
                 .fillMaxWidth(),
         )
@@ -228,15 +226,15 @@ private fun SeasonPreviewContent(
         Box(
             modifier = Modifier
                 .shadow(
-                    elevation = 60.dp,
-                    shape = RoundedCornerShape(AppLayout.Radius.xl),
+                    elevation = 8.dp,
+                    shape = RoundedCornerShape(AppLayout.Radius.xs),
                     clip = false,
-                    ambientColor = Color.Black.copy(alpha = 0.3f),
-                    spotColor = Color.Black.copy(alpha = 0.3f),
+                    ambientColor = AppColors.Shadow.color,
+                    spotColor = AppColors.Shadow.colorMd,
                 )
                 .fillMaxWidth()
                 .aspectRatio(3f / 4f)
-                .clip(RoundedCornerShape(AppLayout.Radius.xl))
+                .clip(RoundedCornerShape(AppLayout.Radius.xs))
                 .background(customFrameDesign.resolvedFillColor),
         )
     }
@@ -250,26 +248,25 @@ private fun SeasonCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val shape = RoundedCornerShape(AppLayout.Radius.lg)
-    val seasonBaseHex = com.pocket4cut.frame.SeasonHTMLFrameStyle.baseHex(season)
-    val seasonBgColor = Color((0xFF000000 or seasonBaseHex).toInt()).copy(alpha = 0.45f)
+    val shape = RoundedCornerShape(AppLayout.Radius.sm)
     Row(
         modifier = modifier
             .clip(shape)
             .border(
-                width = if (selected) 2.5.dp else AppLayout.BorderWidth.thin,
+                width = AppLayout.BorderWidth.thin,
                 color = if (selected) AppColors.Accent.pink else AppColors.Border.subtle,
                 shape = shape,
             )
-            .background(seasonBgColor)
+            .background(if (selected) AppColors.Accent.pinkSubtle else AppColors.Background.card)
             .clickable(onClick = onClick)
             .padding(AppSpacing.md),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
     ) {
         Text(
-            text = season.emoji,
-            fontSize = 28.sp,
+            text = "0${season.ordinal + 1}",
+            style = AppTypography.caption1,
+            color = if (selected) AppColors.Accent.pink else AppColors.Text.tertiary,
         )
         Column(
             modifier = Modifier.weight(1f),

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 108 108">
+
+<!-- ARTWORK START -->
+<g fill-rule="evenodd" transform="translate(54 54) scale(0.88) translate(-54 -54)">
+<path fill="#000000" d="M32,28H41Q43,28 43,30V34H52Q56,34 56,39V67Q56,72 52,72H29Q24,72 24,67V39Q24,34 29,34H30V30Q30,28 32,28Z M34,51A10,10 0 1,0 54,51A10,10 0 1,0 34,51Z"/>
+<g transform="rotate(9 68.5 56.5)" fill-rule="evenodd">
+<path fill="#000000" d="M57,34H80V79H57Z M60,40H77V47H60Z M60,48.5H77V55.5H60Z M60,57H77V64H60Z M60,65.5H77V72.5H60Z"/>
+</g>
+</g>
+<!-- ARTWORK END -->
+</svg>

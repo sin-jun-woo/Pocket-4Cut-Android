@@ -1,0 +1,81 @@
+{
+    "renderer": "Paparazzi 2.0.0-alpha02 / Android layoutlib 15.2.3",
+    "source": "Production Android Compose Screen functions; generated demo photo fixtures",
+    "deviceCapture": false,
+    "runs": [
+        "20260910004452_291409.js",
+        "20260910004500_60db20.js",
+        "20260910004501_0dd768.js",
+        "20260910004503_e7457e.js",
+        "20260910004504_7f6852.js",
+        "20260910004505_4f796c.js",
+        "20260910004509_6ea037.js",
+        "20260910004511_280eae.js",
+        "20260910004512_e76b6e.js"
+    ],
+    "screens": [
+        {
+            "name": "selection",
+            "width": 1080,
+            "height": 2400,
+            "timestamp": "2026-09-09T15:44:59.718Z",
+            "test": "com.pocket4cut.storecapture.StoreScreenshotsTest#selection"
+        },
+        {
+            "name": "detail",
+            "width": 1080,
+            "height": 2400,
+            "timestamp": "2026-09-09T15:45:01.491Z",
+            "test": "com.pocket4cut.storecapture.StoreScreenshotsTest#detail"
+        },
+        {
+            "name": "layout",
+            "width": 1080,
+            "height": 2400,
+            "timestamp": "2026-09-09T15:45:02.841Z",
+            "test": "com.pocket4cut.storecapture.StoreScreenshotsTest#layout"
+        },
+        {
+            "name": "result",
+            "width": 1080,
+            "height": 2400,
+            "timestamp": "2026-09-09T15:45:04.193Z",
+            "test": "com.pocket4cut.storecapture.StoreScreenshotsTest#result"
+        },
+        {
+            "name": "frame_count",
+            "width": 1080,
+            "height": 2400,
+            "timestamp": "2026-09-09T15:45:05.521Z",
+            "test": "com.pocket4cut.storecapture.StoreScreenshotsTest#frameCount"
+        },
+        {
+            "name": "gallery",
+            "width": 1080,
+            "height": 2400,
+            "timestamp": "2026-09-09T15:45:08.822Z",
+            "test": "com.pocket4cut.storecapture.StoreScreenshotsTest#gallery"
+        },
+        {
+            "name": "edit",
+            "width": 1080,
+            "height": 2400,
+            "timestamp": "2026-09-09T15:45:10.659Z",
+            "test": "com.pocket4cut.storecapture.StoreScreenshotsTest#edit"
+        },
+        {
+            "name": "home",
+            "width": 1080,
+            "height": 2400,
+            "timestamp": "2026-09-09T15:45:11.901Z",
+            "test": "com.pocket4cut.storecapture.StoreScreenshotsTest#home"
+        },
+        {
+            "name": "color",
+            "width": 1080,
+            "height": 2400,
+            "timestamp": "2026-09-09T15:45:13.312Z",
+            "test": "com.pocket4cut.storecapture.StoreScreenshotsTest#color"
+        }
+    ]
+}

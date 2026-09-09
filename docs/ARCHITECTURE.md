@@ -1,7 +1,7 @@
 # Pocket 4Cut 현재 구현 아키텍처
 
-> 확인일: 2026-09-10. 기준은 HEAD `95140a0`과 조사 시점의 `app/` 미커밋 변경 27개를 포함한 작업 트리다.
-> 이번 반영 범위는 문서다. 로컬 앱 변경이 함께 커밋되거나 원격 브랜치에 반영되었다는 의미가 아니다.
+> 확인일: 2026-09-10. 최초 구조 조사는 HEAD `95140a0`과 당시 미커밋 앱 변경을 기준으로 했고, 이번 갱신은 HEAD `317b711`에 남아 있던 전체 작업을 통합하는 시점의 실제 코드를 기준으로 한다.
+> 이번 통합 범위에는 UI, 버전, 아이콘, 디자인 산출물, 개발 문서와 검증 스크립트가 포함된다. 커밋·원격 반영 결과와 검증 한계는 [WORKLOG](WORKLOG.md)의 최신 기록을 따른다.
 > 아래는 소스에서 확인한 구조이며, 기기에서 전체 기능의 정확성을 검증했다는 선언이 아니다.
 
 이 문서는 현재 호출 관계를 설명한다. 루트의 [ARCHITECTURE.md](../ARCHITECTURE.md)는 목표 계층과 예시 클래스가 포함된 기존 설계 문서이므로 구분해서 읽는다. 구현 변경 시 실제 코드와 이 문서를 함께 갱신한다.
@@ -10,7 +10,7 @@
 
 Pocket 4Cut은 촬영·사진 선택·프레임 편집·콜라주 생성·보관을 기기에서 수행하는 Android 앱이다. [settings.gradle.kts](../settings.gradle.kts)에 등록된 Gradle 모듈은 `:app` 하나다.
 
-[앱 빌드 설정](../app/build.gradle.kts)의 applicationId/namespace는 `com.pocket4cut`, minSdk는 26, compileSdk/targetSdk는 36이다. 조사한 작업 트리 버전은 `1.2 (3)`이며 기준 HEAD의 버전은 `1.0 (1)`이다. 버전·UI 관련 로컬 앱 변경은 이번 문서 커밋에 포함하지 않는다. Gradle 8.13, AGP 8.13.2, Kotlin 2.0.21을 선언하며 실행 검증은 [WORKLOG](WORKLOG.md)에 기록한다.
+[앱 빌드 설정](../app/build.gradle.kts)의 applicationId/namespace는 `com.pocket4cut`, minSdk는 26, compileSdk/targetSdk는 36이다. 이번 통합 작업 트리 버전은 `1.3 (4)`이며 최초 조사 당시에는 `1.2 (3)`, 기준 HEAD `95140a0`에서는 `1.0 (1)`이었다. Gradle 8.13, AGP 8.13.2, Kotlin 2.0.21을 선언하며 실행 검증은 [WORKLOG](WORKLOG.md)에 기록한다.
 
 [MainActivity](../app/src/main/java/com/pocket4cut/MainActivity.kt)는 다음 순서로 앱을 시작한다.
 
@@ -167,7 +167,7 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 
 실사용 토큰과 컴포넌트는 [ui/designsystem](../app/src/main/java/com/pocket4cut/ui/designsystem)에 있다. [ui/theme/Theme.kt](../app/src/main/java/com/pocket4cut/ui/theme/Theme.kt)는 MainActivity가 호출하는 MaterialTheme 연결 계층이며 미사용 코드가 아니다. 다만 최상위 colorScheme 값과 동적 AppColors getter의 갱신 시점이 달라 계절 변경 동기화가 필요하다.
 
-조사 시점 로컬 UI 변경은 종이색·잉크색, 작은 모서리와 계절 강조색을 사용한다. `IconCircleButton`은 사각형 계열이고 `Pink*` 컴포넌트도 실제 색은 테마를 따른다. 이 시각 변경은 문서 커밋만으로 원격 앱에 적용되지 않는다. `core/designsystem`은 TODO다.
+현재 UI는 종이색·잉크색, 작은 모서리와 계절 강조색을 사용한다. `IconCircleButton`은 사각형 계열이고 `Pink*` 컴포넌트도 실제 색은 테마를 따른다. 이번 통합에는 이 시각 변경의 앱 코드와 Film Strip v4 런처 자산이 포함된다. `core/designsystem`은 TODO다.
 
 ## 7. 미연결 구성과 향후 제안
 

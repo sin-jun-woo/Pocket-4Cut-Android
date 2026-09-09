@@ -1,5 +1,9 @@
 # 포켓 네 컷 (Pocket 4Cut)
 
+> **현재 구현 기준 안내 (2026-09-09)**: 개발을 시작할 때 [프로젝트 이해·인수 문서](PROJECT_UNDERSTANDING.md)를 먼저 읽어 주세요.
+> [파일별 코드 지도](engineering/CODE_MAP.md), [확인된 문제](engineering/KNOWN_ISSUES.md), [실제 빌드·검증 기록](engineering/VERIFICATION.md)을 함께 정리했습니다.
+> 아래 본문과 기존 설계 문서에는 초기 기획 당시의 상태·기술 설명이 남아 있습니다.
+
 <div align="center">
 
 **집에서 즐기는 모바일 인생네컷 부스**

@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -35,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.pocket4cut.core.util.BitmapDecoding
@@ -209,19 +207,6 @@ private fun ThemeCard(
     Column(
         modifier = Modifier
             .width(140.dp)
-            .then(
-                if (isSelected) {
-                    Modifier.shadow(
-                        elevation = 12.dp,
-                        shape = shape,
-                        clip = false,
-                        ambientColor = AppColors.Accent.pink.copy(alpha = 0.2f),
-                        spotColor = AppColors.Accent.pink.copy(alpha = 0.3f),
-                    )
-                } else {
-                    Modifier
-                },
-            )
             .clip(shape)
             .background(AppColors.Background.tertiary)
             .border(borderWidth, borderColor, shape)
@@ -250,7 +235,7 @@ private fun ThemeCard(
                         .align(Alignment.TopEnd)
                         .padding(4.dp)
                         .size(20.dp)
-                        .clip(CircleShape)
+                        .clip(RoundedCornerShape(AppLayout.Radius.xs))
                         .background(AppColors.Accent.pink),
                     contentAlignment = Alignment.Center,
                 ) {

@@ -16,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -164,10 +163,8 @@ private fun ThemeSection(context: android.content.Context) {
                                 modifier = Modifier
                                     .size(40.dp)
                                     .clip(CircleShape)
-                                    .background(
-                                        Brush.linearGradient(listOf(theme.background.primary, theme.background.tertiary)),
-                                    )
-                                    .border(1.5.dp, Color.White, CircleShape),
+                                    .background(theme.background.card)
+                                    .border(1.dp, theme.border.medium, CircleShape),
                             )
                             Box(
                                 modifier = Modifier
@@ -178,7 +175,7 @@ private fun ThemeSection(context: android.content.Context) {
                         }
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                "${season.emoji} ${season.displayName}",
+                                season.displayName,
                                 style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
                                 color = AppColors.Text.primary,
                             )

@@ -1,7 +1,40 @@
 # Pocket 4Cut 이미지·그래픽 자산 가이드
 
 > 확인일: 2026-09-10 · 기준: 기존 HEAD `95140a0`와 미커밋 로컬 코드 변경을 포함한 작업 트리.
-> 이 문서는 현행 구현을 기록하고 신규 자산의 제작 기준을 제안한다. 이미지 생성·변환, 기존 자산 이름 변경, 렌더링 코드 수정은 수행하지 않았다.
+> 최초 문서 조사에서는 자산을 변경하지 않았다. 이후 런처 아이콘 변경은 바로 아래 갱신 기록을 따른다.
+
+## 2026-09-10 최신 갱신 — Film Strip v4 런처/스토어 자산
+
+HEAD `ac42903`과 미커밋 UI 변경을 유지한 작업 트리에서 사용자가 네 컷/필름 사진 중심 아이콘 및 피처 그래픽 제작·적용을 요청했다. 후속 요청에 따라 인화지 하단에 소문자 `pocket4cut`을 추가했다. 아래 Print Booth v1과 1~2절의 자산 규격 설명은 각각 이전 시점 기록이다.
+
+- 현재 컬러 원본은 `design/branding/film-strip-v4/source/icon-with-wordmark.png`. 네 컷 인물 사진·인화지·필름 표현을 위해 image_gen으로 제작한 래스터를 사용한다. 인물은 가상의 성인이며 사용자 사진을 사용하지 않았다.
+- `mipmap-anydpi/ic_launcher.xml`, `ic_launcher_round.xml`은 실제 새 density PNG `@drawable/ic_launcher_foreground`를 참조한다. 기존 전경 XML 이름은 새 PNG를 가리키는 호환 alias로 갱신했다. 배경은 `#1B1B19`다.
+- density 전경5개(108/162/216/324/432), 일반/원형5쌍(48/72/96/144/192)을 새 이미지로 재생성했다. **컬러 전경에는 차콜 backing이 포함되며 알파가 모두255다.** 투명 cutout으로 설명하지 않는다. 원형 legacy PNG에는 마스크 투명도가 있다.
+- `ic_launcher_monochrome.xml`은 별도 단색 네 컷·필름 벡터다. 사진창4개·천공6개는 실제 투명이며, 사진의 인물·하단 글씨는 단색 테마 변형에서 생략한다. 전체 외곽 반경30.017dp.
+- 컬러 전경은108dp, 표시용 중심 crop은72dp다. 차콜 대비>20인 픽셀의 최대 반경31.283dp 미만을 확인했고 마스크·축소판도 시각 검사했다. 낮은 대비의 가장자리를 놓칠 수 있는 보조 검사이므로 완전한 알파 실루엣 검증 또는 실기기 검증으로 표현하지 않는다.
+- `assets/branding/pocket_4cut_app_icon.png`는 현재1024px master 사본이고, 같은 이름 SVG는 옆 PNG를 읽는 preview wrapper다. 자체 완결형 벡터도 런타임 SVG 로더도 아니다.
+- 등록 파일: `design/play-store/film-strip-v4/app-icon-512.png` (512×512 RGBA8/sRGB/344,668B), `feature-graphic-1024x500.png` (1024×500 RGB8/sRGB/알파 없음/793,055B). 내장 생성 도구의 프롬프트와 AI 생성 사실을 안내 파일에 기록했다.
+- 재생성: sharp가 준비된 Node에서 `node design/branding/film-strip-v4/export-assets.cjs`. 생성 이미지를 다시 그리는 스크립트가 아니라 크기·색상 형식·안전영역·리소스 출력을 만드는 도구다.
+- 이전 v1 파일21개는 `design/branding/film-strip-v4/previous-icon-v1/`에 보존했다. 기존 휴대전화 소개 이미지8장과 이전 배포 ZIP은 변경하지 않았다.
+
+시각 검토판·출력23개 해시·파일검사는 `design/branding/film-strip-v4/asset-validation.json` 및 README를 따른다. 앱 빌드 결과와 미실행 검사는 WORKLOG에 별도로 기록했다. 프레임·사용자 결과 JPEG·UI 코드의 렌더 계약은 이번 작업에서 변경하지 않았다.
+
+## 2026-09-10 이전 갱신 — Print Booth v1 런처 아이콘
+
+HEAD `ac42903` 및 기존 미커밋 UI 변경을 포함한 작업 트리에서, 사용자의 앱 아이콘 제작·적용 요청으로 런처 자산을 교체했다. 아래 1~2절의 이전 그라데이션·동일 monochrome 설명은 교체 전 조사 기록이다. 프레임·저장 JPEG 렌더링 계약은 이 작업에서 변경하지 않았다.
+
+- 브랜드 원본: `app/src/main/assets/branding/pocket_4cut_app_icon.svg`, 1024×1024, `viewBox="18 18 72 72"`. 앱은 여전히 SVG를 직접 읽지 않는다.
+- 적응형 아이콘의 배경: 기존 `ic_launcher_background.xml`을 인쇄 빨강 `#C83D2D` 단색으로 교체.
+- 적응형 전경: 신규 `res/drawable/ic_launcher_print_foreground.xml`, 108dp 벡터. 아이보리·잉크색 네 컷 스트립.
+- 테마 아이콘: 신규 `res/drawable/ic_launcher_monochrome.xml`. 사진 네 칸이 실제 투명 구멍인 독립 단색 벡터.
+- `mipmap-anydpi/ic_launcher.xml`, `ic_launcher_round.xml`을 위 전경·단색 리소스에 연결했다.
+- 기존 density별 PNG 15개의 이름과 크기는 유지하고 새 디자인으로 재생성했다. 일반 launcher는 전체 불투명, round launcher와 foreground에는 투명 영역이 있다.
+- 제작 원본·512px Play 아이콘·1024px master·마스크 검토·검증 JSON은 `design/branding/print-booth-v1/`에 있다. 교체 전 원본 19개도 이 폴더의 `previous-icon/`에 보존했다.
+- 재생성: `sharp`를 사용할 수 있는 Node 환경에서 `node design/branding/print-booth-v1/render-icons.cjs`.
+- 확인: Play PNG 512×512 RGBA8/sRGB/14,882B/알파255, 5종 density 치수, XML 5개 파싱, 원본·벡터 기하 일치, 66dp 안전원 안 마크(최대 반경32.45dp), 단색 투명창4개.
+- 마스크 검토 이미지는 제작 도구 출력이며 실기기 런처 화면 캡처가 아니다. 빌드와 기기 검증 범위는 해당 WORKLOG 기록을 따른다.
+
+스토어 휴대전화 소개 이미지는 `design/play-store/print-booth-v1/`에 제작하며, 등록용 이미지·실제 Compose 화면 렌더·예시 생성 사진·검증용 전체 보기를 구분한다. `docs/`에는 예시 사진이나 원시 캡처를 복사하지 않는다.
 
 ## 1. 현행 자산의 구분
 

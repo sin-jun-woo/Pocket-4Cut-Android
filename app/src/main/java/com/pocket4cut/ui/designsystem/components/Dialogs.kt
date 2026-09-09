@@ -53,14 +53,14 @@ fun ConfirmDialog(
                 .clickable(onClick = onCancel),
             contentAlignment = Alignment.Center,
         ) {
-            val shape = RoundedCornerShape(AppLayout.Radius.xl)
+            val shape = RoundedCornerShape(AppLayout.Radius.lg)
             Column(
                 modifier = Modifier
                     .widthIn(max = 340.dp)
                     .fillMaxWidth()
                     .padding(horizontal = AppSpacing.Screen.horizontal)
                     .shadow(
-                        elevation = 30.dp,
+                        elevation = 8.dp,
                         shape = shape,
                         clip = false,
                         ambientColor = AppColors.Shadow.colorMd,
@@ -97,7 +97,7 @@ fun ConfirmDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(AppLayout.Height.Button.lg)
-                        .clip(RoundedCornerShape(AppLayout.Radius.md))
+                        .clip(RoundedCornerShape(AppLayout.Radius.sm))
                         .clickable(onClick = onCancel),
                     contentAlignment = Alignment.Center,
                 ) {

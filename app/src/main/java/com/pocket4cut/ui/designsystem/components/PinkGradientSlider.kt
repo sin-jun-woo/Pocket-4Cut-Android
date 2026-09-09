@@ -25,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
@@ -35,7 +34,7 @@ import com.pocket4cut.ui.designsystem.AppSpacing
 import com.pocket4cut.ui.designsystem.AppTypography
 import kotlin.math.roundToInt
 
-private val TrackHeight = 8.dp
+private val TrackHeight = 4.dp
 private val ThumbDp = 24.dp
 
 @Composable
@@ -122,17 +121,15 @@ fun PinkGradientSlider(
                     val w = size.width
                     val r = h / 2f
                     drawRoundRect(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(
-                                AppColors.Accent.pinkDark,
-                                AppColors.Accent.pink,
-                                AppColors.Accent.pinkLight,
-                            ),
-                            startX = 0f,
-                            endX = w,
-                        ),
+                        color = AppColors.Border.medium,
                         topLeft = Offset.Zero,
                         size = Size(w, h),
+                        cornerRadius = CornerRadius(r, r),
+                    )
+                    drawRoundRect(
+                        color = AppColors.Accent.pink,
+                        topLeft = Offset.Zero,
+                        size = Size(thumbCenterX, h),
                         cornerRadius = CornerRadius(r, r),
                     )
                 }

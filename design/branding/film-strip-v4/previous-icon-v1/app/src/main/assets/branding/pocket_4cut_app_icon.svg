@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="18 18 72 72">
+  <title>Pocket 4Cut — Print Booth</title>
+  <desc>Four ink photo windows on an ivory photo strip, tilted fifteen degrees on a flat print-red field.</desc>
+  <path fill="#C83D2D" d="M18,18H90V90H18Z"/>
+  <g id="photo-strip" transform="rotate(-15 54 54)">
+    <path fill="#FBFAF6" d="M36,27H72V81H36Z"/>
+    <path fill="#1B1B19" d="M40,31H68V40H40Z M40,43H68V52H40Z M40,55H68V64H40Z M40,67H68V76H40Z"/>
+  </g>
+</svg>

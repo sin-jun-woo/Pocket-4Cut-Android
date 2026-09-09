@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pocket 4Cut — Print Booth v1</title>
+  <style>
+    :root {
+      --pb-paper: #f3f0e8;
+      --pb-surface: #fbfaf6;
+      --pb-ink: #1b1b19;
+      --pb-muted: #6e6a63;
+      --pb-quiet: #706b63;
+      --pb-line: #d0cbc1;
+      --pb-red: #c83d2d;
+      --pb-red-soft: #f1dcd7;
+      --pb-blue: #8aa9b6;
+      --pb-yellow: #ddbd68;
+      --pb-green: #93ad9a;
+      --pb-violet: #aba3bd;
+      --pb-shadow: rgba(27, 27, 25, .16);
+      --pb-font: "Malgun Gothic", "Noto Sans KR", Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-width: 360px;
+      background: #ded9cf;
+      color: var(--pb-ink);
+      font-family: var(--pb-font);
+    }
+    .stage { padding: 32px; display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+    .screen {
+      width: 360px;
+      flex: 0 0 360px;
+      height: 800px;
+      overflow: hidden;
+      position: relative;
+      background: var(--pb-paper);
+      color: var(--pb-ink);
+      padding: 24px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      isolation: isolate;
+    }
+    .screen.dark { background: #111211; color: #fbfaf6; }
+    .screen.no-pad { padding: 0; }
+    .screen-tag { position: absolute; left: 20px; top: 10px; color: var(--pb-quiet); font-size: 9px; letter-spacing: 1.5px; font-weight: 700; }
+    .topline { display: flex; justify-content: space-between; align-items: flex-start; padding-top: 18px; }
+    .wordmark { font-size: 11px; line-height: 14px; letter-spacing: 1.6px; font-weight: 700; }
+    .micro { color: var(--pb-quiet); font-size: 9px; letter-spacing: 1.1px; }
+    .icon-box { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--pb-line); background: var(--pb-surface); border-radius: 4px; font-size: 18px; }
+    .dark .icon-box { border-color: rgba(251,250,246,.32); background: rgba(251,250,246,.08); }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 28px; line-height: 34px; letter-spacing: -.6px; font-weight: 700; }
+    h2 { font-size: 22px; line-height: 28px; font-weight: 700; }
+    h3 { font-size: 16px; line-height: 22px; font-weight: 700; }
+    .body { font-size: 14px; line-height: 20px; color: var(--pb-muted); }
+    .dark .body { color: rgba(251,250,246,.68); }
+    .caption { font-size: 11px; line-height: 15px; color: var(--pb-quiet); }
+    .eyebrow { color: var(--pb-red); font-size: 10px; letter-spacing: 1.6px; font-weight: 700; }
+    .rule { height: 1px; background: var(--pb-line); width: 100%; }
+    .dark .rule { background: rgba(251,250,246,.2); }
+    .btn { height: 52px; border: 1px solid var(--pb-line); border-radius: 4px; background: var(--pb-surface); color: var(--pb-ink); display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; letter-spacing: -.1px; }
+    .btn.primary { background: var(--pb-red); border-color: var(--pb-red); color: #fff; }
+    .btn.small { height: 40px; padding: 0 14px; font-size: 12px; }
+    .btn.link { height: 42px; border: 0; background: transparent; color: var(--pb-muted); }
+    .spacer { flex: 1; }
+    .stack { display: flex; flex-direction: column; gap: 10px; }
+    .row { display: flex; align-items: center; gap: 12px; }
+    .between { justify-content: space-between; }
+    .center { align-items: center; justify-content: center; }
+    .paper { background: var(--pb-surface); border: 1px solid var(--pb-line); border-radius: 4px; }
+    .film-mark { width: 72px; padding: 6px; border: 2px solid var(--pb-ink); border-radius: 3px; display: flex; flex-direction: column; gap: 4px; }
+    .film-mark b { display: block; height: 36px; border: 1px solid var(--pb-line); background: var(--pb-surface); }
+    .film-mark b:last-child { background: var(--pb-red); border-color: var(--pb-red); }
+    .strip { width: 154px; padding: 9px; border: 1px solid var(--pb-line); border-radius: 3px; background: var(--pb-surface); box-shadow: 0 5px 10px var(--pb-shadow); transform: rotate(-2deg); }
+    .strip .photo { height: 66px; margin-bottom: 6px; }
+    .strip-foot { display: flex; justify-content: space-between; align-items: center; font-size: 9px; letter-spacing: .7px; font-weight: 700; }
+    .red-bar { height: 3px; width: 18px; background: var(--pb-red); }
+    .photo { position: relative; overflow: hidden; background: var(--pb-blue); }
+    .photo::before { content: ""; position: absolute; width: 52px; height: 52px; border-radius: 50%; background: rgba(251,250,246,.58); left: 34%; top: 18%; }
+    .photo::after { content: ""; position: absolute; width: 140px; height: 70px; border-radius: 80px 80px 0 0; background: rgba(27,27,25,.38); left: 9%; bottom: -22px; }
+    .photo.peach { background: #d9ae8e; }
+    .photo.green { background: var(--pb-green); }
+    .photo.yellow { background: #d4b85f; }
+    .photo.violet { background: var(--pb-violet); }
+    .photo.red { background: #c97968; }
+    .photo.dark { background: #5c6870; }
+    .photo .num { position: absolute; right: 8px; top: 6px; font-size: 10px; font-weight: 700; color: rgba(27,27,25,.56); z-index: 1; }
+    .bottom-actions { display: flex; flex-direction: column; gap: 10px; }
+    .bottom-actions.two { flex-direction: row; }
+    .bottom-actions.two > * { flex: 1; }
+    .header-title { padding: 34px 0 24px; }
+    .choice-row { min-height: 102px; padding: 14px 12px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--pb-line); border-radius: 4px; background: var(--pb-surface); }
+    .choice-row.selected { border: 2px solid var(--pb-red); background: var(--pb-red-soft); }
+    .choice-code { width: 28px; align-self: stretch; display: flex; align-items: flex-start; padding-top: 2px; color: var(--pb-red); font-size: 11px; font-weight: 700; letter-spacing: .8px; }
+    .choice-copy { flex: 1; }
+    .choice-copy strong { display: block; font-size: 20px; line-height: 26px; }
+    .choice-copy span { display: block; font-size: 12px; color: var(--pb-muted); margin-top: 2px; }
+    .mini-print { width: 40px; height: 64px; padding: 3px; display: flex; flex-direction: column; gap: 2px; border: 1px solid var(--pb-line); }
+    .mini-print i { flex: 1; border: 1px solid var(--pb-line); background: #e7e1d7; }
+    .mini-print.selected { border-color: var(--pb-red); }
+    .mini-print.selected i { border-color: rgba(200,61,45,.5); }
+    .mode-row { min-height: 86px; padding: 18px 0; display: flex; align-items: center; gap: 12px; }
+    .mode-icon { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--pb-line); background: var(--pb-surface); border-radius: 2px; font-size: 18px; }
+    .mode-copy { flex: 1; }
+    .mode-copy strong { display: block; font-size: 16px; letter-spacing: .6px; }
+    .mode-copy span { display: block; color: var(--pb-muted); font-size: 13px; margin-top: 3px; }
+    .chev { color: var(--pb-quiet); font-size: 20px; }
+    .preview-paper { width: 216px; padding: 10px; background: var(--pb-surface); border: 1px solid var(--pb-line); box-shadow: 0 5px 10px var(--pb-shadow); }
+    .preview-paper .photo { height: 106px; margin-bottom: 7px; }
+    .preview-paper .photo:last-of-type { margin-bottom: 0; }
+    .select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .select-photo { aspect-ratio: 3 / 4; position: relative; border: 1px solid var(--pb-line); background: var(--pb-surface); }
+    .select-photo.selected { border: 2px solid var(--pb-red); }
+    .select-photo .photo { width: 100%; height: 100%; }
+    .order { position: absolute; z-index: 2; right: 6px; top: 6px; width: 24px; height: 24px; display: grid; place-items: center; background: var(--pb-red); color: #fff; font-size: 11px; font-weight: 700; }
+    .countline { display: flex; align-items: baseline; gap: 5px; }
+    .countline strong { font-size: 26px; line-height: 30px; }
+    .countline span { color: var(--pb-muted); font-size: 12px; }
+    .camera-view { flex: 1; position: relative; background: linear-gradient(140deg, #8c9a98 0%, #c2a68d 50%, #6f7c86 100%); overflow: hidden; }
+    .camera-view::before { content: ""; position: absolute; left: 55px; top: 126px; width: 250px; height: 270px; background: rgba(27,27,25,.25); border-radius: 50% 50% 10px 10px; }
+    .camera-view::after { content: "LIVE"; position: absolute; top: 32px; left: 20px; color: #fff; border: 1px solid rgba(255,255,255,.6); padding: 5px 8px; font-size: 9px; letter-spacing: 1.5px; }
+    .camera-top { position: absolute; z-index: 1; left: 20px; right: 20px; top: 20px; display: flex; justify-content: space-between; align-items: center; }
+    .camera-control { width: 42px; height: 42px; display: grid; place-items: center; color: #fff; border: 1px solid rgba(255,255,255,.45); background: rgba(17,18,17,.42); border-radius: 3px; font-size: 16px; }
+    .camera-count { font-size: 14px; letter-spacing: 1px; color: #fff; font-weight: 700; }
+    .camera-bottom { position: absolute; z-index: 1; left: 20px; right: 20px; bottom: 20px; }
+    .segments { display: flex; gap: 4px; margin: 8px 0 14px; }
+    .segments i { flex: 1; height: 3px; background: rgba(255,255,255,.35); }
+    .segments i.active { background: var(--pb-red); }
+    .camera-hint { color: rgba(255,255,255,.8); font-size: 11px; text-align: center; }
+    .shutter { width: 78px; height: 78px; border: 4px solid #fff; border-radius: 50%; margin: 14px auto 0; display: grid; place-items: center; }
+    .shutter::after { content: ""; display: block; width: 56px; height: 56px; border-radius: 50%; background: #fff; }
+    .tabs { display: flex; gap: 18px; border-bottom: 1px solid var(--pb-line); padding-bottom: 8px; }
+    .tabs span { font-size: 12px; color: var(--pb-muted); }
+    .tabs span.active { color: var(--pb-red); font-weight: 700; border-bottom: 2px solid var(--pb-red); padding-bottom: 8px; margin-bottom: -10px; }
+    .tool-row { display: flex; gap: 10px; }
+    .tool { flex: 1; text-align: center; font-size: 11px; color: var(--pb-muted); }
+    .tool-box { height: 64px; margin-bottom: 5px; border: 1px solid var(--pb-line); background: var(--pb-surface); }
+    .tool.active .tool-box { border: 2px solid var(--pb-red); }
+    .input-line { height: 48px; border: 1px solid var(--pb-line); border-radius: 4px; background: var(--pb-surface); padding: 14px; color: var(--pb-quiet); font-size: 14px; }
+    .thumb-row { display: flex; gap: 8px; }
+    .thumb { width: 64px; height: 86px; border: 1px solid var(--pb-line); }
+    .thumb.active { border: 2px solid var(--pb-red); }
+    .setting-row { min-height: 58px; border-bottom: 1px solid var(--pb-line); display: flex; align-items: center; justify-content: space-between; }
+    .setting-row .label { font-size: 15px; font-weight: 700; }
+    .setting-row .value { color: var(--pb-muted); font-size: 13px; }
+    .toggle { width: 38px; height: 22px; border-radius: 12px; background: var(--pb-red); padding: 3px; display: flex; justify-content: flex-end; }
+    .toggle i { width: 16px; height: 16px; background: #fff; border-radius: 50%; }
+    .color-swatch { width: 38px; height: 38px; border: 1px solid var(--pb-line); border-radius: 2px; }
+    .color-swatch.selected { outline: 2px solid var(--pb-red); outline-offset: 2px; }
+    .season-card { flex: 1; border: 1px solid var(--pb-line); background: var(--pb-surface); padding: 6px; }
+    .season-card .photo { height: 112px; }
+    .season-card p { padding: 8px 2px 2px; font-size: 12px; font-weight: 700; }
+    /* Keep phone chrome fixed; only explicitly marked content regions scroll. */
+    .screen > * { flex-shrink: 0; }
+    .screen > .spacer { flex: 1 1 0; min-height: 12px; }
+    .icon-box, .mode-icon, .camera-control { flex-shrink: 0; }
+    .btn { flex-shrink: 0; min-height: 52px; }
+    .btn.small { min-height: 40px; }
+    .btn.link { min-height: 42px; }
+    .btn.disabled { background: #d8d2c8; border-color: #d8d2c8; color: #6e6a63; }
+    .scroll-region { flex: 1 1 0; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #ada59a transparent; padding-right: 7px; }
+    .scroll-note { margin: 8px 0 12px; text-align: right; color: var(--pb-muted); font-size: 11px; }
+    .camera-view::after { top: 84px; }
+    .camera-side { position: absolute; right: 20px; top: 290px; display: flex; flex-direction: column; gap: 12px; z-index: 1; }
+    .camera-view .screen-tag { z-index: 2; color: rgba(251,250,246,.7); }
+    .layout-preview { padding: 22px 0 20px; }
+    .layout-preview .preview-paper { width: 132px; }
+    .layout-preview .photo { height: 58px; }
+    .layout-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+    .layout-option { padding: 7px; }
+    .layout-option .mini-print { width: 100%; height: 92px; }
+    .layout-option.selected { border: 2px solid var(--pb-red); padding: 6px; }
+    .mini-print.grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .mini-print.horizontal { flex-direction: row; }
+    .layout-option .caption { padding-top: 8px; min-height: 24px; font-size: 10px; }
+    .compact-preview { padding: 16px 0 18px; }
+    .compact-preview .preview-paper { width: 148px; }
+    .compact-preview .photo { height: 55px; }
+    .edit-preview .preview-paper { width: 150px; }
+    .edit-preview .photo { height: 42px; }
+    .gallery-print { height: 100%; display: flex; flex-direction: column; gap: 4px; padding: 6px; background: var(--pb-surface); }
+    .gallery-print .photo { flex: 1; min-height: 0; }
+    .gallery-print .photo::before { width: 22px; height: 22px; top: 10%; }
+    .gallery-print .photo::after { width: 64px; height: 45px; bottom: -20px; left: 25%; }
+    .gallery-print.two { gap: 6px; }
+    .gallery-print.six { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); }
+    .gallery-print.six .photo::before { width: 15px; height: 15px; }
+    .gallery-print.six .photo::after { width: 40px; left: 12%; }
+  </style>
+</head>
+<body>
+<main class="stage">
+  <section class="screen" data-screen="01_launch"><div class="screen-tag">01 / LAUNCH</div><div class="spacer"></div><div class="stack center"><div class="film-mark"><b></b><b></b><b></b><b></b></div><div class="stack center" style="gap:2px"><div style="font-size:30px;letter-spacing:3px;font-weight:700">POCKET</div><div style="font-size:42px;line-height:44px;letter-spacing:-1px;font-weight:700;color:var(--pb-red)">4CUT</div></div></div><div class="spacer"></div><div class="row center"><span class="rule" style="width:28px"></span><span class="micro">SELF PHOTO BOOTH</span><span class="rule" style="width:28px"></span></div></section>
+
+  <section class="screen" data-screen="02_home"><div class="screen-tag">02 / HOME</div><div class="topline"><div><div class="wordmark">POCKET / 4CUT</div><div class="micro">SELF PHOTO BOOTH</div></div><div class="icon-box">⚙</div></div><div class="header-title"><h1>오늘의 네 컷을<br>만들어볼까요?</h1><p class="body" style="margin-top:8px">준비되면 바로 촬영을 시작하세요.</p></div><div class="spacer"></div><div class="row center" style="padding-bottom:36px"><div class="strip"><div class="photo peach"></div><div class="photo green"></div><div class="photo yellow"></div><div class="photo violet"></div><div class="strip-foot"><span>POCKET 4CUT</span><i class="red-bar"></i></div></div></div><div class="bottom-actions"><div class="btn primary">▣ &nbsp; 촬영 시작</div><div class="btn">▤ &nbsp; 보관함</div></div></section>
+
+  <section class="screen" data-screen="03_frame_count"><div class="screen-tag">03 / FRAME COUNT</div><div class="topline"><div class="stack" style="gap:4px"><h1>사진 구성</h1><p class="body">완성할 인화지의 컷 수를 고르세요.</p></div><div class="icon-box">×</div></div><div class="spacer" style="max-height:36px"></div><div class="stack"><div class="choice-row"><div class="choice-code">01</div><div class="choice-copy"><strong>2 CUT</strong><span>4장 촬영 → 2장 선택</span><span>레이아웃 2종</span></div><div class="mini-print"><i></i><i></i></div></div><div class="choice-row selected"><div class="choice-code">02</div><div class="choice-copy"><strong>4 CUT</strong><span>8장 촬영 → 4장 선택</span><span>레이아웃 3종</span></div><div class="mini-print selected"><i></i><i></i><i></i><i></i></div></div><div class="choice-row"><div class="choice-code">03</div><div class="choice-copy"><strong>6 CUT</strong><span>10장 촬영 → 6장 선택</span><span>레이아웃 3종</span></div><div class="mini-print"><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div><div class="spacer"></div><div class="bottom-actions"><div class="btn primary">4컷으로 촬영</div></div></section>
+
+  <section class="screen no-pad dark" data-screen="04_camera"><div class="camera-view"><div class="screen-tag">04 / CAMERA</div><div class="camera-top"><div class="camera-control">‹</div><div class="camera-count">4컷 · 8장 촬영</div><div style="width:42px"></div></div><div class="camera-side"><div class="camera-control" aria-label="카메라 전환">↺</div><div class="camera-control" aria-label="확대">＋</div><div class="camera-control" aria-label="축소">−</div></div><div class="camera-bottom"><div class="camera-hint">손가락으로 확대·축소</div><div class="shutter" aria-label="촬영 시작"></div></div></div></section>
+
+  <section class="screen" data-screen="05_photo_select"><div class="screen-tag">05 / PHOTO SELECT</div><div class="topline"><div class="countline"><strong>03</strong><span>/ 04 선택</span></div><div class="icon-box">‹</div></div><div class="header-title" style="padding-top:24px;padding-bottom:16px"><h2>마음에 드는 사진을<br>순서대로 골라주세요.</h2><p class="body" style="margin-top:6px">선택한 순서가 완성된 프레임에 들어가요.</p></div><div class="scroll-region"><div class="select-grid"><div class="select-photo selected"><div class="photo peach"><span class="num">01</span></div><span class="order">1</span></div><div class="select-photo selected"><div class="photo green"><span class="num">02</span></div><span class="order">2</span></div><div class="select-photo selected"><div class="photo yellow"><span class="num">03</span></div><span class="order">3</span></div><div class="select-photo"><div class="photo violet"><span class="num">04</span></div></div><div class="select-photo"><div class="photo red"><span class="num">05</span></div></div><div class="select-photo"><div class="photo dark"><span class="num">06</span></div></div><div class="select-photo"><div class="photo peach"><span class="num">07</span></div></div><div class="select-photo"><div class="photo green"><span class="num">08</span></div></div></div></div><div class="scroll-note">촬영한 사진 8장 · 아래로 스크롤</div><div class="btn disabled" aria-disabled="true">1장 더 선택하세요</div></section>
+
+  <section class="screen" data-screen="06_layout_select"><div class="screen-tag">06 / LAYOUT</div><div class="topline"><div><div class="eyebrow">LAYOUT</div><h2 style="margin-top:4px">인화지 배치</h2></div><div class="icon-box">×</div></div><div class="row center layout-preview"><div class="preview-paper"><div class="photo peach"></div><div class="photo green"></div><div class="photo yellow"></div><div class="photo violet"></div><div class="strip-foot" style="padding-top:8px"><span>POCKET 4CUT</span><i class="red-bar"></i></div></div></div><div class="row between"><div><h3>배치 선택</h3><p class="caption" style="margin-top:4px">사진의 흐름을 결정하세요.</p></div><div class="eyebrow">04 CUT · 3종</div></div><div class="layout-options"><div class="paper layout-option selected"><div class="mini-print selected"><i></i><i></i><i></i><i></i></div><div class="caption" style="color:var(--pb-red);font-weight:700">클래식 4컷</div></div><div class="paper layout-option"><div class="mini-print grid"><i></i><i></i><i></i><i></i></div><div class="caption">그리드 4컷</div></div><div class="paper layout-option"><div class="mini-print horizontal"><i></i><i></i><i></i><i></i></div><div class="caption">가로 4컷</div></div></div><div class="spacer"></div><div class="btn primary">이 배치로 계속</div></section>
+
+  <section class="screen" data-screen="07_frame_mode"><div class="screen-tag">07 / FRAME MODE</div><div class="topline"><div class="stack" style="gap:4px"><h1>프레임 방식</h1><p class="body">사진에 어울리는 마감 방식을 고르세요.</p></div><div class="icon-box">×</div></div><div class="spacer" style="max-height:28px"></div><div class="stack" style="gap:0"><div class="mode-row"><div style="color:var(--pb-red);font-weight:700;width:28px">A</div><div class="mode-icon">◐</div><div class="mode-copy"><strong>COLOR</strong><span>한 가지 색으로 또렷하게</span></div><div class="chev">›</div></div><div class="rule"></div><div class="mode-row"><div style="color:var(--pb-red);font-weight:700;width:28px">B</div><div class="mode-icon">▧</div><div class="mode-copy"><strong>SEASON</strong><span>계절의 질감과 작은 장식</span></div><div class="chev">›</div></div><div class="rule"></div><div class="mode-row"><div style="color:var(--pb-red);font-weight:700;width:28px">C</div><div class="mode-icon">✎</div><div class="mode-copy"><strong>CUSTOM</strong><span>색, 문구, 스티커를 직접 편집</span></div><div class="chev">›</div></div><div class="rule"></div></div><div class="spacer"></div><p class="caption">다음 단계에서 필터와 문구를 더할 수 있어요.</p></section>
+
+  <section class="screen" data-screen="08_color_frame"><div class="screen-tag">08 / COLOR FRAME</div><div class="topline"><div><div class="eyebrow">A / COLOR</div><h2 style="margin-top:4px">색 프레임</h2></div><div class="icon-box">‹</div></div><div class="row center" style="padding:22px 0"><div class="preview-paper"><div class="photo peach"></div><div class="photo green"></div><div class="photo yellow"></div><div class="photo violet"></div><div class="strip-foot" style="padding-top:8px"><span>POCKET 4CUT</span><i class="red-bar"></i></div></div></div><div class="row between"><h3>프레임 색</h3><span class="caption">화이트 선택</span></div><div class="row" style="gap:14px;flex-wrap:wrap;padding-top:16px"><span class="color-swatch selected" style="background:#ffffff"></span><span class="color-swatch" style="background:#000000"></span><span class="color-swatch" style="background:#ffd6e0"></span><span class="color-swatch" style="background:#c7e6ff"></span><span class="color-swatch" style="background:#c7f0db"></span><span class="color-swatch" style="background:#fff9c2"></span></div><div class="spacer"></div><div class="btn primary">화이트로 계속</div></section>
+
+  <section class="screen" data-screen="09_season_frame"><div class="screen-tag">09 / SEASON FRAME</div><div class="topline"><div><div class="eyebrow">B / SEASON</div><h2 style="margin-top:4px">계절 프레임</h2></div><div class="icon-box">‹</div></div><p class="body" style="padding-top:14px">이번 순간에 어울리는 질감을 골라보세요.</p><div class="row" style="gap:8px;padding-top:22px"><div class="season-card" style="border:2px solid var(--pb-red)"><div class="photo peach"></div><p style="color:var(--pb-red)">봄</p></div><div class="season-card"><div class="photo green"></div><p>여름</p></div></div><div class="row" style="gap:8px;padding-top:10px"><div class="season-card"><div class="photo yellow"></div><p>가을</p></div><div class="season-card"><div class="photo violet"></div><p>겨울</p></div></div><div class="spacer"></div><div class="btn primary">봄 프레임으로 계속</div></section>
+
+  <section class="screen" data-screen="10_custom_frame"><div class="screen-tag">10 / CUSTOM FRAME</div><div class="topline"><div><div class="eyebrow">C / CUSTOM</div><h2 style="margin-top:4px">직접 편집</h2></div><div class="icon-box">‹</div></div><div class="row center compact-preview"><div class="preview-paper" ><div class="photo peach" ></div><div class="photo green" ></div><div class="photo yellow" ></div><div class="photo violet" ></div><div class="strip-foot" style="padding-top:7px"><span>POCKET</span><i class="red-bar"></i></div></div></div><div class="stack" style="gap:16px"><div><div class="row between"><h3>배경 색</h3><span class="caption">화이트</span></div><div class="row" style="gap:10px;padding-top:10px"><span class="color-swatch selected" style="background:#ffffff"></span><span class="color-swatch" style="background:#000000"></span><span class="color-swatch" style="background:#ffd6e0"></span><span class="color-swatch" style="background:#c7e6ff"></span></div></div><div><div class="row between"><h3>문구</h3><span class="caption">선택 사항</span></div><div class="input-line" style="margin-top:8px">오늘도 우리답게</div></div><div><div class="row between"><h3>장식</h3><span class="caption">장식 추가</span></div><div class="row" style="gap:10px;padding-top:8px"><div class="mode-icon">✦</div><div class="mode-icon">—</div><div class="mode-icon">□</div></div></div></div><div class="spacer"></div><div class="btn primary">이 프레임으로 계속</div></section>
+
+  <section class="screen" data-screen="11_edit"><div class="screen-tag">11 / EDIT</div><div class="topline"><div><div class="eyebrow">EDIT / 01</div><h2 style="margin-top:4px">콜라주 편집</h2></div><div class="icon-box">✓</div></div><div class="row center compact-preview edit-preview"><div class="preview-paper" ><div class="photo peach" ></div><div class="photo green" ></div><div class="photo yellow" ></div><div class="photo violet" ></div><div class="strip-foot" style="padding-top:7px"><span>POCKET 4CUT</span><i class="red-bar"></i></div></div></div><div class="tabs"><span class="active">필터</span><span>프레임</span><span>문구</span><span>순서</span></div><div style="padding-top:18px"><div class="tool-row"><div class="tool active"><div class="tool-box" style="background:#d9ae8e"></div>원본</div><div class="tool"><div class="tool-box" style="background:#b4a99a"></div>소프트</div><div class="tool"><div class="tool-box" style="background:#7e807c"></div>필름</div><div class="tool"><div class="tool-box" style="background:#555653"></div>흑백</div></div></div><div class="stack" style="gap:8px;padding-top:20px"><div class="row between"><h3>텍스트</h3><span class="caption">선택 사항</span></div><div class="input-line">오늘도 우리답게</div><div class="row between" style="padding-top:8px"><span style="font-size:14px;font-weight:700">날짜 표시</span><span class="toggle"><i></i></span></div></div><div class="spacer"></div><div class="btn primary">상세 편집으로</div></section>
+
+  <section class="screen" data-screen="12_detail_edit"><div class="screen-tag">12 / DETAIL EDIT</div><div class="topline"><div class="icon-box">‹</div><div style="text-align:center"><div class="eyebrow">EDIT / 02</div><h2 style="margin-top:4px">상세 편집</h2></div><div class="icon-box" aria-label="초기화">↺</div></div><div class="row center" style="padding:18px 0 12px"><div class="preview-paper" style="width:142px"><div class="photo peach" style="height:96px"></div><div class="strip-foot" style="padding-top:7px"><span>01 / 04</span><i class="red-bar"></i></div></div></div><p class="caption" style="text-align:center;margin-bottom:16px">사진을 드래그하거나 핀치해서 조정하세요.</p><div class="row between"><h3>편집할 컷</h3><span class="caption">01 / 04</span></div><div class="thumb-row" style="padding-top:10px"><div class="thumb active"><div class="photo peach" style="height:100%"></div></div><div class="thumb"><div class="photo green" style="height:100%"></div></div><div class="thumb"><div class="photo yellow" style="height:100%"></div></div><div class="thumb"><div class="photo violet" style="height:100%"></div></div></div><div class="rule" style="margin:18px 0"></div><div class="row" style="gap:8px"><div class="btn small" style="flex:1">↶ 90° 회전</div><div class="btn small" style="flex:1">⇄ 좌우 반전</div></div><div class="stack" style="gap:10px;padding-top:18px"><div><div class="row between"><span style="font-size:13px;font-weight:700">밝기</span><span class="caption">0</span></div><div style="height:2px;background:var(--pb-line);margin:14px 0 8px;position:relative"><i style="position:absolute;left:50%;top:-6px;width:14px;height:14px;border-radius:50%;background:var(--pb-red)"></i></div></div><div><div class="row between"><span style="font-size:13px;font-weight:700">대비</span><span class="caption">0</span></div><div style="height:2px;background:var(--pb-line);margin:14px 0 8px;position:relative"><i style="position:absolute;left:50%;top:-6px;width:14px;height:14px;border-radius:50%;background:var(--pb-red)"></i></div></div><div><div class="row between"><span style="font-size:13px;font-weight:700">채도</span><span class="caption">0</span></div><div style="height:2px;background:var(--pb-line);margin:14px 0 8px;position:relative"><i style="position:absolute;left:50%;top:-6px;width:14px;height:14px;border-radius:50%;background:var(--pb-red)"></i></div></div></div><div class="spacer"></div><div class="btn primary">적용</div></section>
+
+  <section class="screen" data-screen="13_result"><div class="screen-tag">13 / RESULT</div><div class="topline"><div><div class="eyebrow">PRINT READY</div><h1 style="margin-top:6px">완성됐어요</h1><p class="body" style="margin-top:6px">사진을 저장하거나 친구와 공유하세요.</p></div><div class="icon-box">⌂</div></div><div class="spacer" style="max-height:18px"></div><div class="row center"><div class="preview-paper" style="width:230px"><div class="photo peach" style="height:110px"></div><div class="photo green" style="height:110px"></div><div class="photo yellow" style="height:110px"></div><div class="photo violet" style="height:110px"></div><div class="strip-foot" style="padding-top:9px"><span>POCKET 4CUT</span><i class="red-bar"></i></div></div></div><div class="spacer"></div><div class="bottom-actions two"><div class="btn primary">↓ &nbsp; 저장</div><div class="btn">↗ &nbsp; 공유</div></div><div class="btn link">홈으로 돌아가기</div></section>
+
+  <section class="screen" data-screen="14_gallery"><div class="screen-tag">14 / GALLERY</div><div class="topline"><div class="icon-box">×</div><div class="stack center" style="gap:2px"><h2>보관함</h2><div class="caption">4개의 추억</div></div><div style="width:40px"></div></div><div class="tabs" style="margin-top:20px"><span class="active">전체</span><span>종류별</span></div><div class="row" style="padding-top:20px"><h3>2026년 9월 8일</h3><span class="caption">4장</span></div><div class="select-grid" style="padding-top:10px"><div><div class="select-photo" style="aspect-ratio:3/4"><div class="gallery-print"><div class="photo peach"></div><div class="photo green"></div><div class="photo yellow"></div><div class="photo violet"></div></div></div><div class="row between" style="padding-top:6px"><span class="caption" style="color:var(--pb-ink)">4 CUT</span><span class="caption">09.08</span></div></div><div><div class="select-photo" style="aspect-ratio:3/4"><div class="gallery-print two"><div class="photo green"></div><div class="photo peach"></div></div></div><div class="row between" style="padding-top:6px"><span class="caption" style="color:var(--pb-ink)">2 CUT</span><span class="caption">09.08</span></div></div><div><div class="select-photo" style="aspect-ratio:3/4"><div class="gallery-print six"><div class="photo yellow"></div><div class="photo peach"></div><div class="photo green"></div><div class="photo violet"></div><div class="photo red"></div><div class="photo dark"></div></div></div><div class="row between" style="padding-top:6px"><span class="caption" style="color:var(--pb-ink)">6 CUT</span><span class="caption">09.08</span></div></div><div><div class="select-photo" style="aspect-ratio:3/4"><div class="gallery-print"><div class="photo violet"></div><div class="photo yellow"></div><div class="photo green"></div><div class="photo peach"></div></div></div><div class="row between" style="padding-top:6px"><span class="caption" style="color:var(--pb-ink)">4 CUT</span><span class="caption">09.08</span></div></div></div><div class="spacer"></div><p class="caption" style="text-align:center">길게 눌러 삭제할 수 있어요.</p></section>
+
+  <section class="screen" data-screen="15_settings"><div class="screen-tag">15 / SETTINGS</div><div class="topline"><div><h1>설정</h1><p class="body" style="margin-top:5px">촬영 습관과 앱을 정리하세요.</p></div><div class="icon-box">×</div></div><div class="spacer" style="max-height:22px"></div><div class="eyebrow">THEME</div><div class="setting-row"><span class="label">계절 테마</span><span class="value">봄　›</span></div><div class="setting-row"><span class="label">전면 카메라 기본</span><span class="toggle"><i></i></span></div><div class="setting-row"><span class="label">카운트다운</span><span class="value">3초　›</span></div><div style="height:28px"></div><div class="eyebrow">STORAGE</div><div class="setting-row"><div><span class="label">자동 저장</span><div class="caption" style="margin-top:3px">완성한 사진을 갤러리에 바로 저장</div></div><span class="toggle"><i></i></span></div><div class="setting-row"><div><span class="label" style="color:var(--pb-red)">보관함 전체 삭제</span><div class="caption" style="margin-top:3px">저장된 콜라주 4개</div></div><span class="value">›</span></div><div style="height:28px"></div><div class="eyebrow">ABOUT</div><div class="setting-row"><span class="label">버전</span><span class="value">1.2 (3)</span></div><div class="setting-row"><span class="label">개인정보 처리방침</span><span class="value">›</span></div><div class="setting-row"><span class="label">문의 / 피드백</span><span class="value">›</span></div></section>
+  <section class="screen" data-screen="16_privacy_policy"><div class="screen-tag">16 / PRIVACY POLICY</div><div class="topline" style="align-items:center;padding-bottom:20px"><div class="icon-box">‹</div><h3>개인정보 처리방침</h3><div style="width:40px"></div></div><div class="rule"></div><div class="scroll-region" style="padding-top:20px"><div class="body" style="white-space:pre-wrap;color:var(--pb-ink);line-height:23px">Pocket 4Cut (포켓 네 컷) 개인정보 처리방침&#10;&#10;시행일: 2026년 6월 3일&#10;최종 개정일: 2026년 6월 3일&#10;&#10;1. 총칙&#10;본 앱(Pocket 4Cut)은 「개인정보 보호법」 등 관련 법령을 준수합니다.&#10;운영자: Pocket 4Cut 개발자&#10;문의: sus3456@naver.com&#10;패키지명: com.pocket4cut&#10;&#10;2. 요약&#10;· 서버로 개인정보를 전송·저장하지 않습니다.&#10;· 회원가입, 로그인, 광고·분석 SDK를 사용하지 않습니다.&#10;· 카메라·사진은 기기 안에서만 촬영·편집·저장합니다.&#10;&#10;3. 처리하는 정보 (기기 내)&#10;· 촬영 사진 및 콜라주 결과물: 촬영·편집·저장·공유 기능 제공&#10;· 보관함 메타데이터: 세션 ID, 경로, 생성 시각 등&#10;· 앱 설정: 카메라 방향, 카운트다운, 자동 저장 옵션 등&#10;· 문의: 이용자가 메일 앱으로 직접 보낸 내용만 수신&#10;&#10;4. 접근 권한&#10;· 카메라: 연속 촬영 (필수)&#10;· 사진·동영상: 이용자가 갤러리 저장을 선택할 때 등 (해당 기능 사용 시)&#10;본 앱은 사진첩의 기존 사진을 임의로 업로드하지 않습니다.&#10;&#10;5. 보관 및 파기&#10;· 앱 삭제 또는 앱 내 데이터 삭제로 기기 내 데이터를 제거할 수 있습니다.&#10;· 갤러리에 저장한 파일은 이용자가 직접 삭제합니다.&#10;&#10;6. 제3자 제공&#10;· 운영자는 정보를 판매·제공하지 않습니다.&#10;· 공유는 이용자가 선택한 앱으로 직접 전송됩니다.&#10;&#10;7. 위탁&#10;· 개인정보 처리 위탁을 하지 않습니다.&#10;&#10;8. 이용자 권리&#10;· 권한 철회, 데이터 삭제, 문의(sus3456@naver.com)가 가능합니다.&#10;&#10;9. 아동&#10;· 만 14세 미만을 대상으로 하지 않으며, 고의로 수집하지 않습니다.&#10;&#10;10. 안전 조치&#10;· 외부 서버 미사용, 추적 SDK 미사용&#10;&#10;11. 기기 백업&#10;· 이용자가 Android 자동 백업을 켠 경우 앱 데이터가 계정 백업에 포함될 수 있습니다.&#10;&#10;12. 변경&#10;· 변경 시 시행일을 갱신하여 앱·웹에 공지합니다.&#10;&#10;13. 문의&#10;Pocket 4Cut 개발자&#10;sus3456@naver.com&#10;&#10;※ 전문(웹): https://sin-jun-woo.github.io/Pocket-4Cut-Android/privacy-policy.html</div></div><p class="scroll-note" style="margin-bottom:0">아래로 스크롤해 전문 보기</p></section>
+
+  <section class="screen" data-screen="17_contact_feedback"><div class="screen-tag">17 / CONTACT &amp; FEEDBACK</div><div class="topline" style="align-items:center;padding-bottom:20px"><div class="icon-box">‹</div><h2>문의/피드백</h2><div style="width:40px"></div></div><div class="rule"></div><div class="stack" style="padding-top:32px;gap:20px"><h2 style="color:var(--pb-red);text-align:center;font-size:24px">sus3456@naver.com</h2><p class="body" style="text-align:center">버그 제보, 기능 제안, 사용 중 불편한 점이 있으면 위 주소로 메일 보내줘. 최대한 빨리 확인할게.</p><div style="height:8px"></div><div class="btn primary">주소 복사</div><div class="btn">메일 앱에서 열기</div></div><div class="spacer"></div></section>
+</main>
+</body>
+</html>

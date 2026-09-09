@@ -1,0 +1,74 @@
+// Explicit-use store screenshot harness. It never participates in ordinary builds.
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import java.nio.ByteBuffer
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
+
+gradle.beforeProject { p ->
+    if (p.path != ':app') return
+    p.buildscript {
+        repositories {
+            google()
+            mavenCentral()
+        }
+        dependencies {
+            classpath 'app.cash.paparazzi:paparazzi-gradle-plugin:2.0.0-alpha02'
+        }
+    }
+    p.plugins.withId('com.android.application') {
+        p.apply plugin: 'app.cash.paparazzi'
+        p.dependencies.add('testImplementation', 'net.bytebuddy:byte-buddy:1.17.6')
+        p.dependencies.add('testImplementation', 'net.bytebuddy:byte-buddy-agent:1.17.6')
+        p.android.sourceSets.getByName('test').java.srcDir(
+            p.rootProject.file('design/play-store/print-booth-v1/capture')
+        )
+        def exportTask = p.tasks.register('exportStoreScreenshots') {
+            group = 'verification'
+            description = 'Export the latest actual Compose capture frames under stable names.'
+            doLast {
+                def report = p.layout.buildDirectory.dir('reports/paparazzi/debug').get().asFile
+                def runFiles = new File(report, 'runs').listFiles()?.findAll {
+                    it.name.endsWith('.js') && (!p.ext.has('storeCaptureStartedAt') || it.lastModified() >= p.ext.storeCaptureStartedAt)
+                }
+                if (!runFiles) throw new GradleException('No Paparazzi run was produced.')
+                def rows = runFiles.collectMany { runFile ->
+                    def script = runFile.getText('UTF-8')
+                    new JsonSlurper().parseText(script.substring(script.indexOf('=') + 1).trim().replaceAll(';\\s*$', ''))
+                }.sort { it.timestamp }
+                rows = rows.groupBy { it.name }.values().collect { it.last() }
+                def assetRoot = p.rootProject.file('design/play-store/print-booth-v1')
+                def output = new File(assetRoot, 'raw-screenshots')
+                output.mkdirs()
+                def allowed = ['home', 'result', 'frame_count', 'selection', 'layout', 'color', 'edit', 'detail', 'gallery']
+                def exported = []
+                rows.findAll { allowed.contains(it.name) }.each { row ->
+                    def input = new File(report, row.file)
+                    byte[] bytes = input.bytes
+                    int width = ByteBuffer.wrap(bytes, 16, 4).getInt()
+                    int height = ByteBuffer.wrap(bytes, 20, 4).getInt()
+                    if (width != 1080 || height != 2400) throw new GradleException("Unexpected PNG size for ${row.name}: ${width}x${height}")
+                    def destination = new File(output, "${row.name}.png")
+                    Files.copy(input.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING)
+                    exported << [name: row.name, width: width, height: height, timestamp: row.timestamp, test: row.testName]
+                }
+                new File(assetRoot, 'capture/capture-manifest.json').setText(JsonOutput.prettyPrint(JsonOutput.toJson([
+                    renderer: 'Paparazzi 2.0.0-alpha02 / Android layoutlib 15.2.3',
+                    source: 'Production Android Compose Screen functions; generated demo photo fixtures',
+                    deviceCapture: false,
+                    runs: runFiles.collect { it.name },
+                    screens: exported
+                ])), 'UTF-8')
+                println "Exported ${exported.size()} actual Compose screenshots."
+            }
+        }
+        p.tasks.withType(Test).configureEach { t ->
+            t.maxHeapSize = '3g'
+            t.outputs.upToDateWhen { false }
+            t.doFirst { p.ext.storeCaptureStartedAt = System.currentTimeMillis() }
+            t.systemProperty 'store.assets.dir', p.rootProject.file('design/play-store/print-booth-v1').absolutePath
+            t.testLogging { events 'failed', 'passed'; exceptionFormat 'full'; showStandardStreams = true }
+            t.finalizedBy(exportTask)
+        }
+    }
+}

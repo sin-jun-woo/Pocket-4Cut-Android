@@ -34,7 +34,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
@@ -285,7 +284,7 @@ private fun PreviewSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(480.dp)
-                    .clip(RoundedCornerShape(AppLayout.Radius.xl))
+                    .clip(RoundedCornerShape(AppLayout.Radius.xs))
                     .background(uiState.selectedFrameColor.color),
                 contentAlignment = Alignment.Center,
             ) {
@@ -296,7 +295,7 @@ private fun PreviewSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(480.dp)
-                    .clip(RoundedCornerShape(AppLayout.Radius.xl)),
+                    .clip(RoundedCornerShape(AppLayout.Radius.xs)),
             ) {
                 CollagePreviewScaledToFit(
                     images = uiState.filteredPreviewImages,
@@ -404,16 +403,12 @@ private fun FilterChip(
         Box(
             modifier = Modifier
                 .size(64.dp)
-                .then(
-                    if (isSelected) Modifier.shadow(8.dp, CircleShape, ambientColor = AppColors.Accent.pink.copy(alpha = 0.3f), spotColor = AppColors.Accent.pink.copy(alpha = 0.4f))
-                    else Modifier,
-                )
-                .clip(CircleShape)
+                .clip(RoundedCornerShape(AppLayout.Radius.xs))
                 .background(AppColors.Background.tertiary)
                 .border(
-                    width = if (isSelected) 4.dp else 1.dp,
+                    width = if (isSelected) 2.dp else 1.dp,
                     color = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle,
-                    shape = CircleShape,
+                    shape = RoundedCornerShape(AppLayout.Radius.xs),
                 )
                 .clickable(onClick = onClick),
             contentAlignment = Alignment.Center,
@@ -494,17 +489,13 @@ private fun FrameColorChip(
         Box(
             modifier = Modifier
                 .size(56.dp)
-                .then(
-                    if (isSelected) Modifier.shadow(8.dp, CircleShape, ambientColor = AppColors.Accent.pink.copy(alpha = 0.3f), spotColor = AppColors.Accent.pink.copy(alpha = 0.4f))
-                    else Modifier,
-                )
                 .clip(CircleShape)
                 .then(
                     if (fc.gradientBrush != null) Modifier.background(fc.gradientBrush, CircleShape)
                     else Modifier.background(fc.color, CircleShape),
                 )
                 .border(
-                    width = if (isSelected) 3.dp else 1.dp,
+                    width = if (isSelected) 2.dp else 1.dp,
                     color = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle,
                     shape = CircleShape,
                 )
@@ -514,14 +505,13 @@ private fun FrameColorChip(
             if (isSelected) {
                 Box(
                     Modifier
-                        .fillMaxSize()
-                        .background(AppColors.Accent.pink.copy(alpha = 0.25f), CircleShape),
+                        .fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
                     Box(
                         Modifier
                             .size(20.dp)
-                            .clip(CircleShape)
+                            .clip(RoundedCornerShape(AppLayout.Radius.xs))
                             .background(AppColors.Accent.pink),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -607,7 +597,7 @@ private fun TextInputSection(
                 .fillMaxWidth()
                 .onFocusChanged { isFocused = it.isFocused }
                 .then(
-                    if (isFocused) Modifier.border(3.dp, AppColors.Accent.pink, RoundedCornerShape(AppLayout.Radius.sm))
+                    if (isFocused) Modifier.border(2.dp, AppColors.Accent.pink, RoundedCornerShape(AppLayout.Radius.sm))
                     else Modifier.border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.sm)),
                 ),
         )
@@ -904,7 +894,7 @@ private fun OrderCell(
             .onGloballyPositioned(onBoundsInRoot)
             .clip(RoundedCornerShape(AppLayout.Radius.sm))
             .border(
-                width = if (isSelected || isDragging) 3.dp else 0.dp,
+                width = if (isSelected || isDragging) 2.dp else 0.dp,
                 color = borderColor,
                 shape = RoundedCornerShape(AppLayout.Radius.sm),
             ),
@@ -922,7 +912,7 @@ private fun OrderCell(
             modifier = Modifier
                 .padding(6.dp)
                 .size(24.dp)
-                .clip(CircleShape)
+                .clip(RoundedCornerShape(AppLayout.Radius.xs))
                 .background(
                     if (isSelected) AppColors.Accent.pink else AppColors.Background.primary.copy(alpha = 0.7f),
                 )
@@ -933,7 +923,7 @@ private fun OrderCell(
             Text(
                 "$displayNumber",
                 style = AppTypography.caption1.copy(fontWeight = FontWeight.Bold),
-                color = Color.White,
+                color = if (isSelected) Color.White else AppColors.Text.primary,
             )
         }
     }
