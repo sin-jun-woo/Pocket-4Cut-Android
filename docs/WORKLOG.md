@@ -4,6 +4,17 @@
 
 `docs/`는 GitHub Pages 배포 대상이므로 공개 가능한 요약만 기록한다. 비밀값, 사용자 사진, 기기 serial, 개인 로컬 경로, 원시 실행 로그를 넣지 않는다. 세부 실행 산출물은 로컬 build/캐시 영역에 두고 필요한 명령·결과만 남긴다.
 
+## 2026-09-10 — Windows JAVA_HOME 오류 해결 (Asia/Seoul)
+
+- 요청: 터미널의 `JAVA_HOME is not set` 및 Java PATH 미발견 오류 해결.
+- 기준: `codex/setup-project-guidance`, HEAD `ac42903` 및 기존 미커밋 UI·버전·이미지·문서 변경이 있는 작업 트리. 기존 변경은 보존하고 이번 안내와 로그 추가분만 커밋 대상으로 구분했다.
+- 확인: Android Studio 번들 JBR 21.0.10의 `java`와 `javac`는 직접 실행 가능했지만, 기존 터미널 환경에서 Java를 찾지 못했다. IDE의 로컬 Gradle JDK 지정과 wrapper의 `JAVA_HOME`/`PATH` 조회가 별개임을 확인했다.
+- 조치: 이 PC의 사용자 환경 변수 `JAVA_HOME`을 확인된 JBR로 영구 등록하고, 기존 사용자 `Path` 항목을 보존하며 JDK `bin`을 추가했다. Windows에 환경 변경 알림을 보냈다. 앱 소스·Gradle 설정·이미지 에셋은 수정하지 않았다.
+- 변경 파일: `QUICK_START.md`에 설정·터미널 재시작·현재 PowerShell 갱신 방법을 추가하고, `docs/WORKLOG.md`에 이번 기록을 추가했다. OS 환경 변수 자체는 Git 커밋에 포함되지 않는다.
+- 검증: 저장된 사용자 환경 변수를 별도 PowerShell 실행에서 다시 읽고, `PATH`의 JDK 항목이 한 개이며 `java`가 해당 JDK로 해석되는 것을 확인했다. `java -version`과 `javac -version`은 21.0.10, `./gradlew.bat --version --console=plain`은 Gradle 8.13 / Launcher JVM 21.0.10으로 성공했다.
+- `./gradlew.bat :app:assembleDebug --offline --console=plain`: **성공**, 36개 태스크 중 8개 실행 / 28개 UP-TO-DATE. 기존 사용자 Gradle 캐시를 이번 검증 프로세스에서 지정해 사용했다. 완전한 재컴파일이나 새 기능 테스트로 간주하지 않는다.
+- 범위/잔여 확인: Java 실행 환경 수정이므로 단위 테스트·Lint·실기기 검사는 재실행하지 않았다. 이전 CAMERA Lint 오류를 수정한 작업이 아니다. 이미 실행 중인 터미널/IDE는 재시작하거나 문서의 PowerShell 갱신 명령을 적용해야 한다.
+
 ## 2026-09-10 — 프로젝트 개발 지침과 기준 문서 구성
 
 ### 요청과 작업 범위
