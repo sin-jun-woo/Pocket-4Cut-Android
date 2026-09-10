@@ -192,3 +192,18 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 6. 검증한 범위와 미검증 범위를 작업 기록에 남긴다. 이 가이드의 현재 규격을 바꿨다면 해당 근거 코드와 설명을 함께 갱신한다.
 
 이번 확인은 코드·자산 목록·PNG 헤더 및 픽셀 알파 검사다. 런처 마스크와 themed icon, 실제 촬영부터 저장까지의 기기 시각 검증, 새로운 파일 자산 로더 또는 변환 파이프라인 검증은 수행하지 않았다.
+
+## 10. 2026-09-10 릴스 홍보 자산 — Film Story v1
+
+기준은 `4527a05`의 앱 1.3 (4)와 기존 스토어 제작물이다. `design/reels/film-story-v1/`에 30초 홍보 영상 2종, 1080×1920 JPEG 커버, 게시글/편집용 SRT/업로드 안내, 제작 코드와 검증 자료를 추가했다. 앱 내 리소스·아이콘·UI·Manifest·Gradle은 변경하지 않았다.
+
+- `deliverables/Pocket4Cut-Reels-30s.mp4`: 1080×1920 / 9:16 / 30 fps / 900프레임 / 30초. H.264 High, yuv420p, BT.709, faststart. AAC 48 kHz stereo 음악+효과음.
+- `deliverables/Pocket4Cut-Reels-30s-NoMusic.mp4`: 동일한 영상에 합성 효과음만 포함. 새 음악 추가용이며 완전 무음본은 아니다.
+- `deliverables/Pocket4Cut-Reels-Cover.jpg`: 1080×1920 불투명 JPEG. 인화지·앱 이름·큰 한글 타이포그래피로 구성한 릴스 커버이며 앱 아이콘 교체본이 아니다.
+- `audio/`: 외부 음원·샘플 없이 절차적으로 합성한 30초 / 48 kHz / stereo / PCM16 WAV 세 파일. 최종 MP4의 음악 포함본은 −15.3 LUFS / −2.1 dBTP로 측정했다.
+
+새 사진/로고를 생성하지 않았다. Film Strip v4 아이콘, 기존 프로덕션 Compose 호스트 렌더, CollageRenderer의 네 컷 JPEG, 가상 성인 생성 사진을 재사용했다. 사진 이동·강조·전환은 영상 편집 효과이며 실제 디바이스 연속 녹화가 아니다. 사용자 촬영 사진이나 실제 고객 후기로 소개하지 않는다. 프레임 색 예시는 필터도 적용된 스타일링 조합이다.
+
+재료의 경로·치수·해시는 `verification/input-manifest.json`, 편집 판단·트렌드 참고 링크는 `source/CREATIVE-BRIEF.md`, 음악 제작/권리 한계는 `source/AUDIO-NOTES.md`, 실행 방법과 도구 출처는 해당 폴더 README에 기록했다. 기존 이미지의 생성 프롬프트는 원래 스토어 자산 패키지에 남겨 두었다. FFmpeg 실행 파일과 한글 폰트 파일을 앱 또는 납품 ZIP에 포함하지 않는다.
+
+두 MP4를 전체 디코딩하고 규격·길이·동기·오디오 true peak·예상치 못한 검은 구간을 검사했다. 주요 자막 영역, 시안/최종 디코딩 8장면, 시작/끝 프레임, 커버를 시각 검토했다. 기본 색상 태그가 누락된 최초 출력은 납품하지 않고 태그 설정을 보완해 재출력했다. 실제 휴대전화 음량, Instagram 업로드 자르기/심사, 앱 E2E는 미검증이다.

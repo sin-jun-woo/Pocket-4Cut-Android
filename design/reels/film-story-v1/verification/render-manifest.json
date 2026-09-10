@@ -1,0 +1,94 @@
+{
+  "duration": 30,
+  "fps": 30,
+  "frames": 900,
+  "width": 1080,
+  "height": 1920,
+  "video": "H.264 high / yuv420p / BT.709 / faststart",
+  "elapsedSeconds": 35.219,
+  "shots": [
+    {
+      "start": 0,
+      "end": 3,
+      "id": "hook",
+      "title": [
+        "네 컷 찍으러",
+        "어디 가?"
+      ],
+      "subtitle": "사진관 감성, 내 손안에."
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "id": "capture",
+      "title": [
+        "내 폰이",
+        "네 컷 부스."
+      ],
+      "subtitle": "4컷 선택 → 8장 자동 촬영"
+    },
+    {
+      "start": 6,
+      "end": 10,
+      "id": "selection",
+      "title": [
+        "잘 나온 컷만,",
+        "쏙."
+      ],
+      "subtitle": "8장 중 마음에 드는 4장을 골라요."
+    },
+    {
+      "start": 10,
+      "end": 13,
+      "id": "layout",
+      "title": [
+        "길게? 나란히?",
+        "배치도 내 취향."
+      ],
+      "subtitle": "클래식 · 그리드 · 가로 레이아웃"
+    },
+    {
+      "start": 13,
+      "end": 16,
+      "id": "color",
+      "title": [
+        "프레임 색도",
+        "나답게."
+      ],
+      "subtitle": "사진에 어울리는 색을 골라요."
+    },
+    {
+      "start": 16,
+      "end": 20,
+      "id": "filter",
+      "title": [
+        "같은 사진,",
+        "다른 분위기."
+      ],
+      "subtitle": "원본 · 소프트 · 필름 · 흑백"
+    },
+    {
+      "start": 20,
+      "end": 24,
+      "id": "save",
+      "title": [
+        "오늘의 우리,",
+        "한 장으로."
+      ],
+      "subtitle": "완성한 사진은 저장하고 공유해요."
+    },
+    {
+      "start": 24,
+      "end": 30,
+      "id": "cta",
+      "title": [
+        "다음 네 컷은",
+        "지금 여기서."
+      ],
+      "subtitle": "Google Play에서 Pocket4Cut 검색"
+    }
+  ],
+  "sourceRevision": "4527a05",
+  "deviceCapture": false,
+  "errors": ""
+}
