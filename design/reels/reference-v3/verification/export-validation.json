@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-09-10T12:16:34.504Z",
+  "checkedAt": "2026-09-10T12:24:10.304Z",
   "file": "deliverables/Pocket4Cut-Reels-Reference-Voice.mp4",
-  "bytes": 6019314,
-  "sha256": "21d42e7eb026b001d77572cf345329ce369d5fa6b2ec615a89cb7595622bf2f4",
+  "bytes": 5909714,
+  "sha256": "6e5df09d817b513d6f321893b22488a5018768a15b3cfc91a37187fd0ab0273c",
   "duration": 23,
   "video": {
     "codec": "h264",

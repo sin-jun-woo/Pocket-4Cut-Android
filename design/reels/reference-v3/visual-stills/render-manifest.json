@@ -1,6 +1,6 @@
 {
   "storySha256": "d0c64f5ee77899645087ae24aa74c045315657a2017b0eef98d839d4d11de13e",
-  "visualSha256": "2340488a64b37260421bbc5d6d4cc438a4a543fb1bf07f861e506d2202521cd1",
+  "visualSha256": "335f46907de1ed895cfe6dedb662bdbb9214199da002e2b38f0888ced9e13eb6",
   "duration": 23,
   "requestedDuration": 23,
   "fps": 30,
@@ -8,7 +8,7 @@
   "width": 1080,
   "height": 1920,
   "video": "H.264 high / yuv420p / BT.709 / faststart",
-  "elapsedSeconds": 45.257,
+  "elapsedSeconds": 46.707,
   "shots": [
     {
       "start": 0,

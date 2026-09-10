@@ -233,7 +233,7 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 - `audio/narration-original.wav`: 실제 6초 참조를 조건으로 로컬 Qwen3-TTS 1.7B Base가 생성한 새 대본. 20.160초 / 24 kHz / mono / 32-bit float. `narration-master.wav`는 배속 없이 시작 0.12초와 후반 여유를 추가한 23초 / 48 kHz / stereo / PCM24다.
 - `visual-stills/`: 14구간의 두 시점 JPEG와 모아보기, 자막 경계·자산 해시·렌더 기록. `verification/`에는 실제 인코딩 MP4의 14장면/시작/끝 프레임, 음성·파일·패키지 검증이 있다.
 
-사용자 요청에 따라 자체 앱 소개 흐름과 친근한 존댓말을 사용하고, 참조 광고의 계정/원본 영상/원본 대본을 본편·커버·ZIP에 넣지 않았다. 광고·AI 사용 예시 표시는 별도로 유지했다. 사용자 원본 영상과 음성은 ignored 작업 영역에만 보존한다.
+사용자 요청에 따라 자체 앱 소개 흐름과 친근한 존댓말을 사용하고, 참조 광고의 계정/원본 영상/원본 대본을 본편·커버·ZIP에 넣지 않았다. 초기 출력의 상·하단 설명 표시는 후속 요청으로 제거했으며, 현재 본편·커버·스틸·ZIP에 반영했다. 소개 자막과 음성은 그대로이고 제작 도구·재료의 사실 기록은 별도로 보존한다. 사용자 원본 영상과 음성은 ignored 작업 영역에만 보존한다.
 
 색상은 종이색 `#F0ECE3`, 먹색 `#252520`, 적색 `#C83D2D` 중심이다. 생성 프롬프트가 필요한 새 사진 작업은 없었다. 새 음성 대본은 `source/narration-script.json`, 생성 설정·공식 Qwen/whisper.cpp 출처·Apache-2.0 모델 표기와 권리/검수 한계는 `source/VOICE-NOTES.md`, 재사용 이미지 경로·치수·해시는 `visual-stills/input-manifest.json`을 참조한다. 원본 이미지의 생성 프롬프트는 기존 스토어 제작물에 남겨 두었다.
 

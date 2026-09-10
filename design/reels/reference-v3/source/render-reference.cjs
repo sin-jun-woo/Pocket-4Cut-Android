@@ -102,11 +102,6 @@ function identity(y, light = false) {
   ctx.drawImage(images.icon, 80, y, 93, 93);
   text('Pocket4Cut', 191, y + 63, 47, light ? C.white : C.ink, { maxWidth: 550 });
 }
-function disclosure(light = false) {
-  const color = light ? '#FFFFFFE0' : '#35352F';
-  text('광고 · 사용 예시', 80, 276, 23, color, { bold: false, stroke: light, maxWidth: 260 });
-  text('AI 내레이션 · 생성 예시', 80, 1548, 23, C.white, { bold: false, stroke: true, critical: false, maxWidth: 500 });
-}
 function caption(shot, light = true, y = 1062) {
   const start = y - (shot.lines.length - 1) * 29;
   shot.lines.forEach((line, i) => text(line, 490, start + i * 59, 45, light ? C.white : C.ink, {
@@ -182,7 +177,7 @@ function scene(shot, t) {
     print('blush', 859, 1164, 1580, 12);
     print('black', 702, 1067, 1570, 4);
     print('white', 382, 1000, 1530 + p * 22, -7);
-    // Clear the whole header so the disclosure cannot collide with print lettering.
+    // Keep a clear brand header above the large photo prints.
     rect(0, 0, W, 436, '#D7D3C6');
     identity(321);
     // CTA uses the actual brand, not a copied reference account or fake offer.
@@ -191,7 +186,6 @@ function scene(shot, t) {
     captionY = 1120; light = true;
   }
   caption(shot, light, captionY);
-  disclosure(shot.id === 'hook' || shot.id === 'occasions' || (shot.id === 'filter' && (shot.variant === 'bw' || /흑백/.test(shot.lines.join(' ')))));
 }
 function renderFrame(t, check = false) {
   const time = Math.max(0, Math.min(DURATION - .000001, t));
@@ -236,7 +230,7 @@ async function stills() {
   text('내 폰이', 82, 453, 87, C.ink, { maxWidth: 780 });
   text('네 컷 사진관으로', 82, 566, 84, C.red, { maxWidth: 804 });
   identity(632);
-  disclosure(); audit = false;
+  audit = false;
   fs.writeFileSync(path.join(OUTPUT, 'Pocket4Cut-Reference-Cover.jpg'), canvas.toBuffer('image/jpeg', 96));
   fs.writeFileSync(path.join(PROOF, 'text-safe-area-checks.json'), JSON.stringify({
     note: 'Conservative project critical-text bounds, not a universal Instagram specification. Existing app UI can extend outside the caption region.',

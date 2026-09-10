@@ -1,12 +1,12 @@
 ﻿{
-    "CheckedAt":  "2026-09-10T12:17:43.5910214Z",
+    "CheckedAt":  "2026-09-10T12:24:55.5181385Z",
     "File":  "Pocket4Cut-Reference-Reels-Package.zip",
-    "Bytes":  6834141,
-    "SHA256":  "FD33CADE7F26AB4DC293C443FBD973AF105F2E0A9C2E10D73569367CB7CE24FC",
+    "Bytes":  6715952,
+    "SHA256":  "27E3123725A0E6D36BCB36214B676D3D317BD022C6064AB44F07FC1ECA120E3C",
     "Entries":  [
                     {
                         "File":  "Pocket4Cut-Reels-Reference-Voice.mp4",
-                        "SHA256":  "21D42E7EB026B001D77572CF345329CE369D5FA6B2EC615A89CB7595622BF2F4",
+                        "SHA256":  "6E5DF09D817B513D6F321893B22488A5018768A15B3CFC91A37187FD0AB0273C",
                         "Match":  true
                     },
                     {
@@ -16,7 +16,7 @@
                     },
                     {
                         "File":  "Pocket4Cut-Reference-Cover.jpg",
-                        "SHA256":  "BDA5F2B0169465FAC40FA8F6AD4BE280356024B5D1974D80F91BA76D9C894F58",
+                        "SHA256":  "339456BC930DAB03C2B6C7108ABA5C1A2F3AEDDA1D728ADF2D44CB72F5BD0DCB",
                         "Match":  true
                     },
                     {
@@ -36,7 +36,7 @@
                     },
                     {
                         "File":  "UPLOAD-GUIDE.md",
-                        "SHA256":  "3E6A65280085A3B9D3538393F704B9A0BB66865CA71188A4B454D0C2B1644735",
+                        "SHA256":  "A6852672BA6300F074CA8FF2356369BBDE671651C5FB499F0E31317FCC40978E",
                         "Match":  true
                     }
                 ]

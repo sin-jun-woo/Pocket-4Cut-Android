@@ -1,0 +1,29 @@
+{
+  "date": "2026-09-10",
+  "baselineCommit": "4fac7a2cb52559eebf8b59ebd88288a888d8d6b0",
+  "change": "Removed only the top and bottom explanatory overlay labels from all scenes and the cover.",
+  "videoBeforeSha256": "21d42e7eb026b001d77572cf345329ce369d5fa6b2ec615a89cb7595622bf2f4",
+  "videoAfterSha256": "6e5df09d817b513d6f321893b22488a5018768a15b3cfc91a37187fd0ab0273c",
+  "preservedFileCount": 7,
+  "preservedFiles": [
+    "audio/narration-original.wav",
+    "audio/narration-master.wav",
+    "deliverables/Pocket4Cut-Reference-Narration.mp3",
+    "deliverables/CAPTIONS-KO.srt",
+    "deliverables/NARRATION-KO.txt",
+    "source/narration-script.json",
+    "source/story-timed.json"
+  ],
+  "allPreservedFileHashesMatchBefore": true,
+  "encodedAudioPacketHashBeforeAndAfter": "80f7da1428cc70905cd3a92aed41e880436e5ca490e633dfb8d1e33cabe1dd56",
+  "encodedAudioHashMethod": "FFmpeg -map 0:a:0 -c:a copy -f hash -hash sha256",
+  "durationSeconds": 23,
+  "frames": 690,
+  "criticalTextBoundsChecked": 41,
+  "sceneStillsChecked": 28,
+  "encodedVisualReview": "14 selected scenes, first and last frames, plus the cover; requested labels absent and app captions retained.",
+  "rendererAndCaptionLabelSearch": "No removed label strings found in renderer, text-bound report or SRT.",
+  "packageEntries": 7,
+  "packageHashesMatch": true,
+  "limitations": "No new subjective listening, device test or Instagram upload. Audio is byte-preserved. Internal production records remain accurate."
+}
