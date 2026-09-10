@@ -19,6 +19,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,6 +92,7 @@ fun SettingsScreen(
                     .padding(top = AppSpacing.md, bottom = AppSpacing.xxxl),
                 verticalArrangement = Arrangement.spacedBy(AppSpacing.Component.sectionGap),
             ) {
+                DisplaySection()
                 ThemeSection(context)
                 CameraSection()
                 SaveSection()
@@ -132,6 +135,20 @@ fun SettingsScreen(
                 }
             },
             onCancel = { showDeleteConfirm = false },
+        )
+    }
+}
+
+@Composable
+private fun DisplaySection() {
+    SettingsGroup(title = "화면", icon = Icons.Default.BrightnessHigh) {
+        ToggleRow(
+            title = "화면 자동 꺼짐 방지",
+            subtitle = "켜면 앱 사용 중 화면을 계속 켜 둬요.\n끄면 휴대폰 설정에 따라 화면이 꺼져요.",
+            icon = Icons.Default.BrightnessHigh,
+            checked = AppSettings.keepScreenOn,
+            onCheckedChange = { AppSettings.updateKeepScreenOn(it) },
+            switchLabel = "화면 자동 꺼짐 방지",
         )
     }
 }
@@ -419,6 +436,7 @@ private fun ToggleRow(
     icon: ImageVector,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
+    switchLabel: String? = null,
 ) {
     Row(
         modifier = Modifier
@@ -439,6 +457,7 @@ private fun ToggleRow(
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
+            modifier = Modifier.semantics { switchLabel?.let { contentDescription = it } },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
                 checkedTrackColor = AppColors.Accent.pink,

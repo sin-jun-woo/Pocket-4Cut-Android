@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.edit
 
 object AppSettings {
     private const val PREFS_NAME = "pocket4cut_settings"
@@ -13,6 +14,9 @@ object AppSettings {
 
     const val COUNTDOWN_MIN = 1
     const val COUNTDOWN_MAX = 10
+
+    var keepScreenOn: Boolean by mutableStateOf(false)
+        private set
 
     var preferFrontCamera: Boolean by mutableStateOf(true)
         private set
@@ -28,10 +32,16 @@ object AppSettings {
 
     fun init(context: Context) {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        keepScreenOn = prefs.getBoolean("keepScreenOn", false)
         preferFrontCamera = prefs.getBoolean("preferFrontCamera", true)
         countdownSeconds = prefs.getInt("countdownSeconds", 3).coerceIn(COUNTDOWN_MIN, COUNTDOWN_MAX)
         autoSaveToGallery = prefs.getBoolean("autoSaveToGallery", false)
         showDateByDefault = prefs.getBoolean("showDateByDefault", false)
+    }
+
+    fun updateKeepScreenOn(value: Boolean) {
+        keepScreenOn = value
+        prefs.edit { putBoolean("keepScreenOn", value) }
     }
 
     fun updatePreferFrontCamera(value: Boolean) {
