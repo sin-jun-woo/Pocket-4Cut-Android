@@ -4,6 +4,19 @@
 
 `docs/`는 GitHub Pages 배포 대상이므로 공개 가능한 요약만 기록한다. 비밀값, 사용자 사진, 기기 serial, 개인 로컬 경로, 원시 실행 로그를 넣지 않는다. 세부 실행 산출물은 로컬 build/캐시 영역에 두고 필요한 명령·결과만 남긴다.
 
+## 2026-09-10 — 연결 Android 실기기 기능·충돌 감사 (Asia/Seoul)
+
+- 요청/범위: 실제 기기에 debug 빌드를 설치하고 촬영·편집·저장·보관함·중단 상황을 검사, 추가 제공된 RuntimeException 스택 2개를 포함해 문제를 정리했다. 앱 기능 수정은 포함하지 않는다.
+- 기준: 시작 `codex/reels-promo`, HEAD `f79b2fd389fdb56a0a39b21ca5223f5f0bc0979b`, 당시 기존 변경 없음. 병행 릴스 작업의 커밋과 미커밋 파일은 보존했고 검사 중 앱 소스 변경은 없었다.
+- 변경 파일: `engineering/DEVICE_QA_2026-09-10.md`의 29개 항목·재현 단계·근거·한계, `engineering/device-diagnostics/RenderContractDiagnosticTest.kt`와 README, `scripts/device-diagnostics.init.gradle`, 이 로그. 진단 소스는 init script를 명시한 경우에만 androidTest에 추가된다. 의존성·Manifest·이미지 자산은 바꾸지 않았다.
+- 실제 기능 검사: Android 16/API36 기기에서 2/4/6컷 촬영과 저장, 전후면·줌, 선택/재정렬, 색/계절/커스텀, 필터·문구·날짜·상세 보정, 공유 chooser, 보관함 종류·테스트 결과 삭제, 설정·권한·큰 글자·회전·백그라운드·프로세스 복원을 실행했다. 수신자 전송과 기존 사용자 자료 삭제는 하지 않았다.
+- 주요 결과: 기존 recycled Bitmap 충돌 로그와 같은 계열의 수명 결함, 백그라운드 촬영 실패, 사진 순서 인계 누락, 편집 프로세스 복원 손실, preview/export 불일치, 중복 자동 저장, 삭제 후 JSON 잔존을 확인했다. 실제 UI 재현/계측/정적 코드 확인을 구분했다. 이번 수동 검사에서 새 FATAL은 관찰되지 않았다.
+- 검증: `:app:assembleDebug` 성공 및 기기 설치·실행, 최종 기준 빌드는 UP-TO-DATE. `:app:testDebugUnitTest --rerun` 실제 실행 1개 통과. 기본 `ExampleInstrumentedTest` 1개 통과. `:app:lintDebug`는 기존 `PermissionImpliesUnsupportedChromeOsHardware`로 실패(Error 1/Warning 91/Hint 2).
+- 진단: `-I scripts/device-diagnostics.init.gradle :app:assembleDebugAndroidTest --offline --console=plain` 성공. 실제 기기에서 `RenderContractDiagnosticTest` 7개 실행·2개 통과·5개 실패. 32개 렌더 조합과 역순 Renderer 입력은 통과, Bitmap 수명·24문구 조건·4색 ID·6컷 기하 중복·하트 스티커 출력은 실패. 재실행 명령과 해상도 범위는 진단 README에 기록했다.
+- 보존/복원: 기존 세션 metadata 일치와 기존 선택 사진·결과·미완성 초안 존재 확인. 화면 제한·글자 크기·회전·카메라 권한·앱 타이머/테마/자동 저장을 원래 값으로 복원했다. 테스트 APK는 제거했으며 신규 테스트 결과 2개와 일부 테스트 촬영/사진첩 사본은 기기에 남는다. 실제 사진·식별자·원시 로그는 ignored 로컬 영역에만 보관한다.
+- 미검증: 다른 기종/API26–35, 실제 저장공간 고갈·저메모리/전화/열 압박, 모든 장식·글꼴 조합, TalkBack 전체 완주, release/Play 배포. 한 기기 검사와 전체 경우의 수 전수 검증을 혼동하지 않는다.
+- Git: 위 5개 파일만 검토·stage·Conventional Commit 대상으로 삼는다. 병행 변경을 포함하지 않는다. 최종 SHA와 일반 push 결과는 완료 응답과 Git 이력에 기록한다.
+
 ## 2026-09-10 — 참조 음색과 자체 존댓말 대본의 릴스 v3 (Asia/Seoul)
 
 ### 요청과 변경 범위
