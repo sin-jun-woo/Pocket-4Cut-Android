@@ -2,7 +2,7 @@
 gradle.beforeProject { p ->
     if (p.path != ':app') return
     p.plugins.withId('com.android.application') {
-        p.android.sourceSets.getByName('androidTest').java.srcDir(
+        p.android.sourceSets.getByName('androidTest').kotlin.srcDir(
             p.rootProject.file('engineering/device-diagnostics')
         )
     }

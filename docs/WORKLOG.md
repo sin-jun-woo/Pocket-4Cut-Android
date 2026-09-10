@@ -4,6 +4,21 @@
 
 `docs/`는 GitHub Pages 배포 대상이므로 공개 가능한 요약만 기록한다. 비밀값, 사용자 사진, 기기 serial, 개인 로컬 경로, 원시 실행 로그를 넣지 않는다. 세부 실행 산출물은 로컬 build/캐시 영역에 두고 필요한 명령·결과만 남긴다.
 
+## 2026-09-11 — Play Console 앱 최적화 경고 대응 (Asia/Seoul)
+
+- 요청/범위: Play Console의 ‘앱 최적화 낮음 / 난독화 0% / R8 구성 없음’ 표시를 해결할 release 빌드 구성을 적용한다. 앱 기능 결함과 기존 Lint 오류는 이번 변경에 섞지 않는다.
+- 기준/보존: `codex/reels-promo`, 시작 HEAD `022fc33c`, 시작 작업 트리 clean 및 `origin/codex/reels-promo`와 0/0. 사용자의 최종 지시에 따라 버전은 `1.4 (5)`를 유지한다.
+- 빌드 도구: AGP 8.13.2→9.0.1, Gradle 8.13→9.1.0, Kotlin/Compose compiler 2.0.21→2.2.10으로 갱신했다. AGP 9 내장 Kotlin에 맞춰 `org.jetbrains.kotlin.android` 적용과 `kotlinOptions`를 제거하고, 선택 진단 Kotlin source set을 `.kotlin.srcDir`로 등록했다. 설치된 SDK를 재사용하도록 Build Tools 36.1.0을 명시했다. wrapper 배포 SHA-256과 wrapper JAR SHA-256을 공식 값으로 검증했다.
+- release 최적화: `isMinifyEnabled=true`, `isShrinkResources=true`, `proguard-android-optimize.txt`를 적용했다. 앱 전체 keep, 전역 `dontwarn`, `dontoptimize`, `dontshrink`, `dontobfuscate`는 추가하지 않았다. 선택 실행 Paparazzi 도구는 AGP 9 호환 수정이 반영된 2.0.0-alpha05/layoutlib 16.2.1로 갱신했고 test Kotlin 컴파일이 성공했다. 실제 스크린샷 생성·기존 산출물 교체는 수행하지 않았다.
+- 빌드/테스트: ignored 격리 buildDir에서 `:app:assembleDebug :app:assembleDebugAndroidTest :app:testDebugUnitTest :app:bundleRelease`를 최초 116 task 모두 실행해 성공했다. 최종 1.4(5) 재검증도 성공(18 executed/98 up-to-date)했고 `:app:assembleRelease`도 성공했다. `:app:testReleaseUnitTest` task는 이 구성에서 생성되지 않아 실행하지 못했고, 최적화 release는 아래의 별도 실기기 패키지로 검증했다. 최초 AGP 9 dry-run은 기본 Build Tools 36.0.0 미설치로 실패했으며 36.1.0 명시 후 전체 task graph와 R8 task가 정상 구성됐다.
+- AAB 확인: 최종 AAB는 31,135,845 bytes, SHA-256 `3B7C4CD629C12F077FF78073D3BA73B4BA24E776CC8129E571CE22157D967DB7`, `jarsigner -verify` exit 0이다. 비최적화 기준 AAB 39,240,879 bytes보다 20.65% 작고, 압축 해제 DEX는 3개/46,858,388 bytes에서 1개/3,394,376 bytes로 92.76% 감소했다. 13개 폰트는 모두 유지됐다.
+- R8 증거: AAB의 `BUNDLE-METADATA/com.android.tools/r8.json`은 R8 9.0.32, 난독화 97.88%, 최적화 97.04%, 축소 97.98%, optimized resource shrinking=true를 기록한다. AAB 내부 `proguard.map`과 외부 `mapping.txt` 44,923,761 bytes가 생성됐다. production release APK는 `com.pocket4cut`, versionName 1.4, versionCode 5, minSdk 26, targetSdk 36으로 확인했다.
+- Lint: `:app:lintDebug`는 **실패 — Error 1, Warning 91, Hint 2**. 차단 오류는 기존 `AndroidManifest.xml:6`의 `PermissionImpliesUnsupportedChromeOsHardware`이며 이번 최적화 작업에서 suppress하지 않았다. release의 `lintVitalRelease`는 성공했다.
+- 실기기 release: Android 16/API 36 기기에 R8·resource shrink를 그대로 둔 별도 applicationId/debug 서명 QA APK를 설치했다. cold start, 홈, 설정 ON/OFF의 실제 `FLAG_KEEP_SCREEN_ON` 반영과 재실행 복원, 2컷 선택, CameraX 권한·전면 카메라 준비, 4장 연속 촬영, 2장 선택, 가로 레이아웃, 커스텀 색/스티커, 필름 필터, 상세 편집 회전·반전·보정 반복, 최종 결과 생성, 공유 chooser, 보관함 생성·재실행 복원을 확인했다. 반복 조작 전후 PID가 유지됐고 새 `AndroidRuntime` crash가 없었다.
+- 계측/기존 결함: 별도 debug QA 패키지 `com.pocket4cut.agp9qa`에서 Bitmap 소유권 회귀 계측 2개는 통과했다. 선택 진단 포함 10개 전체 실행은 5 pass/5 fail이었다. 실패 1개는 임시 applicationId suffix와 하드코딩된 packageName 기대의 차이이고, 4개는 이미 문서화된 R02 문구/날짜 preview, R03 스티커 export, R04 카탈로그 색 복원, R08 6컷 배치 중복을 그대로 검출했다. 이 계측은 최적화된 release의 계측 검증이 아니며 이번 범위에서 해당 기능 코드를 바꾸지 않았다.
+- 정리/한계: QA package 제거 후 원래 `com.pocket4cut`만 남겼고 QA 촬영·세션 파일도 함께 제거했다. 사용자 사진을 공용 영역에 남기지 않기 위해 MediaStore 저장 버튼은 누르지 않았다. 한 기기의 release 검증이 모든 기기·OS 조합을 보장하지 않으며 Play Console 서버 표시는 새 AAB 업로드·처리 뒤 확인해야 한다.
+- Git: 이번 build/toolchain/R8/문서 파일만 명시적으로 stage·검토해 Conventional Commit으로 일반 push한다. Play Console 경고 해소는 이 AAB를 업로드하고 처리가 끝난 뒤 같은 ‘앱 최적화’ 항목에서 최종 확인한다.
+
 ## 2026-09-10 — UI 게시 Bitmap 조기 해제 충돌 수정 (Asia/Seoul)
 
 - 요청/범위: 당일 업데이트를 위해 실기기 감사의 최우선 QA-01, `Canvas: trying to use a recycled bitmap` 강제 종료 원인만 수정한다. 다른 P1/P2 결함과 Lint 기존 오류는 이번 범위에서 고치지 않았다.

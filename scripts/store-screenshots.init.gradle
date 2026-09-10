@@ -13,14 +13,14 @@ gradle.beforeProject { p ->
             mavenCentral()
         }
         dependencies {
-            classpath 'app.cash.paparazzi:paparazzi-gradle-plugin:2.0.0-alpha02'
+            classpath 'app.cash.paparazzi:paparazzi-gradle-plugin:2.0.0-alpha05'
         }
     }
     p.plugins.withId('com.android.application') {
         p.apply plugin: 'app.cash.paparazzi'
         p.dependencies.add('testImplementation', 'net.bytebuddy:byte-buddy:1.17.6')
         p.dependencies.add('testImplementation', 'net.bytebuddy:byte-buddy-agent:1.17.6')
-        p.android.sourceSets.getByName('test').java.srcDir(
+        p.android.sourceSets.getByName('test').kotlin.srcDir(
             p.rootProject.file('design/play-store/print-booth-v1/capture')
         )
         def exportTask = p.tasks.register('exportStoreScreenshots') {
@@ -53,7 +53,7 @@ gradle.beforeProject { p ->
                     exported << [name: row.name, width: width, height: height, timestamp: row.timestamp, test: row.testName]
                 }
                 new File(assetRoot, 'capture/capture-manifest.json').setText(JsonOutput.prettyPrint(JsonOutput.toJson([
-                    renderer: 'Paparazzi 2.0.0-alpha02 / Android layoutlib 15.2.3',
+                    renderer: 'Paparazzi 2.0.0-alpha05 / Android layoutlib 16.2.1',
                     source: 'Production Android Compose Screen functions; generated demo photo fixtures',
                     deviceCapture: false,
                     runs: runFiles.collect { it.name },

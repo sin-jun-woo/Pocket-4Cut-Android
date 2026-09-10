@@ -1,7 +1,7 @@
 # Pocket 4Cut 현재 구현 아키텍처
 
-> 확인일: 2026-09-10. 최초 구조 조사는 HEAD `95140a0`과 당시 미커밋 앱 변경을 기준으로 했고, 이번 갱신은 HEAD `317b711`에 남아 있던 전체 작업을 통합하는 시점의 실제 코드를 기준으로 한다.
-> 이번 통합 범위에는 UI, 버전, 아이콘, 디자인 산출물, 개발 문서와 검증 스크립트가 포함된다. 커밋·원격 반영 결과와 검증 한계는 [WORKLOG](WORKLOG.md)의 최신 기록을 따른다.
+> 확인일: 2026-09-10. 최초 구조 조사는 HEAD `95140a0`과 당시 미커밋 앱 변경을 기준으로 했고, 빌드 설정은 HEAD `022fc33c` 이후의 AGP 9/R8 변경을 반영했다.
+> 구조 설명은 기존 조사를 이어서 유지한다. 커밋·원격 반영 결과와 실제 실행 검증 한계는 [WORKLOG](WORKLOG.md)의 최신 기록을 따른다.
 > 아래는 소스에서 확인한 구조이며, 기기에서 전체 기능의 정확성을 검증했다는 선언이 아니다.
 
 이 문서는 현재 호출 관계를 설명한다. 루트의 [ARCHITECTURE.md](../ARCHITECTURE.md)는 목표 계층과 예시 클래스가 포함된 기존 설계 문서이므로 구분해서 읽는다. 구현 변경 시 실제 코드와 이 문서를 함께 갱신한다.
@@ -10,7 +10,9 @@
 
 Pocket 4Cut은 촬영·사진 선택·프레임 편집·콜라주 생성·보관을 기기에서 수행하는 Android 앱이다. [settings.gradle.kts](../settings.gradle.kts)에 등록된 Gradle 모듈은 `:app` 하나다.
 
-[앱 빌드 설정](../app/build.gradle.kts)의 applicationId/namespace는 `com.pocket4cut`, minSdk는 26, compileSdk/targetSdk는 36이다. 이번 통합 작업 트리 버전은 `1.3 (4)`이며 최초 조사 당시에는 `1.2 (3)`, 기준 HEAD `95140a0`에서는 `1.0 (1)`이었다. Gradle 8.13, AGP 8.13.2, Kotlin 2.0.21을 선언하며 실행 검증은 [WORKLOG](WORKLOG.md)에 기록한다.
+[앱 빌드 설정](../app/build.gradle.kts)의 applicationId/namespace는 `com.pocket4cut`, minSdk는 26, compileSdk/targetSdk는 36이며 버전은 `1.4 (5)`다. Gradle 9.1.0, AGP 9.0.1, Build Tools 36.1.0을 사용한다. Kotlin은 AGP의 내장 지원을 사용하고 Compose compiler plugin은 2.2.10을 적용한다. 별도의 `org.jetbrains.kotlin.android` plugin은 적용하지 않는다. Java/Kotlin 코드 대상 11은 Gradle 실행 JDK와 구분한다.
+
+release에는 R8 코드 최적화·난독화와 최적화된 리소스 축소를 활성화한다. 기본 `proguard-android-optimize.txt`와 [앱 추가 규칙](../app/proguard-rules.pro)을 함께 사용한다. debug 빌드와 계측 테스트 통과만으로 최적화된 release의 동작까지 검증됐다고 판단하지 않는다.
 
 [MainActivity](../app/src/main/java/com/pocket4cut/MainActivity.kt)는 다음 순서로 앱을 시작한다.
 

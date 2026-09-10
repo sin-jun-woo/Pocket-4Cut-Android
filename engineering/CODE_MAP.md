@@ -1,6 +1,6 @@
 # 소스 파일 지도
 
-기준: 2026-09-09 작업 트리, main Kotlin **85개**. 아래 파일 경로는 모두 `app/src/main/java/com/pocket4cut/` 기준이다. 빈 파일·미사용 코드도 포함한다. 개별 기능 수정 시 이 지도에서 담당 파일을 찾고 [KNOWN_ISSUES](KNOWN_ISSUES.md)의 경계를 함께 확인한다.
+파일 지도 최초 조사: 2026-09-09. 빌드·테스트 구성 갱신: 2026-09-10, HEAD `022fc33c` 이후의 AGP 9/R8 변경 포함. main Kotlin **85개**. 아래 파일 경로는 모두 `app/src/main/java/com/pocket4cut/` 기준이다. 빈 파일·미사용 코드도 포함한다. 개별 기능 수정 시 이 지도에서 담당 파일을 찾고 [KNOWN_ISSUES](KNOWN_ISSUES.md)의 경계를 함께 확인한다.
 
 ## 진입점과 화면 — 29파일
 
@@ -129,15 +129,17 @@
 | app/src/main/res/drawable* / mipmap* | 밀도별 런처 아이콘·adaptive icon |
 | app/src/main/assets/fonts | 한국어 폰트 TTF 13개. 바이너리 내부의 라이선스 메타데이터 감사는 미실시 |
 | app/src/main/assets/branding | 브랜드 아이콘 SVG |
-| app/src/test / app/src/androidTest | 산술 기본 테스트 / packageName 기본 테스트 각1개 |
-| app/build.gradle.kts | 앱 ID·SDK·버전·서명·의존성·빌드 타입 |
-| build.gradle.kts / settings.gradle.kts | 플러그인 선언, 저장소, 단일 app 모듈 |
-| gradle/libs.versions.toml / wrapper | 의존성 버전·Gradle 배포 버전 |
-| gradle.properties / app/proguard-rules.pro | 빌드 JVM2GB·AndroidX 설정 / 미최적화 release 기본 규칙 |
+| app/src/test / app/src/androidTest | 산술 단위 테스트 1개 / packageName 계측 1개와 Bitmap 소유권 회귀 계측 2개. 선택 진단은 별도 init script로 추가 |
+| app/build.gradle.kts | 앱 ID·SDK·버전·서명·의존성·release R8 코드 최적화와 리소스 축소 |
+| build.gradle.kts / settings.gradle.kts | Android·Compose compiler plugin 선언, 저장소, 단일 app 모듈. Kotlin은 AGP 내장 지원 |
+| gradle/libs.versions.toml / wrapper | AGP 9.0.1·Compose compiler 2.2.10 등 버전 / Gradle 9.1.0 배포와 SHA-256 검증 |
+| gradle.properties / app/proguard-rules.pro | 빌드 JVM 2GB·AndroidX 설정 / release에 연결된 앱 추가 R8 규칙. 현재 사용자 정의 규칙 없음 |
 | local.properties | 로컬 SDK 위치, Git 제외. 공유 문서에 복사하지 않음 |
 | keystore.properties.example | 서명 속성 템플릿. 실제 자격증명 파일은 조사에서 제외 |
 | scripts/generate-release-keystore.ps1 / .bat | 릴리스 키 생성 도구. 이번에는 실행하지 않음 |
 | scripts/e2e-smoke-adb.ps1 | 특정 환경의 좌표 기반 smoke 보조 도구. 독립적인 E2E 성공 증명 아님 |
+| scripts/device-diagnostics.init.gradle | 명시적으로 실행할 때 렌더 계약 진단 Kotlin 7개를 androidTest에 추가 |
+| scripts/store-screenshots.init.gradle | 명시적으로 실행하는 Paparazzi 스크린샷 도구. 외부 Kotlin test source를 등록하며 일반 앱 빌드에는 적용되지 않음 |
 | .github/workflows/github-pages.yml | docs 전체 Pages 배포; Android CI는 아님 |
 | design/mockups/print-booth-v1 | HTML/CJS 기반 시안·PNG·검사 JSON·이전 확인 기록 |
 | design/Pocket4Cut-Print-Booth-v1.zip | 디자인 인계 패키지. 앱 런타임 자산이 아님 |

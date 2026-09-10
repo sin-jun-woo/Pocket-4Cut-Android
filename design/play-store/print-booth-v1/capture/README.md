@@ -24,7 +24,7 @@
 
 ## 테스트 환경 보완과 한계
 
-Paparazzi 2.0.0-alpha02 / Android layoutlib 15.2.3으로 호스트에서 실제 앱 Composable을 렌더한다. 기기에서 실행한 캡처나 촬영·저장·공유 E2E 검증은 아니다.
+현재 재생성 하네스는 Paparazzi 2.0.0-alpha05 / Android layoutlib 16.2.1로 호스트에서 실제 앱 Composable을 렌더한다. 기존 `capture-manifest.json`과 납품 PNG는 2.0.0-alpha02 / layoutlib 15.2.3으로 만든 산출물이며, 이번 빌드 도구 갱신에서는 다시 생성하지 않았다. 기기에서 실행한 캡처나 촬영·저장·공유 E2E 검증은 아니다.
 
 Windows 호스트에서 Android `fstat`과 `FileProvider`의 기기 경로 처리를 사용할 수 없어 테스트 프로세스 안에서만 입력 바이트 디코딩·파일 URI로 보완한다. 예제 사진용 Coil fetcher는 동일한 Bitmap을 반환하고 사진 배치·크롭·UI 그리기는 앱 코드가 수행한다. VM에는 고정 예제 state를 주입하고 로딩 I/O와 IO dispatcher를 테스트에서 제어해 로딩 전 프레임이 저장되지 않도록 한다.
 
