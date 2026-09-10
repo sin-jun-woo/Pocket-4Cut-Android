@@ -1,0 +1,94 @@
+{
+  "checkedAt": "2026-09-10T12:16:34.504Z",
+  "file": "deliverables/Pocket4Cut-Reels-Reference-Voice.mp4",
+  "bytes": 6019314,
+  "sha256": "21d42e7eb026b001d77572cf345329ce369d5fa6b2ec615a89cb7595622bf2f4",
+  "duration": 23,
+  "video": {
+    "codec": "h264",
+    "width": 1080,
+    "height": 1920,
+    "frames": 690,
+    "fps": 30,
+    "pixelFormat": "yuv420p",
+    "colorSpace": "bt709",
+    "colorTransfer": "bt709",
+    "colorPrimaries": "bt709"
+  },
+  "audio": {
+    "codec": "aac",
+    "sampleRate": 48000,
+    "channels": 2,
+    "duration": 23,
+    "integratedLUFS": -16,
+    "truePeakDbTP": -3.4,
+    "musicAdded": false,
+    "soundEffectsAdded": false
+  },
+  "checks": {
+    "fullDecode": "PASS",
+    "durationSync": "PASS",
+    "faststart": "PASS",
+    "blackIntervals": 0,
+    "coverSize": "PASS"
+  },
+  "proofs": [
+    {
+      "file": "verification/encoded-01-hook.jpg",
+      "time": 0.7
+    },
+    {
+      "file": "verification/encoded-02-solution.jpg",
+      "time": 3.17
+    },
+    {
+      "file": "verification/encoded-03-capture.jpg",
+      "time": 4.97
+    },
+    {
+      "file": "verification/encoded-04-capture.jpg",
+      "time": 6.63
+    },
+    {
+      "file": "verification/encoded-05-selection.jpg",
+      "time": 8.15
+    },
+    {
+      "file": "verification/encoded-06-layout.jpg",
+      "time": 9.646
+    },
+    {
+      "file": "verification/encoded-07-filter.jpg",
+      "time": 10.766
+    },
+    {
+      "file": "verification/encoded-08-filter.jpg",
+      "time": 12.11
+    },
+    {
+      "file": "verification/encoded-09-save.jpg",
+      "time": 13.77
+    },
+    {
+      "file": "verification/encoded-10-save.jpg",
+      "time": 14.989999999999998
+    },
+    {
+      "file": "verification/encoded-11-occasions.jpg",
+      "time": 16.07
+    },
+    {
+      "file": "verification/encoded-12-occasions.jpg",
+      "time": 17.03
+    },
+    {
+      "file": "verification/encoded-13-cta.jpg",
+      "time": 18.23
+    },
+    {
+      "file": "verification/encoded-14-cta.jpg",
+      "time": 20.25
+    }
+  ],
+  "scope": "Actual encoded-file checks and selected-frame extraction. Visual review is separate; not subjective listening, exact timbre equivalence or Instagram upload acceptance."
+}

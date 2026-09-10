@@ -1,0 +1,1193 @@
+{
+  "provider": "Local whisper.cpp ASR, not supplied-text forced transcription",
+  "modelType": "small",
+  "language": "ko",
+  "transcript": " 내 폰이 네 컷 사진관이 된다면요? 포켓 네 컷! 이렇게 써보세요. 네 컷을 고르고 촬영을 누르면 8장이 자동으로 찍혀요. 마음에 드는 4장만 골라주세요. 배치랑 필터도 취향대로 바꿀 수 있어요. 흑백으로 하면 이런 느낌이에요. 완성하면 저장하고 친구에게 바로 공유해요. 데이트할 때도 집에서 놀 때도 오늘의 표정 네 컷으로 남겨보세요. 포켓 네 컷!",
+  "expectedTranscript": "내 폰이 네 컷 사진관이 된다면요? 포켓네컷, 이렇게 써보세요. 네 컷을 고르고 촬영을 누르면, 여덟 장이 자동으로 찍혀요. 마음에 드는 네 장만 골라 주세요. 배치랑 필터도 취향대로 바꿀 수 있어요. 흑백으로 하면 이런 느낌이에요. 완성하면 저장하고, 친구에게 바로 공유해요. 데이트할 때도, 집에서 놀 때도. 오늘의 표정, 네 컷으로 남겨보세요. 포켓네컷.",
+  "comparison": {
+    "normalizedTranscriptEqualsExpected": true,
+    "expectedNormalized": "내폰이4컷사진관이된다면요포켓4컷이렇게써보세요4컷을고르고촬영을누르면8장이자동으로찍혀요마음에드는4장만골라주세요배치랑필터도취향대로바꿀수있어요흑백으로하면이런느낌이에요완성하면저장하고친구에게바로공유해요데이트할때도집에서놀때도오늘의표정4컷으로남겨보세요포켓4컷",
+    "recognizedNormalized": "내폰이4컷사진관이된다면요포켓4컷이렇게써보세요4컷을고르고촬영을누르면8장이자동으로찍혀요마음에드는4장만골라주세요배치랑필터도취향대로바꿀수있어요흑백으로하면이런느낌이에요완성하면저장하고친구에게바로공유해요데이트할때도집에서놀때도오늘의표정4컷으로남겨보세요포켓4컷",
+    "expectedCharacterCount": 136,
+    "recognizedCharacterCount": 136,
+    "editDistance": 0,
+    "differences": [],
+    "normalization": [
+      "Ignore whitespace and punctuation; Latin letter case is ignored.",
+      "Only Korean 2/4/6/8 number forms immediately before 컷 or 장 are mapped to digits.",
+      "No phonetic, brand-name, spelling, synonym or ASR-error corrections are applied."
+    ]
+  },
+  "units": {
+    "jsonOffsets": "milliseconds / 1000",
+    "t_dtw": "centiseconds / 100"
+  },
+  "limitations": [
+    "Recognition agreement is not a subjective listening or voice-similarity assessment.",
+    "DTW token moments and inferred phrase ends are estimates, not sample-accurate word boundaries.",
+    "A nonzero exit status must stop downstream rendering; an older story file is not updated on failure."
+  ],
+  "master": {
+    "durationSeconds": 23,
+    "voiceTimeOffsetSeconds": 0.12,
+    "sha256": "a9d9a91fe80e2202d3b07b813719b4206e6466ab3177ed7a83827782195b8c12"
+  },
+  "segments": [
+    {
+      "index": 0,
+      "text": " 내 폰이 네 컷 사진관이 된다면요?",
+      "startSeconds": 0,
+      "endSeconds": 2.28,
+      "tokens": [
+        {
+          "text": " 내",
+          "id": 6918,
+          "probability": 0.245237,
+          "startSeconds": 0,
+          "endSeconds": 0.09,
+          "dtwCentiseconds": 22,
+          "dtwSeconds": 0.22
+        },
+        {
+          "text": " 폰",
+          "id": 9250,
+          "probability": 0.736468,
+          "startSeconds": 0.09,
+          "endSeconds": 0.37,
+          "dtwCentiseconds": 42,
+          "dtwSeconds": 0.42
+        },
+        {
+          "text": "이",
+          "id": 1129,
+          "probability": 0.980458,
+          "startSeconds": 0.38,
+          "endSeconds": 0.46,
+          "dtwCentiseconds": 60,
+          "dtwSeconds": 0.6
+        },
+        {
+          "text": " 네",
+          "id": 8808,
+          "probability": 0.392175,
+          "startSeconds": 0.46,
+          "endSeconds": 0.55,
+          "dtwCentiseconds": 82,
+          "dtwSeconds": 0.82
+        },
+        {
+          "text": " 컷",
+          "id": 9305,
+          "probability": 0.883711,
+          "startSeconds": 0.55,
+          "endSeconds": 0.82,
+          "dtwCentiseconds": 98,
+          "dtwSeconds": 0.98
+        },
+        {
+          "text": " 사진",
+          "id": 29899,
+          "probability": 0.460967,
+          "startSeconds": 0.89,
+          "endSeconds": 1.01,
+          "dtwCentiseconds": 130,
+          "dtwSeconds": 1.3
+        },
+        {
+          "text": "관이",
+          "id": 12222,
+          "probability": 0.92239,
+          "startSeconds": 1.06,
+          "endSeconds": 1.4,
+          "dtwCentiseconds": 144,
+          "dtwSeconds": 1.44
+        },
+        {
+          "text": " 된",
+          "id": 16975,
+          "probability": 0.99511,
+          "startSeconds": 1.4,
+          "endSeconds": 1.49,
+          "dtwCentiseconds": 174,
+          "dtwSeconds": 1.74
+        },
+        {
+          "text": "다면요",
+          "id": 9835,
+          "probability": 0.456628,
+          "startSeconds": 1.49,
+          "endSeconds": 2.19,
+          "dtwCentiseconds": 188,
+          "dtwSeconds": 1.88
+        },
+        {
+          "text": "?",
+          "id": 30,
+          "probability": 0.512368,
+          "startSeconds": 2.28,
+          "endSeconds": 2.28,
+          "dtwCentiseconds": 230,
+          "dtwSeconds": 2.3
+        }
+      ],
+      "joinedTokenText": " 내 폰이 네 컷 사진관이 된다면요?",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 1,
+      "text": " 포켓 네 컷! 이렇게 써보세요.",
+      "startSeconds": 2.28,
+      "endSeconds": 4.04,
+      "tokens": [
+        {
+          "text": " 포",
+          "id": 17101,
+          "probability": 0.717449,
+          "startSeconds": 2.28,
+          "endSeconds": 2.37,
+          "dtwCentiseconds": 240,
+          "dtwSeconds": 2.4
+        },
+        {
+          "text": "켓",
+          "id": 12397,
+          "probability": 0.561361,
+          "startSeconds": 2.37,
+          "endSeconds": 2.54,
+          "dtwCentiseconds": 256,
+          "dtwSeconds": 2.56
+        },
+        {
+          "text": " 네",
+          "id": 8808,
+          "probability": 0.715051,
+          "startSeconds": 2.66,
+          "endSeconds": 2.71,
+          "dtwCentiseconds": 274,
+          "dtwSeconds": 2.74
+        },
+        {
+          "text": " 컷",
+          "id": 9305,
+          "probability": 0.97615,
+          "startSeconds": 2.71,
+          "endSeconds": 3,
+          "dtwCentiseconds": 290,
+          "dtwSeconds": 2.9
+        },
+        {
+          "text": "!",
+          "id": 0,
+          "probability": 0.449093,
+          "startSeconds": 3,
+          "endSeconds": 3.17,
+          "dtwCentiseconds": 304,
+          "dtwSeconds": 3.04
+        },
+        {
+          "text": " 이렇게",
+          "id": 5483,
+          "probability": 0.518646,
+          "startSeconds": 3.18,
+          "endSeconds": 3.36,
+          "dtwCentiseconds": 324,
+          "dtwSeconds": 3.24
+        },
+        {
+          "text": " 써보세요",
+          "id": 37113,
+          "probability": 0.912681,
+          "startSeconds": 3.36,
+          "endSeconds": 3.84,
+          "dtwCentiseconds": 348,
+          "dtwSeconds": 3.48
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.459794,
+          "startSeconds": 3.84,
+          "endSeconds": 4.04,
+          "dtwCentiseconds": 404,
+          "dtwSeconds": 4.04
+        }
+      ],
+      "joinedTokenText": " 포켓 네 컷! 이렇게 써보세요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 2,
+      "text": " 네 컷을 고르고 촬영을 누르면 8장이 자동으로 찍혀요.",
+      "startSeconds": 4.04,
+      "endSeconds": 7.1,
+      "tokens": [
+        {
+          "text": " 네",
+          "id": 8808,
+          "probability": 0.945188,
+          "startSeconds": 4.04,
+          "endSeconds": 4.13,
+          "dtwCentiseconds": 420,
+          "dtwSeconds": 4.2
+        },
+        {
+          "text": " 컷",
+          "id": 9305,
+          "probability": 0.983369,
+          "startSeconds": 4.13,
+          "endSeconds": 4.4,
+          "dtwCentiseconds": 432,
+          "dtwSeconds": 4.32
+        },
+        {
+          "text": "을",
+          "id": 1638,
+          "probability": 0.99593,
+          "startSeconds": 4.42,
+          "endSeconds": 4.49,
+          "dtwCentiseconds": 450,
+          "dtwSeconds": 4.5
+        },
+        {
+          "text": " 고르고",
+          "id": 18556,
+          "probability": 0.997164,
+          "startSeconds": 4.49,
+          "endSeconds": 4.93,
+          "dtwCentiseconds": 466,
+          "dtwSeconds": 4.66
+        },
+        {
+          "text": " 촬영",
+          "id": 27874,
+          "probability": 0.974783,
+          "startSeconds": 4.94,
+          "endSeconds": 5.12,
+          "dtwCentiseconds": 504,
+          "dtwSeconds": 5.04
+        },
+        {
+          "text": "을",
+          "id": 1638,
+          "probability": 0.998022,
+          "startSeconds": 5.12,
+          "endSeconds": 5.21,
+          "dtwCentiseconds": 522,
+          "dtwSeconds": 5.22
+        },
+        {
+          "text": " 누르면",
+          "id": 30225,
+          "probability": 0.998654,
+          "startSeconds": 5.21,
+          "endSeconds": 5.68,
+          "dtwCentiseconds": 532,
+          "dtwSeconds": 5.32
+        },
+        {
+          "text": " 8",
+          "id": 1649,
+          "probability": 0.585199,
+          "startSeconds": 5.68,
+          "endSeconds": 5.98,
+          "dtwCentiseconds": 586,
+          "dtwSeconds": 5.86
+        },
+        {
+          "text": "장이",
+          "id": 34202,
+          "probability": 0.891567,
+          "startSeconds": 5.98,
+          "endSeconds": 6.18,
+          "dtwCentiseconds": 616,
+          "dtwSeconds": 6.16
+        },
+        {
+          "text": " 자동",
+          "id": 15905,
+          "probability": 0.984265,
+          "startSeconds": 6.18,
+          "endSeconds": 6.58,
+          "dtwCentiseconds": 636,
+          "dtwSeconds": 6.36
+        },
+        {
+          "text": "으로",
+          "id": 4130,
+          "probability": 0.998645,
+          "startSeconds": 6.58,
+          "endSeconds": 6.76,
+          "dtwCentiseconds": 662,
+          "dtwSeconds": 6.62
+        },
+        {
+          "text": " 찍",
+          "id": 17285,
+          "probability": 0.998847,
+          "startSeconds": 6.84,
+          "endSeconds": 6.88,
+          "dtwCentiseconds": 676,
+          "dtwSeconds": 6.76
+        },
+        {
+          "text": "혀",
+          "id": 23683,
+          "probability": 0.982403,
+          "startSeconds": 6.88,
+          "endSeconds": 6.98,
+          "dtwCentiseconds": 694,
+          "dtwSeconds": 6.94
+        },
+        {
+          "text": "요",
+          "id": 1495,
+          "probability": 0.998727,
+          "startSeconds": 6.98,
+          "endSeconds": 7.1,
+          "dtwCentiseconds": 708,
+          "dtwSeconds": 7.08
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.926164,
+          "startSeconds": 7.1,
+          "endSeconds": 7.1,
+          "dtwCentiseconds": 714,
+          "dtwSeconds": 7.14
+        }
+      ],
+      "joinedTokenText": " 네 컷을 고르고 촬영을 누르면 8장이 자동으로 찍혀요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 3,
+      "text": " 마음에 드는 4장만 골라주세요.",
+      "startSeconds": 7.1,
+      "endSeconds": 8.94,
+      "tokens": [
+        {
+          "text": " 마음에",
+          "id": 43093,
+          "probability": 0.930287,
+          "startSeconds": 7.1,
+          "endSeconds": 7.36,
+          "dtwCentiseconds": 738,
+          "dtwSeconds": 7.38
+        },
+        {
+          "text": " 드는",
+          "id": 531,
+          "probability": 0.973758,
+          "startSeconds": 7.48,
+          "endSeconds": 7.74,
+          "dtwCentiseconds": 754,
+          "dtwSeconds": 7.54
+        },
+        {
+          "text": " 4",
+          "id": 1017,
+          "probability": 0.505571,
+          "startSeconds": 7.76,
+          "endSeconds": 8.05,
+          "dtwCentiseconds": 798,
+          "dtwSeconds": 7.98
+        },
+        {
+          "text": "장",
+          "id": 4573,
+          "probability": 0.943066,
+          "startSeconds": 8.05,
+          "endSeconds": 8.12,
+          "dtwCentiseconds": 810,
+          "dtwSeconds": 8.1
+        },
+        {
+          "text": "만",
+          "id": 5978,
+          "probability": 0.994896,
+          "startSeconds": 8.16,
+          "endSeconds": 8.23,
+          "dtwCentiseconds": 824,
+          "dtwSeconds": 8.24
+        },
+        {
+          "text": " 골라",
+          "id": 42142,
+          "probability": 0.996896,
+          "startSeconds": 8.23,
+          "endSeconds": 8.61,
+          "dtwCentiseconds": 840,
+          "dtwSeconds": 8.4
+        },
+        {
+          "text": "주세요",
+          "id": 25457,
+          "probability": 0.791459,
+          "startSeconds": 8.61,
+          "endSeconds": 8.93,
+          "dtwCentiseconds": 874,
+          "dtwSeconds": 8.74
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.949744,
+          "startSeconds": 8.94,
+          "endSeconds": 8.94,
+          "dtwCentiseconds": 898,
+          "dtwSeconds": 8.98
+        }
+      ],
+      "joinedTokenText": " 마음에 드는 4장만 골라주세요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 4,
+      "text": " 배치랑 필터도 취향대로 바꿀 수 있어요.",
+      "startSeconds": 8.94,
+      "endSeconds": 11.24,
+      "tokens": [
+        {
+          "text": " 배",
+          "id": 14155,
+          "probability": 0.982403,
+          "startSeconds": 8.94,
+          "endSeconds": 9.03,
+          "dtwCentiseconds": 910,
+          "dtwSeconds": 9.1
+        },
+        {
+          "text": "치랑",
+          "id": 31678,
+          "probability": 0.866305,
+          "startSeconds": 9.03,
+          "endSeconds": 9.41,
+          "dtwCentiseconds": 926,
+          "dtwSeconds": 9.26
+        },
+        {
+          "text": " 필",
+          "id": 19620,
+          "probability": 0.973418,
+          "startSeconds": 9.41,
+          "endSeconds": 9.5,
+          "dtwCentiseconds": 960,
+          "dtwSeconds": 9.6
+        },
+        {
+          "text": "터도",
+          "id": 21412,
+          "probability": 0.97765,
+          "startSeconds": 9.5,
+          "endSeconds": 9.88,
+          "dtwCentiseconds": 974,
+          "dtwSeconds": 9.74
+        },
+        {
+          "text": " 취",
+          "id": 28880,
+          "probability": 0.997972,
+          "startSeconds": 9.88,
+          "endSeconds": 9.96,
+          "dtwCentiseconds": 1014,
+          "dtwSeconds": 10.14
+        },
+        {
+          "text": "향",
+          "id": 24318,
+          "probability": 0.993612,
+          "startSeconds": 10,
+          "endSeconds": 10.06,
+          "dtwCentiseconds": 1024,
+          "dtwSeconds": 10.24
+        },
+        {
+          "text": "대로",
+          "id": 167,
+          "probability": 0.978575,
+          "startSeconds": 10.06,
+          "endSeconds": 10.43,
+          "dtwCentiseconds": 1028,
+          "dtwSeconds": 10.28
+        },
+        {
+          "text": " 바꿀",
+          "id": 45795,
+          "probability": 0.955704,
+          "startSeconds": 10.43,
+          "endSeconds": 10.8,
+          "dtwCentiseconds": 1060,
+          "dtwSeconds": 10.6
+        },
+        {
+          "text": " 수",
+          "id": 4446,
+          "probability": 0.989527,
+          "startSeconds": 10.8,
+          "endSeconds": 10.89,
+          "dtwCentiseconds": 1082,
+          "dtwSeconds": 10.82
+        },
+        {
+          "text": " 있어요",
+          "id": 12654,
+          "probability": 0.995363,
+          "startSeconds": 10.89,
+          "endSeconds": 11.23,
+          "dtwCentiseconds": 1112,
+          "dtwSeconds": 11.12
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.980602,
+          "startSeconds": 11.23,
+          "endSeconds": 11.24,
+          "dtwCentiseconds": 1126,
+          "dtwSeconds": 11.26
+        }
+      ],
+      "joinedTokenText": " 배치랑 필터도 취향대로 바꿀 수 있어요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 5,
+      "text": " 흑백으로 하면 이런 느낌이에요.",
+      "startSeconds": 11.24,
+      "endSeconds": 12.84,
+      "tokens": [
+        {
+          "text": " 흑",
+          "id": 14473,
+          "probability": 0.961142,
+          "startSeconds": 11.24,
+          "endSeconds": 11.51,
+          "dtwCentiseconds": 1134,
+          "dtwSeconds": 11.34
+        },
+        {
+          "text": "백",
+          "id": 8672,
+          "probability": 0.960113,
+          "startSeconds": 11.62,
+          "endSeconds": 11.78,
+          "dtwCentiseconds": 1150,
+          "dtwSeconds": 11.5
+        },
+        {
+          "text": "으로",
+          "id": 4130,
+          "probability": 0.995839,
+          "startSeconds": 11.78,
+          "endSeconds": 11.96,
+          "dtwCentiseconds": 1168,
+          "dtwSeconds": 11.68
+        },
+        {
+          "text": " 하면",
+          "id": 17422,
+          "probability": 0.991051,
+          "startSeconds": 11.96,
+          "endSeconds": 12.13,
+          "dtwCentiseconds": 1186,
+          "dtwSeconds": 11.86
+        },
+        {
+          "text": " 이런",
+          "id": 8381,
+          "probability": 0.996223,
+          "startSeconds": 12.14,
+          "endSeconds": 12.32,
+          "dtwCentiseconds": 1208,
+          "dtwSeconds": 12.08
+        },
+        {
+          "text": " 느낌",
+          "id": 12652,
+          "probability": 0.992746,
+          "startSeconds": 12.32,
+          "endSeconds": 12.5,
+          "dtwCentiseconds": 1238,
+          "dtwSeconds": 12.38
+        },
+        {
+          "text": "이에요",
+          "id": 15099,
+          "probability": 0.978874,
+          "startSeconds": 12.5,
+          "endSeconds": 12.8,
+          "dtwCentiseconds": 1264,
+          "dtwSeconds": 12.64
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.976448,
+          "startSeconds": 12.8,
+          "endSeconds": 12.82,
+          "dtwCentiseconds": 1286,
+          "dtwSeconds": 12.86
+        }
+      ],
+      "joinedTokenText": " 흑백으로 하면 이런 느낌이에요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 6,
+      "text": " 완성하면 저장하고 친구에게 바로 공유해요.",
+      "startSeconds": 12.84,
+      "endSeconds": 15.4,
+      "tokens": [
+        {
+          "text": " 완성",
+          "id": 41867,
+          "probability": 0.983616,
+          "startSeconds": 12.84,
+          "endSeconds": 13.1,
+          "dtwCentiseconds": 1310,
+          "dtwSeconds": 13.1
+        },
+        {
+          "text": "하면",
+          "id": 16283,
+          "probability": 0.948603,
+          "startSeconds": 13.22,
+          "endSeconds": 13.43,
+          "dtwCentiseconds": 1338,
+          "dtwSeconds": 13.38
+        },
+        {
+          "text": " 저",
+          "id": 4841,
+          "probability": 0.99552,
+          "startSeconds": 13.43,
+          "endSeconds": 13.58,
+          "dtwCentiseconds": 1356,
+          "dtwSeconds": 13.56
+        },
+        {
+          "text": "장",
+          "id": 4573,
+          "probability": 0.996373,
+          "startSeconds": 13.58,
+          "endSeconds": 13.66,
+          "dtwCentiseconds": 1370,
+          "dtwSeconds": 13.7
+        },
+        {
+          "text": "하고",
+          "id": 7040,
+          "probability": 0.993875,
+          "startSeconds": 13.72,
+          "endSeconds": 14.04,
+          "dtwCentiseconds": 1394,
+          "dtwSeconds": 13.94
+        },
+        {
+          "text": " 친구",
+          "id": 28307,
+          "probability": 0.495379,
+          "startSeconds": 14.07,
+          "endSeconds": 14.24,
+          "dtwCentiseconds": 1430,
+          "dtwSeconds": 14.3
+        },
+        {
+          "text": "에게",
+          "id": 15989,
+          "probability": 0.998114,
+          "startSeconds": 14.24,
+          "endSeconds": 14.42,
+          "dtwCentiseconds": 1454,
+          "dtwSeconds": 14.54
+        },
+        {
+          "text": " 바로",
+          "id": 15965,
+          "probability": 0.986111,
+          "startSeconds": 14.47,
+          "endSeconds": 14.64,
+          "dtwCentiseconds": 1476,
+          "dtwSeconds": 14.76
+        },
+        {
+          "text": " 공",
+          "id": 9273,
+          "probability": 0.993453,
+          "startSeconds": 14.64,
+          "endSeconds": 14.74,
+          "dtwCentiseconds": 1498,
+          "dtwSeconds": 14.98
+        },
+        {
+          "text": "유",
+          "id": 19062,
+          "probability": 0.991648,
+          "startSeconds": 14.74,
+          "endSeconds": 14.84,
+          "dtwCentiseconds": 1506,
+          "dtwSeconds": 15.06
+        },
+        {
+          "text": "해요",
+          "id": 15788,
+          "probability": 0.865864,
+          "startSeconds": 14.84,
+          "endSeconds": 15.03,
+          "dtwCentiseconds": 1528,
+          "dtwSeconds": 15.28
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.972236,
+          "startSeconds": 15.13,
+          "endSeconds": 15.4,
+          "dtwCentiseconds": 1542,
+          "dtwSeconds": 15.42
+        }
+      ],
+      "joinedTokenText": " 완성하면 저장하고 친구에게 바로 공유해요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 7,
+      "text": " 데이트할 때도 집에서 놀 때도",
+      "startSeconds": 15.4,
+      "endSeconds": 17.24,
+      "tokens": [
+        {
+          "text": " 데",
+          "id": 20883,
+          "probability": 0.99846,
+          "startSeconds": 15.4,
+          "endSeconds": 15.55,
+          "dtwCentiseconds": 1554,
+          "dtwSeconds": 15.54
+        },
+        {
+          "text": "이트",
+          "id": 40547,
+          "probability": 0.986666,
+          "startSeconds": 15.55,
+          "endSeconds": 15.85,
+          "dtwCentiseconds": 1574,
+          "dtwSeconds": 15.74
+        },
+        {
+          "text": "할",
+          "id": 7999,
+          "probability": 0.685171,
+          "startSeconds": 15.85,
+          "endSeconds": 16,
+          "dtwCentiseconds": 1590,
+          "dtwSeconds": 15.9
+        },
+        {
+          "text": " 때도",
+          "id": 49738,
+          "probability": 0.995207,
+          "startSeconds": 16,
+          "endSeconds": 16.32,
+          "dtwCentiseconds": 1604,
+          "dtwSeconds": 16.04
+        },
+        {
+          "text": " 집",
+          "id": 12111,
+          "probability": 0.468905,
+          "startSeconds": 16.32,
+          "endSeconds": 16.42,
+          "dtwCentiseconds": 1646,
+          "dtwSeconds": 16.46
+        },
+        {
+          "text": "에서",
+          "id": 4885,
+          "probability": 0.999153,
+          "startSeconds": 16.46,
+          "endSeconds": 16.65,
+          "dtwCentiseconds": 1666,
+          "dtwSeconds": 16.66
+        },
+        {
+          "text": " 놀",
+          "id": 10091,
+          "probability": 0.929812,
+          "startSeconds": 16.65,
+          "endSeconds": 16.98,
+          "dtwCentiseconds": 1678,
+          "dtwSeconds": 16.78
+        },
+        {
+          "text": " 때도",
+          "id": 49738,
+          "probability": 0.996147,
+          "startSeconds": 17.03,
+          "endSeconds": 17.24,
+          "dtwCentiseconds": 1704,
+          "dtwSeconds": 17.04
+        }
+      ],
+      "joinedTokenText": " 데이트할 때도 집에서 놀 때도",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 8,
+      "text": " 오늘의 표정 네 컷으로 남겨보세요.",
+      "startSeconds": 17.24,
+      "endSeconds": 19.32,
+      "tokens": [
+        {
+          "text": " 오늘",
+          "id": 8880,
+          "probability": 0.985879,
+          "startSeconds": 17.24,
+          "endSeconds": 17.5,
+          "dtwCentiseconds": 1746,
+          "dtwSeconds": 17.46
+        },
+        {
+          "text": "의",
+          "id": 2785,
+          "probability": 0.995066,
+          "startSeconds": 17.62,
+          "endSeconds": 17.73,
+          "dtwCentiseconds": 1762,
+          "dtwSeconds": 17.62
+        },
+        {
+          "text": " 표",
+          "id": 20966,
+          "probability": 0.997221,
+          "startSeconds": 17.73,
+          "endSeconds": 17.86,
+          "dtwCentiseconds": 1774,
+          "dtwSeconds": 17.74
+        },
+        {
+          "text": "정",
+          "id": 6170,
+          "probability": 0.998346,
+          "startSeconds": 17.9,
+          "endSeconds": 18.06,
+          "dtwCentiseconds": 1790,
+          "dtwSeconds": 17.9
+        },
+        {
+          "text": " 네",
+          "id": 8808,
+          "probability": 0.458881,
+          "startSeconds": 18.13,
+          "endSeconds": 18.16,
+          "dtwCentiseconds": 1822,
+          "dtwSeconds": 18.22
+        },
+        {
+          "text": " 컷",
+          "id": 9305,
+          "probability": 0.995746,
+          "startSeconds": 18.16,
+          "endSeconds": 18.4,
+          "dtwCentiseconds": 1840,
+          "dtwSeconds": 18.4
+        },
+        {
+          "text": "으로",
+          "id": 4130,
+          "probability": 0.99257,
+          "startSeconds": 18.4,
+          "endSeconds": 18.56,
+          "dtwCentiseconds": 1858,
+          "dtwSeconds": 18.58
+        },
+        {
+          "text": " 남",
+          "id": 11689,
+          "probability": 0.997084,
+          "startSeconds": 18.56,
+          "endSeconds": 18.64,
+          "dtwCentiseconds": 1876,
+          "dtwSeconds": 18.76
+        },
+        {
+          "text": "겨보세요",
+          "id": 1368,
+          "probability": 0.931738,
+          "startSeconds": 18.64,
+          "endSeconds": 19.32,
+          "dtwCentiseconds": 1888,
+          "dtwSeconds": 18.88
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.888881,
+          "startSeconds": 19.32,
+          "endSeconds": 19.32,
+          "dtwCentiseconds": 1934,
+          "dtwSeconds": 19.34
+        }
+      ],
+      "joinedTokenText": " 오늘의 표정 네 컷으로 남겨보세요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 9,
+      "text": " 포켓 네 컷!",
+      "startSeconds": 19.32,
+      "endSeconds": 20.18,
+      "tokens": [
+        {
+          "text": " 포",
+          "id": 17101,
+          "probability": 0.993796,
+          "startSeconds": 19.32,
+          "endSeconds": 19.39,
+          "dtwCentiseconds": 1948,
+          "dtwSeconds": 19.48
+        },
+        {
+          "text": "켓",
+          "id": 12397,
+          "probability": 0.975883,
+          "startSeconds": 19.39,
+          "endSeconds": 19.59,
+          "dtwCentiseconds": 1968,
+          "dtwSeconds": 19.68
+        },
+        {
+          "text": " 네",
+          "id": 8808,
+          "probability": 0.935178,
+          "startSeconds": 19.68,
+          "endSeconds": 19.68,
+          "dtwCentiseconds": 1988,
+          "dtwSeconds": 19.88
+        },
+        {
+          "text": " 컷",
+          "id": 9305,
+          "probability": 0.997598,
+          "startSeconds": 19.7,
+          "endSeconds": 19.9,
+          "dtwCentiseconds": 2004,
+          "dtwSeconds": 20.04
+        },
+        {
+          "text": "!",
+          "id": 0,
+          "probability": 0.877567,
+          "startSeconds": 19.9,
+          "endSeconds": 20.14,
+          "dtwCentiseconds": 2012,
+          "dtwSeconds": 20.12
+        }
+      ],
+      "joinedTokenText": " 포켓 네 컷!",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    }
+  ],
+  "issues": [],
+  "warnings": [],
+  "readyForRender": true,
+  "joinedTokenTranscript": " 내 폰이 네 컷 사진관이 된다면요? 포켓 네 컷! 이렇게 써보세요. 네 컷을 고르고 촬영을 누르면 8장이 자동으로 찍혀요. 마음에 드는 4장만 골라주세요. 배치랑 필터도 취향대로 바꿀 수 있어요. 흑백으로 하면 이런 느낌이에요. 완성하면 저장하고 친구에게 바로 공유해요. 데이트할 때도 집에서 놀 때도 오늘의 표정 네 컷으로 남겨보세요. 포켓 네 컷!",
+  "captionPhrases": [
+    {
+      "id": "hook",
+      "text": "내 폰이 네 컷 사진관이 된다면요?",
+      "lines": [
+        "내 폰이 네 컷 사진관이 된다면요?"
+      ],
+      "phraseIndex": 0,
+      "normalizedStart": 0,
+      "normalizedEnd": 13,
+      "rawVoiceStart": 0.22,
+      "rawVoiceEnd": 2.19,
+      "voiceStart": 0.34,
+      "voiceEnd": 2.31,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "solution",
+      "text": "포켓네컷, 이렇게 써보세요.",
+      "lines": [
+        "포켓네컷, 이렇게 써보세요."
+      ],
+      "phraseIndex": 1,
+      "normalizedStart": 13,
+      "normalizedEnd": 24,
+      "rawVoiceStart": 2.4,
+      "rawVoiceEnd": 3.84,
+      "voiceStart": 2.52,
+      "voiceEnd": 3.96,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "capture",
+      "text": "네 컷을 고르고 촬영을 누르면,",
+      "lines": [
+        "4컷을 고르고 촬영을 누르면"
+      ],
+      "phraseIndex": 2,
+      "normalizedStart": 24,
+      "normalizedEnd": 36,
+      "rawVoiceStart": 4.2,
+      "rawVoiceEnd": 5.68,
+      "voiceStart": 4.32,
+      "voiceEnd": 5.8,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "capture",
+      "text": "여덟 장이 자동으로 찍혀요.",
+      "lines": [
+        "8장이 자동으로 찍혀요."
+      ],
+      "variant": "detail",
+      "phraseIndex": 3,
+      "normalizedStart": 36,
+      "normalizedEnd": 46,
+      "rawVoiceStart": 5.86,
+      "rawVoiceEnd": 7.1,
+      "voiceStart": 5.98,
+      "voiceEnd": 7.22,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "selection",
+      "text": "마음에 드는 네 장만 골라 주세요.",
+      "lines": [
+        "마음에 드는 4장만 골라 주세요."
+      ],
+      "phraseIndex": 4,
+      "normalizedStart": 46,
+      "normalizedEnd": 59,
+      "rawVoiceStart": 7.38,
+      "rawVoiceEnd": 8.93,
+      "voiceStart": 7.5,
+      "voiceEnd": 9.05,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "layout",
+      "text": "배치랑 필터도 취향대로 바꿀 수 있어요.",
+      "lines": [
+        "배치랑 필터도 취향대로."
+      ],
+      "phraseIndex": 5,
+      "normalizedStart": 59,
+      "normalizedEnd": 75,
+      "rawVoiceStart": 9.1,
+      "rawVoiceEnd": 11.23,
+      "voiceStart": 9.22,
+      "voiceEnd": 11.35,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "filter",
+      "text": "흑백으로 하면 이런 느낌이에요.",
+      "lines": [
+        "흑백으로 하면 이런 느낌이에요."
+      ],
+      "variant": "bw",
+      "phraseIndex": 6,
+      "normalizedStart": 75,
+      "normalizedEnd": 88,
+      "rawVoiceStart": 11.34,
+      "rawVoiceEnd": 12.8,
+      "voiceStart": 11.46,
+      "voiceEnd": 12.92,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "save",
+      "text": "완성하면 저장하고,",
+      "lines": [
+        "완성하면 저장하고"
+      ],
+      "phraseIndex": 7,
+      "normalizedStart": 88,
+      "normalizedEnd": 96,
+      "rawVoiceStart": 13.1,
+      "rawVoiceEnd": 14.04,
+      "voiceStart": 13.22,
+      "voiceEnd": 14.16,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "save",
+      "text": "친구에게 바로 공유해요.",
+      "lines": [
+        "친구에게 바로 공유해요."
+      ],
+      "phraseIndex": 8,
+      "normalizedStart": 96,
+      "normalizedEnd": 106,
+      "rawVoiceStart": 14.3,
+      "rawVoiceEnd": 15.54,
+      "voiceStart": 14.42,
+      "voiceEnd": 15.66,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "occasions",
+      "text": "데이트할 때도, 집에서 놀 때도.",
+      "lines": [
+        "데이트할 때도, 집에서 놀 때도."
+      ],
+      "phraseIndex": 9,
+      "normalizedStart": 106,
+      "normalizedEnd": 118,
+      "rawVoiceStart": 15.54,
+      "rawVoiceEnd": 17.24,
+      "voiceStart": 15.66,
+      "voiceEnd": 17.36,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "cta",
+      "text": "오늘의 표정, 네 컷으로 남겨보세요.",
+      "lines": [
+        "오늘의 표정, 네 컷으로 남겨보세요."
+      ],
+      "phraseIndex": 10,
+      "normalizedStart": 118,
+      "normalizedEnd": 132,
+      "rawVoiceStart": 17.46,
+      "rawVoiceEnd": 19.32,
+      "voiceStart": 17.58,
+      "voiceEnd": 19.44,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "cta",
+      "text": "포켓네컷.",
+      "lines": [
+        "Pocket4Cut"
+      ],
+      "variant": "end",
+      "phraseIndex": 11,
+      "normalizedStart": 132,
+      "normalizedEnd": 136,
+      "rawVoiceStart": 19.48,
+      "rawVoiceEnd": 20.18,
+      "voiceStart": 19.6,
+      "voiceEnd": 20.3,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    }
+  ],
+  "inputVoiceSha256": "e443490cc35c5e545a5c264c667c7e3d73f17cb1fa2a65be11f0208ab7b0d7bc",
+  "inputSha256": "fd12fc775901b40942e1e7325fbae368c067761d39dfe8e8fa24f41a06ad6867"
+}

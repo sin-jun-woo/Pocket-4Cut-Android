@@ -222,3 +222,19 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 음성 생성은 공식 [Qwen3-TTS](https://github.com/QwenLM/Qwen3-TTS)의 [VoiceDesign 모델](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign)과 [공개 데모](https://huggingface.co/spaces/Qwen/Qwen3-TTS)를 사용했다. 한국어 원본 남성 음색을 텍스트로 지정했고 참조 음성/실존 인물 복제를 사용하지 않았다. 모델/데모의 Apache-2.0 표기는 생성물 독점권·광고 심사 통과의 보증이 아니다. 원본 요청은 `source/voice-request.json`, 출처·후처리·한계는 `source/VOICE-NOTES.md`에 기록했다.
 
 실제 발화의 자동 전사 119개 한글 음절이 대본과 일치했다. 흑백 감상과 저장/공유의 결과 연속성을 검토해 수정했다. 전체 MP4 디코딩·규격·길이·동기·음량·검은 구간 검사와 7개 ZIP 항목 원본 해시 비교를 통과했다. 생성 예시 고지를 유지하며 실제 청취·Instagram 업로드/자르기·스토어 배포 상태·앱 E2E는 별도 확인이 필요하다.
+
+## 12. 2026-09-10 릴스 홍보 자산 — Reference v3
+
+기준은 `f79b2fd`이며 `design/reels/reference-v3/`에 별도 광고를 추가했다. 기존 앱·아이콘·v1/v2 영상은 보존했다. 새 사진·프레임·로고 생성 없이 기존 앱 코드 기반 Compose 호스트 렌더·CollageRenderer 결과·Film Strip v4 아이콘·가상 성인 사진을 편집했다.
+
+- `deliverables/Pocket4Cut-Reels-Reference-Voice.mp4`: 23초 / 1080×1920 / 9:16 / 30 fps / 690프레임. H.264 High/yuv420p/BT.709/faststart + AAC stereo 48 kHz. 음악·효과음 추가 없음. 최종 음량 −16.0 LUFS / −3.4 dBTP.
+- `deliverables/Pocket4Cut-Reference-Narration.mp3`: 23초 / 48 kHz / stereo / MP3 192 kbps 설정. 동일한 내레이션 마스터에서 내보낸다.
+- `deliverables/Pocket4Cut-Reference-Cover.jpg`: 1080×1920 불투명 JPEG. “내 폰이 / 네 컷 사진관으로”, 실제 브랜드와 큰 필름 사진을 배치한 릴스 커버다. 앱 아이콘 교체본이 아니다.
+- `audio/narration-original.wav`: 실제 6초 참조를 조건으로 로컬 Qwen3-TTS 1.7B Base가 생성한 새 대본. 20.160초 / 24 kHz / mono / 32-bit float. `narration-master.wav`는 배속 없이 시작 0.12초와 후반 여유를 추가한 23초 / 48 kHz / stereo / PCM24다.
+- `visual-stills/`: 14구간의 두 시점 JPEG와 모아보기, 자막 경계·자산 해시·렌더 기록. `verification/`에는 실제 인코딩 MP4의 14장면/시작/끝 프레임, 음성·파일·패키지 검증이 있다.
+
+사용자 요청에 따라 자체 앱 소개 흐름과 친근한 존댓말을 사용하고, 참조 광고의 계정/원본 영상/원본 대본을 본편·커버·ZIP에 넣지 않았다. 광고·AI 사용 예시 표시는 별도로 유지했다. 사용자 원본 영상과 음성은 ignored 작업 영역에만 보존한다.
+
+색상은 종이색 `#F0ECE3`, 먹색 `#252520`, 적색 `#C83D2D` 중심이다. 생성 프롬프트가 필요한 새 사진 작업은 없었다. 새 음성 대본은 `source/narration-script.json`, 생성 설정·공식 Qwen/whisper.cpp 출처·Apache-2.0 모델 표기와 권리/검수 한계는 `source/VOICE-NOTES.md`, 재사용 이미지 경로·치수·해시는 `visual-stills/input-manifest.json`을 참조한다. 원본 이미지의 생성 프롬프트는 기존 스토어 제작물에 남겨 두었다.
+
+실제 전사/DTW로 대본 내용을 확인했고 최종 파일의 전체 디코딩·규격·동기·음량·검은 구간을 검사했다. 선택 프레임·커버 시각 검수에서 흑백→저장/공유 연속성을 확인하고 CTA 상단 표기 겹침을 정리했다. 음색 완전 동일성·자연스러움의 직접 청취, 기기 UI/업로드 심사, 실제 Play 상태는 미검증이다.

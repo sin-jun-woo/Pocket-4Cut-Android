@@ -1,0 +1,20 @@
+{
+  "language": "Korean",
+  "register": "Friendly polite Korean; do not use casual banmal endings.",
+  "concept": "Pocket4Cut app introduction, not the reference clothing-ad storyline.",
+  "text": "내 폰이 네 컷 사진관이 된다면요? 포켓네컷, 이렇게 써보세요. 네 컷을 고르고 촬영을 누르면, 여덟 장이 자동으로 찍혀요. 마음에 드는 네 장만 골라 주세요. 배치랑 필터도 취향대로 바꿀 수 있어요. 흑백으로 하면 이런 느낌이에요. 완성하면 저장하고, 친구에게 바로 공유해요. 데이트할 때도, 집에서 놀 때도. 오늘의 표정, 네 컷으로 남겨보세요. 포켓네컷.",
+  "phrases": [
+    { "id": "hook", "text": "내 폰이 네 컷 사진관이 된다면요?", "lines": ["내 폰이 네 컷 사진관이 된다면요?"] },
+    { "id": "solution", "text": "포켓네컷, 이렇게 써보세요.", "lines": ["포켓네컷, 이렇게 써보세요."] },
+    { "id": "capture", "text": "네 컷을 고르고 촬영을 누르면,", "lines": ["4컷을 고르고 촬영을 누르면"] },
+    { "id": "capture", "text": "여덟 장이 자동으로 찍혀요.", "lines": ["8장이 자동으로 찍혀요."], "variant": "detail" },
+    { "id": "selection", "text": "마음에 드는 네 장만 골라 주세요.", "lines": ["마음에 드는 4장만 골라 주세요."] },
+    { "id": "layout", "text": "배치랑 필터도 취향대로 바꿀 수 있어요.", "lines": ["배치랑 필터도 취향대로."] },
+    { "id": "filter", "text": "흑백으로 하면 이런 느낌이에요.", "lines": ["흑백으로 하면 이런 느낌이에요."], "variant": "bw" },
+    { "id": "save", "text": "완성하면 저장하고,", "lines": ["완성하면 저장하고"] },
+    { "id": "save", "text": "친구에게 바로 공유해요.", "lines": ["친구에게 바로 공유해요."] },
+    { "id": "occasions", "text": "데이트할 때도, 집에서 놀 때도.", "lines": ["데이트할 때도, 집에서 놀 때도."] },
+    { "id": "cta", "text": "오늘의 표정, 네 컷으로 남겨보세요.", "lines": ["오늘의 표정, 네 컷으로 남겨보세요."] },
+    { "id": "cta", "text": "포켓네컷.", "lines": ["Pocket4Cut"], "variant": "end" }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "duration": 23,
+  "source": "Local Whisper ASR transcript comparison and experimental DTW token timing",
+  "voiceOffsetSeconds": 0.12,
+  "captionLeadSeconds": 0.05,
+  "note": "Estimated phrase timing. Editorial layout/filter and occasion cuts share their complete spoken phrase caption. No exact voice-similarity claim.",
+  "scenes": [
+    {
+      "start": 0,
+      "end": 2.47,
+      "id": "hook",
+      "lines": [
+        "내 폰이 네 컷 사진관이 된다면요?"
+      ],
+      "voiceStart": 0.34,
+      "voiceEnd": 2.31,
+      "phraseIndex": 0
+    },
+    {
+      "start": 2.47,
+      "end": 4.27,
+      "id": "solution",
+      "lines": [
+        "포켓네컷, 이렇게 써보세요."
+      ],
+      "voiceStart": 2.52,
+      "voiceEnd": 3.96,
+      "phraseIndex": 1
+    },
+    {
+      "start": 4.27,
+      "end": 5.93,
+      "id": "capture",
+      "lines": [
+        "4컷을 고르고 촬영을 누르면"
+      ],
+      "voiceStart": 4.32,
+      "voiceEnd": 5.8,
+      "phraseIndex": 2
+    },
+    {
+      "start": 5.93,
+      "end": 7.45,
+      "id": "capture",
+      "lines": [
+        "8장이 자동으로 찍혀요."
+      ],
+      "variant": "detail",
+      "voiceStart": 5.98,
+      "voiceEnd": 7.22,
+      "phraseIndex": 3
+    },
+    {
+      "start": 7.45,
+      "end": 9.17,
+      "id": "selection",
+      "lines": [
+        "마음에 드는 4장만 골라 주세요."
+      ],
+      "voiceStart": 7.5,
+      "voiceEnd": 9.05,
+      "phraseIndex": 4
+    },
+    {
+      "start": 9.17,
+      "end": 10.122,
+      "id": "layout",
+      "lines": [
+        "배치랑 필터도 취향대로."
+      ],
+      "voiceStart": 9.22,
+      "voiceEnd": 11.35,
+      "phraseIndex": 5
+    },
+    {
+      "start": 10.122,
+      "end": 11.41,
+      "id": "filter",
+      "lines": [
+        "배치랑 필터도 취향대로."
+      ],
+      "voiceStart": 9.22,
+      "voiceEnd": 11.35,
+      "phraseIndex": 5,
+      "variant": "original"
+    },
+    {
+      "start": 11.41,
+      "end": 13.17,
+      "id": "filter",
+      "lines": [
+        "흑백으로 하면 이런 느낌이에요."
+      ],
+      "variant": "bw",
+      "voiceStart": 11.46,
+      "voiceEnd": 12.92,
+      "phraseIndex": 6
+    },
+    {
+      "start": 13.17,
+      "end": 14.37,
+      "id": "save",
+      "lines": [
+        "완성하면 저장하고"
+      ],
+      "voiceStart": 13.22,
+      "voiceEnd": 14.16,
+      "phraseIndex": 7
+    },
+    {
+      "start": 14.37,
+      "end": 15.61,
+      "id": "save",
+      "lines": [
+        "친구에게 바로 공유해요."
+      ],
+      "voiceStart": 14.42,
+      "voiceEnd": 15.66,
+      "phraseIndex": 8
+    },
+    {
+      "start": 15.61,
+      "end": 16.53,
+      "id": "occasions",
+      "lines": [
+        "데이트할 때도, 집에서 놀 때도."
+      ],
+      "voiceStart": 15.66,
+      "voiceEnd": 17.36,
+      "phraseIndex": 9,
+      "variant": "one"
+    },
+    {
+      "start": 16.53,
+      "end": 17.53,
+      "id": "occasions",
+      "lines": [
+        "데이트할 때도, 집에서 놀 때도."
+      ],
+      "voiceStart": 15.66,
+      "voiceEnd": 17.36,
+      "phraseIndex": 9,
+      "variant": "two"
+    },
+    {
+      "start": 17.53,
+      "end": 19.55,
+      "id": "cta",
+      "lines": [
+        "오늘의 표정, 네 컷으로 남겨보세요."
+      ],
+      "voiceStart": 17.58,
+      "voiceEnd": 19.44,
+      "phraseIndex": 10
+    },
+    {
+      "start": 19.55,
+      "end": 23,
+      "id": "cta",
+      "lines": [
+        "Pocket4Cut"
+      ],
+      "variant": "end",
+      "voiceStart": 19.6,
+      "voiceEnd": 20.3,
+      "phraseIndex": 11
+    }
+  ]
+}

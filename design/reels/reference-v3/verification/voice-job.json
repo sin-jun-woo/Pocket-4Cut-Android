@@ -1,0 +1,14 @@
+{
+  "eventId": "f0de5d0c6da540aba5e84785626968c7",
+  "submittedAt": "2026-09-10T11:49:47.977Z",
+  "mode": "reference-audio voice clone",
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+  "language": "Korean",
+  "useXvectorOnly": false,
+  "referenceSha256": "879cebf255d781553ade92ed00bd25d50f7298884423d295830876d24fe253d8",
+  "targetScriptSha256": "9c3af3b78b540f5718766559ec961fb9f162b313efede88ebec074e4c90cf3a5",
+  "authorization": "User expressly requested the reference AI timbre and approved extracted voice plus script transmission to Qwen/Hugging Face.",
+  "referenceMediaIncludedInDeliverables": false,
+  "paidApiCall": false,
+  "error": "null"
+}
