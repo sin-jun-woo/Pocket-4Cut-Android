@@ -4,6 +4,20 @@
 
 `docs/`는 GitHub Pages 배포 대상이므로 공개 가능한 요약만 기록한다. 비밀값, 사용자 사진, 기기 serial, 개인 로컬 경로, 원시 실행 로그를 넣지 않는다. 세부 실행 산출물은 로컬 build/캐시 영역에 두고 필요한 명령·결과만 남긴다.
 
+## 2026-09-10 — UI 게시 Bitmap 조기 해제 충돌 수정 (Asia/Seoul)
+
+- 요청/범위: 당일 업데이트를 위해 실기기 감사의 최우선 QA-01, `Canvas: trying to use a recycled bitmap` 강제 종료 원인만 수정한다. 다른 P1/P2 결함과 Lint 기존 오류는 이번 범위에서 고치지 않았다.
+- 기준/보존: `codex/reels-promo`, 시작 HEAD `5410405`. 시작 전부터 있던 `app/build.gradle.kts`의 1.3(4)→1.4(5) 버전 변경은 사용자 작업으로 보존하고 이번 변경에 포함하지 않았다.
+- 원인/수정: `asImageBitmap()`은 별도 복사본을 만들지 않는데 ViewModel이 StateFlow로 게시한 Bitmap을 Compose의 이전 프레임이 놓기 전에 recycle했다. `DetailEditViewModel`의 전체 preview 교체·단일 슬롯 교체·ViewModel 제거와 `EditViewModel`의 ViewModel 제거, 총 4개 수동 recycle 경로를 제거했다. 미게시 중간 산출물·취소 결과·최종 렌더 임시 Bitmap 해제는 유지했다.
+- 회귀 테스트: `BitmapOwnershipInstrumentedTest` 2개를 추가해 Detail의 전체/단일 교체 및 두 ViewModel 제거 뒤 보관한 UI 참조가 recycled되지 않고 Canvas에 그려짐을 확인했다. 필터 thumbnail 작업 완료까지 기다려 테스트 자체의 해제 경합도 피했다. 기존 진단의 조기 recycle 테스트 1개도 assertion 변경 없이 통과했다.
+- 빌드/단위 검사: 편집기 프로세스가 기본 `app/build`의 `R.jar`를 점유해 해당 출력 경로 빌드는 두 번 실패했고 프로세스를 강제 종료하지 않았다. ignored 격리 buildDir로 `:app:assembleDebug :app:assembleDebugAndroidTest :app:testDebugUnitTest`를 실행해 69개 task 모두 실제 실행·성공, 기본 단위 테스트 1개 통과. 마지막 테스트 보강 후 androidTest APK 재빌드도 성공했다. sandbox의 기본/cache-only wrapper 재시도 2회는 캐시 쓰기·오프라인 plugin 부재로 실패한 뒤 기존 사용자 Gradle 캐시와 격리 buildDir 조합으로 최종 성공했다.
+- Lint: 격리 buildDir의 `:app:lintDebug`는 **실패 — Error 1, Warning 77, Hint 2**. 차단 오류는 기존 `AndroidManifest.xml:6`의 `PermissionImpliesUnsupportedChromeOsHardware`이며 suppress하거나 이번 충돌 수정에 섞지 않았다.
+- 실기기 자동/수동 검사: Android 16/API 36 기기에서 신규 계측 2개와 기존 표적 진단 1개가 통과했다. 새 2컷 세션으로 회전·반전 36회, 보정 slider 왕복 36회, 상세 편집 재진입 3회, 일반 편집 이탈 2회를 수행했고 전후 PID가 유지됐으며 새 crash가 없었다. 조작 후 1회 PSS 309,500KiB/RSS 417,060KiB는 최고값이나 장기 누수 검증이 아니다.
+- 데이터/환경 정리: 신규 테스트 세션과 임시 test APK를 제거했고, 검사 전후 기존 세션 metadata가 동일함을 확인했다. 앱은 데이터 유지 설치 후 홈에서 실행 중이며 기존 설정의 `keepScreenOn=true`를 유지했다. 설치 APK는 별도 사용자 버전 변경을 포함해 1.4(5)이지만 그 버전 파일은 이번 커밋 대상이 아니다.
+- 변경 파일/자산: production ViewModel 2개, 기본 계측 테스트 1개, QA·known issues·진단 README·이 로그를 변경했다. 의존성, Manifest, 사용자 UI, 이미지 에셋은 변경하지 않았다.
+- 한계: 한 기기의 반복 실행으로 모든 프레임 경합·OS·메모리 압박에서의 무충돌을 보장할 수 없다. UI 참조가 사라질 때까지 Bitmap 회수가 늦어질 수 있으므로 별도 메모리 최고 사용량 위험은 유지한다. 다른 감사 항목은 후속 작업으로 남긴다.
+- Git: 위 충돌 수정 관련 파일만 명시적으로 stage·검토해 Conventional Commit으로 일반 push한다. 기존 버전 변경은 working tree에 남긴다.
+
 ## 2026-09-10 — 남은 파일 전체 커밋·푸시 (Asia/Seoul)
 
 - 요청/범위: 현재 저장소에 남아 있는 변경을 모두 커밋하고 GitHub에 push한다. 브랜치 병합이나 main 변경은 요청 범위에 포함하지 않는다.

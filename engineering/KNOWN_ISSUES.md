@@ -142,7 +142,7 @@
 | UI 스레드 디코드/필터 | NavHost `:219/:352`가 Main에서 사진을 decode. EditViewModel `:254`는 순서 변경 시 필터 이미지를 Main에서 재생성. 기기 trace 필요 |
 | 메모리 최고 사용량 | 원본·필터 preview·상세 preview·최종 처리 사진·출력 bitmap이 겹친다. 2048² ARGB 한 장 약 16MiB, 클래식 출력 약 31MiB. 실제 사용량 측정 필요 |
 | decodeSampled 요청 크기 의미 | BitmapDecoding `:29`는 양쪽 치수를 기준으로 sampling. reqSize=720이 긴 변 720 이하를 보장하지 않음 |
-| bitmap 소유권 | Edit는 생성된 모든 preview를 명시 해제하지 않음. Detail은 상태 교체 전에 이전 bitmap을 recycle. 영구 누수로 단정하지 않고 GC/그리기 타이밍 검증 |
+| bitmap 소유권 | 해결(2026-09-10): Edit 원본과 Detail preview처럼 UI에 게시한 Bitmap의 수동 recycle 4곳을 제거하고 도달 가능성에 따른 회수로 통일. 신규 수명 계측 2개, 기존 조기 recycle 진단 1개, 실기기 반복 편집 통과. 일시적 메모리 중첩은 위의 최고 사용량 위험으로 계속 추적 |
 | 필터/보정 작업 경합 | EditViewModel `:263`의 오래된 Job 결과가 최신 선택을 덮을 수 있음. Detail의 전체 rebuild Job은 slotJobs에서 관리하지 않음 |
 | 취소와 예외 정리 | Detail의 처리 목록 구성 중 실패하면 앞서 생성한 bitmap이 finally 범위 밖. withContext 취소 시 이후 recycle 분기에 도달하지 않을 수 있음 |
 | 촬영 취소 | CaptureEngine suspendCoroutine은 요청 취소를 연결하지 않음. CaptureViewModel catch(Throwable)은 취소도 FAILED로 변환할 수 있음 |

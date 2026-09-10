@@ -56,6 +56,8 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     private val _uiState = MutableStateFlow(EditUiState())
     val uiState: StateFlow<EditUiState> = _uiState
 
+    // These bitmaps are also published in uiState. Compose may retain a previous state while it
+    // completes a draw, so their lifetime is managed by reachability instead of manual recycle().
     private var originalImages: List<Bitmap> = emptyList()
     private var lastSessionId: String = ""
     private var lastFrameType: FrameType? = null
@@ -271,11 +273,6 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
             }
             _uiState.update { it.copy(filteredPreviewImages = filtered) }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        originalImages.forEach { runCatching { it.recycle() } }
     }
 
     companion object {

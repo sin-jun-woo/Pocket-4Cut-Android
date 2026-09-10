@@ -22,6 +22,12 @@
 6. 하트 스티커와 이름 문자열 출력 차이: 실패(픽셀 동일).
 7. UI가 이전 상태를 보유할 때 Bitmap 수명: 실패(조기 recycle).
 
+## QA-01 수정 후 표적 재검증
+
+2026-09-10에 UI에 게시한 Bitmap을 상태 교체 또는 ViewModel 제거 시 수동 recycle하던 production 경로 4곳을 제거했다. 같은 기기에서 기존 7번 진단 `replacingDetailPreviewDoesNotRecycleBitmapStillRetainedByUiConsumer`만 수정 없이 다시 실행해 통과했다.
+
+기본 androidTest 소스에는 `BitmapOwnershipInstrumentedTest`를 추가했다. Detail의 단일·전체 preview 교체와 ViewModel 제거, Edit의 ViewModel 제거 뒤 이전 UI 참조를 Canvas에 그리는 2개 테스트가 통과했다. 최초 7개 진단 전체를 다시 실행한 결과로 합산하지 않으며, 3~6번의 기존 실패는 이번 범위에서 수정하거나 재분류하지 않았다.
+
 마지막 검사는 수명 계약 위반을 검증한다. 실제 Compose draw 경합의 타이밍이나 사용자의 정확한 튕김 조작을 재현하는 테스트는 아니다. 출력 중앙색 검사는 실제 인물의 크롭·계절 장식·모든 글꼴/이모지 품질 검증을 대체하지 않는다.
 
 실패 assertion을 반대로 바꾸거나 suppress하여 통과시키지 않는다. 제품 수정 후 같은 테스트와 관련 기기 UI 회귀 검사를 실행한다.

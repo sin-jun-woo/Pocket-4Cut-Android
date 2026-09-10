@@ -89,6 +89,10 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
     private var initialized = false
     private val slotJobs = mutableMapOf<Int, Job>()
 
+    // Preview bitmaps published through uiState can outlive the latest emission while Compose
+    // finishes drawing an earlier frame. Never recycle a published bitmap manually; let the
+    // runtime reclaim it after every UI consumer has released its reference.
+
     fun initialize(
         baseImages: List<Bitmap>,
         imagePaths: List<String>,
@@ -269,7 +273,6 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
                 return@launch
             }
             _uiState.update { prev ->
-                prev.collagePreviewImages.forEach { it.recycle() }
                 prev.copy(collagePreviewImages = results)
             }
         }
@@ -293,7 +296,6 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
                     return@update prev
                 }
                 val mutable = prev.collagePreviewImages.toMutableList()
-                mutable[index].recycle()
                 mutable[index] = result
                 prev.copy(collagePreviewImages = mutable)
             }
@@ -376,6 +378,5 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
         slotJobs.values.forEach { it.cancel() }
         slotJobs.clear()
         super.onCleared()
-        _uiState.value.collagePreviewImages.forEach { it.recycle() }
     }
 }
