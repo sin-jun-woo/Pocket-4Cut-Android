@@ -1,0 +1,404 @@
+{
+  "provider": "Qwen official Hugging Face Space",
+  "eventId": "cc9f8a54827845698979cfe42e5902f3",
+  "status": "complete",
+  "asrModel": "Qwen/Qwen3-ASR-1.7B",
+  "alignerModel": "Qwen/Qwen3-ForcedAligner-0.6B",
+  "inputFile": "audio/narration-original.wav",
+  "inputSha256": "c0cf285df090d47d978c5779c32cac8df3f41a968f5da73c9ba5bb6b39dd2c19",
+  "inputDurationSeconds": 25.95375,
+  "timingBasis": "Original narration; add 0.15 seconds only if the final soundtrack preserves this rate and prepends the planned delay",
+  "language": "Korean",
+  "transcript": "저 네컷 만들었어요. 근데 사진관은 안 갔어요. 이거 포켓 네컷이에요. 네컷 고르고 촬영 누르면 여덟 장이 자동으로 찍혀요. 잘 나온 네 장만 고르고요. 배치랑 필터도 바꿨어요. 어, 흑백 좀 괜찮은데요? 완성하면 저장하고 바로 공유해요. 친구 만났는데 사진 안 남긴 날 있잖아요. 다음엔 폰으로 네컷 남겨봐요.",
+  "expectedScript": "저, 네 컷 만들었어요. 근데 사진관은 안 갔어요. 이거, 포켓 네 컷이에요. 네 컷 고르고 촬영 누르면, 여덟 장이 자동으로 찍혀요. 잘 나온 네 장만 고르고요. 배치랑 필터도 바꿨어요. 어, 흑백 좀 괜찮은데요? 완성하면 저장하고, 바로 공유해요. 친구 만났는데 사진 안 남긴 날, 있잖아요. 다음엔 폰으로 네 컷 남겨봐요.",
+  "comparison": {
+    "normalization": "Remove whitespace, punctuation and symbols; retain all other characters",
+    "normalizedTranscriptEqualsExpected": true,
+    "normalizedCharacterCount": 119,
+    "timestampTokensJoinEqualsTranscript": true,
+    "wordTokenCount": 60,
+    "zeroDurationTokens": [
+      {
+        "text": "엔",
+        "start_time": 23.84,
+        "end_time": 23.84
+      }
+    ],
+    "negativeDurations": 0
+  },
+  "timestamps": [
+    {
+      "text": "저",
+      "start_time": 0,
+      "end_time": 0.24
+    },
+    {
+      "text": "네컷",
+      "start_time": 0.32,
+      "end_time": 0.64
+    },
+    {
+      "text": "만들",
+      "start_time": 0.64,
+      "end_time": 0.96
+    },
+    {
+      "text": "었어요",
+      "start_time": 1.12,
+      "end_time": 1.36
+    },
+    {
+      "text": "근데",
+      "start_time": 1.44,
+      "end_time": 1.76
+    },
+    {
+      "text": "사진",
+      "start_time": 1.76,
+      "end_time": 2.08
+    },
+    {
+      "text": "관은",
+      "start_time": 2.08,
+      "end_time": 2.32
+    },
+    {
+      "text": "안",
+      "start_time": 2.32,
+      "end_time": 2.48
+    },
+    {
+      "text": "갔어요",
+      "start_time": 2.48,
+      "end_time": 3.04
+    },
+    {
+      "text": "이거",
+      "start_time": 3.44,
+      "end_time": 3.76
+    },
+    {
+      "text": "포켓",
+      "start_time": 3.76,
+      "end_time": 4.32
+    },
+    {
+      "text": "네컷이에요",
+      "start_time": 4.56,
+      "end_time": 5.44
+    },
+    {
+      "text": "네컷",
+      "start_time": 5.92,
+      "end_time": 6.32
+    },
+    {
+      "text": "고르",
+      "start_time": 6.32,
+      "end_time": 6.56
+    },
+    {
+      "text": "고",
+      "start_time": 6.56,
+      "end_time": 6.72
+    },
+    {
+      "text": "촬영",
+      "start_time": 6.72,
+      "end_time": 7.04
+    },
+    {
+      "text": "누르",
+      "start_time": 7.12,
+      "end_time": 7.28
+    },
+    {
+      "text": "면",
+      "start_time": 7.28,
+      "end_time": 7.68
+    },
+    {
+      "text": "여덟",
+      "start_time": 8.08,
+      "end_time": 8.32
+    },
+    {
+      "text": "장이",
+      "start_time": 8.32,
+      "end_time": 8.8
+    },
+    {
+      "text": "자동",
+      "start_time": 8.8,
+      "end_time": 9.12
+    },
+    {
+      "text": "으로",
+      "start_time": 9.12,
+      "end_time": 9.28
+    },
+    {
+      "text": "찍혀요",
+      "start_time": 9.28,
+      "end_time": 10
+    },
+    {
+      "text": "잘",
+      "start_time": 10.56,
+      "end_time": 10.8
+    },
+    {
+      "text": "나온",
+      "start_time": 10.8,
+      "end_time": 11.04
+    },
+    {
+      "text": "네",
+      "start_time": 11.04,
+      "end_time": 11.2
+    },
+    {
+      "text": "장만",
+      "start_time": 11.2,
+      "end_time": 11.6
+    },
+    {
+      "text": "고르",
+      "start_time": 11.6,
+      "end_time": 11.84
+    },
+    {
+      "text": "고요",
+      "start_time": 11.84,
+      "end_time": 12.24
+    },
+    {
+      "text": "배치",
+      "start_time": 12.64,
+      "end_time": 12.96
+    },
+    {
+      "text": "랑",
+      "start_time": 12.96,
+      "end_time": 13.12
+    },
+    {
+      "text": "필터도",
+      "start_time": 13.12,
+      "end_time": 13.6
+    },
+    {
+      "text": "바꿨",
+      "start_time": 13.6,
+      "end_time": 14.08
+    },
+    {
+      "text": "어요",
+      "start_time": 14.08,
+      "end_time": 14.4
+    },
+    {
+      "text": "어",
+      "start_time": 15.04,
+      "end_time": 15.28
+    },
+    {
+      "text": "흑백",
+      "start_time": 15.28,
+      "end_time": 15.68
+    },
+    {
+      "text": "좀",
+      "start_time": 15.68,
+      "end_time": 15.84
+    },
+    {
+      "text": "괜찮",
+      "start_time": 15.84,
+      "end_time": 16.16
+    },
+    {
+      "text": "은데요",
+      "start_time": 16.16,
+      "end_time": 16.56
+    },
+    {
+      "text": "완성",
+      "start_time": 17.28,
+      "end_time": 17.6
+    },
+    {
+      "text": "하면",
+      "start_time": 17.6,
+      "end_time": 17.92
+    },
+    {
+      "text": "저장",
+      "start_time": 17.92,
+      "end_time": 18.24
+    },
+    {
+      "text": "하고",
+      "start_time": 18.24,
+      "end_time": 18.56
+    },
+    {
+      "text": "바로",
+      "start_time": 18.64,
+      "end_time": 18.88
+    },
+    {
+      "text": "공유",
+      "start_time": 18.88,
+      "end_time": 19.12
+    },
+    {
+      "text": "해요",
+      "start_time": 19.12,
+      "end_time": 19.44
+    },
+    {
+      "text": "친구",
+      "start_time": 20.08,
+      "end_time": 20.48
+    },
+    {
+      "text": "만났",
+      "start_time": 20.48,
+      "end_time": 20.72
+    },
+    {
+      "text": "는데",
+      "start_time": 20.72,
+      "end_time": 21.2
+    },
+    {
+      "text": "사진",
+      "start_time": 21.44,
+      "end_time": 21.76
+    },
+    {
+      "text": "안",
+      "start_time": 21.76,
+      "end_time": 21.92
+    },
+    {
+      "text": "남긴",
+      "start_time": 21.92,
+      "end_time": 22.24
+    },
+    {
+      "text": "날",
+      "start_time": 22.24,
+      "end_time": 22.4
+    },
+    {
+      "text": "있잖아요",
+      "start_time": 22.4,
+      "end_time": 23.12
+    },
+    {
+      "text": "다음",
+      "start_time": 23.44,
+      "end_time": 23.84
+    },
+    {
+      "text": "엔",
+      "start_time": 23.84,
+      "end_time": 23.84
+    },
+    {
+      "text": "폰으로",
+      "start_time": 23.84,
+      "end_time": 24.24
+    },
+    {
+      "text": "네컷",
+      "start_time": 24.24,
+      "end_time": 24.56
+    },
+    {
+      "text": "남겨",
+      "start_time": 24.56,
+      "end_time": 24.88
+    },
+    {
+      "text": "봐요",
+      "start_time": 24.88,
+      "end_time": 25.28
+    }
+  ],
+  "captionPhrases": [
+    {
+      "text": "저, 네 컷 만들었어요.",
+      "start_time": 0,
+      "end_time": 1.36
+    },
+    {
+      "text": "근데 사진관은 안 갔어요.",
+      "start_time": 1.44,
+      "end_time": 3.04
+    },
+    {
+      "text": "이거, 포켓 네 컷이에요.",
+      "start_time": 3.44,
+      "end_time": 5.44
+    },
+    {
+      "text": "네 컷 고르고 촬영 누르면,",
+      "start_time": 5.92,
+      "end_time": 7.68
+    },
+    {
+      "text": "여덟 장이 자동으로 찍혀요.",
+      "start_time": 8.08,
+      "end_time": 10
+    },
+    {
+      "text": "잘 나온 네 장만 고르고요.",
+      "start_time": 10.56,
+      "end_time": 12.24
+    },
+    {
+      "text": "배치랑 필터도 바꿨어요.",
+      "start_time": 12.64,
+      "end_time": 14.4
+    },
+    {
+      "text": "어, 흑백 좀 괜찮은데요?",
+      "start_time": 15.04,
+      "end_time": 16.56
+    },
+    {
+      "text": "완성하면 저장하고,",
+      "start_time": 17.28,
+      "end_time": 18.56
+    },
+    {
+      "text": "바로 공유해요.",
+      "start_time": 18.64,
+      "end_time": 19.44
+    },
+    {
+      "text": "친구 만났는데",
+      "start_time": 20.08,
+      "end_time": 21.2
+    },
+    {
+      "text": "사진 안 남긴 날, 있잖아요.",
+      "start_time": 21.44,
+      "end_time": 23.12
+    },
+    {
+      "text": "다음엔 폰으로 네 컷 남겨봐요.",
+      "start_time": 23.44,
+      "end_time": 25.28
+    }
+  ],
+  "limitations": [
+    "Automatic ASR is a machine verification, not actual listening or a guarantee of natural prosody, voice gender, or flawless pronunciation.",
+    "The aligner splits Korean morphemes. The zero-duration token '엔' at 23.84 seconds must be joined to the preceding '다음' if word-level captions are created.",
+    "Reported times are model estimates, not sample-accurate boundaries.",
+    "Exactly one transcription request was submitted; no additional synthesis, paid API, registration, installation or quota bypass was used."
+  ]
+}

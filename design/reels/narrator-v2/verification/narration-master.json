@@ -1,0 +1,47 @@
+{
+  "source": "audio/narration-original.wav",
+  "output": "audio/narration-master-30s.wav",
+  "music": false,
+  "addedSoundEffects": false,
+  "voiceTimeOffsetSeconds": 0.15,
+  "speechTimeStretch": 1,
+  "filters": [
+    "highpass=f=70,acompressor=threshold=0.2:ratio=2:attack=5:release=65:makeup=1,aformat=sample_rates=48000:channel_layouts=stereo",
+    "loudnorm=I=-16:TP=-1.8:LRA=7:measured_I=-20.61:measured_TP=-7.29:measured_LRA=5.00:measured_thresh=-31.37:offset=0.95:linear=true:print_format=json",
+    "12ms entrance fade; 150ms start offset; silence pad to 30s"
+  ],
+  "target": {
+    "integratedLUFS": -16,
+    "truePeakDbTP": -1.8,
+    "durationSeconds": 30,
+    "sampleRate": 48000,
+    "channels": 2,
+    "codec": "PCM24"
+  },
+  "measuredBeforeNormalization": {
+    "input_i": "-20.61",
+    "input_tp": "-7.29",
+    "input_lra": "5.00",
+    "input_thresh": "-31.37",
+    "output_i": "-16.95",
+    "output_tp": "-4.25",
+    "output_lra": "3.50",
+    "output_thresh": "-27.62",
+    "normalization_type": "dynamic",
+    "target_offset": "0.95"
+  },
+  "normalizationResult": {
+    "input_i": "-20.44",
+    "input_tp": "-7.30",
+    "input_lra": "4.90",
+    "input_thresh": "-31.10",
+    "output_i": "-15.82",
+    "output_tp": "-2.69",
+    "output_lra": "4.90",
+    "output_thresh": "-26.49",
+    "normalization_type": "linear",
+    "target_offset": "-0.18"
+  },
+  "bytes": 8640102,
+  "sha256": "64637d6377d9b9c83e46ffb7259f92903f7a45003e025a799699a2e4f82dc611"
+}

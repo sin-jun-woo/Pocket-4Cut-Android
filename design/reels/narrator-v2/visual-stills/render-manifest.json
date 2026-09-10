@@ -1,0 +1,178 @@
+{
+  "duration": 30,
+  "requestedDuration": 30,
+  "fps": 30,
+  "frames": 900,
+  "width": 1080,
+  "height": 1920,
+  "video": "H.264 high / yuv420p / BT.709 / faststart",
+  "elapsedSeconds": 44.053,
+  "shots": [
+    {
+      "start": 0,
+      "end": 1.53,
+      "id": "hook",
+      "lines": [
+        "저, 네 컷",
+        "만들었어요."
+      ],
+      "voiceStart": 0.15,
+      "voiceEnd": 1.51
+    },
+    {
+      "start": 1.53,
+      "end": 3.53,
+      "id": "reveal",
+      "lines": [
+        "근데 사진관은",
+        "안 갔어요."
+      ],
+      "voiceStart": 1.5899999999999999,
+      "voiceEnd": 3.19
+    },
+    {
+      "start": 3.53,
+      "end": 6.01,
+      "id": "brand",
+      "lines": [
+        "이거,",
+        "포켓 네 컷이에요."
+      ],
+      "voiceStart": 3.59,
+      "voiceEnd": 5.590000000000001
+    },
+    {
+      "start": 6.01,
+      "end": 8.17,
+      "id": "capture",
+      "lines": [
+        "네 컷 고르고",
+        "촬영 누르면,"
+      ],
+      "voiceStart": 6.07,
+      "voiceEnd": 7.83
+    },
+    {
+      "start": 8.17,
+      "end": 10.65,
+      "id": "capture",
+      "lines": [
+        "8장이 자동으로",
+        "찍혀요."
+      ],
+      "voiceStart": 8.23,
+      "voiceEnd": 10.15
+    },
+    {
+      "start": 10.65,
+      "end": 12.73,
+      "id": "selection",
+      "lines": [
+        "잘 나온 4장만",
+        "고르고요."
+      ],
+      "voiceStart": 10.71,
+      "voiceEnd": 12.39
+    },
+    {
+      "start": 12.73,
+      "end": 13.65,
+      "id": "layout",
+      "lines": [
+        "배치랑 필터도",
+        "바꿨어요."
+      ],
+      "voiceStart": 12.790000000000001,
+      "voiceEnd": 14.55
+    },
+    {
+      "start": 13.65,
+      "end": 15.13,
+      "id": "filter",
+      "lines": [
+        "배치랑 필터도",
+        "바꿨어요."
+      ],
+      "voiceStart": 12.790000000000001,
+      "voiceEnd": 14.55,
+      "variant": "original"
+    },
+    {
+      "start": 15.13,
+      "end": 17.37,
+      "id": "filter",
+      "lines": [
+        "어, 흑백",
+        "좀 괜찮은데요?"
+      ],
+      "voiceStart": 15.19,
+      "voiceEnd": 16.709999999999997
+    },
+    {
+      "start": 17.37,
+      "end": 18.73,
+      "id": "save",
+      "lines": [
+        "완성하면",
+        "저장하고,"
+      ],
+      "voiceStart": 17.43,
+      "voiceEnd": 18.709999999999997
+    },
+    {
+      "start": 18.73,
+      "end": 20.17,
+      "id": "save",
+      "lines": [
+        "바로 공유해요."
+      ],
+      "voiceStart": 18.79,
+      "voiceEnd": 19.59
+    },
+    {
+      "start": 20.17,
+      "end": 21.53,
+      "id": "memory",
+      "lines": [
+        "친구 만났는데"
+      ],
+      "voiceStart": 20.229999999999997,
+      "voiceEnd": 21.349999999999998
+    },
+    {
+      "start": 21.53,
+      "end": 23.53,
+      "id": "memory",
+      "lines": [
+        "사진 안 남긴 날,",
+        "있잖아요."
+      ],
+      "voiceStart": 21.59,
+      "voiceEnd": 23.27
+    },
+    {
+      "start": 23.53,
+      "end": 26,
+      "id": "cta",
+      "lines": [
+        "다음엔 폰으로",
+        "네 컷 남겨봐요."
+      ],
+      "voiceStart": 23.59,
+      "voiceEnd": 25.43
+    },
+    {
+      "start": 26,
+      "end": 30,
+      "id": "cta",
+      "lines": [
+        "Pocket4Cut",
+        "폰으로 남기는 네 컷"
+      ],
+      "spoken": false
+    }
+  ],
+  "deviceCapture": false,
+  "audio": false,
+  "errors": ""
+}

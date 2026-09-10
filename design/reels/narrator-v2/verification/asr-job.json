@@ -1,0 +1,19 @@
+{
+  "provider": "Qwen official Hugging Face Space",
+  "endpoint": "https://qwen-qwen3-asr.hf.space/gradio_api/call/transcribe",
+  "eventId": "cc9f8a54827845698979cfe42e5902f3",
+  "asrModel": "Qwen/Qwen3-ASR-1.7B",
+  "alignerModel": "Qwen/Qwen3-ForcedAligner-0.6B",
+  "language": "Korean",
+  "returnTimestamps": true,
+  "inputFile": "audio/narration-original.wav",
+  "inputSha256": "c0cf285df090d47d978c5779c32cac8df3f41a968f5da73c9ba5bb6b39dd2c19",
+  "inputBytes": 1245824,
+  "inputDurationSeconds": 25.95375,
+  "timingBasis": "Original narration before final 0.15-second delay and silence padding",
+  "source": "Original synthetic scripted advertising narration, not personal recorded audio",
+  "requestsSubmitted": 1,
+  "paidApiCall": false,
+  "status": "complete",
+  "resultFile": "verification/asr-result.json"
+}

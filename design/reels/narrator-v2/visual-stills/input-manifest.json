@@ -1,0 +1,96 @@
+{
+  "note": "Existing AI sample photos and production Compose / CollageRenderer outputs. Editorial animation, not device capture.",
+  "assets": [
+    {
+      "id": "icon",
+      "file": "design/play-store/film-strip-v4/app-icon-master-1024.png",
+      "width": 1024,
+      "height": 1024,
+      "sha256": "fdbf0be23d2301297844a071db9458b95fdf4d885f02a3c65f20b691dc354c51"
+    },
+    {
+      "id": "count",
+      "file": "design/play-store/print-booth-v1/raw-screenshots/frame_count.png",
+      "width": 1080,
+      "height": 2400,
+      "sha256": "bd868aa2bb9739e31b34d51a8fe18f3e28ab44646fe8fb804d60f27f14f21ced"
+    },
+    {
+      "id": "selection",
+      "file": "design/play-store/print-booth-v1/raw-screenshots/selection.png",
+      "width": 1080,
+      "height": 2400,
+      "sha256": "ef1cb83994fa7e2dbcc561bce133eb99cd0a3f26a3ec1cb3417e6dea6a72182c"
+    },
+    {
+      "id": "layout",
+      "file": "design/play-store/print-booth-v1/raw-screenshots/layout.png",
+      "width": 1080,
+      "height": 2400,
+      "sha256": "3f64aeee84b3f6194fd1022bb12e91e09c932a172ada7b32400a5c8c72749d32"
+    },
+    {
+      "id": "edit",
+      "file": "design/play-store/print-booth-v1/raw-screenshots/edit.png",
+      "width": 1080,
+      "height": 2400,
+      "sha256": "bfe7bfc7527a38f151a5a6133d446085f1289d8b34a7a261b28f7ff0f7f08c65"
+    },
+    {
+      "id": "result",
+      "file": "design/play-store/print-booth-v1/raw-screenshots/result.png",
+      "width": 1080,
+      "height": 2400,
+      "sha256": "8cabc56126adb96aa86e8a08266e337f468615fc66c52fc6cee9aa4e68aa3f6d"
+    },
+    {
+      "id": "white",
+      "file": "design/play-store/print-booth-v1/capture/fixtures/store-demo-result-white.jpg",
+      "width": 1650,
+      "height": 4920,
+      "sha256": "d851fee934301c9aa7b303300e67cced67a381f15ab8d1f48858353c03b34dc3"
+    },
+    {
+      "id": "black",
+      "file": "design/play-store/print-booth-v1/capture/fixtures/store-demo-result-black.jpg",
+      "width": 1650,
+      "height": 4920,
+      "sha256": "61f97366bb6ea8e12e88dfd94d28fe779a31fd41cf90aa4996f52d2f853ed3eb"
+    },
+    {
+      "id": "blush",
+      "file": "design/play-store/print-booth-v1/capture/fixtures/store-demo-result-blush.jpg",
+      "width": 1650,
+      "height": 4920,
+      "sha256": "4dfd62bf91f1410ee0ca99b1fc1b439b4963fa1ffb60655e0af5aa8116cf6606"
+    },
+    {
+      "id": "photo1",
+      "file": "design/play-store/print-booth-v1/demo-photos/demo_01.jpg",
+      "width": 627,
+      "height": 627,
+      "sha256": "533de8c368330f37f11b7b66498b9648c648be61bbde915724cce8ddcc17ce8a"
+    },
+    {
+      "id": "photo2",
+      "file": "design/play-store/print-booth-v1/demo-photos/demo_02.jpg",
+      "width": 627,
+      "height": 627,
+      "sha256": "f1db2811e4f4bb49eb6850774257e068f45d30f6b7f1b51edf44f5b7a5219232"
+    },
+    {
+      "id": "photo3",
+      "file": "design/play-store/print-booth-v1/demo-photos/demo_03.jpg",
+      "width": 627,
+      "height": 627,
+      "sha256": "44544cd0c995848b758a5802cbb7216527c17dae8bd868ad2403b278a1e60e68"
+    },
+    {
+      "id": "photo4",
+      "file": "design/play-store/print-booth-v1/demo-photos/demo_04.jpg",
+      "width": 627,
+      "height": 627,
+      "sha256": "d4cd93a9e5187013529b1160ffbb5a910312eb14f6f62726c389052567aee2b0"
+    }
+  ]
+}

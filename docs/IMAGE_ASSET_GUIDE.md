@@ -207,3 +207,18 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 재료의 경로·치수·해시는 `verification/input-manifest.json`, 편집 판단·트렌드 참고 링크는 `source/CREATIVE-BRIEF.md`, 음악 제작/권리 한계는 `source/AUDIO-NOTES.md`, 실행 방법과 도구 출처는 해당 폴더 README에 기록했다. 기존 이미지의 생성 프롬프트는 원래 스토어 자산 패키지에 남겨 두었다. FFmpeg 실행 파일과 한글 폰트 파일을 앱 또는 납품 ZIP에 포함하지 않는다.
 
 두 MP4를 전체 디코딩하고 규격·길이·동기·오디오 true peak·예상치 못한 검은 구간을 검사했다. 주요 자막 영역, 시안/최종 디코딩 8장면, 시작/끝 프레임, 커버를 시각 검토했다. 기본 색상 태그가 누락된 최초 출력은 납품하지 않고 태그 설정을 보완해 재출력했다. 실제 휴대전화 음량, Instagram 업로드 자르기/심사, 앱 E2E는 미검증이다.
+
+## 11. 2026-09-10 릴스 홍보 자산 — Narrator v2
+
+기준은 `c33b83a`이며 `design/reels/narrator-v2/`에 기존 v1과 별개의 음성 중심 광고를 추가했다. 앱 및 기존 이미지 원본은 변경하지 않았다. 새 사진/아이콘 생성 없이 기존 Compose 호스트 렌더·CollageRenderer 결과·Film Strip v4 아이콘·AI 생성 가상 성인 사진으로 편집했다.
+
+- `deliverables/Pocket4Cut-Reels-Male-Narration-30s.mp4`: 1080×1920 / 9:16 / 30 fps / 900프레임 / 30초. H.264 High/yuv420p/BT.709/faststart, AAC stereo 48 kHz. 한국어 남성 AI 나레이션만 포함하며 음악·효과음 없음.
+- `deliverables/Pocket4Cut-Male-Narration.mp3`: 동일한 30초 음성 트랙, MP3 192 kbps 설정. 시작 여유 및 끝 무음 포함.
+- `deliverables/Pocket4Cut-Narrator-Cover.jpg`: 1080×1920 불투명 JPEG. 큰 필름 사진과 한글 제목, 광고·AI 생성 예시 고지. 앱 아이콘 교체본이 아니다.
+- `audio/narration-original.wav`: 공식 Qwen3-TTS VoiceDesign이 생성한 25.953750초 / 24 kHz / mono / PCM16. 원본 음성 및 텍스트 음색 지시를 보존했다.
+- `audio/narration-master-30s.wav`: 30초 / 48 kHz / stereo / PCM24. 말속도 1.0배, 0.15초 시작 여유 및 끝 무음. 최종 AAC −15.8 LUFS / −2.7 dBTP 측정.
+- `visual-stills/`: 실제 대사에 맞춘 15구간의 두 시점 JPEG와 모아보기. `verification/`에는 최종 MP4에서 추출한 15장면/시작/끝 JPEG 및 검증 JSON이 있다. 스틸은 영상 편집 검사용이며 앱 실기기 스크린샷으로 소개하지 않는다.
+
+음성 생성은 공식 [Qwen3-TTS](https://github.com/QwenLM/Qwen3-TTS)의 [VoiceDesign 모델](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign)과 [공개 데모](https://huggingface.co/spaces/Qwen/Qwen3-TTS)를 사용했다. 한국어 원본 남성 음색을 텍스트로 지정했고 참조 음성/실존 인물 복제를 사용하지 않았다. 모델/데모의 Apache-2.0 표기는 생성물 독점권·광고 심사 통과의 보증이 아니다. 원본 요청은 `source/voice-request.json`, 출처·후처리·한계는 `source/VOICE-NOTES.md`에 기록했다.
+
+실제 발화의 자동 전사 119개 한글 음절이 대본과 일치했다. 흑백 감상과 저장/공유의 결과 연속성을 검토해 수정했다. 전체 MP4 디코딩·규격·길이·동기·음량·검은 구간 검사와 7개 ZIP 항목 원본 해시 비교를 통과했다. 생성 예시 고지를 유지하며 실제 청취·Instagram 업로드/자르기·스토어 배포 상태·앱 E2E는 별도 확인이 필요하다.

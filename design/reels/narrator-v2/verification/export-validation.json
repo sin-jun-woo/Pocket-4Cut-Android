@@ -1,0 +1,98 @@
+{
+  "checkedAt": "2026-09-10T11:12:31.179Z",
+  "file": "deliverables/Pocket4Cut-Reels-Male-Narration-30s.mp4",
+  "bytes": 6366981,
+  "sha256": "360731d52fa0f7adc6b7c968c7a82a8ee461d3d5f4410fcc7a96f8e2fbd8bcfd",
+  "video": {
+    "codec": "h264",
+    "width": 1080,
+    "height": 1920,
+    "frames": 900,
+    "fps": "30/1",
+    "pixelFormat": "yuv420p",
+    "colorSpace": "bt709",
+    "colorTransfer": "bt709",
+    "colorPrimaries": "bt709"
+  },
+  "audio": {
+    "codec": "aac",
+    "sampleRate": 48000,
+    "channels": 2,
+    "duration": 30,
+    "integratedLUFS": -15.8,
+    "truePeakDbTP": -2.7,
+    "music": false,
+    "soundEffects": false
+  },
+  "duration": 30,
+  "checks": {
+    "fullDecode": "PASS",
+    "durationSync": "PASS",
+    "faststart": "PASS",
+    "blackIntervals": 0,
+    "coverSize": "PASS"
+  },
+  "frames": [
+    {
+      "file": "verification/encoded-01-hook.jpg",
+      "time": 0.765
+    },
+    {
+      "file": "verification/encoded-02-reveal.jpg",
+      "time": 2.33
+    },
+    {
+      "file": "verification/encoded-03-brand.jpg",
+      "time": 4.33
+    },
+    {
+      "file": "verification/encoded-04-capture.jpg",
+      "time": 6.81
+    },
+    {
+      "file": "verification/encoded-05-capture.jpg",
+      "time": 8.97
+    },
+    {
+      "file": "verification/encoded-06-selection.jpg",
+      "time": 11.450000000000001
+    },
+    {
+      "file": "verification/encoded-07-layout.jpg",
+      "time": 13.190000000000001
+    },
+    {
+      "file": "verification/encoded-08-filter.jpg",
+      "time": 14.39
+    },
+    {
+      "file": "verification/encoded-09-filter.jpg",
+      "time": 15.930000000000001
+    },
+    {
+      "file": "verification/encoded-10-save.jpg",
+      "time": 18.05
+    },
+    {
+      "file": "verification/encoded-11-save.jpg",
+      "time": 19.450000000000003
+    },
+    {
+      "file": "verification/encoded-12-memory.jpg",
+      "time": 20.85
+    },
+    {
+      "file": "verification/encoded-13-memory.jpg",
+      "time": 22.330000000000002
+    },
+    {
+      "file": "verification/encoded-14-cta.jpg",
+      "time": 24.330000000000002
+    },
+    {
+      "file": "verification/encoded-15-cta.jpg",
+      "time": 26.8
+    }
+  ],
+  "scope": "File-level verification and selected encoded image inspection, not subjective listening or Instagram upload acceptance."
+}

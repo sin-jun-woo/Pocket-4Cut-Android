@@ -1,0 +1,14 @@
+{
+  "eventId": "e23af22676534dbda1bd8ee7f548e405",
+  "submittedAt": "2026-09-10T10:54:51.790Z",
+  "provider": "Qwen official Hugging Face Space",
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "completedAt": "2026-09-10T10:55:26.590Z",
+  "url": "https://qwen-qwen3-tts.hf.space/gradio_api/file=/tmp/gradio/bf6c54fa8bcbb63740c396d40f5fb94e40c82e578607add8d28feba77693ad07/audio.wav",
+  "status": "Voice design generation completed successfully!",
+  "file": "audio/narration-original.wav",
+  "bytes": 1245824,
+  "sha256": "c0cf285df090d47d978c5779c32cac8df3f41a968f5da73c9ba5bb6b39dd2c19",
+  "referenceVoice": false,
+  "paidApiCall": false
+}

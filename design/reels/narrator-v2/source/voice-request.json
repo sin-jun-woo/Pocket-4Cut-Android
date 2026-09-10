@@ -1,0 +1,9 @@
+{
+  "provider": "Qwen official Hugging Face Space",
+  "model": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+  "endpoint": "https://qwen-qwen3-tts.hf.space/gradio_api/call/generate_voice_design",
+  "language": "Korean",
+  "text": "저, 네 컷 만들었어요. 근데 사진관은 안 갔어요. 이거, 포켓 네 컷이에요. 네 컷 고르고 촬영 누르면, 여덟 장이 자동으로 찍혀요. 잘 나온 네 장만 고르고요. 배치랑 필터도 바꿨어요. 어, 흑백 좀 괜찮은데요? 완성하면 저장하고, 바로 공유해요. 친구 만났는데 사진 안 남긴 날, 있잖아요. 다음엔 폰으로 네 컷 남겨봐요.",
+  "voiceDescription": "A young adult Korean male with a natural Seoul accent, calm mid-low register, close-mic conversational delivery, dry playful humor, and light upward inflections at sentence endings. Speak clearly and slightly briskly, like casually telling a friend what you tried. Small natural pauses between sentences, no long dramatic pauses. Natural Korean pronunciation. No announcer projection, no exaggerated acting, no singing, no background music or effects. Create an original voice; do not imitate any real person.",
+  "disclosure": "AI narration of a scripted advertising demonstration, not an actual customer testimonial. No reference voice, recording or identity was supplied."
+}
