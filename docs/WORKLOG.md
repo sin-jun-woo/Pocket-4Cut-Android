@@ -477,3 +477,12 @@ git ls-remote --heads origin codex/setup-project-guidance
 - 번들: 최종 `app-release.aab` 38,276,058 bytes, SHA-256 `5a9ddea0a3375c8a4e383b9168db30011994c2a430205119441c83c79d39f502`; `jarsigner -verify`는 `jar verified`를 반환했다. release Manifest는 ID `com.pocket4cut`, 1.4(5), min26/target36, CAMERA와 API 28 상한 쓰기 권한, 설정 허용 목록 백업이다. 업로드 키가 기존 Play Console 등록 키와 같은지는 확인하지 못했다. 서명키·암호 파일은 열람/커밋하지 않았다.
 - 출시 제한: 로컬 출시 후보 및 API 37 제한 검증은 통과했지만, 원격 API 26/28/29/33/36 CI 결과, 실제 전·후면 카메라·공유 수신·TalkBack/2배 글자/가로·저메모리/저장 공간 부족·실제 백업 복원·중단 지점별 장애 주입, 13개 TTF 파일별 출처/고지, Play Console 서명·버전·데이터 안전성·심사는 미완료다. 따라서 프로덕션 출시 승인으로 기록하지 않는다. 새 이미지 에셋은 없으며 기존 벡터·계절 atlas만 재사용했다.
 - Git: 작업 관련 파일과 합성 QA 증거만 정확한 경로로 stage하여 검토 후 원자적 커밋·현재 브랜치 일반 push를 수행한다. 자체 SHA와 원격 결과는 최종 `git log -1`, `git status --short --branch`, `git ls-remote --heads origin codex/release-readiness` 및 완료 보고에서 확인한다.
+
+## 2026-09-22 — 출시 차단 항목 재확인 및 개인정보 링크 보정 (Asia/Seoul)
+
+- 기준: 첫 출시 준비 커밋 `157334b8d59bfae500f50aa942dd2953ebe63c1e`은 `origin/codex/release-readiness`에 push됐다. 원격 GitHub Actions [실행 35724117933](https://github.com/sin-jun-woo/Pocket-4Cut-Android/actions/runs/35724117933)은 build/API 29·33·36 성공, API 26·28 실패다. 공개 annotation에는 exit 1만 있어 설치·부팅·계측 중 원인을 확정할 수 없다. 구형 사진첩 권한 거부·재허용·재시도는 현재 계측이 API 29 미만에서 건너뛰므로 별도 미검증이다.
+- 수정: 공개 개인정보 URL의 익명 HTTP 응답이 404여서 앱 내 방침 전문 끝의 도달 불가능한 링크 한 줄을 제거했다. 앱 내 전문은 유지하며 `docs/privacy-policy.html` 공개 배포는 별도 출시 관문으로 남겼다. Play 출시 초안과 출시 보고서에 현재 404를 명시했다.
+- 권리: 번들 TTF 13개를 파일명으로 4개 게시자 계열에 분류했으나 각 바이너리 공식 원본·해시·고지 전문이 저장소에 없어 출시 권리 확인은 열려 있다. IMAGE_ASSET_GUIDE에 근거와 한계를 보강했다.
+- Lint 비교: 같은 JDK/Gradle cache 및 격리 buildDir에서 시작 `6c815cb` 44경고/2힌트, 첫 출시 커밋 `157334b` 42경고/2힌트로 새 코드 경고 증가가 없었다. 작업 트리 실행의 56경고와 격리 실행의 42경고 차이는 버전 알림 항목 14개이며 정확한 환경 원인은 미확정이다. 기존 경고 분류·처리는 남았다.
+- 최종 소스 검증: `:app:assembleDebug :app:assembleQaRelease :app:testDebugUnitTest :app:lintDebug :app:lintRelease :app:bundleRelease --offline --console=plain` **BUILD SUCCESSFUL** (4분 5초, 144 task 중 37 executed/107 up-to-date). JVM 1/1, Debug Lint 오류 0/경고 56/힌트 2, Release Lint 오류 0/경고 41/힌트 2. 새 AAB 38,276,019 bytes, SHA-256 `5bcb4411ba8b9a0d97bc977f4ccf49c3fa079b17b2055a9b8d0a92a6f43931e1`; `jarsigner -verify` exit 0/`jar verified`이며 자기 서명·타임스탬프 관련 경고도 남는다. 인수를 인용해 재실행한 API 37 전체 계측은 대형 렌더·계절 출력 포함 XML **59/59 통과**, 2분 19초(65 task 중 1 executed/64 up-to-date)였다. 최초 명령은 PowerShell의 `-P` 인수 분리로 테스트 전 실패했으며 수정해 완료했다.
+- 배포 상태: Play 업로드/게시와 `main` 반영은 수행하지 않았으며, API 26/28 실패와 공개 정책 URL 404·폰트 권리·실기기 검증이 해소되기 전 출시 완료로 판정하지 않는다.

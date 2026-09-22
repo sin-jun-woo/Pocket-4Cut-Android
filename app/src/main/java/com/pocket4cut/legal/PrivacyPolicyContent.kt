@@ -71,6 +71,5 @@ Pocket 4Cut (포켓 네 컷) 개인정보 처리방침
 신준우
 $CONTACT_EMAIL
 
-※ 전문(웹): https://sin-jun-woo.github.io/Pocket-4Cut-Android/privacy-policy.html
 """.trimIndent()
 }

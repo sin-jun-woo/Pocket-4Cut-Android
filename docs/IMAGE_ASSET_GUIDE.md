@@ -110,7 +110,7 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 
 `CustomFrameDecoration.position`은 캔버스 전체 기준 정규화 중심 좌표다. `scale`은 배율, `rotationRadians`는 라디안이며 커스텀 편집기의 degree 제스처를 라디안으로 변환한다. 커스텀 편집 화면도 장식을 Compose 글자·아이콘 오버레이로 따로 그리지 않고 일반 미리보기·최종 출력과 같은 `drawScene`에 전달한다. 커스텀 텍스트는 논리 폭과 최대 2행 말줄임 규칙을 공유한다. 선택 표시·터치 영역까지 모든 화면 크기에서 픽셀 정합이 검증된 것은 아니다.
 
-출시 권리 검토에서 `assets/fonts/`의 TTF 13개에 대한 라이선스 전문·파일별 원본 출처가 저장소에 없음을 확인했다. [네이버](https://hangeul.naver.com/font)와 [카페24](https://cafe24.zendesk.com/hc/ko/articles/18299360301593-%EC%B9%B4%ED%8E%9824%EC%97%90%EC%84%9C-%EC%A0%9C%EA%B3%B5%EB%90%98%EB%8A%94-%ED%8F%B0%ED%8A%B8%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%A0-%EC%88%98-%EC%9E%88%EB%82%98%EC%9A%94)의 공개 안내는 일부 글꼴의 번들 조건을 설명하지만, 이 저장소의 각 파일이 공식 원본과 일치하고 고지 조건을 충족하는지는 별도로 확인해야 한다. 새 출처나 허가를 추정해 적지 않는다.
+출시 권리 검토에서 `assets/fonts/`의 TTF 13개에 대한 라이선스 전문·파일별 원본 URL/해시가 저장소에 없음을 확인했다. 파일명 기준으로 배민 4종(`BMHANNAPro`, `BMJUA_ttf`, `BMKkubulimTTF`, `BMYEONSUNG_ttf`), 카페24 3종, GC컴퍼니 `Jalnan2TTF` 1종, 네이버 나눔/클로바 5종이다. 이는 이름으로 분류한 것이며 바이너리 출처·허가 확인이 아니다. [우아한형제들](https://www.woowahan.com/fonts/license), [카페24](https://help.cafe24.com/faq/web-hosting/introduce/new-renewal-change/cafe24_free_fonts_usage/), [GC컴퍼니](https://gccompany.co.kr/font), [네이버](https://hangeul.naver.com/font)의 공식 배포 조건과 각 파일 원본을 대조하고, 필요한 저작권 표시·라이선스 전문을 배포물에 포함해야 한다. 특히 네이버·우아한형제들의 고지 조건을 확인해야 한다. 현재 파일을 임의로 재배포 가능하다고 판정하지 않는다.
 
 스티커/문구 색은 24bit RGB를 불투명 색으로 그린다. `textColorARGB`라는 이름만 보고 사용자 지정 반투명 장식을 지원한다고 설명하지 않는다. 계절 Paint의 별도 alpha는 다른 기능이다.
 

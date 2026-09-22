@@ -2,6 +2,8 @@
 
 > **2026-09-22 코드 기준:** `app/build.gradle.kts`의 버전은 `1.4 (versionCode 5)`, 배포 applicationId는 `com.pocket4cut`이다. 아래 문구는 **Play Console 입력 전 검토용 초안**이다. 실제 게시·심사, 기존 게시 버전/서명, 데이터 안전성 신고, 스토어 이미지와 각 기능의 출시 검증 완료 여부는 이 저장소에서 확인되지 않았다. 업로드 전에 최종 AAB와 Console 상태를 대조한다.
 
+> **출시 차단 사항:** `https://sin-jun-woo.github.io/Pocket-4Cut-Android/privacy-policy.html`은 2026-09-22 공개 요청에서 HTTP 404였다. `docs/privacy-policy.html`은 저장소에 있지만 공개 게시가 확인되지 않았다. Play Console에 URL을 입력하기 전에 공개 페이지를 배포하고 익명 접속으로 본문을 확인해야 한다. 앱 내 방침 전문은 유지하고 도달하지 않는 웹 주소 표시는 제거했다.
+
 > **버전:** 1.4 (versionCode 5)\
 > **작성일:** 2026-09-22\
 > **용도:** Google Play Console에 붙여넣을 출시노트·앱 소개 문구 모음

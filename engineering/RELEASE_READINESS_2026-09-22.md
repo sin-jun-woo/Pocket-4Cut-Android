@@ -78,9 +78,9 @@ Android 배포 설정은 `minSdk 26`, `targetSdk 36`, `compileSdk 36`, 배포 ID
 
 | 검증 | 실행 명령 또는 증거 | 결과와 해석 |
 | --- | --- | --- |
-| Debug·R8 QA·JVM·Debug Lint·release AAB | `./gradlew.bat :app:assembleDebug :app:assembleQaRelease :app:testDebugUnitTest :app:lintDebug :app:bundleRelease --offline --console=plain` | **BUILD SUCCESSFUL**, 4분 44초. 142 task 중 32 executed/110 up-to-date. JVM XML은 1/1 통과. Debug Lint XML은 오류 0, 경고 56, 힌트 2. |
+| 최종 소스의 Debug·R8 QA·JVM·양쪽 Lint·release AAB | `./gradlew.bat :app:assembleDebug :app:assembleQaRelease :app:testDebugUnitTest :app:lintDebug :app:lintRelease :app:bundleRelease --offline --console=plain` | **BUILD SUCCESSFUL**, 4분 5초. 144 task 중 37 executed/107 up-to-date. JVM XML은 1/1 통과. Debug Lint 오류 0·경고 56·힌트 2, Release Lint 오류 0·경고 41·힌트 2. |
 | 기본 전체 계측 | `./gradlew.bat :app:connectedDebugAndroidTest --offline --console=plain` | **BUILD SUCCESSFUL**, API 37 결과 XML 59개 중 57 통과·2 opt-in 건너뜀·실패/오류 0. Gradle 출력의 총계 문구 대신 결과 XML의 `tests=59`를 기준으로 삼았다. |
-| 대형 렌더·계절 내보내기 포함 전체 계측 | `./gradlew.bat :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.renderMemoryStress=true -Pandroid.testInstrumentationRunnerArguments.seasonalExport=true -Pandroid.testInstrumentationRunnerArguments.seasonalSourceRevision=release-readiness-worktree --offline --console=plain` | **BUILD SUCCESSFUL**, 결과 XML **59/59 통과**, 실패·오류·건너뜀 0. 계절 출력은 실제 renderer에서 투명 PNG 72장과 가상 성인 사진 합성 JPEG 32장, manifest를 생성했다. 이들은 `app/build/outputs/connected_android_test_additional_output/`의 검사 산출물이며 이번 커밋의 신규 앱 자산이 아니다. |
+| 최종 소스의 대형 렌더·계절 내보내기 포함 전체 계측 | `./gradlew.bat :app:connectedDebugAndroidTest '-Pandroid.testInstrumentationRunnerArguments.renderMemoryStress=true' '-Pandroid.testInstrumentationRunnerArguments.seasonalExport=true' '-Pandroid.testInstrumentationRunnerArguments.seasonalSourceRevision=release-readiness-final' --offline --console=plain` | **BUILD SUCCESSFUL**, 2분 19초. 결과 XML **59/59 통과**, 실패·오류·건너뜀 0. 계절 출력은 실제 renderer에서 투명 PNG 72장과 가상 성인 사진 합성 JPEG 32장, manifest를 생성했다. 이들은 `app/build/outputs/connected_android_test_additional_output/`의 검사 산출물이며 이번 커밋의 신규 앱 자산이 아니다. 처음 명령은 PowerShell이 점이 포함된 `-P` 인수를 잘못 분리해 테스트 시작 전 실패했고, 각 인수를 인용한 위 명령으로 재실행했다. |
 | 릴리스 변형 Lint | `./gradlew.bat :app:lintRelease --offline --console=plain` | **BUILD SUCCESSFUL**, 1분 32초. Release Lint XML 오류 0, 경고 41, 힌트 2. Debug의 56개와 variant별 검사 범위가 달라 동일 건수로 해석하지 않는다. |
 
 전체 계측 XML에는 백업 규칙 2, Bitmap 소유권 2·파이프라인 4, 촬영 손상/게시/순서 복구 5, 출력 기하 3, 기존 진단 7, 초안 즉시 이탈 1, MediaStore 3, 접근성 5, 렌더 출시 계약 4, 결과 게시 4, 계절 계약·미리보기·구형 배치 7, 세션 저장소 11, 기본 패키지 확인 1이 포함된다. UI에서 실제 촬영을 59번 수행했다는 뜻이 아니다. 새 저장소 시험은 숨긴 손상 기록의 재표시와 삭제 차단, 완료본/원본 보존, 중단된 결과 격리 재생을 포함한다.
@@ -99,7 +99,7 @@ Android 배포 설정은 `minSdk 26`, `targetSdk 36`, `compileSdk 36`, 배포 ID
 
 ### 배포 번들과 Manifest
 
-최종 `app/build/outputs/bundle/release/app-release.aab`는 **38,276,058 bytes**, SHA-256 `5a9ddea0a3375c8a4e383b9168db30011994c2a430205119441c83c79d39f502`이다. JDK `jarsigner -verify`는 `jar verified`를 반환했고 공개 서명 인증서 SHA-256 fingerprint는 `93:DF:82:15:B0:1C:28:3F:81:65:FE:79:4D:C5:1A:23:E6:FC:F6:DD:A8:07:B2:D8:6C:01:4E:20:2D:A4:A5:E5`다. 자기 서명·타임스탬프 없음과 JAR/stream 해석 경고도 출력되었다. 로컬 서명 검증은 Play Console의 기존 업로드 키 fingerprint와 일치함을 증명하지 않는다. 개인 keystore 파일이나 비밀번호는 읽거나 문서·커밋에 넣지 않았다.
+최종 `app/build/outputs/bundle/release/app-release.aab`는 **38,276,019 bytes**, SHA-256 `5bcb4411ba8b9a0d97bc977f4ccf49c3fa079b17b2055a9b8d0a92a6f43931e1`이다. JDK `jarsigner -verify`는 `jar verified`와 exit 0을 반환했고 공개 서명 인증서 SHA-256 fingerprint는 `93:DF:82:15:B0:1C:28:3F:81:65:FE:79:4D:C5:1A:23:E6:FC:F6:DD:A8:07:B2:D8:6C:01:4E:20:2D:A4:A5:E5`다. 자기 서명·타임스탬프 없음과 JAR/stream 해석 경고도 출력되었다. 로컬 서명 검증은 Play Console의 기존 업로드 키 fingerprint와 일치함을 증명하지 않는다. 개인 keystore 파일이나 비밀번호는 읽거나 문서·커밋에 넣지 않았다.
 
 AGP가 생성한 release merged Manifest는 `com.pocket4cut`, `versionCode=5`, `versionName=1.4`, `minSdk=26`, `targetSdk=36`이었다. 앱 권한은 `CAMERA`와 API 28 상한 `WRITE_EXTERNAL_STORAGE`이고, 의존성의 내부 signature permission 외에 기존 사진 전체 읽기 권한은 없다. 카메라 hardware 선언은 optional이며 백업 규칙 두 파일이 Manifest에 연결된다. AAB가 Play에서 허용되는 기존 버전/서명 조합인지, 정책·데이터 안전성 양식이 맞는지는 이 파일만으로 판정할 수 없다.
 
@@ -107,10 +107,18 @@ AGP가 생성한 release merged Manifest는 `com.pocket4cut`, `versionCode=5`, `
 
 **이번 결과는 로컬 출시 후보 빌드와 API 37 제한 검증 통과이며, 최종 프로덕션 출시 승인은 보류한다.** 앱의 사진 손실·복구 가능성에 관한 주요 경계를 개선했고 정상 흐름을 실제 R8 QA 앱으로 수행했으나, 다음 조건은 계획의 완료 요건이면서 현재 증거가 없다.
 
-1. **OS·물리 기기:** API 26/28/29/33/36의 실행 결과, 전·후면 물리 카메라 방향/미러링·발열·연속 촬영, 잠금·회전·권한 회수 각 촬영 단계, 실제 공유 수신 앱 JPEG 읽기. CI 파일에 매트릭스를 정의한 것과 CI가 통과한 것은 다르다.
+1. **OS·물리 기기:** 원격 API 26/28 실패 원인 규명 및 재통과, 전·후면 물리 카메라 방향/미러링·발열·연속 촬영, 잠금·회전·권한 회수 각 촬영 단계, 실제 공유 수신 앱 JPEG 읽기. API 29/33/36의 원격 계측 job은 성공했지만 모든 기능의 수동 검사를 뜻하지 않는다. API 26/28의 사진첩 쓰기 권한 거부→허용→재시도는 기존 계측 3개가 모두 API 29 이상에서만 실행되므로 별도 검증이 필요하다.
 2. **중단·리소스:** MediaStore insert/복사/게시의 강제 종료, 촬영·삭제·JSON 쓰기의 단계별 장애 및 공간 부족 주입, 백업/기기 이전 후 설정만 복원, 256MiB 및 더 낮은 메모리 기기의 앱 전체 peak/안전 실패. 최대 출력 단일 계측만으로 이를 대체하지 않는다.
 3. **화면·접근성·이미지:** 실제 TalkBack 완주, 2배 글자/가로/작은 화면 전 흐름, 25개 스티커·45색·13개 글꼴·모든 계절 결과 JPEG의 저장/재열기 육안 검수. 자동 scene 투영 128조합과 대표 결과 한 장을 전체 수동 조합의 대체로 세지 않는다.
-4. **배포·권리:** 원격 CI 전체 실행, Play Console의 패키지·기존 `versionCode`·업로드 키 일치, 앱 서명·데이터 안전성·스토어 설명·개인정보 URL·심사 트랙, 포함된 TTF 13개의 파일별 공식 원본·라이선스 전문·고지 확인이 필요하다. 글꼴은 파일명과 일반 배포 정책만으로 각 바이너리의 권리를 확정할 수 없다.
-5. **Lint 경고:** 오류는 0이지만 Debug 기준 경고 **56**개를 남겼다. 분포는 `UseKtx` 18, 의존성/버전 알림 15, 미사용 리소스 8, `ModifierParameter` 6, 아이콘 관련 7, 기타 2다. 이전 Paper Seasons 기록의 경고 44개와 수가 다르다. 동일 Lint 기준으로 항목별 기준 대비 증가가 없는지 증명하거나 관련 경고를 처리하기 전에는 원 계획의 `새 경고 0`을 달성했다고 말하지 않는다.
+4. **배포·권리:** Play Console의 패키지·기존 `versionCode`·업로드 키 일치, 앱 서명·데이터 안전성·스토어 설명·공개 개인정보 URL·심사 트랙, 포함된 TTF 13개의 파일별 공식 원본·라이선스 전문·고지 확인이 필요하다. 현재 공개 개인정보 URL은 HTTP 404이므로 제출 가능한 상태가 아니다. 글꼴은 파일명과 일반 배포 정책만으로 각 바이너리의 권리를 확정할 수 없다.
+5. **Lint 경고:** 작업 트리의 Debug Lint는 오류 0·경고 **56**개·힌트 2개다. 분포는 `UseKtx` 18, 의존성/버전 알림 15, 미사용 리소스 8, `ModifierParameter` 6, 아이콘 관련 7, 기타 2다. 별도의 동일 JDK/Gradle cache 및 격리 buildDir 비교에서 시작 커밋 `6c815cb`는 44경고/2힌트, 첫 출시 준비 커밋 `157334b`는 42경고/2힌트로 새 코드 경고가 증가하지 않았다. 작업 트리 56과 격리 실행 42의 차이 14개는 버전 알림 항목에 있었으며 정확한 환경 원인은 확정하지 않았다. 기존 경고의 분류·처리는 여전히 남아 있다.
 
 요청한 25개 감사 항목은 위 표에 각각 코드·실행 근거와 미완료 범위를 남겼다. 실기기·원격 서비스·권리 자료가 확보되기 전에는 이 보고서를 출시 완료 확인서나 무결함 보증서로 사용하지 않는다. 현재 변경에는 새 프레임·스티커·아이콘·패턴 이미지 파일이 없고, 기존 Paper Seasons 자산을 재사용했다.
+
+## 첫 push 이후 원격 CI·공개 자료 확인
+
+첫 출시 준비 커밋 `157334b8d59bfae500f50aa942dd2953ebe63c1e`은 `origin/codex/release-readiness`에 push했다. [GitHub Actions 실행 35724117933](https://github.com/sin-jun-woo/Pocket-4Cut-Android/actions/runs/35724117933)의 공개 job 상태를 확인한 결과 build와 API 29·33·36 계측은 **success**, API 26·28 계측은 **failure**였다. 두 실패 job의 공개 annotation은 에뮬레이터/계측 실행 step의 exit 1만 보였고 세부 로그는 공개 API에서 얻지 못했다. 따라서 에뮬레이터 설치·부팅, 테스트 실패, 시간 초과 중 무엇이 원인인지 확정하지 않는다. 명백한 무방비 API 29+ 호출은 정적 검토에서 찾지 못했으나 원인 배제의 증거도 아니다. 특히 API 26/28의 구형 사진첩 저장 권한 경로는 기존 계측이 건너뛰므로 CI가 녹색이어도 별도 수동/계측 검사가 필요하다.
+
+저장소의 `docs/privacy-policy.html`은 공개 페이지의 소스일 뿐이다. 2026-09-22에 앱에 표시하던 `https://sin-jun-woo.github.io/Pocket-4Cut-Android/privacy-policy.html`을 익명 HTTP 요청으로 확인하니 **404**였다. GitHub Pages API도 익명 요청에서 404였으므로 실제 Pages 설정을 확인할 수 없었다. 도달하지 않는 웹 링크는 앱 내 방침 전문에서 제거했다. 전문 자체는 앱에서 볼 수 있고, 공개 URL 배포·익명 접속 확인은 Play 제출 전 필수 관문이다. 현재 `origin/main`은 과거 커밋 `4527a05`이고 이 작업 브랜치의 정책 HTML이 배포 브랜치에 들어갔다고 주장하지 않는다.
+
+글꼴 13종은 파일명상 우아한형제들 4종, 카페24 3종, GC컴퍼니 `Jalnan2TTF` 1종, 네이버 계열 5종으로 분류했다. [우아한형제들 공식 조건](https://www.woowahan.com/fonts/license), [카페24 안내](https://help.cafe24.com/faq/web-hosting/introduce/new-renewal-change/cafe24_free_fonts_usage/), [GC컴퍼니 공식 배포](https://gccompany.co.kr/font), [네이버 공식 배포](https://hangeul.naver.com/font)를 찾았으나 현재 13개 TTF 각각의 원본 URL·해시·포함해야 할 고지 전문은 저장소에 없다. 법적 사용 가능성을 추정하지 않으며 파일별 확인과 고지가 끝나기 전 출시 승인하지 않는다.
