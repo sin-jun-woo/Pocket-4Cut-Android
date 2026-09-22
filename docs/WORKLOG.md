@@ -4,6 +4,14 @@
 
 `docs/`는 GitHub Pages 배포 대상이므로 공개 가능한 요약만 기록한다. 비밀값, 사용자 사진, 기기 serial, 개인 로컬 경로, 원시 실행 로그를 넣지 않는다. 세부 실행 산출물은 로컬 build/캐시 영역에 두고 필요한 명령·결과만 남긴다.
 
+## 2026-09-22 — Android 에뮬레이터 전면 감사 재실행 (Asia/Seoul)
+
+- 요청/범위: 현재 저장소를 처음부터 다시 조사하고 앱 코드 수정 없이 에뮬레이터의 촬영·선택·프레임·편집·저장·공유·보관함 문제와 리팩터링 기준을 상세 보고서로 기록했다. 기준은 `codex/reels-promo`의 시작 HEAD `434584ec502e8349ebec0f6500b4d857ac26344e`, 시작 작업 트리 clean이다. 이전 감사의 기기 결과를 이번 실행 성공으로 합치지 않았다.
+- 변경 파일: `engineering/EMULATOR_AUDIT_2026-09-22.md`, `engineering/audit-evidence/2026-09-22/`의 합성 카메라 장면·앱 화면 증거 15개, 이 작업 로그. 앱 기능 코드·Manifest·Gradle·에셋은 바꾸지 않았다.
+- 빌드/테스트: `:app:assembleDebug :app:assembleDebugAndroidTest :app:testDebugUnitTest :app:lintDebug --rerun-tasks --continue --offline --console=plain` 실행. 두 APK 생성 성공, 기본 JVM 테스트 1개 실제 실행·통과. Lint는 기존 `PermissionImpliesUnsupportedChromeOsHardware`로 실패(1 error/77 warnings/2 hints), 따라서 결합 명령 exit 1. `:app:connectedDebugAndroidTest`는 API 37 에뮬레이터에서 기본 3개 통과. 선택 `-I scripts/device-diagnostics.init.gradle :app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.pocket4cut.diagnostic.RenderContractDiagnosticTest --offline --console=plain`은 7개 중 3개 통과·4개 실패(문구/날짜, 카탈로그 색, 스티커, 6컷 기하 중복).
+- 기기 확인: 새 설치에서 2컷 4장→2장, 4컷 8장→4장, 6컷 10장→6장 선택까지 진행했다. 권한 설정 복귀 UI 미갱신, 선택·커스텀 상태의 회전 소실, 카탈로그 검정의 흰색 복원, 문구/날짜 및 스티커·계절 프레임의 preview/export 차이, 자동 사진첩 저장 중복을 재현했다. 수동 저장 JPEG와 Android 공유 시트, 촬영 중 Home 왕복, 큰 글자·다크모드도 확인했다. `logcat`에서 이번 앱 관련 FATAL 패턴은 발견하지 못했다.
+- 보존/한계: 에뮬레이터의 글자 크기·시스템 모드·회전을 원래 값으로 돌렸다. 테스트 앱의 임시 세션은 계측 설치 과정 뒤 재설치되었고, 합성 결과의 공용 사진첩 사본은 남아 있다. 사용자 사진 삭제·저장소 손상 주입은 하지 않았다. API 26–36, 다른 기기·실기기, 메모리/공간 부족, 모든 프레임·글꼴·스티커 조합, TalkBack, 최적화 release는 이번 새 검사 범위 밖이다. 상세한 재현·수정 기준은 [보고서](../engineering/EMULATOR_AUDIT_2026-09-22.md)에 있다.
+
 ## 2026-09-11 — Play Console 앱 최적화 경고 대응 (Asia/Seoul)
 
 - 요청/범위: Play Console의 ‘앱 최적화 낮음 / 난독화 0% / R8 구성 없음’ 표시를 해결할 release 빌드 구성을 적용한다. 앱 기능 결함과 기존 Lint 오류는 이번 변경에 섞지 않는다.
