@@ -8,8 +8,10 @@ data class FrameColor(
     val name: String,
     val color: Color,
     val gradientBrush: Brush? = null,
+    val gradientStops: List<Color>? = null,
 ) {
-    val isLight: Boolean get() = id != "black"
+    val isLight: Boolean get() =
+        (0.299f * color.red + 0.587f * color.green + 0.114f * color.blue) > 0.5f
 }
 
 object FrameColors {
@@ -66,14 +68,23 @@ object FrameColors {
         FrameColor("dove", "비둘기", Color(0xFFD5D5D5)),
         // 특별 색상 (gradient)
         FrameColor("hologram", "홀로그램", Color(0xFFF0E5FF),
-            Brush.linearGradient(listOf(Color(0xFFFFE5E5), Color(0xFFE5F0FF), Color(0xFFF0E5FF)))),
+            Brush.linearGradient(listOf(Color(0xFFFFE5E5), Color(0xFFE5F0FF), Color(0xFFF0E5FF))),
+            listOf(Color(0xFFFFE5E5), Color(0xFFE5F0FF), Color(0xFFF0E5FF))),
         FrameColor("sunset", "석양", Color(0xFFFFE5D9),
-            Brush.linearGradient(listOf(Color(0xFFFFE5D9), Color(0xFFFFD4E5)))),
+            Brush.linearGradient(listOf(Color(0xFFFFE5D9), Color(0xFFFFD4E5))),
+            listOf(Color(0xFFFFE5D9), Color(0xFFFFD4E5))),
         FrameColor("aurora", "오로라", Color(0xFFD4F0FF),
-            Brush.linearGradient(listOf(Color(0xFFD4F0FF), Color(0xFFE5D4FF), Color(0xFFFFD4E5)))),
+            Brush.linearGradient(listOf(Color(0xFFD4F0FF), Color(0xFFE5D4FF), Color(0xFFFFD4E5))),
+            listOf(Color(0xFFD4F0FF), Color(0xFFE5D4FF), Color(0xFFFFD4E5))),
     )
 
-    fun byId(id: String): FrameColor = all.firstOrNull { it.id == id } ?: all.first()
+    fun byId(id: String): FrameColor =
+        all.firstOrNull { it.id == id }
+            ?: com.pocket4cut.presentation.navigation.FrameType.entries
+                .asSequence()
+                .flatMap { colorFramePalette(it).asSequence() }
+                .firstOrNull { it.id == id }
+            ?: all.first()
 
     fun colorFramePalette(frameType: com.pocket4cut.presentation.navigation.FrameType): List<FrameColor> {
         val themes = FrameCatalog.themes(frameType)

@@ -3,7 +3,7 @@ package com.pocket4cut.ui.designsystem.components
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
@@ -16,6 +16,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.pocket4cut.ui.designsystem.AppColors
 
@@ -28,6 +31,7 @@ private val ThumbPadding = 2.dp
 fun PinkToggle(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
+    label: String,
     modifier: Modifier = Modifier,
 ) {
     val thumbTargetX = if (checked) {
@@ -44,21 +48,30 @@ fun PinkToggle(
 
     Box(
         modifier = modifier
-            .size(ToggleWidth, ToggleHeight)
-            .clip(RoundedCornerShape(ToggleHeight / 2))
-            .background(trackColor)
-            .clickable(
+            .size(ToggleWidth, 48.dp)
+            .semantics { contentDescription = label }
+            .toggleable(
+                value = checked,
+                role = Role.Switch,
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = { onCheckedChange(!checked) },
+                onValueChange = onCheckedChange,
             ),
+        contentAlignment = Alignment.Center,
     ) {
         Box(
             modifier = Modifier
-                .offset(x = thumbX, y = ThumbPadding)
-                .size(ThumbSize)
-                .clip(CircleShape)
-                .background(AppColors.Text.inverse),
-        )
+                .size(ToggleWidth, ToggleHeight)
+                .clip(RoundedCornerShape(ToggleHeight / 2))
+                .background(trackColor),
+        ) {
+            Box(
+                modifier = Modifier
+                    .offset(x = thumbX, y = ThumbPadding)
+                    .size(ThumbSize)
+                    .clip(CircleShape)
+                    .background(AppColors.Text.inverse),
+            )
+        }
     }
 }

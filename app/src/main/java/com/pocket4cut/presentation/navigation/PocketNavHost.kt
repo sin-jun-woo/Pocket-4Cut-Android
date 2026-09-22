@@ -5,6 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -15,6 +16,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import android.graphics.Bitmap
 import com.pocket4cut.data.storage.FileImageStorage
+import com.pocket4cut.data.local.SessionDocumentRepository
+import com.pocket4cut.domain.model.SessionDocument
+import com.pocket4cut.domain.model.SessionStage
 import com.pocket4cut.frame.FilterId
 import com.pocket4cut.frame.FrameCatalog
 import com.pocket4cut.frame.FrameColors
@@ -40,6 +44,7 @@ import com.pocket4cut.presentation.selection.SelectionScreen
 import com.pocket4cut.presentation.settings.ContactFeedbackScreen
 import com.pocket4cut.presentation.settings.PrivacyPolicyScreen
 import com.pocket4cut.presentation.settings.SettingsScreen
+import kotlinx.coroutines.launch
 
 @Composable
 fun PocketNavHost(
@@ -64,9 +69,26 @@ fun PocketNavHost(
 
         // Home
         composable(Routes.HOME) {
+            val context = LocalContext.current
+            var recentDraft by remember { mutableStateOf<SessionDocument?>(null) }
+            var draftLoadError by remember { mutableStateOf<String?>(null) }
+            LaunchedEffect(Unit) {
+                runCatching {
+                    SessionDocumentRepository(context).list().firstOrNull { session ->
+                        session.stage != SessionStage.RESULT && session.stage != SessionStage.DELETED &&
+                            session.stage != SessionStage.NEEDS_RECOVERY
+                    }
+                }.onSuccess { recentDraft = it }
+                    .onFailure { draftLoadError = "저장된 작업을 읽을 수 없습니다. 보관함에서 확인해 주세요." }
+            }
             HomeScreen(
                 onStart = { navController.navigate(Routes.FRAME_TYPE_SELECT) },
                 onGallery = { navController.navigate(Routes.GALLERY) },
+                onResume = recentDraft?.let { draft ->
+                    { navController.navigate(resumeRoute(draft)) }
+                },
+                resumeLabel = recentDraft?.let { "${it.selectedCount}컷 이어서 작업하기" },
+                notice = draftLoadError,
                 onSettings = { navController.navigate(Routes.SETTINGS) },
             )
         }
@@ -90,11 +112,23 @@ fun PocketNavHost(
 
         // Gallery
         composable(Routes.GALLERY) {
+            val context = LocalContext.current
+            val scope = rememberCoroutineScope()
             GalleryScreen(
                 onBack = { navController.popBackStack() },
                 onOpen = { resultPath ->
                     val encoded = NavCodec.encodePath(resultPath)
                     navController.navigate("${Routes.RESULT}/$encoded")
+                },
+                onOpenResult = { _, _, resultPath ->
+                    val encoded = NavCodec.encodePath(resultPath)
+                    navController.navigate("${Routes.RESULT}/$encoded")
+                },
+                onResumeDraft = { sessionId, _ ->
+                    scope.launch {
+                        val document = SessionDocumentRepository(context).getById(sessionId) ?: return@launch
+                        navController.navigate(resumeRoute(document))
+                    }
                 },
             )
         }
@@ -120,6 +154,27 @@ fun PocketNavHost(
                 onBack = { navController.popBackStack() },
                 onCompleted = { sessionId, type ->
                     navController.navigate("${Routes.SELECTION}/${type.id}/$sessionId") {
+                        popUpTo(Routes.HOME) { inclusive = false }
+                    }
+                },
+            )
+        }
+
+        composable(
+            route = "${Routes.CAPTURE}/{${Routes.Args.FRAME_TYPE}}/{${Routes.Args.SESSION_ID}}",
+            arguments = listOf(
+                navArgument(Routes.Args.FRAME_TYPE) { type = NavType.StringType },
+                navArgument(Routes.Args.SESSION_ID) { type = NavType.StringType },
+            ),
+        ) { entry ->
+            val frameType = FrameType.fromId(entry.arguments?.getString(Routes.Args.FRAME_TYPE).orEmpty())
+            val sessionId = entry.arguments?.getString(Routes.Args.SESSION_ID).orEmpty()
+            CaptureScreen(
+                frameType = frameType,
+                resumeSessionId = sessionId,
+                onBack = { navController.popBackStack() },
+                onCompleted = { id, type ->
+                    navController.navigate("${Routes.SELECTION}/${type.id}/$id") {
                         popUpTo(Routes.HOME) { inclusive = false }
                     }
                 },
@@ -160,13 +215,16 @@ fun PocketNavHost(
             val sessionId = entry.arguments?.getString(Routes.Args.SESSION_ID).orEmpty()
             val selectedRaw = entry.arguments?.getString(Routes.Args.SELECTED_INDEXES).orEmpty()
             val frameType = FrameType.fromId(frameTypeId)
-            val storage = FileImageStorage(LocalContext.current)
-            val selectedIndexes = NavCodec.decodeIndexes(selectedRaw)
+            val context = LocalContext.current
+            val sessions = remember(context) { SessionDocumentRepository(context) }
+            val scope = rememberCoroutineScope()
 
             var photoPaths by remember { mutableStateOf(emptyList<String>()) }
             LaunchedEffect(sessionId) {
-                val allPaths = storage.getCapturePaths(sessionId)
-                photoPaths = selectedIndexes.mapNotNull { idx -> allPaths.getOrNull(idx) }
+                val document = sessions.getById(sessionId) ?: return@LaunchedEffect
+                photoPaths = document.draft.selectedPhotoIdsInOrder.map { id ->
+                    sessions.resolvePhotoPath(document.photos.first { it.photoId == id }).absolutePath
+                }
             }
 
             LayoutSelectionScreen(
@@ -174,9 +232,16 @@ fun PocketNavHost(
                 requiredCount = frameType.selectCount,
                 frameType = frameType,
                 onSelectLayout = { layoutId ->
-                    navController.navigate(
-                        "${Routes.FRAME_THEME_SELECT}/${frameTypeId}/$sessionId/$selectedRaw/${layoutId.name}",
-                    )
+                    scope.launch {
+                        val doc = sessions.getById(sessionId) ?: return@launch
+                        sessions.update(sessionId, doc.revision) { current ->
+                            current.copy(stage = SessionStage.FRAME,
+                                draft = current.draft.copy(layoutId = layoutId.name))
+                        }
+                        navController.navigate(
+                            "${Routes.FRAME_THEME_SELECT}/${frameTypeId}/$sessionId/$selectedRaw/${layoutId.name}",
+                        )
+                    }
                 },
                 onCancel = { navController.popBackStack() },
             )
@@ -197,8 +262,9 @@ fun PocketNavHost(
             val selectedRaw = entry.arguments?.getString(Routes.Args.SELECTED_INDEXES).orEmpty()
             val layoutIdStr = entry.arguments?.getString(Routes.Args.LAYOUT_ID).orEmpty()
             val frameType = FrameType.fromId(frameTypeId)
-            val storage = FileImageStorage(LocalContext.current)
-            val selectedIndexes = NavCodec.decodeIndexes(selectedRaw)
+            val context = LocalContext.current
+            val sessions = remember(context) { SessionDocumentRepository(context) }
+            val scope = rememberCoroutineScope()
             val frameLayoutId = remember(layoutIdStr) {
                 runCatching { FrameLayoutId.valueOf(layoutIdStr) }.getOrElse { FrameLayoutId.FOUR_VERTICAL }
             }
@@ -206,14 +272,38 @@ fun PocketNavHost(
 
             var photoPaths by remember { mutableStateOf(emptyList<String>()) }
             LaunchedEffect(sessionId) {
-                val allPaths = storage.getCapturePaths(sessionId)
-                photoPaths = selectedIndexes.mapNotNull { idx -> allPaths.getOrNull(idx) }
+                val document = sessions.getById(sessionId) ?: return@LaunchedEffect
+                photoPaths = document.draft.selectedPhotoIdsInOrder.map { id ->
+                    sessions.resolvePhotoPath(document.photos.first { it.photoId == id }).absolutePath
+                }
             }
 
-            val theme = remember(frameType) { FrameCatalog.themes(frameType).first() }
-            val context = LocalContext.current
+            var theme by remember { mutableStateOf(FrameCatalog.themes(frameType).first()) }
+            var initialDesign by remember { mutableStateOf<CustomFrameDesign?>(null) }
 
             var flowStep by remember { mutableStateOf("choose") }
+            var frameLoaded by remember { mutableStateOf(false) }
+            LaunchedEffect(sessionId) {
+                val document = sessions.getById(sessionId) ?: return@LaunchedEffect
+                flowStep = document.draft.frameStep
+                theme = FrameCatalog.themes(frameType).firstOrNull { it.id == document.draft.themeId }
+                    ?: FrameCatalog.themes(frameType).first()
+                initialDesign = document.draft.customDesignJson?.let(PendingCollageStore::deserializeDesign)
+                frameLoaded = true
+            }
+
+            fun saveFrame(step: String, onSaved: () -> Unit = {},
+                          transform: (com.pocket4cut.domain.model.SessionDraft) -> com.pocket4cut.domain.model.SessionDraft = { it }) {
+                scope.launch {
+                    val document = sessions.getById(sessionId) ?: return@launch
+                    sessions.update(sessionId, document.revision) { current ->
+                        current.copy(stage = if (step == "edit") SessionStage.EDIT else SessionStage.FRAME,
+                            draft = transform(current.draft).copy(themeId = theme.id,
+                                frameStep = if (step == "edit") current.draft.frameStep else step))
+                    }
+                    onSaved()
+                }
+            }
 
             var previewBitmaps by remember { mutableStateOf(emptyList<Bitmap>()) }
             LaunchedEffect(photoPaths) {
@@ -228,11 +318,11 @@ fun PocketNavHost(
                 )
             }
 
-            when (flowStep) {
+            if (frameLoaded) when (flowStep) {
                 "choose" -> FrameFlowCoordinatorScreen(
-                    onColorPick = { flowStep = "color" },
-                    onSeasonPick = { flowStep = "season" },
-                    onCustomEditor = { flowStep = "custom" },
+                    onColorPick = { saveFrame("color", onSaved = { flowStep = "color" }) },
+                    onSeasonPick = { saveFrame("season", onSaved = { flowStep = "season" }) },
+                    onCustomEditor = { saveFrame("custom", onSaved = { flowStep = "custom" }) },
                     onDismiss = { navController.popBackStack() },
                 )
                 "color" -> ColorFramePalettePickScreen(
@@ -240,15 +330,13 @@ fun PocketNavHost(
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
-                    onBack = { flowStep = "choose" },
+                    onBack = { saveFrame("choose", onSaved = { flowStep = "choose" }) },
                     onDismiss = { navController.popBackStack() },
                     onCompleted = { color ->
-                        PendingCollageStore.writeFrameSelection(
-                            context, sessionId,
-                            type = "solid",
-                            frameColorId = color.id,
-                        )
-                        navigateToEdit()
+                        saveFrame("edit", onSaved = { navigateToEdit() }) {
+                            it.copy(frameColorId = color.id, backgroundType = "solid",
+                                seasonId = null, customDesignJson = null)
+                        }
                     },
                 )
                 "season" -> SeasonBackgroundFramePickScreen(
@@ -256,17 +344,14 @@ fun PocketNavHost(
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
-                    onBack = { flowStep = "choose" },
+                    onBack = { saveFrame("choose", onSaved = { flowStep = "choose" }) },
                     onDismiss = { navController.popBackStack() },
                     onCompleted = { season ->
                         val design = SeasonBackgroundFrameFactory.design(season)
-                        PendingCollageStore.writeFrameSelection(
-                            context, sessionId,
-                            type = "season",
-                            seasonId = season.name.lowercase(),
-                            customDesignJson = PendingCollageStore.serializeDesign(design),
-                        )
-                        navigateToEdit()
+                        saveFrame("edit", onSaved = { navigateToEdit() }) {
+                            it.copy(backgroundType = "season", seasonId = season.name.lowercase(),
+                                customDesignJson = PendingCollageStore.serializeDesign(design))
+                        }
                     },
                 )
                 "custom" -> CustomFrameEditorScreen(
@@ -274,16 +359,18 @@ fun PocketNavHost(
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
-                    onBack = { flowStep = "choose" },
+                    onBack = { saveFrame("choose", onSaved = { flowStep = "choose" }) },
                     onDismiss = { navController.popBackStack() },
+                    initialDesign = initialDesign,
+                    onDraftChanged = { design ->
+                        saveFrame("custom") { it.copy(customDesignJson = PendingCollageStore.serializeDesign(design),
+                            frameColorId = design.fillColorId, backgroundType = "solid") }
+                    },
                     onCompleted = { design ->
-                        PendingCollageStore.writeFrameSelection(
-                            context, sessionId,
-                            type = "custom",
-                            frameColorId = design.fillColorId,
-                            customDesignJson = PendingCollageStore.serializeDesign(design),
-                        )
-                        navigateToEdit()
+                        saveFrame("edit", onSaved = { navigateToEdit() }) {
+                            it.copy(frameColorId = design.fillColorId, backgroundType = "solid",
+                                seasonId = null, customDesignJson = PendingCollageStore.serializeDesign(design))
+                        }
                     },
                 )
             }
@@ -317,7 +404,7 @@ fun PocketNavHost(
                 },
                 onComplete = { resultPath ->
                     val encoded = NavCodec.encodePath(resultPath)
-                    navController.navigate("${Routes.RESULT}/$encoded")
+                    navController.navigate("${Routes.RESULT}/$encoded?auto=true")
                 },
             )
         }
@@ -346,42 +433,53 @@ fun PocketNavHost(
             val selectedIndexes = NavCodec.decodeIndexes(selectedRaw)
 
             val context = LocalContext.current
-            val storage = FileImageStorage(context)
+            val sessions = remember(context) { SessionDocumentRepository(context) }
             var photoBitmaps by remember { mutableStateOf(emptyList<Bitmap>()) }
             var photoPaths by remember { mutableStateOf(emptyList<String>()) }
+            var photoIds by remember { mutableStateOf(emptyList<String>()) }
+            var detailDocument by remember { mutableStateOf<SessionDocument?>(null) }
             LaunchedEffect(sessionId) {
-                val allPaths = storage.getCapturePaths(sessionId)
-                val selected = selectedIndexes.mapNotNull { idx -> allPaths.getOrNull(idx) }
-                photoPaths = selected
-                photoBitmaps = selected.mapNotNull { path ->
-                    com.pocket4cut.core.util.BitmapDecoding.decodeSampled(path, 2048)
+                val document = sessions.getById(sessionId) ?: return@LaunchedEffect
+                val refs = document.draft.selectedPhotoIdsInOrder.map { id ->
+                    document.photos.firstOrNull { it.photoId == id } ?: return@LaunchedEffect
+                }
+                val paths = refs.map { sessions.resolvePhotoPath(it).absolutePath }
+                detailDocument = document
+                photoIds = refs.map { it.photoId }
+                photoPaths = paths
+                photoBitmaps = paths.mapNotNull { path ->
+                    com.pocket4cut.core.util.BitmapDecoding.decodeSampled(path, 1024)
                 }
             }
 
-            if (photoBitmaps.isNotEmpty()) {
-                val pending = PendingCollageStore.read(context, sessionId)
-                val design = pending?.customDesignJson?.let { PendingCollageStore.deserializeDesign(it) }
+            if (photoBitmaps.size == photoIds.size && photoBitmaps.isNotEmpty() && detailDocument != null) {
+                val draft = detailDocument!!.draft
+                val design = draft.customDesignJson?.let { PendingCollageStore.deserializeDesign(it) }
                 DetailEditScreen(
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
-                    frameColor = FrameColors.byId(pending?.frameColorId ?: "white"),
+                    frameColor = FrameColors.byId(draft.frameColorId),
                     orderedImages = photoBitmaps,
                     imagePaths = photoPaths,
+                    photoIds = photoIds,
+                    initialAdjustments = draft.adjustmentsByPhotoId,
+                    layoutVersion = draft.layoutVersion,
+                    dateText = draft.dateText,
                     sessionId = sessionId,
                     selectedIndexes = selectedIndexes,
-                    globalFilter = pending?.filterId ?: FilterId.ORIGINAL,
-                    customText = pending?.text.orEmpty(),
-                    showDate = pending?.showDate ?: true,
-                    textFontSize = pending?.textFontSize ?: 16f,
-                    dateFontSize = pending?.dateFontSize ?: 16f,
-                    captionFontName = pending?.captionFontName,
-                    captionColorRGB = pending?.captionColorRGB,
+                    globalFilter = runCatching { FilterId.valueOf(draft.filterId) }.getOrDefault(FilterId.ORIGINAL),
+                    customText = draft.caption,
+                    showDate = draft.showDate,
+                    textFontSize = draft.textFontSize,
+                    dateFontSize = draft.dateFontSize,
+                    captionFontName = draft.captionFontName,
+                    captionColorRGB = draft.captionColorRgb,
                     customFrameDesign = design,
                     onBack = { navController.popBackStack() },
                     onResult = { resultPath ->
                         val encoded = NavCodec.encodePath(resultPath)
-                        navController.navigate("${Routes.RESULT}/$encoded")
+                        navController.navigate("${Routes.RESULT}/$encoded?auto=true")
                     },
                 )
             }
@@ -389,12 +487,16 @@ fun PocketNavHost(
 
         // Result
         composable(
-            route = "${Routes.RESULT}/{${Routes.Args.RESULT_PATH}}",
-            arguments = listOf(navArgument(Routes.Args.RESULT_PATH) { type = NavType.StringType }),
+            route = "${Routes.RESULT}/{${Routes.Args.RESULT_PATH}}?auto={auto}",
+            arguments = listOf(
+                navArgument(Routes.Args.RESULT_PATH) { type = NavType.StringType },
+                navArgument("auto") { type = NavType.BoolType; defaultValue = false },
+            ),
         ) { entry ->
             val encoded = entry.arguments?.getString(Routes.Args.RESULT_PATH).orEmpty()
             ResultScreen(
                 resultPath = NavCodec.decodePath(encoded),
+                autoSave = entry.arguments?.getBoolean("auto") == true,
                 onHome = {
                     navController.navigate(Routes.HOME) {
                         popUpTo(Routes.HOME) { inclusive = true }
@@ -404,4 +506,29 @@ fun PocketNavHost(
             )
         }
     }
+}
+
+private fun resumeRoute(document: SessionDocument): String {
+    val frameType = FrameType.entries.firstOrNull { it.captureCount == document.captureCount }
+        ?: FrameType.FOUR_CUT
+    val id = document.sessionId
+    if (document.stage == SessionStage.CAPTURE) return "${Routes.CAPTURE}/${frameType.id}/$id"
+    if (document.stage == SessionStage.SELECT) return "${Routes.SELECTION}/${frameType.id}/$id"
+    val orderedPhotos = document.photos.sortedBy { it.captureIndex }
+    val selected = document.draft.selectedPhotoIdsInOrder.mapNotNull { photoId ->
+        orderedPhotos.indexOfFirst { it.photoId == photoId }.takeIf { it >= 0 }
+    }
+    if (selected.size != document.selectedCount) return "${Routes.SELECTION}/${frameType.id}/$id"
+    val selectedRaw = NavCodec.encodeIndexes(selected)
+    if (document.draft.layoutId.isBlank()) {
+        return "${Routes.LAYOUT_SELECTION}/${frameType.id}/$id/$selectedRaw"
+    }
+    val layout = document.draft.layoutId
+    if (document.stage == SessionStage.FRAME) {
+        return "${Routes.FRAME_THEME_SELECT}/${frameType.id}/$id/$selectedRaw/$layout"
+    }
+    val theme = document.draft.themeId.takeIf { it.isNotBlank() }
+        ?: FrameCatalog.themes(frameType).first().id
+    val destination = if (document.stage == SessionStage.DETAIL) Routes.DETAIL_EDIT else Routes.EDIT
+    return "$destination/${frameType.id}/$id/$selectedRaw/$layout/$theme"
 }

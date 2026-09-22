@@ -9,9 +9,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.pocket4cut.core.util.BitmapAdjustments
 import com.pocket4cut.core.util.BitmapDecoding
-import com.pocket4cut.data.local.SessionRepository
+import com.pocket4cut.data.local.SessionDocumentRepository
 import com.pocket4cut.data.storage.FileImageStorage
-import com.pocket4cut.domain.model.PhotoSession
+import com.pocket4cut.domain.model.PhotoAdjustments
+import com.pocket4cut.domain.model.ResultRecord
+import com.pocket4cut.domain.model.SessionDocument
+import com.pocket4cut.domain.model.SessionStage
 import com.pocket4cut.frame.CollageRenderer
 import com.pocket4cut.frame.CustomFrameDesign
 import com.pocket4cut.frame.FilterDefs
@@ -23,18 +26,24 @@ import com.pocket4cut.frame.FrameLayoutId
 import com.pocket4cut.frame.FrameLayouts
 import com.pocket4cut.frame.FrameStyle
 import com.pocket4cut.frame.FrameTheme
+import com.pocket4cut.frame.RenderSnapshot
 import com.pocket4cut.presentation.navigation.FrameType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.io.File
+import java.util.UUID
 
 data class PhotoSlotAdjustment(
     val quarterTurnsClockwise: Int = 0,
@@ -57,6 +66,7 @@ data class PhotoSlotAdjustment(
 
 data class DetailEditUiState(
     val isRendering: Boolean = false,
+    val errorMessage: String? = null,
     val selectedSlotIndex: Int = 0,
     val slotAdjustments: List<PhotoSlotAdjustment> = emptyList(),
     val collagePreviewImages: List<Bitmap> = emptyList(),
@@ -66,11 +76,17 @@ data class DetailEditUiState(
 class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
 
     private val storage = FileImageStorage(app.applicationContext)
+    private val sessions = SessionDocumentRepository(app.applicationContext)
     private val _uiState = MutableStateFlow(DetailEditUiState())
     val uiState: StateFlow<DetailEditUiState> = _uiState
 
     private var baseOrderedImages: List<Bitmap> = emptyList()
     private var imagePaths: List<String> = emptyList()
+    private var photoIds: List<String> = emptyList()
+    private var layoutVersion: Int = 2
+    private var dateText: String = ""
+    private var persistJob: Job? = null
+    private val persistMutex = Mutex()
     private var frameType: FrameType = FrameType.FOUR_CUT
     private var frameStyle: FrameStyle = FrameLayouts.defaultForSlots(4)
     private var theme: FrameTheme = FrameCatalog.themes(FrameType.FOUR_CUT).first()
@@ -87,7 +103,11 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
     private var customFrameDesign: CustomFrameDesign? = null
 
     private var initialized = false
-    private val slotJobs = mutableMapOf<Int, Job>()
+    private var previewJob: Job? = null
+    private var previewGeneration = 0L
+    private var publishedAdjustments: List<PhotoSlotAdjustment> = emptyList()
+    private val previewMutex = Mutex()
+    private val renderMutex = Mutex()
 
     // Preview bitmaps published through uiState can outlive the latest emission while Compose
     // finishes drawing an earlier frame. Never recycle a published bitmap manually; let the
@@ -96,6 +116,10 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
     fun initialize(
         baseImages: List<Bitmap>,
         imagePaths: List<String>,
+        photoIds: List<String>,
+        initialAdjustments: Map<String, PhotoAdjustments>,
+        layoutVersion: Int,
+        dateText: String,
         frameType: FrameType,
         frameStyle: FrameStyle,
         theme: FrameTheme,
@@ -116,6 +140,9 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
 
         this.baseOrderedImages = baseImages
         this.imagePaths = imagePaths
+        this.photoIds = photoIds
+        this.layoutVersion = layoutVersion
+        this.dateText = dateText
         this.frameType = frameType
         this.frameStyle = frameStyle
         this.theme = theme
@@ -131,7 +158,17 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
         this.captionColorRGB = captionColorRGB
         this.customFrameDesign = customFrameDesign
 
-        val adjustments = List(baseImages.size) { PhotoSlotAdjustment.neutral }
+        val adjustments = photoIds.map { id ->
+            initialAdjustments[id]?.let { adj ->
+                PhotoSlotAdjustment(
+                    quarterTurnsClockwise = ((adj.rotationDegrees / 90) % 4 + 4) % 4,
+                    isFlippedHorizontally = adj.flipHorizontal,
+                    brightness = adj.brightness,
+                    contrast = adj.contrast,
+                    saturation = adj.saturation,
+                )
+            } ?: PhotoSlotAdjustment.neutral
+        }
         _uiState.value = DetailEditUiState(slotAdjustments = adjustments)
         rebuildAllPreviewImages()
     }
@@ -149,19 +186,23 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun resetCurrentSlot() {
+        if (_uiState.value.isRendering) return
         val idx = _uiState.value.selectedSlotIndex
         if (idx !in _uiState.value.slotAdjustments.indices) return
         val next = _uiState.value.slotAdjustments.toMutableList().also { it[idx] = PhotoSlotAdjustment.neutral }
         _uiState.update { it.copy(slotAdjustments = next, hasChanges = false) }
         rebuildPreviewImage(idx)
+        schedulePersist()
     }
 
     fun resetAllSlots() {
+        if (_uiState.value.isRendering) return
         val count = _uiState.value.slotAdjustments.size
         if (count == 0) return
         val next = List(count) { PhotoSlotAdjustment.neutral }
         _uiState.update { it.copy(slotAdjustments = next, hasChanges = false) }
         rebuildAllPreviewImages()
+        schedulePersist()
     }
 
     fun rotateCurrentSlot() = updateCurrentSlot {
@@ -189,55 +230,63 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
      * and returns the result file path.
      */
     suspend fun renderFinalCollage(): String {
+        check(renderMutex.tryLock()) { "이미 결과 이미지를 만들고 있습니다." }
         _uiState.update { it.copy(isRendering = true) }
         return try {
+            previewJob?.cancelAndJoin()
+            persistJob?.cancelAndJoin()
             withContext(Dispatchers.IO) {
-                val adjustments = _uiState.value.slotAdjustments
-                val processedBitmaps = imagePaths.mapIndexed { i, path ->
-                    processImageFromPath(path, adjustments.getOrElse(i) { PhotoSlotAdjustment.neutral })
-                }
-                val dateString = if (showDate) {
-                    SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date())
-                } else {
-                    null
-                }
-                val bgColor = customFrameDesign?.resolvedFillColor ?: frameColor.color
+                val renderContext = currentCoroutineContext()
+                val document = persistAdjustments()
+                val snapshot = RenderSnapshot.from(document, sessions, frameType)
+                val bgColor = snapshot.customFrameDesign?.resolvedFillColor ?: snapshot.frameColor.color
                 val input = CollageRenderer.Input(
-                    images = processedBitmaps,
-                    frameStyle = frameStyle,
-                    theme = theme,
+                    images = emptyList(),
+                    imageProvider = { index ->
+                        renderContext.ensureActive()
+                        val id = snapshot.photoIdsInOrder[index]
+                        val adj = snapshot.adjustmentsByPhotoId[id] ?: PhotoAdjustments()
+                        processImageFromPath(snapshot.imagePathsInOrder[index], PhotoSlotAdjustment(
+                            quarterTurnsClockwise = ((adj.rotationDegrees / 90) % 4 + 4) % 4,
+                            isFlippedHorizontally = adj.flipHorizontal,
+                            brightness = adj.brightness,
+                            contrast = adj.contrast,
+                            saturation = adj.saturation,
+                        ), snapshot.filterId, renderContext::ensureActive)
+                    },
+                    recycleProvidedImages = true,
+                    frameStyle = snapshot.frameStyle,
+                    theme = snapshot.theme,
                     overrideBackground = bgColor,
-                    customFrameDesign = customFrameDesign,
-                    customDecorations = customFrameDesign?.decorations ?: emptyList(),
+                    backgroundGradient = snapshot.frameColor.gradientStops,
+                    customFrameDesign = snapshot.customFrameDesign,
+                    customDecorations = snapshot.customFrameDesign?.decorations ?: emptyList(),
                     filterId = FilterId.ORIGINAL,
-                    text = customText.takeIf { it.isNotBlank() },
-                    dateString = dateString,
-                    textFontSize = textFontSize,
-                    dateFontSize = dateFontSize,
-                    textColorRGB = captionColorRGB,
-                    captionFontName = captionFontName,
+                    text = snapshot.caption.takeIf { it.isNotBlank() },
+                    dateString = snapshot.dateText,
+                    textFontSize = snapshot.textFontSize,
+                    dateFontSize = snapshot.dateFontSize,
+                    textColorRGB = snapshot.captionColorRgb,
+                    captionFontName = snapshot.captionFontName,
                     context = getApplication(),
+                    layoutVersion = snapshot.layoutVersion,
                 )
-                val result = try {
-                    CollageRenderer.render(input)
-                } finally {
-                    processedBitmaps.forEach { it.recycle() }
-                }
+                val result = CollageRenderer.render(input)
                 try {
-                    val path = storage.saveResult(result, sessionId)
-                    val sessions = SessionRepository(getApplication())
-                    sessions.upsert(
-                        PhotoSession(
-                            id = sessionId,
-                            captureCount = frameType.captureCount,
-                            selectedCount = frameType.selectCount,
-                            imagePaths = imagePaths,
-                            selectedIndexes = selectedIndexes,
-                            frameId = frameStyle.id.name,
-                            finalImagePath = path,
-                            createdAt = System.currentTimeMillis(),
-                        ),
+                    renderContext.ensureActive()
+                    val resultId = UUID.randomUUID().toString()
+                    val record = ResultRecord(
+                        resultId = resultId,
+                        sourceRevision = snapshot.revision,
+                        path = "results/${sessionId}_${resultId}.jpg",
+                        width = result.width,
+                        height = result.height,
+                        createdAt = System.currentTimeMillis(),
                     )
+                    sessions.prepareResultPublication(sessionId, snapshot.revision, record)
+                    val path = storage.saveImmutableResult(result, sessionId, resultId)
+                    check(File(path).name == "${sessionId}_${resultId}.jpg")
+                    sessions.completeResultPublication(sessionId, resultId)
                     path
                 } finally {
                     result.recycle()
@@ -245,138 +294,176 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
             }
         } finally {
             _uiState.update { it.copy(isRendering = false) }
+            renderMutex.unlock()
         }
     }
 
     /* ── Private helpers ────────────────────────────────────────────── */
 
     private inline fun updateCurrentSlot(transform: (PhotoSlotAdjustment) -> PhotoSlotAdjustment) {
+        if (_uiState.value.isRendering) return
         val idx = _uiState.value.selectedSlotIndex
         if (idx !in _uiState.value.slotAdjustments.indices) return
         val next = _uiState.value.slotAdjustments.toMutableList().also { it[idx] = transform(it[idx]) }
         _uiState.update { it.copy(slotAdjustments = next, hasChanges = !next[idx].isNeutral) }
         rebuildPreviewImage(idx)
+        schedulePersist()
+    }
+
+    private fun schedulePersist() {
+        persistJob?.cancel()
+        persistJob = viewModelScope.launch {
+            delay(180)
+            runCatching { persistAdjustments() }.onFailure { cause ->
+                if (cause is kotlinx.coroutines.CancellationException) throw cause
+                _uiState.update { it.copy(errorMessage = cause.message ?: "보정값을 저장하지 못했습니다.") }
+            }
+        }
+    }
+
+    suspend fun leave(onSaved: () -> Unit) {
+        persistJob?.cancelAndJoin()
+        persistAdjustments()
+        onSaved()
+    }
+
+    private suspend fun persistAdjustments(): SessionDocument = persistMutex.withLock {
+        val mapping = photoIds.mapIndexed { index, id ->
+            val adj = _uiState.value.slotAdjustments.getOrElse(index) { PhotoSlotAdjustment.neutral }
+            id to PhotoAdjustments(
+                rotationDegrees = adj.quarterTurnsClockwise * 90,
+                flipHorizontal = adj.isFlippedHorizontally,
+                brightness = adj.brightness,
+                contrast = adj.contrast,
+                saturation = adj.saturation,
+            )
+        }.toMap()
+        val current = sessions.getById(sessionId) ?: error("편집 작업을 찾지 못했습니다.")
+        if (current.draft.adjustmentsByPhotoId == mapping && current.stage == SessionStage.DETAIL) return@withLock current
+        sessions.update(sessionId, current.revision) { doc ->
+            doc.copy(stage = SessionStage.DETAIL, draft = doc.draft.copy(adjustmentsByPhotoId = mapping))
+        }
     }
 
     private fun rebuildAllPreviewImages() {
-        slotJobs.values.forEach { it.cancel() }
-        slotJobs.clear()
-        viewModelScope.launch {
-            val adjustments = _uiState.value.slotAdjustments
-            val results = withContext(Dispatchers.Default) {
-                baseOrderedImages.mapIndexed { i, base ->
-                    processImage(base, adjustments.getOrElse(i) { PhotoSlotAdjustment.neutral })
+        val generation = ++previewGeneration
+        previewJob?.cancel()
+        val adjustments = _uiState.value.slotAdjustments.toList()
+        val previousImages = _uiState.value.collagePreviewImages
+        val previousAdjustments = publishedAdjustments
+        previewJob = viewModelScope.launch {
+            // The outer scope owns unpublished results even if withContext discards its return
+            // value on cancellation while dispatching back to Main.
+            val owned = mutableListOf<Bitmap>()
+            var published = false
+            try {
+                val results = withContext(Dispatchers.Default) {
+                    previewMutex.withLock {
+                        val context = currentCoroutineContext()
+                        baseOrderedImages.mapIndexed { index, base ->
+                            context.ensureActive()
+                            val adj = adjustments.getOrElse(index) { PhotoSlotAdjustment.neutral }
+                            previousImages.getOrNull(index)?.takeIf {
+                                previousAdjustments.getOrNull(index) == adj
+                            } ?: processImage(base, adj, context::ensureActive).also(owned::add)
+                        }
+                    }
                 }
-            }
-            if (!isActive) {
-                results.forEach { it.recycle() }
-                return@launch
-            }
-            _uiState.update { prev ->
-                prev.copy(collagePreviewImages = results)
+                currentCoroutineContext().ensureActive()
+                if (generation != previewGeneration) return@launch
+                _uiState.update { it.copy(collagePreviewImages = results) }
+                publishedAdjustments = adjustments
+                published = true
+            } catch (cause: CancellationException) {
+                throw cause
+            } catch (cause: Exception) {
+                _uiState.update { it.copy(errorMessage = cause.message ?: "미리보기를 만들지 못했습니다.") }
+            } finally {
+                if (!published) owned.forEach { it.recycle() }
             }
         }
     }
 
     private fun rebuildPreviewImage(index: Int) {
-        val base = baseOrderedImages.getOrNull(index) ?: return
-        val adj = _uiState.value.slotAdjustments.getOrElse(index) { PhotoSlotAdjustment.neutral }
-        slotJobs[index]?.cancel()
-        slotJobs[index] = viewModelScope.launch {
-            val result = withContext(Dispatchers.Default) {
-                processImage(base, adj)
-            }
-            if (!isActive) {
-                result.recycle()
-                return@launch
-            }
-            _uiState.update { prev ->
-                if (index !in prev.collagePreviewImages.indices) {
-                    result.recycle()
-                    return@update prev
-                }
-                val mutable = prev.collagePreviewImages.toMutableList()
-                mutable[index] = result
-                prev.copy(collagePreviewImages = mutable)
-            }
-        }
+        if (index in baseOrderedImages.indices) rebuildAllPreviewImages()
     }
 
     /** Pipeline: rotation → global filter → per-slot color adjustments. */
-    private fun processImage(source: Bitmap, adj: PhotoSlotAdjustment): Bitmap {
-        var bmp = source.copy(Bitmap.Config.ARGB_8888, false)
-
-        repeat(adj.quarterTurnsClockwise) {
-            val rotated = BitmapAdjustments.rotate90(bmp)
-            bmp.recycle()
-            bmp = rotated
-        }
-
-        if (adj.isFlippedHorizontally) {
-            val flipped = BitmapAdjustments.flipHorizontal(bmp)
-            if (flipped !== bmp) bmp.recycle()
-            bmp = flipped
-        }
-
-        FilterDefs.colorFilter(globalFilter)?.let { cf ->
-            val filtered = applyColorFilter(bmp, cf)
-            bmp.recycle()
-            bmp = filtered
-        }
-
-        if (adj.brightness != 0f || adj.contrast != 1f || adj.saturation != 1f) {
-            val adjusted = BitmapAdjustments.applyColorAdjustments(bmp, adj.brightness, adj.contrast, adj.saturation)
-            bmp.recycle()
-            bmp = adjusted
-        }
-
-        return bmp
-    }
+    private fun processImage(source: Bitmap, adj: PhotoSlotAdjustment, checkCancelled: () -> Unit): Bitmap =
+        processOwnedImage(source.copy(Bitmap.Config.ARGB_8888, false), adj, globalFilter, checkCancelled)
 
     /** Full-resolution variant that decodes from disk. */
-    private fun processImageFromPath(path: String, adj: PhotoSlotAdjustment): Bitmap {
-        var bmp = BitmapDecoding.decodeSampled(path, reqSize = 3072)
+    private fun processImageFromPath(
+        path: String,
+        adj: PhotoSlotAdjustment,
+        filter: FilterId,
+        checkCancelled: () -> Unit,
+    ): Bitmap {
+        val decoded = BitmapDecoding.decodeSampled(path, reqSize = 3072, maxPixels = 6_000_000L)
             ?: error("Failed to decode: $path")
+        return processOwnedImage(decoded, adj, filter, checkCancelled)
+    }
 
-        repeat(adj.quarterTurnsClockwise) {
-            val rotated = BitmapAdjustments.rotate90(bmp)
-            if (rotated !== bmp) bmp.recycle()
-            bmp = rotated
-        }
+    private fun processOwnedImage(
+        source: Bitmap,
+        adj: PhotoSlotAdjustment,
+        filter: FilterId,
+        checkCancelled: () -> Unit,
+    ): Bitmap {
+        var bmp = source
+        try {
+            checkCancelled()
+            repeat(adj.quarterTurnsClockwise) {
+                val rotated = BitmapAdjustments.rotate90(bmp)
+                if (rotated !== bmp) bmp.recycle()
+                bmp = rotated
+                checkCancelled()
+            }
 
-        if (adj.isFlippedHorizontally) {
-            val flipped = BitmapAdjustments.flipHorizontal(bmp)
-            if (flipped !== bmp) bmp.recycle()
-            bmp = flipped
-        }
+            if (adj.isFlippedHorizontally) {
+                val flipped = BitmapAdjustments.flipHorizontal(bmp)
+                if (flipped !== bmp) bmp.recycle()
+                bmp = flipped
+                checkCancelled()
+            }
 
-        FilterDefs.colorFilter(globalFilter)?.let { cf ->
-            val filtered = applyColorFilter(bmp, cf)
+            FilterDefs.colorFilter(filter)?.let { cf ->
+                val filtered = applyColorFilter(bmp, cf)
+                bmp.recycle()
+                bmp = filtered
+                checkCancelled()
+            }
+
+            if (adj.brightness != 0f || adj.contrast != 1f || adj.saturation != 1f) {
+                val adjusted = BitmapAdjustments.applyColorAdjustments(bmp, adj.brightness, adj.contrast, adj.saturation)
+                if (adjusted !== bmp) bmp.recycle()
+                bmp = adjusted
+                checkCancelled()
+            }
+
+            return bmp
+        } catch (cause: Throwable) {
             bmp.recycle()
-            bmp = filtered
+            throw cause
         }
-
-        if (adj.brightness != 0f || adj.contrast != 1f || adj.saturation != 1f) {
-            val adjusted = BitmapAdjustments.applyColorAdjustments(bmp, adj.brightness, adj.contrast, adj.saturation)
-            if (adjusted !== bmp) bmp.recycle()
-            bmp = adjusted
-        }
-
-        return bmp
     }
 
     private fun applyColorFilter(source: Bitmap, colorFilter: ColorMatrixColorFilter): Bitmap {
         val out = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(out)
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-        paint.colorFilter = colorFilter
-        canvas.drawBitmap(source, 0f, 0f, paint)
-        return out
+        try {
+            val canvas = Canvas(out)
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
+            paint.colorFilter = colorFilter
+            canvas.drawBitmap(source, 0f, 0f, paint)
+            return out
+        } catch (cause: Throwable) {
+            out.recycle()
+            throw cause
+        }
     }
 
     override fun onCleared() {
-        slotJobs.values.forEach { it.cancel() }
-        slotJobs.clear()
+        previewJob?.cancel()
         super.onCleared()
     }
 }

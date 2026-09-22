@@ -134,6 +134,7 @@ fun ColorFramePalettePickScreen(
                     frameStyle = frameStyle,
                     theme = theme,
                     overrideBackground = selected.color,
+                    backgroundGradient = selected.gradientStops,
                     modifier = Modifier
                         .shadow(
                             elevation = 8.dp,

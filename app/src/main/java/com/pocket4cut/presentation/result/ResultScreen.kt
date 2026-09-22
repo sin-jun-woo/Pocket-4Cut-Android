@@ -1,9 +1,8 @@
 package com.pocket4cut.presentation.result
 
-import android.content.ContentValues
 import android.content.Intent
-import android.os.Build
-import android.provider.MediaStore
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -52,7 +51,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.pocket4cut.core.util.FileUris
+import com.pocket4cut.data.export.ExportMode
+import com.pocket4cut.data.export.ExportOutcome
+import com.pocket4cut.data.export.GalleryExporter
+import com.pocket4cut.data.local.SessionDocumentRepository
+import com.pocket4cut.domain.model.ExportStatus
 import com.pocket4cut.presentation.settings.AppSettings
 import com.pocket4cut.ui.designsystem.AppColors
 import com.pocket4cut.ui.designsystem.AppLayout
@@ -65,10 +68,8 @@ import com.pocket4cut.ui.designsystem.components.IconCircleButton
 import com.pocket4cut.ui.designsystem.components.PrimaryButton
 import com.pocket4cut.ui.designsystem.components.SecondaryButton
 import java.io.File
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 private val BottomChromeReserve = 184.dp
 
@@ -77,19 +78,82 @@ fun ResultScreen(
     resultPath: String,
     onHome: () -> Unit,
     onShare: (() -> Unit)? = null,
+    autoSave: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val file = remember(resultPath) { File(resultPath) }
-    val uri = remember(file, context) { FileUris.contentUriForFile(context, file) }
 
     var isSaving by remember { mutableStateOf(false) }
     var isSaved by remember { mutableStateOf(false) }
+    var resultLink by remember(resultPath) { mutableStateOf<Pair<String, String>?>(null) }
 
     var toastMessage by remember { mutableStateOf<String?>(null) }
     var toastType by remember { mutableStateOf(AppToastType.Success) }
 
     val scope = rememberCoroutineScope()
+    val sessions = remember(context) { SessionDocumentRepository(context) }
+    val exporter = remember(context) { GalleryExporter(context) }
+    var pendingPermissionRetry by remember { mutableStateOf<Pair<String, String>?>(null) }
+
+    fun showOutcome(outcome: ExportOutcome) {
+        when (outcome) {
+            is ExportOutcome.Saved, is ExportOutcome.AlreadySaved -> {
+                isSaved = true
+                toastType = AppToastType.Success
+                toastMessage = "갤러리에 저장 완료!"
+            }
+            is ExportOutcome.NeedsPermission -> {
+                toastType = AppToastType.Error
+                toastMessage = "사진첩 저장 권한이 필요합니다."
+            }
+            is ExportOutcome.NeedsRecovery -> {
+                toastType = AppToastType.Error
+                toastMessage = "저장 상태를 확인할 수 없습니다. 다시 시도해 주세요."
+            }
+            is ExportOutcome.Failed -> {
+                toastType = AppToastType.Error
+                toastMessage = outcome.message
+            }
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        val target = pendingPermissionRetry
+        pendingPermissionRetry = null
+        if (granted && target != null) scope.launch {
+            isSaving = true
+            showOutcome(exporter.export(target.first, target.second, ExportMode.SAVE))
+            isSaving = false
+        } else if (!granted) {
+            toastType = AppToastType.Error
+            toastMessage = "사진첩 저장 권한이 거부되었습니다."
+        }
+    }
+
+    LaunchedEffect(resultPath) {
+        runCatching {
+            sessions.list().firstNotNullOfOrNull { document ->
+                document.results.firstOrNull { record ->
+                    sessions.resolveResultPath(record).canonicalPath == file.canonicalPath
+                }?.let { record ->
+                    (document.sessionId to record.resultId) to document.exportOperations.any {
+                        it.resultId == record.resultId && it.status == ExportStatus.COMPLETED
+                    }
+                }
+            }
+        }.onSuccess { match ->
+            resultLink = match?.first
+            isSaved = match?.second == true
+            if (match == null) {
+                toastType = AppToastType.Error
+                toastMessage = "저장된 결과를 찾을 수 없습니다."
+            }
+        }.onFailure {
+            toastType = AppToastType.Error
+            toastMessage = it.message ?: "결과 정보를 읽을 수 없습니다."
+        }
+    }
 
     LaunchedEffect(toastMessage) {
         val m = toastMessage ?: return@LaunchedEffect
@@ -102,69 +166,48 @@ fun ResultScreen(
             onShare()
             return
         }
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "image/*"
-            putExtra(Intent.EXTRA_STREAM, uri)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        val target = resultLink ?: return
+        scope.launch {
+            runCatching { exporter.shareUri(target.first, target.second) }
+                .onSuccess { sharedUri ->
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        type = "image/jpeg"
+                        putExtra(Intent.EXTRA_STREAM, sharedUri)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    context.startActivity(Intent.createChooser(intent, "공유"))
+                }
+                .onFailure {
+                    toastType = AppToastType.Error
+                    toastMessage = it.message ?: "공유할 수 없습니다."
+                }
         }
-        context.startActivity(Intent.createChooser(intent, "공유"))
     }
 
     fun performSave() {
         if (isSaving || isSaved) return
+        val target = resultLink ?: return
         scope.launch {
             isSaving = true
-            val saveResult = withContext(Dispatchers.IO) {
-                runCatching {
-                    val resolver = context.contentResolver
-                    val name = file.nameWithoutExtension.ifBlank { "Pocket4Cut_${System.currentTimeMillis()}" }
-                    val values = ContentValues().apply {
-                        put(MediaStore.Images.Media.DISPLAY_NAME, "$name.jpg")
-                        put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-                        if (Build.VERSION.SDK_INT >= 29) {
-                            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Pocket4Cut")
-                            put(MediaStore.Images.Media.IS_PENDING, 1)
-                        }
-                    }
-                    val collection =
-                        if (Build.VERSION.SDK_INT >= 29) {
-                            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-                        } else {
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                        }
-                    val outUri = resolver.insert(collection, values) ?: error("insert failed")
-                    resolver.openOutputStream(outUri)?.use { out ->
-                        file.inputStream().use { it.copyTo(out) }
-                    } ?: error("openOutputStream failed")
-                    if (Build.VERSION.SDK_INT >= 29) {
-                        values.clear()
-                        values.put(MediaStore.Images.Media.IS_PENDING, 0)
-                        resolver.update(outUri, values, null, null)
-                    }
-                }
-            }
+            val outcome = exporter.export(target.first, target.second, ExportMode.SAVE)
             isSaving = false
-            saveResult.fold(
-                onSuccess = {
-                    isSaved = true
-                    toastType = AppToastType.Success
-                    toastMessage = "갤러리에 저장 완료!"
-                },
-                onFailure = { e ->
-                    toastType = AppToastType.Error
-                    toastMessage = e.message?.takeIf { it.isNotBlank() } ?: "저장에 실패했어요"
-                },
-            )
+            if (outcome is ExportOutcome.NeedsPermission) {
+                pendingPermissionRetry = target
+                permissionLauncher.launch(outcome.permission)
+            } else showOutcome(outcome)
         }
     }
 
-    var didAttemptAutoSave by remember(resultPath) { mutableStateOf(false) }
-    LaunchedEffect(resultPath) {
-        if (didAttemptAutoSave) return@LaunchedEffect
+    LaunchedEffect(resultLink, autoSave) {
+        if (!autoSave) return@LaunchedEffect
         if (!AppSettings.autoSaveToGallery) return@LaunchedEffect
-        if (!file.exists()) return@LaunchedEffect
-        didAttemptAutoSave = true
-        performSave()
+        if (!file.isFile) return@LaunchedEffect
+        val target = resultLink ?: return@LaunchedEffect
+        val outcome = exporter.export(target.first, target.second, ExportMode.AUTO)
+        if (outcome is ExportOutcome.NeedsPermission) {
+            pendingPermissionRetry = target
+            permissionLauncher.launch(outcome.permission)
+        } else showOutcome(outcome)
     }
 
     Box(
@@ -249,7 +292,7 @@ fun ResultScreen(
                         .clip(imageShape),
                 ) {
                     AsyncImage(
-                        model = ImageRequest.Builder(context).data(uri).build(),
+                        model = ImageRequest.Builder(context).data(file).build(),
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()

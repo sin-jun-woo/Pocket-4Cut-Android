@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +30,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import com.pocket4cut.ui.designsystem.AppColors
 import com.pocket4cut.ui.designsystem.AppSpacing
@@ -48,6 +51,7 @@ fun PinkGradientSlider(
     val density = LocalDensity.current
     val thumbRadiusPx = with(density) { (ThumbDp / 2).toPx() }
     val rangeSpan = valueRange.endInclusive - valueRange.start
+    val currentOnValueChange by rememberUpdatedState(onValueChange)
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -58,12 +62,12 @@ fun PinkGradientSlider(
             text = label,
             style = AppTypography.subheadline,
             color = AppColors.Text.primary,
-            modifier = Modifier.widthIn(max = 120.dp),
+            modifier = Modifier.widthIn(max = 120.dp).clearAndSetSemantics {},
         )
         BoxWithConstraints(
             modifier = Modifier
                 .weight(1f)
-                .height(40.dp),
+                .height(48.dp),
             contentAlignment = Alignment.CenterStart,
         ) {
             val trackWidthPx = with(density) { maxWidth.toPx() }
@@ -91,22 +95,23 @@ fun PinkGradientSlider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight()
+                    .accessibleRange(label, value, valueRange, value.roundToInt().toString(), onValueChange)
                     .pointerInput(valueRange, trackWidthPx, thumbRadiusPx) {
                         detectTapGestures { tapOffset ->
                             val f = fractionFromX(tapOffset.x)
-                            onValueChange(valueFromFraction(f))
+                            currentOnValueChange(valueFromFraction(f))
                         }
                     }
                     .pointerInput(valueRange, trackWidthPx, thumbRadiusPx) {
                         detectDragGestures(
                             onDragStart = { start ->
                                 val f = fractionFromX(start.x)
-                                onValueChange(valueFromFraction(f))
+                                currentOnValueChange(valueFromFraction(f))
                             },
                             onDrag = { change, _ ->
                                 change.consume()
                                 val f = fractionFromX(change.position.x)
-                                onValueChange(valueFromFraction(f))
+                                currentOnValueChange(valueFromFraction(f))
                             },
                         )
                     },
@@ -148,7 +153,7 @@ fun PinkGradientSlider(
             text = value.roundToInt().toString(),
             style = AppTypography.subheadline,
             color = AppColors.Text.secondary,
-            modifier = Modifier.padding(start = AppSpacing.xxs),
+            modifier = Modifier.padding(start = AppSpacing.xxs).clearAndSetSemantics {},
         )
     }
 }

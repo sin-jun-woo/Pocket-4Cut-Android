@@ -3,9 +3,11 @@ package com.pocket4cut.presentation.gallery
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.pocket4cut.data.local.SessionRepository
-import com.pocket4cut.data.storage.FileImageStorage
-import com.pocket4cut.domain.model.PhotoSession
+import com.pocket4cut.data.local.SessionDocumentRepository
+import com.pocket4cut.domain.model.ResultRecord
+import com.pocket4cut.domain.model.SessionDocument
+import com.pocket4cut.domain.model.SessionStage
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -26,6 +28,18 @@ data class GalleryItem(
     /** iOS `byDate` 일 단위 섹션 */
     val dayKey: String,
     val daySectionTitle: String,
+    val resultId: String = "",
+    val missingImage: Boolean = false,
+)
+
+data class GalleryDraftItem(
+    val sessionId: String,
+    val stage: SessionStage,
+    val selectedCount: Int,
+    val completedShots: Int,
+    val totalShots: Int,
+    val updatedAt: Long,
+    val thumbnailPath: String?,
 )
 
 data class GalleryBucket(
@@ -38,6 +52,7 @@ data class GalleryUiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val items: List<GalleryItem> = emptyList(),
+    val drafts: List<GalleryDraftItem> = emptyList(),
 ) {
     /** 종류별: 2컷 → 4컷 → 6컷 */
     val kindBuckets: List<GalleryBucket>
@@ -76,8 +91,7 @@ data class GalleryUiState(
 }
 
 class GalleryViewModel(app: Application) : AndroidViewModel(app) {
-    private val sessions = SessionRepository(app.applicationContext)
-    private val storage = FileImageStorage(app.applicationContext)
+    private val sessions = SessionDocumentRepository(app.applicationContext)
 
     private val _uiState = MutableStateFlow(GalleryUiState())
     val uiState: StateFlow<GalleryUiState> = _uiState
@@ -85,13 +99,29 @@ class GalleryViewModel(app: Application) : AndroidViewModel(app) {
     fun load() {
         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
         viewModelScope.launch {
-            runCatching {
-                sessions.getAll()
-            }.onSuccess { list ->
-                _uiState.update {
-                    it.copy(isLoading = false, items = list.map { s -> s.toGalleryItem() })
+            try {
+                val list = sessions.list()
+                val items = list.flatMap { document ->
+                    document.results.map { result -> document.toGalleryItem(result, sessions) }
                 }
-            }.onFailure { t ->
+                val drafts = list.filter { it.stage != SessionStage.RESULT }.map { document ->
+                    GalleryDraftItem(
+                        sessionId = document.sessionId,
+                        stage = document.stage,
+                        selectedCount = document.selectedCount,
+                        completedShots = document.photos.size,
+                        totalShots = document.captureCount,
+                        updatedAt = document.updatedAt,
+                        thumbnailPath = document.photos.lastOrNull()?.let { photo ->
+                            sessions.resolvePhotoPath(photo).absolutePath
+                        },
+                    )
+                }.sortedByDescending { it.updatedAt }
+                _uiState.update {
+                    it.copy(isLoading = false, items = items, drafts = drafts)
+                }
+            } catch (t: Exception) {
+                if (t is CancellationException) throw t
                 _uiState.update {
                     it.copy(isLoading = false, errorMessage = t.message ?: "불러오기에 실패했습니다.")
                 }
@@ -101,10 +131,35 @@ class GalleryViewModel(app: Application) : AndroidViewModel(app) {
 
     fun delete(sessionId: String) {
         viewModelScope.launch {
-            sessions.delete(sessionId)
-            storage.deleteSessionFiles(sessionId)
-            load()
+            try {
+                sessions.requestDelete(sessionId)
+                load()
+            } catch (t: Exception) {
+                if (t is CancellationException) throw t
+                _uiState.update { it.copy(errorMessage = t.message ?: "삭제에 실패했습니다.") }
+            }
         }
+    }
+
+    fun discardDraft(sessionId: String) {
+        viewModelScope.launch {
+            try {
+                val current = sessions.getById(sessionId) ?: return@launch
+                sessions.discardDraft(sessionId, current.revision)
+                load()
+            } catch (t: Exception) {
+                if (t is CancellationException) throw t
+                _uiState.update { it.copy(errorMessage = t.message ?: "작업을 버리지 못했습니다.") }
+            }
+        }
+    }
+
+    fun reportMissingImage() {
+        _uiState.update { it.copy(errorMessage = "결과 이미지 파일을 찾지 못했습니다. 작업을 삭제하거나 다시 시도해 주세요.") }
+    }
+
+    fun reportRecoveryRequired() {
+        _uiState.update { it.copy(errorMessage = "이전 작업의 사진 순서 또는 파일을 확정할 수 없습니다. 원본을 보존했습니다. 이 작업은 자동으로 이어갈 수 없습니다.") }
     }
 }
 
@@ -120,18 +175,24 @@ private fun frameKindForSession(selectedCount: Int): Pair<String, String> =
         else -> "x_$selectedCount" to "${selectedCount}컷"
     }
 
-private fun PhotoSession.toGalleryItem(): GalleryItem {
-    val date = Date(createdAt)
+private fun SessionDocument.toGalleryItem(
+    result: ResultRecord,
+    repository: SessionDocumentRepository,
+): GalleryItem {
+    val date = Date(result.createdAt)
     val (kindKey, kindLabel) = frameKindForSession(selectedCount)
+    val resolved = repository.resolveResultPath(result)
     return GalleryItem(
-        sessionId = id,
-        resultPath = finalImagePath.orEmpty(),
+        sessionId = sessionId,
+        resultPath = resolved.absolutePath,
         selectedCount = selectedCount,
-        createdAt = createdAt,
+        createdAt = result.createdAt,
         shortDateLabel = shortDateFormat.format(date),
         frameKindKey = kindKey,
         frameKindLabel = kindLabel,
         dayKey = dayKeyFormat.format(date),
         daySectionTitle = daySectionFormat.format(date),
+        resultId = result.resultId,
+        missingImage = !resolved.isFile,
     )
 }

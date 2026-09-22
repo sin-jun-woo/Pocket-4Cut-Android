@@ -44,6 +44,9 @@ import com.pocket4cut.ui.designsystem.components.SecondaryButton
 fun HomeScreen(
     onStart: () -> Unit,
     onGallery: () -> Unit,
+    onResume: (() -> Unit)? = null,
+    resumeLabel: String? = null,
+    notice: String? = null,
     onSettings: () -> Unit = {},
     galleryCount: Int = 0,
     modifier: Modifier = Modifier,
@@ -124,6 +127,13 @@ fun HomeScreen(
                 .padding(bottom = AppSpacing.Layout.ctaBottomSpace),
             verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
         ) {
+            notice?.let { Text(it, color = AppColors.Semantic.error, style = AppTypography.footnote) }
+            if (onResume != null) {
+                SecondaryButton(
+                    text = resumeLabel ?: "이어서 작업하기",
+                    onClick = onResume,
+                )
+            }
             PrimaryButton(
                 text = "촬영 시작",
                 onClick = onStart,

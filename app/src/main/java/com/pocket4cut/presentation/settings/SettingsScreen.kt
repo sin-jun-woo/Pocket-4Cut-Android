@@ -24,14 +24,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.pocket4cut.data.local.SessionRepository
-import com.pocket4cut.data.storage.FileImageStorage
+import com.pocket4cut.data.local.SessionDocumentRepository
+import com.pocket4cut.domain.model.SessionStage
 import com.pocket4cut.ui.designsystem.*
 import com.pocket4cut.ui.designsystem.components.*
 import com.pocket4cut.ui.designsystem.theme.*
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 
 @Composable
@@ -44,12 +43,18 @@ fun SettingsScreen(
     val context = LocalContext.current
     var showDeleteConfirm by remember { mutableStateOf(false) }
     var galleryCount by remember { mutableIntStateOf(0) }
+    var affectedDraftCount by remember { mutableIntStateOf(0) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
-        galleryCount = withContext(Dispatchers.IO) {
-            SessionRepository(context).getAll().size
+        try {
+            val sessions = SessionDocumentRepository(context).list()
+            galleryCount = sessions.sumOf { it.results.size }
+            affectedDraftCount = sessions.count { it.stage != SessionStage.RESULT }
+        } catch (error: Exception) {
+            if (error is CancellationException) throw error
+            snackbarHostState.showSnackbar(error.message ?: "보관함 정보를 읽지 못했습니다.")
         }
     }
 
@@ -112,26 +117,36 @@ fun SettingsScreen(
         ConfirmDialog(
             visible = showDeleteConfirm,
             title = "보관함 전체 삭제",
-            message = "저장된 ${galleryCount}개의 추억이 모두 삭제돼요.\n이 작업은 되돌릴 수 없어요.",
+            message = "완성된 콜라주 ${galleryCount}개와 앱 내부 세션을 삭제해요." +
+                (if (affectedDraftCount > 0) "\n진행 중인 작업 ${affectedDraftCount}개도 삭제돼요." else "") +
+                "\n사진첩에 저장한 사본은 유지돼요.",
             confirmText = "전체 삭제",
             cancelText = "취소",
             isDestructive = true,
             onConfirm = {
                 scope.launch {
-                    withContext(Dispatchers.IO) {
-                        val repo = SessionRepository(context)
-                        val imageStorage = FileImageStorage(context)
-                        repo.getAll().forEach { session ->
-                            imageStorage.deleteSessionFiles(session.id)
-                            repo.delete(session.id)
+                    try {
+                        val repo = SessionDocumentRepository(context)
+                        repo.list().forEach { repo.requestDelete(it.sessionId) }
+                        galleryCount = 0
+                        affectedDraftCount = 0
+                        showDeleteConfirm = false
+                        snackbarHostState.showSnackbar(
+                            message = "삭제 완료",
+                            duration = SnackbarDuration.Short,
+                        )
+                    } catch (error: Exception) {
+                        if (error is CancellationException) throw error
+                        val remaining = runCatching {
+                            SessionDocumentRepository(context).list()
+                        }.getOrNull()
+                        if (remaining != null) {
+                            galleryCount = remaining.sumOf { it.results.size }
+                            affectedDraftCount = remaining.count { it.stage != SessionStage.RESULT }
                         }
+                        showDeleteConfirm = false
+                        snackbarHostState.showSnackbar(error.message ?: "일부 항목을 삭제하지 못했습니다.")
                     }
-                    galleryCount = 0
-                    showDeleteConfirm = false
-                    snackbarHostState.showSnackbar(
-                        message = "삭제 완료",
-                        duration = SnackbarDuration.Short,
-                    )
                 }
             },
             onCancel = { showDeleteConfirm = false },

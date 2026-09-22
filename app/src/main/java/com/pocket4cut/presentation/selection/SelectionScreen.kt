@@ -25,6 +25,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
@@ -44,6 +45,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -88,16 +94,16 @@ fun SelectionScreen(
 
     ConfirmDialog(
         visible = showExitConfirm,
-        title = "선택을 취소하시겠어요?",
-        message = "지금까지 촬영한 사진이 모두 삭제됩니다.",
-        confirmText = "나가기",
+        title = "작업을 잠시 멈출까요?",
+        message = "촬영한 사진과 선택은 저장되며 홈에서 이어갈 수 있습니다.",
+        confirmText = "홈으로",
         cancelText = "취소",
         onConfirm = {
             showExitConfirm = false
-            onBack()
+            viewModel.leave(onBack)
         },
         onCancel = { showExitConfirm = false },
-        variant = ConfirmDialogVariant.Destructive,
+        variant = ConfirmDialogVariant.Default,
     )
 
     Box(
@@ -128,7 +134,7 @@ fun SelectionScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = null,
+                            contentDescription = "작업 잠시 멈추기",
                             tint = AppColors.Text.primary,
                             modifier = Modifier.size(IconCircleButtonSize.MD.toIconDp()),
                         )
@@ -258,7 +264,12 @@ fun SelectionScreen(
                                     .clip(cellShape)
                                     .border(borderWidth, borderColor, cellShape)
                                     .background(AppColors.Background.secondary)
-                                    .clickable { viewModel.toggle(index, max) },
+                                    .photoSelectionSemantics(
+                                        photoNumber = index + 1,
+                                        selectionOrder = if (isSelected) order + 1 else null,
+                                        canSelect = selectedCount < max,
+                                        onToggle = { viewModel.toggle(index, max) },
+                                    ),
                             ) {
                                 AsyncImage(
                                     model = path,
@@ -289,6 +300,7 @@ fun SelectionScreen(
                                                 text = "${order + 1}",
                                                 style = AppTypography.footnote.copy(fontWeight = FontWeight.Bold),
                                                 color = Color.White,
+                                                modifier = Modifier.clearAndSetSemantics {},
                                             )
                                         }
                                     } else {
@@ -326,7 +338,7 @@ fun SelectionScreen(
             Spacer(Modifier.height(AppSpacing.md))
             PrimaryButton(
                 text = if (isDone) "다음" else "${remaining}장 더 선택해주세요",
-                onClick = { if (isDone) onDone(uiState.selectedIndexes) },
+                onClick = { if (isDone) viewModel.complete(onDone) },
                 enabled = isDone,
                 fullWidth = true,
             )
@@ -353,3 +365,24 @@ fun SelectionScreen(
         }
     }
 }
+
+internal fun Modifier.photoSelectionSemantics(
+    photoNumber: Int,
+    selectionOrder: Int?,
+    canSelect: Boolean,
+    onToggle: () -> Unit,
+): Modifier = this
+    .semantics {
+        contentDescription = "촬영 사진 $photoNumber"
+        stateDescription = when {
+            selectionOrder != null -> "선택됨, 배치 순서 ${selectionOrder}번째"
+            canSelect -> "선택 안 됨"
+            else -> "선택 안 됨, 선택 가능한 장수를 모두 선택했습니다"
+        }
+    }
+    .toggleable(
+        value = selectionOrder != null,
+        enabled = selectionOrder != null || canSelect,
+        role = Role.Checkbox,
+        onValueChange = { onToggle() },
+    )

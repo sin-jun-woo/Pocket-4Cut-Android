@@ -43,6 +43,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Emulator and instrumentation runs must not replace the installed production app.
+            applicationIdSuffix = ".qa"
+            versionNameSuffix = "-qa"
+        }
         release {
             if (keystorePropertiesFile.exists()) {
                 signingConfig = signingConfigs.getByName("release")
@@ -53,6 +58,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        create("qaRelease") {
+            initWith(getByName("release"))
+            applicationIdSuffix = ".qa"
+            versionNameSuffix = "-qa-r8"
+            signingConfig = signingConfigs.getByName("debug")
+            matchingFallbacks += listOf("release")
         }
     }
     compileOptions {

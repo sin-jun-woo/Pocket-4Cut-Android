@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -40,6 +41,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -55,6 +58,12 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import com.pocket4cut.ui.designsystem.components.accessibleRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -63,6 +72,7 @@ import com.pocket4cut.frame.FilterId
 import com.pocket4cut.frame.FrameColor
 import com.pocket4cut.frame.FrameStyle
 import com.pocket4cut.frame.FrameTheme
+import com.pocket4cut.domain.model.PhotoAdjustments
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.ui.designsystem.AppColors
 import com.pocket4cut.ui.designsystem.AppLayout
@@ -73,9 +83,6 @@ import com.pocket4cut.ui.designsystem.components.IconCircleButton
 import com.pocket4cut.ui.designsystem.components.LoadingOverlay
 import com.pocket4cut.ui.designsystem.components.PrimaryButton
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import kotlin.math.roundToInt
 
 /* ── UI ↔ Model conversion (iOS-exact ranges) ──────────────────── */
@@ -104,6 +111,10 @@ fun DetailEditScreen(
     frameColor: FrameColor,
     orderedImages: List<Bitmap>,
     imagePaths: List<String>,
+    photoIds: List<String>,
+    initialAdjustments: Map<String, PhotoAdjustments>,
+    layoutVersion: Int,
+    dateText: String,
     sessionId: String,
     selectedIndexes: List<Int>,
     globalFilter: FilterId,
@@ -123,6 +134,10 @@ fun DetailEditScreen(
         viewModel.initialize(
             baseImages = orderedImages,
             imagePaths = imagePaths,
+            photoIds = photoIds,
+            initialAdjustments = initialAdjustments,
+            layoutVersion = layoutVersion,
+            dateText = dateText,
             frameType = frameType,
             frameStyle = frameStyle,
             theme = theme,
@@ -142,10 +157,9 @@ fun DetailEditScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    val dateString = remember {
-        SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date())
-    }
+    val dateString = dateText
     val overlayText = remember(customText, showDate, dateString) {
         buildList {
             if (customText.isNotBlank()) add(customText)
@@ -177,7 +191,12 @@ fun DetailEditScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(onClick = {
+                    scope.launch {
+                        runCatching { viewModel.leave(onBack) }
+                            .onFailure { errorMessage = it.message ?: "보정값을 저장하지 못했습니다." }
+                    }
+                }, variant = IconButtonVariant.SOLID) {
                     Icon(Icons.Default.Close, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
                 }
                 Text("상세 편집", style = AppTypography.title2, color = AppColors.Text.primary)
@@ -212,6 +231,7 @@ fun DetailEditScreen(
                         frameStyle = frameStyle,
                         theme = theme,
                         overrideBackground = previewBackground,
+                        backgroundGradient = frameColor.gradientStops,
                         customFrameDesign = customFrameDesign,
                         customDecorations = customFrameDesign?.decorations ?: emptyList(),
                         bottomCaption = bottomCaptionForLayout,
@@ -221,6 +241,7 @@ fun DetailEditScreen(
                         captionDateSizePt = dateFontSize,
                         captionFontName = captionFontName,
                         captionColorRGB = captionColorRGB,
+                        layoutVersion = layoutVersion,
                         modifier = Modifier
                             .shadow(
                                 elevation = 8.dp,
@@ -293,7 +314,11 @@ fun DetailEditScreen(
                                     color = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle,
                                     shape = RoundedCornerShape(AppLayout.Radius.xs),
                                 )
-                                .clickable { viewModel.selectSlot(i) },
+                                .semantics {
+                                    contentDescription = "${i + 1}번째 사진 보정"
+                                    stateDescription = if (hasEdits) "보정 적용됨" else "보정 없음"
+                                }
+                                .selectable(selected = isSelected, role = Role.RadioButton) { viewModel.selectSlot(i) },
                         ) {
                             Image(
                                 bitmap = bitmap.asImageBitmap(),
@@ -411,11 +436,18 @@ fun DetailEditScreen(
                         scope.launch {
                             runCatching { viewModel.renderFinalCollage() }
                                 .onSuccess { path -> onResult(path) }
+                                .onFailure { errorMessage = it.message ?: "결과 저장에 실패했습니다." }
                         }
                     },
                     enabled = !uiState.isRendering,
                     fullWidth = true,
                 )
+                errorMessage?.let { message ->
+                    Text(message, color = AppColors.Semantic.error, style = AppTypography.footnote)
+                }
+                uiState.errorMessage?.let { message ->
+                    Text(message, color = AppColors.Semantic.error, style = AppTypography.footnote)
+                }
             }
         }
 
@@ -426,7 +458,7 @@ fun DetailEditScreen(
 /* ── Adjustment slider row ──────────────────────────────────────── */
 
 @Composable
-private fun AdjustmentSliderRow(
+internal fun AdjustmentSliderRow(
     label: String,
     uiValue: Float,
     onUiValueChange: (Float) -> Unit,
@@ -445,15 +477,17 @@ private fun AdjustmentSliderRow(
                 label,
                 style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
                 color = AppColors.Text.secondary,
+                modifier = Modifier.clearAndSetSemantics {},
             )
             Text(
                 formatSliderValue(uiValue),
                 style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
                 color = AppColors.Accent.pink,
+                modifier = Modifier.clearAndSetSemantics {},
             )
         }
         Spacer(Modifier.height(AppSpacing.xs))
-        PinkGradientSlider(value = uiValue, onValueChange = onUiValueChange)
+        PinkGradientSlider(value = uiValue, onValueChange = onUiValueChange, label = label)
     }
 }
 
@@ -463,6 +497,7 @@ private fun AdjustmentSliderRow(
 private fun PinkGradientSlider(
     value: Float,
     onValueChange: (Float) -> Unit,
+    label: String,
     modifier: Modifier = Modifier,
 ) {
     val thumbSizeDp = 28.dp
@@ -472,8 +507,9 @@ private fun PinkGradientSlider(
 
     Canvas(
         modifier = modifier
-            .height(thumbSizeDp)
+            .height(48.dp)
             .fillMaxWidth()
+            .accessibleRange(label, value, -50f..50f, formatSliderValue(value), onValueChange)
             .pointerInput(Unit) {
                 val thumbPx = thumbSizeDp.toPx()
                 val halfThumb = thumbPx / 2f

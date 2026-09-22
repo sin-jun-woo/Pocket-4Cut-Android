@@ -18,9 +18,22 @@ import kotlin.math.sin
  * Background / slots / outer border are drawn elsewhere; this draws only vector ornaments.
  */
 object SummerFrameVectorDecor {
+    fun draw(
+        canvas: Canvas,
+        width: Float,
+        height: Float,
+        useBorderAdjacentSmallDecor: Boolean = true,
+        slotRects: List<RectF>? = null,
+    ) {
+        SummerFramePainter().draw(canvas, width, height, useBorderAdjacentSmallDecor, slotRects)
+    }
+}
 
-    private const val REF_W = 600f
-    private const val REF_H = 1800f
+/** Paint is mutable: preview and export must never share a painter across threads. */
+private class SummerFramePainter {
+
+    private val REF_W = 600f
+    private val REF_H = 1800f
 
     private val skyBlue: Int = 0xFF4FC3F7.toInt()
     private val mintGreen: Int = 0xFF6BCF9F.toInt()

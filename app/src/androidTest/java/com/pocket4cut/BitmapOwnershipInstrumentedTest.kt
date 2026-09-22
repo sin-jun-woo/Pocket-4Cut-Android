@@ -9,7 +9,13 @@ import androidx.lifecycle.ViewModelStore
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.pocket4cut.data.storage.FileImageStorage
+import com.pocket4cut.data.local.SessionDocumentRepository
+import com.pocket4cut.domain.model.PhotoRef
+import com.pocket4cut.domain.model.SessionDocument
+import com.pocket4cut.domain.model.SessionDraft
 import com.pocket4cut.frame.FilterId
+import com.pocket4cut.frame.CollageLayoutMath
+import com.pocket4cut.frame.CollageRenderer
 import com.pocket4cut.frame.FrameCatalog
 import com.pocket4cut.frame.FrameColors
 import com.pocket4cut.frame.FrameLayoutId
@@ -45,6 +51,10 @@ class BitmapOwnershipInstrumentedTest {
                 viewModel.initialize(
                     baseImages = baseImages,
                     imagePaths = emptyList(),
+                    photoIds = listOf("photo-0", "photo-1"),
+                    initialAdjustments = emptyMap(),
+                    layoutVersion = 2,
+                    dateText = "2026.09.22",
                     frameType = FrameType.TWO_CUT,
                     frameStyle = FrameLayouts.byId(FrameLayoutId.TWO_HORIZONTAL),
                     theme = FrameCatalog.themes(FrameType.TWO_CUT).first(),
@@ -90,18 +100,34 @@ class BitmapOwnershipInstrumentedTest {
     }
 
     @Test
-    fun editOriginalRemainsDrawableAfterViewModelClear() {
+    fun editFilterSwitchReusesOriginalsAndSceneAppliesLatestFilter() {
         val sessionId = "bitmap-lifetime-${System.nanoTime()}"
         val storage = FileImageStorage(app)
-        val fixture = fixtures(1).single()
-        val bytes = ByteArrayOutputStream().use { output ->
-            assertTrue(fixture.compress(Bitmap.CompressFormat.JPEG, 95, output))
-            output.toByteArray()
-        }
+        val sessionStore = SessionDocumentRepository(app)
+        val fixtures = fixtures(2)
+        val photoIds = listOf(java.util.UUID.randomUUID().toString(), java.util.UUID.randomUUID().toString())
         val store = ViewModelStore()
-        var retained: Bitmap? = null
+        val retained = mutableListOf<Bitmap>()
         try {
-            runBlocking { storage.saveCapture(bytes, sessionId, 1) }
+            runBlocking {
+                fixtures.forEachIndexed { index, bitmap ->
+                    val bytes = ByteArrayOutputStream().use { output ->
+                        assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 95, output))
+                        output.toByteArray()
+                    }
+                    storage.saveCapture(bytes, sessionId, index + 1)
+                }
+                sessionStore.create(SessionDocument(
+                    sessionId = sessionId,
+                    createdAt = System.currentTimeMillis(),
+                    captureCount = 4,
+                    selectedCount = 2,
+                    photos = photoIds.mapIndexed { index, id ->
+                        PhotoRef(id, "captures/$sessionId/cap_0${index + 1}.jpg", index)
+                    },
+                    draft = SessionDraft(selectedPhotoIdsInOrder = photoIds),
+                ))
+            }
             lateinit var viewModel: EditViewModel
             instrumentation.runOnMainSync {
                 viewModel = ViewModelProvider(
@@ -111,23 +137,50 @@ class BitmapOwnershipInstrumentedTest {
                 viewModel.init(
                     frameType = FrameType.TWO_CUT,
                     sessionId = sessionId,
-                    selectedIndexes = listOf(0),
+                    selectedIndexes = listOf(0, 1),
                     frameLayoutId = FrameLayoutId.TWO_HORIZONTAL,
                 )
             }
             awaitCondition("edit original image and filter thumbnails") {
-                viewModel.uiState.value.orderedImages.size == 1 &&
+                viewModel.uiState.value.orderedImages.size == 2 &&
                     viewModel.uiState.value.filterChipThumbnails.size == FilterId.entries.size
             }
-            val retainedImage = viewModel.uiState.value.orderedImages.single()
-            retained = retainedImage
+            val retainedImage = viewModel.uiState.value.orderedImages.first()
+            retained += retainedImage
+            instrumentation.runOnMainSync {
+                viewModel.setFilter(FilterId.SOFT)
+                viewModel.setFilter(FilterId.FILM)
+                viewModel.setFilter(FilterId.BW)
+                viewModel.setFilter(FilterId.ORIGINAL)
+                viewModel.setFilter(FilterId.FILM)
+            }
+            val state = viewModel.uiState.value
+            assertTrue(state.selectedFilter == FilterId.FILM)
+            assertTrue(state.orderedImages.first() === retainedImage)
+            val style = FrameLayouts.byId(FrameLayoutId.TWO_HORIZONTAL)
+            val theme = FrameCatalog.themes(FrameType.TWO_CUT).first()
+            val original = CollageRenderer.render(
+                state.orderedImages, style, theme, null, FilterId.ORIGINAL, null, null, 390,
+            )
+            val selected = CollageRenderer.render(
+                state.orderedImages, style, theme, null, state.selectedFilter, null, null, 390,
+            )
+            try {
+                val cell = CollageLayoutMath.compute(style, theme, null, null, 390f).cells.first()
+                val x = cell.centerX().toInt()
+                val y = cell.centerY().toInt()
+                assertTrue("Latest filter must affect common-scene output", original.getPixel(x, y) != selected.getPixel(x, y))
+            } finally {
+                original.recycle()
+                selected.recycle()
+            }
             instrumentation.runOnMainSync { store.clear() }
-            assertDrawable(retainedImage)
+            retained.forEach(::assertDrawable)
         } finally {
             instrumentation.runOnMainSync { store.clear() }
-            runBlocking { storage.deleteSessionFiles(sessionId) }
-            if (!fixture.isRecycled) fixture.recycle()
-            retained?.takeIf { !it.isRecycled }?.recycle()
+            runBlocking { sessionStore.requestDelete(sessionId) }
+            fixtures.forEach { if (!it.isRecycled) it.recycle() }
+            retained.forEach { if (!it.isRecycled) it.recycle() }
         }
     }
 

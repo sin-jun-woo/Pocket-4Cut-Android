@@ -1,6 +1,7 @@
 package com.pocket4cut.presentation.capture
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -34,6 +35,7 @@ import androidx.compose.material.icons.filled.ZoomOut
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,7 +52,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.ui.designsystem.*
@@ -63,13 +68,14 @@ fun CaptureScreen(
     frameType: FrameType,
     onBack: () -> Unit,
     onCompleted: (sessionId: String, frameType: FrameType) -> Unit,
+    resumeSessionId: String? = null,
     modifier: Modifier = Modifier,
     viewModel: CaptureViewModel = viewModel(),
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsState()
-
+    var completedNavigationId by rememberSaveable { mutableStateOf<String?>(null) }
     var hasPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED,
@@ -85,6 +91,43 @@ fun CaptureScreen(
 
     LaunchedEffect(hasPermission) {
         if (hasPermission) viewModel.bindCamera(lifecycleOwner, previewView)
+    }
+    DisposableEffect(hasPermission) {
+        val activity = context as? Activity
+        val controller = activity?.window?.let { WindowCompat.getInsetsController(it, it.decorView) }
+        controller?.isAppearanceLightStatusBars = false
+        controller?.isAppearanceLightNavigationBars = false
+        onDispose {
+            controller?.isAppearanceLightStatusBars = true
+            controller?.isAppearanceLightNavigationBars = true
+        }
+    }
+
+    LaunchedEffect(resumeSessionId, frameType) {
+        val id = resumeSessionId ?: viewModel.savedSessionId()
+        if (id != null) viewModel.restoreSession(id, frameType)
+    }
+
+    DisposableEffect(lifecycleOwner, viewModel) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_STOP -> viewModel.pause()
+                Lifecycle.Event.ON_RESUME -> {
+                    val allowed = ContextCompat.checkSelfPermission(
+                        context, Manifest.permission.CAMERA,
+                    ) == PackageManager.PERMISSION_GRANTED
+                    hasPermission = allowed
+                    if (allowed && viewModel.uiState.value.phase != CapturePhase.CAPTURING) {
+                        viewModel.bindCamera(lifecycleOwner, previewView)
+                    } else if (!allowed) {
+                        viewModel.pause()
+                    }
+                }
+                else -> Unit
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
     LaunchedEffect(hasPermission, previewView) {
@@ -106,17 +149,11 @@ fun CaptureScreen(
     }
 
     LaunchedEffect(uiState.phase, uiState.sessionId) {
-        if (uiState.phase == CapturePhase.COMPLETED && !uiState.sessionId.isNullOrBlank()) {
+        if (uiState.phase == CapturePhase.COMPLETED && !uiState.sessionId.isNullOrBlank() &&
+            completedNavigationId != uiState.sessionId) {
             delay(1500)
+            completedNavigationId = uiState.sessionId
             onCompleted(uiState.sessionId!!, frameType)
-        }
-    }
-
-    var cancelConfirmed by remember { mutableStateOf(false) }
-    LaunchedEffect(cancelConfirmed) {
-        if (cancelConfirmed) {
-            delay(2000)
-            cancelConfirmed = false
         }
     }
 
@@ -126,13 +163,12 @@ fun CaptureScreen(
         label = "flash",
     )
 
-    val isCapturing = uiState.phase == CapturePhase.CAPTURING || uiState.phase == CapturePhase.COUNTDOWN
+    val isCapturing = uiState.phase == CapturePhase.INITIALIZING ||
+        uiState.phase == CapturePhase.CAPTURING ||
+        uiState.phase == CapturePhase.COUNTDOWN || uiState.phase == CapturePhase.POST_SHOT_DELAY
     val canControl = uiState.phase == CapturePhase.READY ||
-        uiState.phase == CapturePhase.IDLE ||
-        uiState.phase == CapturePhase.FAILED
-    val showSideCameraControls = hasPermission &&
-        uiState.phase != CapturePhase.IDLE &&
-        uiState.phase != CapturePhase.COMPLETED
+        uiState.phase == CapturePhase.FAILED || uiState.phase == CapturePhase.PAUSED
+    val showSideCameraControls = hasPermission && canControl
 
     Box(modifier = modifier.fillMaxSize().background(Color.Black)) {
         if (!hasPermission) {
@@ -174,16 +210,8 @@ fun CaptureScreen(
             ) {
                 GlassmorphismCircle(
                     onClick = {
-                        if (isCapturing) {
-                            if (cancelConfirmed) {
-                                viewModel.stop()
-                                onBack()
-                            } else {
-                                cancelConfirmed = true
-                            }
-                        } else {
-                            onBack()
-                        }
+                        viewModel.pause()
+                        onBack()
                     },
                     diameter = 44.dp,
                 ) {
@@ -220,25 +248,6 @@ fun CaptureScreen(
                     CountdownTopRightBadge(number = uiState.countdownRemaining)
                 } else {
                     Spacer(Modifier.size(44.dp))
-                }
-            }
-
-            // Cancel-confirmed toast
-            AnimatedVisibility(
-                visible = cancelConfirmed,
-                enter = fadeIn(tween(AppAnimation.Duration.fast)) + slideInVertically { -it },
-                exit = fadeOut(tween(AppAnimation.Duration.fast)) + slideOutVertically { -it },
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .statusBarsPadding()
-                    .padding(top = 72.dp),
-            ) {
-                GlassmorphismCapsule {
-                    Text(
-                        "한 번 더 누르면 종료돼요",
-                        style = AppTypography.footnote,
-                        color = Color.White,
-                    )
                 }
             }
 
@@ -363,7 +372,16 @@ fun CaptureScreen(
 
                 // Shutter button (ready / idle / failed)
                 if (canControl) {
-                    ShutterButton(onClick = { viewModel.start(frameType) })
+                    if (uiState.sessionId != null) {
+                        PrimaryButton(text = "이어서 촬영", onClick = viewModel::resume)
+                    } else if (uiState.phase == CapturePhase.FAILED) {
+                        PrimaryButton(
+                            text = "카메라 다시 연결",
+                            onClick = { viewModel.bindCamera(lifecycleOwner, previewView) },
+                        )
+                    } else {
+                        ShutterButton(onClick = { viewModel.start(frameType) })
+                    }
                 }
             }
 
@@ -575,6 +593,7 @@ private fun PermissionDeniedView(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(AppColors.Background.primary)
             .padding(AppSpacing.xl),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -45,6 +45,13 @@ import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -115,7 +122,7 @@ fun EditScreen(
                     ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(onClick = { viewModel.leave(onBack) }, variant = IconButtonVariant.SOLID) {
                     Icon(Icons.Default.Close, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
                 }
                 Text(
@@ -223,8 +230,7 @@ fun EditScreen(
             PrimaryButton(
                 text = "사진별 상세 편집",
                 onClick = {
-                    viewModel.persistPendingForDetailEdit(sessionId)
-                    onContinueToDetailEdit()
+                    viewModel.persistPendingForDetailEdit(sessionId, onContinueToDetailEdit)
                 },
                 fullWidth = true,
                 icon = {
@@ -290,7 +296,7 @@ private fun PreviewSection(
             ) {
                 androidx.compose.material3.CircularProgressIndicator(color = AppColors.Accent.pink)
             }
-        } else if (uiState.filteredPreviewImages.isNotEmpty()) {
+        } else if (uiState.orderedImages.isNotEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -298,11 +304,13 @@ private fun PreviewSection(
                     .clip(RoundedCornerShape(AppLayout.Radius.xs)),
             ) {
                 CollagePreviewScaledToFit(
-                    images = uiState.filteredPreviewImages,
+                    images = uiState.orderedImages,
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
+                    filterId = uiState.selectedFilter,
                     overrideBackground = previewBackground,
+                    backgroundGradient = uiState.selectedFrameColor.gradientStops,
                     customFrameDesign = customFrameDesign,
                     customDecorations = customFrameDesign?.decorations ?: emptyList(),
                     bottomCaption = bottomCaption,
@@ -713,7 +721,7 @@ private fun TextInputSection(
 // ── Date Toggle Section ──────────────────────────────────────────────────────
 
 @Composable
-private fun DateToggleSection(
+internal fun DateToggleSection(
     uiState: EditUiState,
     onShowDateChange: (Boolean) -> Unit,
     onDateFontSizeChange: (Float) -> Unit,
@@ -748,7 +756,7 @@ private fun DateToggleSection(
                 color = AppColors.Text.tertiary,
             )
             Spacer(Modifier.weight(1f))
-            PinkToggle(checked = uiState.showDate, onCheckedChange = onShowDateChange)
+            PinkToggle(checked = uiState.showDate, onCheckedChange = onShowDateChange, label = "날짜 표시")
         }
         if (uiState.showDate) {
             Spacer(Modifier.height(AppSpacing.md))
@@ -765,7 +773,7 @@ private fun DateToggleSection(
 // ── Order Section ────────────────────────────────────────────────────────────
 
 @Composable
-private fun OrderSection(
+internal fun OrderSection(
     uiState: EditUiState,
     frameStyle: FrameStyle,
     onTapCell: (Int) -> Unit,
@@ -818,6 +826,8 @@ private fun OrderSection(
                                 isDragging = draggingIndex == index,
                                 cellAspectWidthOverHeight = frameStyle.cellAspectWidthOverHeight,
                                 onBadgeClick = { onTapCell(index) },
+                                onMoveEarlier = if (index > 0) { { onMoveSlot(index, index - 1) } } else null,
+                                onMoveLater = if (index < imageCount - 1) { { onMoveSlot(index, index + 1) } } else null,
                                 dragModifier = Modifier.pointerInput(index, imageCount) {
                                     detectDragGesturesAfterLongPress(
                                         onDragStart = {
@@ -874,6 +884,8 @@ private fun OrderCell(
     isDragging: Boolean,
     cellAspectWidthOverHeight: Float,
     onBadgeClick: () -> Unit,
+    onMoveEarlier: (() -> Unit)?,
+    onMoveLater: (() -> Unit)?,
     dragModifier: Modifier,
     onBoundsInRoot: (LayoutCoordinates) -> Unit,
     modifier: Modifier = Modifier,
@@ -897,6 +909,19 @@ private fun OrderCell(
                 width = if (isSelected || isDragging) 2.dp else 0.dp,
                 color = borderColor,
                 shape = RoundedCornerShape(AppLayout.Radius.sm),
+            )
+            .semantics {
+                contentDescription = "${displayNumber}번째 사진 순서 바꾸기"
+                stateDescription = if (isSelected) "맞바꿀 사진 선택됨" else "맞바꿀 사진 선택 안 됨"
+                customActions = buildList {
+                    onMoveEarlier?.let { move -> add(CustomAccessibilityAction("앞으로 한 칸 이동") { move(); true }) }
+                    onMoveLater?.let { move -> add(CustomAccessibilityAction("뒤로 한 칸 이동") { move(); true }) }
+                }
+            }
+            .clickable(
+                role = Role.Button,
+                onClickLabel = if (isSelected) "맞바꾸기 선택 해제" else "맞바꿀 사진 선택",
+                onClick = onBadgeClick,
             ),
     ) {
         Image(
@@ -917,7 +942,7 @@ private fun OrderCell(
                     if (isSelected) AppColors.Accent.pink else AppColors.Background.primary.copy(alpha = 0.7f),
                 )
                 .align(Alignment.TopStart)
-                .clickable(onClick = onBadgeClick),
+                .clearAndSetSemantics {},
             contentAlignment = Alignment.Center,
         ) {
             Text(

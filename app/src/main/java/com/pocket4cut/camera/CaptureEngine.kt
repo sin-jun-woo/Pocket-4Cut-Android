@@ -2,6 +2,7 @@ package com.pocket4cut.camera
 
 import android.content.Context
 import android.util.Rational
+import android.view.View
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -17,7 +18,7 @@ import java.io.File
 import java.util.concurrent.Executor
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 class CaptureEngine(
     private val context: Context,
@@ -91,20 +92,23 @@ class CaptureEngine(
         val outputOptions = ImageCapture.OutputFileOptions.Builder(targetFile).build()
         val executor: Executor = ContextCompat.getMainExecutor(context)
 
-        return suspendCoroutine { cont ->
+        return suspendCancellableCoroutine { cont ->
             capture.takePicture(
                 outputOptions,
                 executor,
                 object : ImageCapture.OnImageSavedCallback {
                     override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                        cont.resume(targetFile)
+                        if (cont.isActive) cont.resume(targetFile)
+                        else targetFile.delete()
                     }
 
                     override fun onError(exception: ImageCaptureException) {
-                        cont.resumeWithException(exception)
+                        if (cont.isActive) cont.resumeWithException(exception)
+                        else targetFile.delete()
                     }
                 },
             )
+            cont.invokeOnCancellation { targetFile.delete() }
         }
     }
 
@@ -114,13 +118,14 @@ class CaptureEngine(
 
         val future = ProcessCameraProvider.getInstance(context)
         val executor = ContextCompat.getMainExecutor(context)
-        return suspendCoroutine { cont ->
+        return suspendCancellableCoroutine { cont ->
             future.addListener(
                 {
                     try {
-                        cont.resume(future.get())
+                        val provider = future.get()
+                        if (cont.isActive) cont.resume(provider)
                     } catch (t: Throwable) {
-                        cont.resumeWithException(t)
+                        if (cont.isActive) cont.resumeWithException(t)
                     }
                 },
                 executor,
@@ -130,8 +135,24 @@ class CaptureEngine(
 
     private suspend fun awaitLaidOut(previewView: PreviewView) {
         if (previewView.width > 0 && previewView.height > 0) return
-        suspendCoroutine { cont ->
-            previewView.post { cont.resume(Unit) }
+        suspendCancellableCoroutine { cont ->
+            val listener = object : View.OnLayoutChangeListener {
+                override fun onLayoutChange(
+                    v: View, left: Int, top: Int, right: Int, bottom: Int,
+                    oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int,
+                ) {
+                    if (right > left && bottom > top && cont.isActive) {
+                        previewView.removeOnLayoutChangeListener(this)
+                        cont.resume(Unit)
+                    }
+                }
+            }
+            previewView.addOnLayoutChangeListener(listener)
+            cont.invokeOnCancellation { previewView.post { previewView.removeOnLayoutChangeListener(listener) } }
+            if (previewView.width > 0 && previewView.height > 0 && cont.isActive) {
+                previewView.removeOnLayoutChangeListener(listener)
+                cont.resume(Unit)
+            }
         }
     }
 }

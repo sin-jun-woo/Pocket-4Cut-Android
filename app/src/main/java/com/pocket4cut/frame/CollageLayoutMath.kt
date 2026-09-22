@@ -35,10 +35,13 @@ object CollageLayoutMath {
         text: String?,
         dateString: String?,
         outputWidthPx: Float,
+        layoutVersion: Int = 2,
     ): CollageLayoutDimensions {
         val hasText = !text.isNullOrBlank() || !dateString.isNullOrBlank()
         return if (frameStyle.id == FrameLayoutId.FOUR_VERTICAL) {
             fourVertical(frameStyle, theme, hasText)
+        } else if (frameStyle.id == FrameLayoutId.SIX_COLLAGE && layoutVersion >= 2) {
+            sixCollage(hasText, outputWidthPx)
         } else {
             generic(frameStyle, theme, hasText, outputWidthPx)
         }
@@ -50,14 +53,16 @@ object CollageLayoutMath {
         theme: FrameTheme,
         bottomCaption: String?,
         containerWidthPx: Float,
+        layoutVersion: Int = 2,
     ): CollageLayoutDimensions {
         val hasText = !bottomCaption.isNullOrBlank()
         val full = compute(
             frameStyle,
             theme,
-            if (hasText) " " else null,
-            if (hasText) " " else null,
+            bottomCaption?.takeIf { hasText },
+            null,
             if (frameStyle.id == FrameLayoutId.FOUR_VERTICAL) CLASSIC_W else containerWidthPx.coerceAtLeast(1f),
+            layoutVersion,
         )
         val scalePreview = containerWidthPx / full.canvasWidth
         return CollageLayoutDimensions(
@@ -86,6 +91,40 @@ object CollageLayoutMath {
                     a.bottom * scalePreview,
                 )
             },
+            hasBottomText = hasText,
+        )
+    }
+
+    private fun sixCollage(hasText: Boolean, outputWidth: Float): CollageLayoutDimensions {
+        val scale = outputWidth.coerceAtLeast(1f) / 390f
+        val pad = 20f * scale
+        val gap = 10f * scale
+        val smallWidth = 110f * scale
+        val smallHeight = (440f / 3f) * scale
+        // Keep the 3:4 cells intact while reserving a separate footer strip for the
+        // seasonal mark above the optional caption band (which starts at y=525).
+        val top = 40f * scale
+        val second = top + smallHeight + gap
+        val third = second + smallHeight + gap
+        val x1 = pad
+        val x2 = x1 + smallWidth + gap
+        val x3 = x2 + smallWidth + gap
+        val cells = listOf(
+            RectF(x1, top, x2 + smallWidth, second + smallHeight),
+            RectF(x3, top, x3 + smallWidth, top + smallHeight),
+            RectF(x3, second, x3 + smallWidth, second + smallHeight),
+            RectF(x1, third, x1 + smallWidth, third + smallHeight),
+            RectF(x2, third, x2 + smallWidth, third + smallHeight),
+            RectF(x3, third, x3 + smallWidth, third + smallHeight),
+        )
+        val height = (545f + if (hasText) 40f else 0f) * scale
+        return CollageLayoutDimensions(
+            canvasWidth = 390f * scale,
+            canvasHeight = height,
+            scale = scale,
+            cells = cells,
+            headerArea = RectF(0f, 0f, 390f * scale, top),
+            textArea = if (hasText) RectF(0f, 525f * scale, 390f * scale, height) else null,
             hasBottomText = hasText,
         )
     }
@@ -189,6 +228,7 @@ internal fun collageLayoutForRender(
     text: String?,
     dateString: String?,
     outputWidth: Int,
+    layoutVersion: Int = 2,
 ): CollageLayoutDimensions {
     val w = outputWidth.toFloat().coerceAtLeast(1f)
     return if (frameStyle.id == FrameLayoutId.FOUR_VERTICAL) {
@@ -198,9 +238,10 @@ internal fun collageLayoutForRender(
             text,
             dateString,
             COLLAGE_CLASSIC_WIDTH_PX,
+            layoutVersion,
         )
     } else {
-        CollageLayoutMath.compute(frameStyle, theme, text, dateString, w)
+        CollageLayoutMath.compute(frameStyle, theme, text, dateString, w, layoutVersion)
     }
 }
 

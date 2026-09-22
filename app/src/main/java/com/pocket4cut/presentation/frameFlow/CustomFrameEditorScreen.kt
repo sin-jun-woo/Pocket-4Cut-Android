@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -29,6 +30,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ChevronLeft
@@ -39,7 +41,9 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,10 +58,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 import androidx.compose.ui.zIndex
 import com.pocket4cut.core.util.AppFontCatalog
 import com.pocket4cut.frame.CollageLayoutMath
@@ -89,9 +98,11 @@ private enum class TrayMode {
 }
 
 private val stickerTintPalette = listOf(
-    0xFF6B9DL, 0xFFB4D6L, 0xE5527FL, 0x000000L, 0xFFFFFFL, 0x2D2D2DL,
-    0xFFD93DL, 0xFF7E67L, 0x4FC3F7L, 0x6BCF9FL, 0xB794F6L, 0xA8E6CFL,
-    0xC4A8D8L, 0x89CFF0L, 0xFF85C0L, 0x43A047L,
+    "분홍" to 0xFF6B9DL, "연분홍" to 0xFFB4D6L, "진분홍" to 0xE5527FL,
+    "검정" to 0x000000L, "하양" to 0xFFFFFFL, "진회색" to 0x2D2D2DL,
+    "노랑" to 0xFFD93DL, "산호" to 0xFF7E67L, "하늘" to 0x4FC3F7L,
+    "연두" to 0x6BCF9FL, "보라" to 0xB794F6L, "민트" to 0xA8E6CFL,
+    "연보라" to 0xC4A8D8L, "연하늘" to 0x89CFF0L, "장미" to 0xFF85C0L, "초록" to 0x43A047L,
 )
 
 @Composable
@@ -104,22 +115,29 @@ fun CustomFrameEditorScreen(
     onDismiss: () -> Unit,
     onCompleted: (CustomFrameDesign) -> Unit,
     modifier: Modifier = Modifier,
+    initialDesign: CustomFrameDesign? = null,
+    onDraftChanged: (CustomFrameDesign) -> Unit = {},
 ) {
     val context = LocalContext.current
-    var fillColorId by remember { mutableStateOf(FrameColors.all.first().id) }
-    var decorations by remember { mutableStateOf(listOf<CustomFrameDecoration>()) }
+    var fillColorId by remember(initialDesign) { mutableStateOf(initialDesign?.fillColorId ?: FrameColors.all.first().id) }
+    var decorations by remember(initialDesign) { mutableStateOf(initialDesign?.decorations.orEmpty()) }
     var selectedId by remember { mutableStateOf<String?>(null) }
     var trayMode by remember { mutableStateOf(TrayMode.Hidden) }
-    var selectedStickerColor by remember { mutableStateOf(stickerTintPalette.first()) }
+    var selectedStickerColor by remember { mutableStateOf(stickerTintPalette.first().second) }
     var showTextDialog by remember { mutableStateOf(false) }
     var textDraft by remember { mutableStateOf("텍스트") }
     var draftTextColorHex by remember { mutableStateOf(0x000000L) }
     var draftTextFontName by remember { mutableStateOf<String?>(null) }
     var showTextFontSheet by remember { mutableStateOf(false) }
     var showTextColorSheet by remember { mutableStateOf(false) }
+    var showTransformControls by remember { mutableStateOf(false) }
 
     val design = remember(fillColorId, decorations) {
         CustomFrameDesign(fillColorId = fillColorId, decorations = decorations)
+    }
+    LaunchedEffect(design) {
+        delay(200)
+        onDraftChanged(design)
     }
     val previewDesign = remember(fillColorId) {
         CustomFrameDesign(fillColorId = fillColorId, decorations = emptyList())
@@ -148,7 +166,7 @@ fun CustomFrameEditorScreen(
                 IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
                     Icon(
                         imageVector = Icons.Default.ChevronLeft,
-                        contentDescription = null,
+                        contentDescription = "이전 단계",
                         tint = AppColors.Text.primary,
                         modifier = Modifier.size(20.dp),
                     )
@@ -168,7 +186,7 @@ fun CustomFrameEditorScreen(
                 IconCircleButton(onClick = onDismiss, variant = IconButtonVariant.SOLID) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = null,
+                        contentDescription = "작업 잠시 멈추기",
                         tint = AppColors.Text.primary,
                         modifier = Modifier.size(20.dp),
                     )
@@ -247,7 +265,7 @@ fun CustomFrameEditorScreen(
                                             y = (it.position.y + pan.y / sh).coerceIn(0.02f, 0.98f),
                                         ),
                                         scale = (it.scale * zoomChange).coerceIn(0.25f, 5f),
-                                        rotationRadians = it.rotationRadians + rotationChange,
+                                        rotationRadians = it.rotationRadians + Math.toRadians(rotationChange.toDouble()).toFloat(),
                                     )
                                 }
                             }
@@ -259,11 +277,13 @@ fun CustomFrameEditorScreen(
                     Box(
                         modifier = Modifier
                             .zIndex(if (dec.id == selectedId) 2f else 1f)
+                            .align(Alignment.TopStart)
                             .offset(
                                 x = with(density) { (ox + dec.position.x * sw).toDp() } - handle,
                                 y = with(density) { (oy + dec.position.y * sh).toDp() } - handle,
                             )
                             .size(handle * 2)
+                            .clearAndSetSemantics {}
                             .graphicsLayer {
                                 transformOrigin = TransformOrigin.Center
                                 rotationZ = Math.toDegrees(dec.rotationRadians.toDouble()).toFloat()
@@ -347,7 +367,7 @@ fun CustomFrameEditorScreen(
                 if (selectedId != null) {
                     Box(
                         modifier = Modifier
-                            .size(44.dp)
+                            .size(48.dp)
                             .clip(RoundedCornerShape(AppLayout.Radius.md))
                             .background(AppColors.Background.tertiary)
                             .clickable {
@@ -358,7 +378,7 @@ fun CustomFrameEditorScreen(
                     ) {
                         Icon(
                             Icons.Default.Delete,
-                            null,
+                            "선택한 장식 삭제",
                             tint = AppColors.Accent.pink,
                             modifier = Modifier.size(18.dp),
                         )
@@ -424,11 +444,11 @@ fun CustomFrameEditorScreen(
                             .horizontalScroll(rememberScrollState()),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        stickerTintPalette.forEach { rgb ->
+                        stickerTintPalette.forEach { (name, rgb) ->
                             val selected = rgb == selectedStickerColor
                             Box(
                                 modifier = Modifier
-                                    .size(36.dp)
+                                    .size(48.dp)
                                     .clip(CircleShape)
                                     .background(Color(0xFF000000L or rgb))
                                     .border(
@@ -436,7 +456,8 @@ fun CustomFrameEditorScreen(
                                         color = if (selected) AppColors.Accent.pink else AppColors.Border.medium,
                                         shape = CircleShape,
                                     )
-                                    .clickable {
+                                    .semantics { contentDescription = "스티커 색상 $name" }
+                                    .selectable(selected = selected, role = Role.RadioButton) {
                                         selectedStickerColor = rgb
                                         val sid = selectedId
                                         if (sid != null) {
@@ -506,7 +527,7 @@ fun CustomFrameEditorScreen(
                 Spacer(Modifier.height(AppSpacing.md))
                 if (selectedId != null) {
                     Text(
-                        text = "선택한 장식을 드래그, 핀치, 회전할 수 있어요",
+                        text = "제스처 또는 아래 조절 버튼으로 장식을 움직일 수 있어요",
                         style = AppTypography.caption2,
                         color = AppColors.Text.tertiary,
                         modifier = Modifier.padding(bottom = AppSpacing.xs),
@@ -518,12 +539,13 @@ fun CustomFrameEditorScreen(
                         .horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
                 ) {
-                    decorations.forEach { dec ->
+                    decorations.forEachIndexed { index, dec ->
                         val sel = dec.id == selectedId
                         val chipShape = RoundedCornerShape(AppLayout.Radius.sm)
                         Row(
                             modifier = Modifier
-                                .height(36.dp)
+                                .heightIn(min = 48.dp)
+                                .widthIn(min = 48.dp)
                                 .clip(chipShape)
                                 .then(
                                     if (sel) Modifier
@@ -533,12 +555,25 @@ fun CustomFrameEditorScreen(
                                         .background(AppColors.Background.tertiary, chipShape)
                                         .border(1.dp, AppColors.Border.subtle, chipShape)
                                 )
-                                .clickable { selectedId = dec.id }
+                                .semantics {
+                                    contentDescription = "${index + 1}번째 장식, ${dec.accessibilityLabel()}"
+                                }
+                                .selectable(selected = sel, role = Role.RadioButton) { selectedId = dec.id }
                                 .padding(horizontal = AppSpacing.md),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            DecorationChipLabel(decoration = dec, context = context)
+                            Box(Modifier.clearAndSetSemantics {}) {
+                                DecorationChipLabel(decoration = dec, context = context)
+                            }
                         }
+                    }
+                }
+                if (selectedId != null) {
+                    TextButton(
+                        onClick = { showTransformControls = true },
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                    ) {
+                        Text("위치·크기·회전 조절")
                     }
                 }
             }
@@ -550,6 +585,25 @@ fun CustomFrameEditorScreen(
                 fullWidth = true,
             )
             Spacer(Modifier.height(AppSpacing.Layout.ctaBottomSpace))
+        }
+    }
+
+    val selectedDecoration = decorations.firstOrNull { it.id == selectedId }
+    if (showTransformControls && selectedDecoration != null) {
+        @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+        androidx.compose.material3.ModalBottomSheet(
+            onDismissRequest = { showTransformControls = false },
+            containerColor = AppColors.Background.primary,
+        ) {
+            Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(AppSpacing.Screen.horizontal)) {
+                DecorationTransformControls(
+                    decoration = selectedDecoration,
+                    onChange = { updated -> decorations = decorations.map { if (it.id == updated.id) updated else it } },
+                )
+                TextButton(onClick = { showTransformControls = false }, modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)) {
+                    Text("조절 완료")
+                }
+            }
         }
     }
 
@@ -730,14 +784,15 @@ private fun BackgroundColorChip(
 ) {
     Box(
         modifier = Modifier
-            .size(44.dp)
+            .size(48.dp)
             .clip(CircleShape)
             .border(
                 width = if (selected) 2.dp else 1.dp,
                 color = if (selected) AppColors.Accent.pink else AppColors.Border.subtle,
                 shape = CircleShape,
             )
-            .clickable(onClick = onClick),
+            .semantics { contentDescription = "프레임 배경 ${frameColor.name}" }
+            .selectable(selected = selected, role = Role.RadioButton, onClick = onClick),
     ) {
         val brush = frameColor.gradientBrush
         if (brush != null) {

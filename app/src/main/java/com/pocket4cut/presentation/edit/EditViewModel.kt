@@ -8,6 +8,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.data.storage.FileImageStorage
+import com.pocket4cut.data.local.SessionDocumentRepository
+import com.pocket4cut.domain.model.SessionStage
 import com.pocket4cut.frame.CustomFrameDesign
 import com.pocket4cut.frame.FilterDefs
 import com.pocket4cut.frame.FilterId
@@ -18,11 +20,16 @@ import com.pocket4cut.frame.FrameLayouts
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.presentation.settings.AppSettings
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -38,7 +45,6 @@ data class EditUiState(
     val order: List<Int> = emptyList(),
     val selectedSwapIndex: Int? = null,
     val orderedImages: List<Bitmap> = emptyList(),
-    val filteredPreviewImages: List<Bitmap> = emptyList(),
     val filterChipThumbnails: Map<FilterId, Bitmap> = emptyMap(),
     val textFontSize: Float = 16f,
     val dateFontSize: Float = 16f,
@@ -52,6 +58,10 @@ data class EditUiState(
 
 class EditViewModel(app: Application) : AndroidViewModel(app) {
     private val storage = FileImageStorage(app.applicationContext)
+    private val sessions = SessionDocumentRepository(app.applicationContext)
+    private var persistJob: Job? = null
+    private val persistMutex = Mutex()
+    private var basePhotoIds: List<String> = emptyList()
 
     private val _uiState = MutableStateFlow(EditUiState())
     val uiState: StateFlow<EditUiState> = _uiState
@@ -76,49 +86,50 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         lastSelectedIndexes = selectedIndexes
         lastSessionId = sessionId
 
-        val date = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(Date())
-
-        val frameSel = PendingCollageStore.readFrameSelection(getApplication(), sessionId)
-        val bgType = frameSel?.type ?: "solid"
-        val seasonIdVal = frameSel?.seasonId
-        val designJson = frameSel?.customDesignJson
-        val design = designJson?.let { PendingCollageStore.deserializeDesign(it) }
-        val frameColor = frameSel?.frameColorId?.let { FrameColors.byId(it) } ?: FrameColors.all.first()
-        val allowsColor = when (bgType) {
-            "solid" -> true
-            "custom" -> design?.sourceSeason == null
-            else -> false
-        }
-
         _uiState.update {
             it.copy(
                 isLoading = true,
                 errorMessage = null,
-                dateString = date,
-                frameBackgroundType = bgType,
-                seasonId = seasonIdVal,
-                customFrameDesign = design,
-                selectedFrameColor = frameColor,
-                allowsColorEditInEditor = allowsColor,
             )
         }
 
         viewModelScope.launch {
             runCatching {
-                withContext(Dispatchers.IO) {
-                    val allPaths = storage.getCapturePaths(sessionId)
-                    val picked = selectedIndexes.mapNotNull { idx -> allPaths.getOrNull(idx) }
-                    picked.mapNotNull { BitmapDecoding.decodeSampled(it, reqSize = 720) }
+                val document = sessions.getById(sessionId) ?: error("편집할 작업을 찾지 못했습니다.")
+                val ids = document.draft.selectedPhotoIdsInOrder
+                check(ids.size == frameType.selectCount) { "선택한 사진 수가 맞지 않습니다." }
+                val paths = ids.map { id ->
+                    val photo = document.photos.firstOrNull { it.photoId == id } ?: error("선택한 사진이 없습니다.")
+                    sessions.resolvePhotoPath(photo).also { check(it.isFile) { "사진 파일이 없습니다." } }.absolutePath
                 }
-            }.onSuccess { bitmaps ->
+                val bitmaps = withContext(Dispatchers.IO) {
+                    paths.map { BitmapDecoding.decodeSampled(it, reqSize = 720) ?: error("사진을 열 수 없습니다.") }
+                }
+                Triple(document, ids, bitmaps)
+            }.onSuccess { (document, ids, bitmaps) ->
+                basePhotoIds = ids
                 originalImages = bitmaps
                 val order = bitmaps.indices.toList()
+                val draft = document.draft
+                val design = draft.customDesignJson?.let { PendingCollageStore.deserializeDesign(it) }
                 _uiState.update {
                     it.copy(
                         isLoading = false,
                         order = order,
                         orderedImages = bitmaps,
-                        filteredPreviewImages = bitmaps,
+                        selectedFilter = runCatching { FilterId.valueOf(draft.filterId) }.getOrDefault(FilterId.ORIGINAL),
+                        customText = draft.caption,
+                        showDate = draft.showDate,
+                        dateString = draft.dateText,
+                        selectedFrameColor = FrameColors.byId(draft.frameColorId),
+                        frameBackgroundType = draft.backgroundType,
+                        seasonId = draft.seasonId,
+                        customFrameDesign = design,
+                        allowsColorEditInEditor = draft.backgroundType != "season" && design?.sourceSeason == null,
+                        textFontSize = draft.textFontSize,
+                        dateFontSize = draft.dateFontSize,
+                        captionFontName = draft.captionFontName,
+                        captionColorRGB = draft.captionColorRgb,
                     )
                 }
                 buildFilterChipThumbnails()
@@ -131,41 +142,54 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     fun setFilter(filter: FilterId) {
         if (_uiState.value.selectedFilter == filter) return
         _uiState.update { it.copy(selectedFilter = filter) }
-        rebuildFilteredImages()
+        schedulePersist()
     }
 
     fun setFrameColor(color: FrameColor) {
-        _uiState.update { it.copy(selectedFrameColor = color) }
+        _uiState.update {
+            it.copy(
+                selectedFrameColor = color,
+                customFrameDesign = it.customFrameDesign?.copy(fillColorId = color.id, fillHex = null),
+            )
+        }
+        schedulePersist()
     }
 
     fun setText(text: String) {
         _uiState.update { it.copy(customText = text) }
+        schedulePersist(300)
     }
 
     fun toggleDate() {
         _uiState.update { it.copy(showDate = !it.showDate) }
+        schedulePersist()
     }
 
     fun setShowDate(show: Boolean) {
         _uiState.update { it.copy(showDate = show) }
+        schedulePersist()
     }
 
     fun setTextFontSize(size: Float) {
         val v = size.coerceIn(1f, 30f)
         _uiState.update { it.copy(textFontSize = v) }
+        schedulePersist(300)
     }
 
     fun setDateFontSize(size: Float) {
         val v = size.coerceIn(1f, 30f)
         _uiState.update { it.copy(dateFontSize = v) }
+        schedulePersist(300)
     }
 
     fun setCaptionFontName(name: String?) {
         _uiState.update { it.copy(captionFontName = name) }
+        schedulePersist()
     }
 
     fun setCaptionColorRGB(rgb: Long?) {
         _uiState.update { it.copy(captionColorRGB = rgb) }
+        schedulePersist()
     }
 
     fun tapOrderCell(index: Int) {
@@ -181,6 +205,7 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
                 newOrder[index] = temp
                 _uiState.update { it.copy(order = newOrder, selectedSwapIndex = null) }
                 rebuildOrderedAndFilteredImages()
+                schedulePersist()
             }
         }
     }
@@ -195,49 +220,72 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         newOrder.add(toIndex, elem)
         _uiState.update { it.copy(order = newOrder, selectedSwapIndex = null) }
         rebuildOrderedAndFilteredImages()
+        schedulePersist()
     }
 
-    fun persistPendingForDetailEdit(sessionId: String) {
-        val s = _uiState.value
-        PendingCollageStore.write(
-            getApplication(), sessionId,
-            PendingCollageParams(
-                filterId = s.selectedFilter,
-                frameColorId = s.selectedFrameColor.id,
-                text = s.customText,
-                showDate = s.showDate,
-                order = s.order,
-                textFontSize = s.textFontSize,
-                dateFontSize = s.dateFontSize,
-                captionFontName = s.captionFontName,
-                captionColorRGB = s.captionColorRGB,
-                frameBackgroundType = s.frameBackgroundType,
-                seasonId = s.seasonId,
-                customDesignJson = s.customFrameDesign?.let { PendingCollageStore.serializeDesign(it) },
-            ),
-        )
+    private fun schedulePersist(waitMillis: Long = 120L) {
+        val snapshot = _uiState.value
+        persistJob?.cancel()
+        persistJob = viewModelScope.launch {
+            delay(waitMillis)
+            try {
+                persistSnapshot(snapshot, SessionStage.EDIT)
+            } catch (cause: kotlinx.coroutines.CancellationException) {
+                throw cause
+            } catch (cause: Exception) {
+                _uiState.update { it.copy(errorMessage = cause.message ?: "편집 내용을 저장하지 못했습니다.") }
+            }
+        }
     }
 
-    suspend fun renderFinalAndSave(sessionId: String): String {
+    private suspend fun persistSnapshot(snapshot: EditUiState, stage: SessionStage) = persistMutex.withLock {
+        val id = lastSessionId.takeIf { it.isNotBlank() } ?: error("작업 ID가 없습니다.")
+        val orderedIds = snapshot.order.map { basePhotoIds[it] }
+        val document = sessions.getById(id) ?: error("편집할 작업을 찾지 못했습니다.")
+        sessions.update(id, document.revision) { current ->
+            current.copy(
+                stage = stage,
+                draft = current.draft.copy(
+                    selectedPhotoIdsInOrder = orderedIds,
+                    filterId = snapshot.selectedFilter.name,
+                    frameColorId = snapshot.selectedFrameColor.id,
+                    backgroundType = snapshot.frameBackgroundType,
+                    caption = snapshot.customText,
+                    showDate = snapshot.showDate,
+                    textFontSize = snapshot.textFontSize,
+                    dateFontSize = snapshot.dateFontSize,
+                    captionFontName = snapshot.captionFontName,
+                    captionColorRgb = snapshot.captionColorRGB,
+                    seasonId = snapshot.seasonId,
+                    customDesignJson = snapshot.customFrameDesign?.let { PendingCollageStore.serializeDesign(it) },
+                ),
+            )
+        }
+    }
+
+    fun leave(onSaved: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                persistJob?.cancelAndJoin()
+                persistSnapshot(_uiState.value, SessionStage.EDIT)
+                onSaved()
+            } catch (cause: Exception) {
+                _uiState.update { it.copy(errorMessage = cause.message ?: "편집 내용을 저장하지 못했습니다.") }
+            }
+        }
+    }
+
+    fun persistPendingForDetailEdit(sessionId: String, onSaved: () -> Unit) {
         val s = _uiState.value
-        val params = PendingCollageParams(
-            filterId = s.selectedFilter,
-            frameColorId = s.selectedFrameColor.id,
-            text = s.customText,
-            showDate = s.showDate,
-            order = s.order,
-            textFontSize = s.textFontSize,
-            dateFontSize = s.dateFontSize,
-            captionFontName = s.captionFontName,
-            captionColorRGB = s.captionColorRGB,
-        )
-        return CollageFinalize.finalize(
-            getApplication(), sessionId,
-            lastFrameType ?: error("frameType missing"),
-            lastFrameLayoutId ?: error("layoutId missing"),
-            lastSelectedIndexes,
-            params,
-        )
+        viewModelScope.launch {
+            try {
+                persistJob?.cancelAndJoin()
+                persistSnapshot(s, SessionStage.DETAIL)
+                onSaved()
+            } catch (cause: Exception) {
+                _uiState.update { it.copy(errorMessage = cause.message ?: "편집 내용을 저장하지 못했습니다.") }
+            }
+        }
     }
 
     private fun buildFilterChipThumbnails() {
@@ -256,23 +304,7 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     private fun rebuildOrderedAndFilteredImages() {
         val order = _uiState.value.order
         val ordered = order.mapNotNull { originalImages.getOrNull(it) }
-        val filter = _uiState.value.selectedFilter
-        val filtered = if (filter == FilterId.ORIGINAL) ordered
-        else ordered.map { applyFilterToBitmap(it, filter) }
-        _uiState.update { it.copy(orderedImages = ordered, filteredPreviewImages = filtered) }
-    }
-
-    private fun rebuildFilteredImages() {
-        val ordered = _uiState.value.orderedImages
-        if (ordered.isEmpty()) return
-        viewModelScope.launch {
-            val filter = _uiState.value.selectedFilter
-            val filtered = withContext(Dispatchers.Default) {
-                if (filter == FilterId.ORIGINAL) ordered
-                else ordered.map { applyFilterToBitmap(it, filter) }
-            }
-            _uiState.update { it.copy(filteredPreviewImages = filtered) }
-        }
+        _uiState.update { it.copy(orderedImages = ordered) }
     }
 
     companion object {
@@ -280,12 +312,17 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
             if (filterId == FilterId.ORIGINAL) return source
             val cf = FilterDefs.colorFilter(filterId) ?: return source
             val result = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(result)
-            val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
-                colorFilter = cf
+            try {
+                val canvas = Canvas(result)
+                val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
+                    colorFilter = cf
+                }
+                canvas.drawBitmap(source, 0f, 0f, paint)
+                return result
+            } catch (cause: Throwable) {
+                result.recycle()
+                throw cause
             }
-            canvas.drawBitmap(source, 0f, 0f, paint)
-            return result
         }
 
         private fun scaleBitmap(source: Bitmap, maxDim: Int): Bitmap {

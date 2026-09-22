@@ -6,13 +6,16 @@ import android.graphics.Canvas
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.LinearGradient
+import android.graphics.Shader
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.text.TextPaint
+import android.text.TextUtils
 import android.graphics.Color as AColor
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.pocket4cut.core.util.AppFontCatalog
-import com.pocket4cut.core.util.CollageExportMetrics
 import com.pocket4cut.core.util.ColorRGB
 import com.pocket4cut.frame.rendering.AutumnFrameVectorDecor
 import com.pocket4cut.frame.rendering.SpringFrameVectorDecor
@@ -29,9 +32,12 @@ object CollageRenderer {
 
     data class Input(
         val images: List<Bitmap>,
+        val imageProvider: ((Int) -> Bitmap?)? = null,
+        val recycleProvidedImages: Boolean = false,
         val frameStyle: FrameStyle,
         val theme: FrameTheme,
         val overrideBackground: Color? = null,
+        val backgroundGradient: List<Color>? = null,
         val overrideBackgroundImage: Bitmap? = null,
         val customDecorations: List<CustomFrameDecoration> = emptyList(),
         val customFrameDesign: CustomFrameDesign? = null,
@@ -43,18 +49,23 @@ object CollageRenderer {
         val textColorRGB: Long? = null,
         val captionFontName: String? = null,
         val context: Context? = null,
+        val layoutVersion: Int = 2,
     )
 
     fun render(input: Input): Bitmap {
         val preferredOutputWidth = if (input.frameStyle.id == FrameLayoutId.FOUR_VERTICAL) {
             COLLAGE_CLASSIC_WIDTH_PX.toInt()
         } else {
-            CollageExportMetrics.preferredOutputWidth.roundToInt()
+            val logical = CollageLayoutMath.compute(
+                input.frameStyle, input.theme, input.text, input.dateString, 390f, input.layoutVersion,
+            )
+            CollageOutputSize.forScene(logical).first
         }
         val layout = collageLayoutForRender(
             input.frameStyle, input.theme,
             input.text, input.dateString,
             preferredOutputWidth,
+            input.layoutVersion,
         )
         return render(input, layout)
     }
@@ -89,7 +100,17 @@ object CollageRenderer {
             Bitmap.Config.ARGB_8888,
         )
         val canvas = Canvas(bitmap)
+        try {
+            drawScene(canvas, input, layout)
+            return bitmap
+        } catch (error: Throwable) {
+            bitmap.recycle()
+            throw error
+        }
+    }
 
+    /** Both Compose preview and JPEG export draw the same scene and layer order. */
+    fun drawScene(canvas: Canvas, input: Input, layout: CollageLayoutDimensions) {
         val seasonHTML = input.customFrameDesign?.resolvedSeason
         val useSeasonBackdrop = seasonHTML != null && input.overrideBackgroundImage == null
 
@@ -108,12 +129,45 @@ object CollageRenderer {
             SeasonHTMLFrameStyle.drawHTMLBackdrop(seasonHTML, canvas, layout.canvasWidth, layout.canvasHeight)
         } else {
             val bgColor = input.overrideBackground ?: input.theme.background
-            val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = bgColor.toArgb() }
+            val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                color = bgColor.toArgb()
+                input.backgroundGradient?.takeIf { it.size >= 2 }?.let { colors ->
+                    shader = LinearGradient(0f, 0f, layout.canvasWidth, layout.canvasHeight,
+                        colors.map { it.toArgb() }.toIntArray(), null, Shader.TileMode.CLAMP)
+                }
+            }
             canvas.drawRect(canvasRect, bgPaint)
         }
         canvas.restore()
 
-        // 2. Outer border
+        // 2. Photo slots
+        val colorFilter = FilterDefs.colorFilter(input.filterId)
+        val imgPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
+            this.colorFilter = colorFilter
+        }
+        val slotBg = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = AColor.argb(28, 0, 0, 0) }
+
+        for ((i, cell) in layout.cells.withIndex()) {
+            val cellCorner = if (useSeasonBackdrop) {
+                cell.width() * SeasonHTMLFrameStyle.CELL_CORNER_RATIO
+            } else 0f
+
+            canvas.save()
+            if (cellCorner > 0f) {
+                val clipPath = Path().apply { addRoundRect(cell, cellCorner, cellCorner, Path.Direction.CW) }
+                canvas.clipPath(clipPath)
+            }
+            canvas.drawRect(cell, slotBg)
+            val provided = input.imageProvider?.invoke(i)
+            try {
+                (provided ?: input.images.getOrNull(i))?.let { drawAspectFill(canvas, it, cell, imgPaint) }
+            } finally {
+                if (input.recycleProvidedImages) provided?.recycle()
+            }
+            canvas.restore()
+        }
+
+        // 3. Outer border and season cell borders remain visible above photos.
         val borderColor = if (seasonHTML != null) {
             (0xFF000000 or SeasonHTMLFrameStyle.outerStrokeHex(seasonHTML)).toInt()
         } else {
@@ -136,8 +190,24 @@ object CollageRenderer {
             if (r > 0f) canvas.drawRoundRect(borderRect, r, r, borderPaint)
             else canvas.drawRect(borderRect, borderPaint)
         }
+        if (seasonHTML != null) {
+            for (cell in layout.cells) {
+                strokeSeasonCellBorder(canvas, cell, seasonHTML, layout.scale)
+            }
+        }
 
-        // 3. Brand title
+        // 4. Season vector decorations
+        if (seasonHTML != null) {
+            val slotRects = layout.cells.map { RectF(it) }
+            when (seasonHTML) {
+                Season.SPRING -> SpringFrameVectorDecor.draw(canvas, layout.canvasWidth, layout.canvasHeight, true, slotRects)
+                Season.SUMMER -> SummerFrameVectorDecor.draw(canvas, layout.canvasWidth, layout.canvasHeight, true, slotRects)
+                Season.AUTUMN -> AutumnFrameVectorDecor.draw(canvas, layout.canvasWidth, layout.canvasHeight, true, slotRects)
+                Season.WINTER -> WinterFrameVectorDecor.draw(canvas, layout.canvasWidth, layout.canvasHeight, true, slotRects)
+            }
+        }
+
+        // 5. Brand, caption and date
         val effectiveBgColor = when {
             seasonHTML != null -> Color((0xFF000000 or SeasonHTMLFrameStyle.baseHex(seasonHTML)).toInt())
             input.overrideBackground != null -> input.overrideBackground
@@ -152,59 +222,16 @@ object CollageRenderer {
             hasBackgroundImage = input.overrideBackgroundImage != null,
             isSeason = seasonHTML != null,
         )
-
-        // 4. Photo slots
-        val colorFilter = FilterDefs.colorFilter(input.filterId)
-        val imgPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
-            this.colorFilter = colorFilter
-        }
-        val slotBg = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = AColor.argb(28, 0, 0, 0) }
-
-        for ((i, cell) in layout.cells.withIndex()) {
-            val cellCorner = if (useSeasonBackdrop) {
-                cell.width() * SeasonHTMLFrameStyle.CELL_CORNER_RATIO
-            } else 0f
-
-            canvas.save()
-            if (cellCorner > 0f) {
-                val clipPath = Path().apply { addRoundRect(cell, cellCorner, cellCorner, Path.Direction.CW) }
-                canvas.clipPath(clipPath)
-            }
-            canvas.drawRect(cell, slotBg)
-            input.images.getOrNull(i)?.let { drawAspectFill(canvas, it, cell, imgPaint) }
-            canvas.restore()
+        layout.textArea?.let { textArea ->
+            drawOverlayText(canvas, textArea, layout.scale, effectiveBgColor, input)
         }
 
-        // 5. Season cell borders (dashed)
-        if (seasonHTML != null) {
-            for (cell in layout.cells) {
-                strokeSeasonCellBorder(canvas, cell, seasonHTML, layout.scale)
-            }
-        }
-
-        // 6. Season vector decorations
-        if (seasonHTML != null) {
-            val slotRects = layout.cells.map { RectF(it) }
-            when (seasonHTML) {
-                Season.SPRING -> SpringFrameVectorDecor.draw(canvas, layout.canvasWidth, layout.canvasHeight, true, slotRects)
-                Season.SUMMER -> SummerFrameVectorDecor.draw(canvas, layout.canvasWidth, layout.canvasHeight, true, slotRects)
-                Season.AUTUMN -> AutumnFrameVectorDecor.draw(canvas, layout.canvasWidth, layout.canvasHeight, true, slotRects)
-                Season.WINTER -> WinterFrameVectorDecor.draw(canvas, layout.canvasWidth, layout.canvasHeight, true, slotRects)
-            }
-        }
-
-        // 7. Custom decorations
+        // 6. User decorations are the topmost layer.
         val deco = input.customFrameDesign?.decorations ?: input.customDecorations
         if (deco.isNotEmpty()) {
             drawCustomDecorations(canvas, deco, layout.canvasWidth, layout.canvasHeight, input.context)
         }
 
-        // 8. Overlay text
-        layout.textArea?.let { textArea ->
-            drawOverlayText(canvas, textArea, layout.scale, effectiveBgColor, input)
-        }
-
-        return bitmap
     }
 
     private fun strokeSeasonCellBorder(canvas: Canvas, cell: RectF, season: Season, scale: Float) {
@@ -263,14 +290,7 @@ object CollageRenderer {
                     if (palette != null) {
                         val pt = maxOf(base * 0.12f * dec.scale, 12f)
                         val stickerColor = (0xFF000000 or (kind.colorRGB and 0xFFFFFF)).toInt()
-                        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                            textSize = pt
-                            color = stickerColor
-                            textAlign = Paint.Align.CENTER
-                        }
-                        val fm = paint.fontMetrics
-                        val y = -(fm.ascent + fm.descent) / 2f
-                        canvas.drawText(palette.displayName, 0f, y, paint)
+                        StickerVectorPainter.draw(canvas, palette, stickerColor, pt)
                     }
                 }
             }
@@ -354,10 +374,18 @@ object CollageRenderer {
         data class Chunk(val str: String, val paint: Paint, val width: Float, val height: Float)
 
         val chunks = mutableListOf<Chunk>()
+        val maxWidth = (area.width() - 24f * scale).coerceAtLeast(1f)
+        val rawDateWidth = if (dateString.isNullOrBlank()) 0f else datePaint.measureText(dateString)
+        val separatorWidth = if (!text.isNullOrBlank() && !dateString.isNullOrBlank())
+            sepPaint.measureText(separator) else 0f
         if (!text.isNullOrBlank()) {
-            val w = textPaint.measureText(text)
+            val available = if (rawDateWidth > 0f)
+                (maxWidth - rawDateWidth - separatorWidth).coerceAtLeast(0f) else maxWidth
+            val visible = TextUtils.ellipsize(text, TextPaint(textPaint), available,
+                TextUtils.TruncateAt.END).toString()
+            val w = textPaint.measureText(visible)
             val fm = textPaint.fontMetrics
-            chunks.add(Chunk(text, textPaint, w, fm.descent - fm.ascent))
+            if (visible.isNotEmpty()) chunks.add(Chunk(visible, textPaint, w, fm.descent - fm.ascent))
         }
         if (!dateString.isNullOrBlank()) {
             if (chunks.isNotEmpty()) {
@@ -365,13 +393,16 @@ object CollageRenderer {
                 val fm = sepPaint.fontMetrics
                 chunks.add(Chunk(separator, sepPaint, w, fm.descent - fm.ascent))
             }
-            val w = datePaint.measureText(dateString)
+            val available = (maxWidth - chunks.sumOf { it.width.toDouble() }.toFloat()).coerceAtLeast(0f)
+            val visible = TextUtils.ellipsize(dateString, TextPaint(datePaint), available,
+                TextUtils.TruncateAt.END).toString()
+            val w = datePaint.measureText(visible)
             val fm = datePaint.fontMetrics
-            chunks.add(Chunk(dateString, datePaint, w, fm.descent - fm.ascent))
+            if (visible.isNotEmpty()) chunks.add(Chunk(visible, datePaint, w, fm.descent - fm.ascent))
+            else if (chunks.lastOrNull()?.str == separator) chunks.removeAt(chunks.lastIndex)
         }
 
         val totalW = chunks.sumOf { it.width.toDouble() }.toFloat()
-        val maxH = chunks.maxOfOrNull { it.height } ?: 0f
         var drawX = area.centerX() - totalW / 2f
         val baseY = area.centerY()
 

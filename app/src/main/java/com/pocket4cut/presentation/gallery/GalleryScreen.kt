@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.pocket4cut.domain.model.SessionStage
 import com.pocket4cut.ui.designsystem.*
 import com.pocket4cut.ui.designsystem.components.*
 import java.io.File
@@ -45,6 +46,8 @@ private enum class GalleryViewMode {
     BY_KIND,
 }
 
+private enum class GallerySection { COMPLETED, DRAFTS }
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GalleryScreen(
@@ -52,11 +55,15 @@ fun GalleryScreen(
     onOpen: (resultPath: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: GalleryViewModel = viewModel(),
+    onOpenResult: ((sessionId: String, resultId: String, resultPath: String) -> Unit)? = null,
+    onResumeDraft: (sessionId: String, stage: SessionStage) -> Unit = { _, _ -> },
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var viewMode by remember { mutableStateOf(GalleryViewMode.BY_DATE) }
+    var section by remember { mutableStateOf(GallerySection.COMPLETED) }
     var longPressedItemId by remember { mutableStateOf<String?>(null) }
     var deleteTarget by remember { mutableStateOf<GalleryItem?>(null) }
+    var discardTarget by remember { mutableStateOf<GalleryDraftItem?>(null) }
 
     LaunchedEffect(Unit) { viewModel.load() }
     LaunchedEffect(viewMode) { longPressedItemId = null }
@@ -78,13 +85,35 @@ fun GalleryScreen(
                 onClose = onBack,
             )
             Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = AppSpacing.Screen.horizontal),
+                horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+            ) {
+                listOf(
+                    GallerySection.COMPLETED to "완성 ${uiState.items.size}",
+                    GallerySection.DRAFTS to "진행 중 ${uiState.drafts.size}",
+                ).forEach { (choice, label) ->
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = 48.dp)
+                            .clip(RoundedCornerShape(AppLayout.Radius.sm))
+                            .background(if (section == choice) AppColors.Accent.pink else AppColors.Background.secondary)
+                            .clickable { section = choice; longPressedItemId = null },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(label, color = if (section == choice) Color.White else AppColors.Text.primary,
+                            style = AppTypography.caption1)
+                    }
+                }
+            }
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = AppSpacing.Screen.horizontal)
                     .padding(bottom = AppSpacing.md),
                 horizontalArrangement = Arrangement.Center,
             ) {
-                GalleryViewModeToggle(
+                if (section == GallerySection.COMPLETED) GalleryViewModeToggle(
                     selectedMode = viewMode,
                     onModeSelected = { viewMode = it },
                 )
@@ -94,6 +123,27 @@ fun GalleryScreen(
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(color = AppColors.Accent.pink)
                     }
+                }
+
+                uiState.errorMessage != null -> {
+                    Column(Modifier.fillMaxSize().padding(AppSpacing.Screen.horizontal),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(uiState.errorMessage.orEmpty(), color = AppColors.Semantic.error,
+                            style = AppTypography.body, textAlign = TextAlign.Center)
+                        SecondaryButton(text = "다시 불러오기", onClick = viewModel::load, fullWidth = true)
+                    }
+                }
+
+                section == GallerySection.DRAFTS -> {
+                    DraftContent(
+                        drafts = uiState.drafts,
+                        onResume = { item ->
+                            if (item.stage == SessionStage.NEEDS_RECOVERY) viewModel.reportRecoveryRequired()
+                            else onResumeDraft(item.sessionId, item.stage)
+                        },
+                        onDiscard = { discardTarget = it },
+                    )
                 }
 
                 uiState.items.isEmpty() -> {
@@ -138,12 +188,18 @@ fun GalleryScreen(
                         onItemClick = { item ->
                             if (longPressedItemId != null) {
                                 longPressedItemId = null
+                            } else if (!item.missingImage) {
+                                if (onOpenResult != null) {
+                                    onOpenResult(item.sessionId, item.resultId, item.resultPath)
+                                } else {
+                                    onOpen(item.resultPath)
+                                }
                             } else {
-                                onOpen(item.resultPath)
+                                viewModel.reportMissingImage()
                             }
                         },
                         onItemLongPress = { item ->
-                            longPressedItemId = item.sessionId
+                            longPressedItemId = "${item.sessionId}:${item.resultId}"
                         },
                         onDeleteClick = { item ->
                             deleteTarget = item
@@ -155,17 +211,23 @@ fun GalleryScreen(
         }
 
         ConfirmDialog(
-            visible = deleteTarget != null,
-            title = "이 추억을 지울까요?",
-            message = "저장된 사진 파일도 함께 삭제돼요.",
+            visible = deleteTarget != null || discardTarget != null,
+            title = if (discardTarget != null) "이 작업을 버릴까요?" else "이 세션을 지울까요?",
+            message = if (discardTarget != null) {
+                "미완성 작업을 삭제합니다. 이전에 완성한 결과와 사진첩 사본은 유지됩니다."
+            } else {
+                "이 세션의 앱 내부 결과와 촬영 사진을 모두 삭제합니다. 사진첩에 저장한 사본은 유지됩니다."
+            },
             confirmText = "삭제",
             cancelText = "취소",
             isDestructive = true,
             onConfirm = {
                 deleteTarget?.let { viewModel.delete(it.sessionId) }
+                discardTarget?.let { viewModel.discardDraft(it.sessionId) }
                 deleteTarget = null
+                discardTarget = null
             },
-            onCancel = { deleteTarget = null },
+            onCancel = { deleteTarget = null; discardTarget = null },
         )
     }
 }
@@ -305,11 +367,11 @@ private fun GalleryContent(
                     }
                     items(
                         items = bucket.items,
-                        key = { it.sessionId },
+                        key = { "${it.sessionId}:${it.resultId}" },
                     ) { item ->
                         SessionCell(
                             item = item,
-                            isLongPressed = longPressedItemId == item.sessionId,
+                            isLongPressed = longPressedItemId == "${item.sessionId}:${item.resultId}",
                             onClick = { onItemClick(item) },
                             onLongClick = { onItemLongPress(item) },
                             onDeleteClick = { onDeleteClick(item) },
@@ -332,11 +394,11 @@ private fun GalleryContent(
                     }
                     items(
                         items = bucket.items,
-                        key = { it.sessionId },
+                        key = { "${it.sessionId}:${it.resultId}" },
                     ) { item ->
                         SessionCell(
                             item = item,
-                            isLongPressed = longPressedItemId == item.sessionId,
+                            isLongPressed = longPressedItemId == "${item.sessionId}:${item.resultId}",
                             onClick = { onItemClick(item) },
                             onLongClick = { onItemLongPress(item) },
                             onDeleteClick = { onDeleteClick(item) },
@@ -390,11 +452,17 @@ private fun SessionCell(
                 .background(AppColors.Background.secondary),
         ) {
             AsyncImage(
-                model = File(item.resultPath),
-                contentDescription = null,
+                model = if (item.missingImage) null else File(item.resultPath),
+                contentDescription = "${item.frameKindLabel} 결과, ${item.daySectionTitle}" +
+                    if (item.missingImage) ", 이미지 파일 없음" else "",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Fit,
             )
+            if (item.missingImage) {
+                Text("이미지 파일 없음", color = AppColors.Semantic.error,
+                    style = AppTypography.caption1,
+                    modifier = Modifier.align(Alignment.Center))
+            }
             androidx.compose.animation.AnimatedVisibility(
                 visible = isLongPressed,
                 enter = scaleIn() + fadeIn(),
@@ -405,7 +473,7 @@ private fun SessionCell(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(48.dp)
                         .clip(RoundedCornerShape(AppLayout.Radius.xs))
                         .background(AppColors.Semantic.error)
                         .clickable(onClick = onDeleteClick),
@@ -437,6 +505,86 @@ private fun SessionCell(
                 style = AppTypography.caption2,
                 color = AppColors.Text.tertiary,
             )
+        }
+    }
+}
+
+@Composable
+private fun DraftContent(
+    drafts: List<GalleryDraftItem>,
+    onResume: (GalleryDraftItem) -> Unit,
+    onDiscard: (GalleryDraftItem) -> Unit,
+) {
+    if (drafts.isEmpty()) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("진행 중인 작업이 없어요", style = AppTypography.body,
+                color = AppColors.Text.secondary)
+        }
+        return
+    }
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = Modifier.fillMaxSize().padding(horizontal = AppSpacing.Screen.horizontal),
+        horizontalArrangement = Arrangement.spacedBy(AppSpacing.Component.cardGap),
+        verticalArrangement = Arrangement.spacedBy(AppSpacing.Component.cardGap),
+        contentPadding = PaddingValues(bottom = AppSpacing.xxxl),
+    ) {
+        items(drafts, key = { it.sessionId }) { draft ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(AppLayout.Radius.xs))
+                    .background(AppColors.Background.secondary),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(3f / 4f)
+                        .clickable { onResume(draft) },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    val thumbnail = draft.thumbnailPath?.takeIf { File(it).isFile }
+                    if (thumbnail != null) {
+                        AsyncImage(
+                            model = File(thumbnail),
+                            contentDescription = "진행 중인 ${draft.selectedCount}컷 작업",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop,
+                        )
+                    } else {
+                        Icon(Icons.Default.PhotoCamera, contentDescription = null,
+                            tint = AppColors.Text.tertiary, modifier = Modifier.size(52.dp))
+                    }
+                    Text(
+                        text = if (draft.stage == SessionStage.NEEDS_RECOVERY) "복구 필요" else "이어서 작업",
+                        color = Color.White,
+                        style = AppTypography.caption1,
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(AppSpacing.xs)
+                            .clip(RoundedCornerShape(AppLayout.Radius.xs))
+                            .background(AppColors.Accent.pink)
+                            .padding(horizontal = AppSpacing.xs, vertical = AppSpacing.xs),
+                    )
+                }
+                Text(
+                    text = if (draft.totalShots > 0) {
+                        "${draft.selectedCount}컷 · 촬영 ${draft.completedShots}/${draft.totalShots}"
+                    } else "${draft.selectedCount}컷 · 복구 필요",
+                    color = AppColors.Text.primary,
+                    style = AppTypography.caption1,
+                    modifier = Modifier.padding(horizontal = AppSpacing.xs, vertical = AppSpacing.xs),
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 48.dp)
+                        .clickable { onDiscard(draft) },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text("작업 버리기", color = AppColors.Semantic.error, style = AppTypography.caption1)
+                }
+            }
         }
     }
 }
