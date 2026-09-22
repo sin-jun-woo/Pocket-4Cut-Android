@@ -6,7 +6,6 @@ import com.pocket4cut.frame.CollageOutputSize
 import com.pocket4cut.frame.FrameCatalog
 import com.pocket4cut.frame.FrameLayoutId
 import com.pocket4cut.frame.FrameLayouts
-import com.pocket4cut.frame.rendering.SeasonDecorAnchors
 import com.pocket4cut.presentation.navigation.FrameType
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -50,19 +49,19 @@ class CollageOutputContractInstrumentedTest {
         assertTrue(legacy.cells[0].width() < modern.cells[0].width())
     }
 
-    @Test fun sixCutSeasonFooterHasSpaceBeforeCaptionAtBothCanvasHeights() {
+    @Test fun sixCutFooterAndCaptionStayOutsideThePhotoSlots() {
         val style = FrameLayouts.byId(FrameLayoutId.SIX_COLLAGE)
         val theme = FrameCatalog.themes(FrameType.SIX_CUT).first()
         for (caption in listOf<String?>(null, "문구")) {
             val layout = CollageLayoutMath.compute(style, theme, caption, null, 390f, 2)
             val slotBottom = layout.cells.maxOf { it.bottom }
-            val footerTop = SeasonDecorAnchors.memoriesBaselineY(
-                layout.canvasHeight, layout.cells, 12f, layout.canvasHeight - 20f,
-            )
-            val footerBottom = footerTop + 12f
             assertEquals(if (caption == null) 545f else 585f, layout.canvasHeight)
-            assertTrue("Season footer must clear photos", footerTop - 10f >= slotBottom)
-            assertTrue("Season footer must clear caption", footerBottom <= (layout.textArea?.top ?: layout.canvasHeight - 8f))
+            val footerBottom = layout.textArea?.top ?: layout.canvasHeight
+            assertTrue("Season artwork retains a footer outside photos", footerBottom - slotBottom >= 25f)
+            layout.textArea?.let { captionArea ->
+                assertTrue("Caption must clear every photo", captionArea.top > slotBottom)
+                assertEquals(layout.canvasHeight, captionArea.bottom, 0.01f)
+            }
             assertEquals(500f, slotBottom, 0.01f)
         }
     }

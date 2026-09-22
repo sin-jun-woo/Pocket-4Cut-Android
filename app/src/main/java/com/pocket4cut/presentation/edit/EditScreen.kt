@@ -320,6 +320,7 @@ private fun PreviewSection(
                     captionDateSizePt = captionDateSizePt,
                     captionFontName = captionFontName,
                     captionColorRGB = captionColorRGB,
+                    layoutVersion = uiState.layoutVersion,
                     modifier = Modifier.fillMaxSize(),
                 )
             }

@@ -1,0 +1,5113 @@
+{
+  "renderer": "Production Android CollageRenderer.drawScene \/ CollageRenderer.render",
+  "apiLevel": 37,
+  "sourceRevision": "d249a01+paper-seasons-v1-final-worktree",
+  "templateCount": 72,
+  "exampleCount": 32,
+  "exampleFormat": "JPEG quality 98, same opaque image format as the app",
+  "photoSource": "Four fictional generated adult demo photos from existing print-booth-v1 assets; repeated for six slots",
+  "templateMethod": "Production scene with actual layout geometry, photo windows cleared to true alpha; caption variants reserve an empty caption band",
+  "appExportFormat": "JPEG; transparent PNG files are production-rendered design deliverables, not a new app export format",
+  "files": [
+    {
+      "path": "frames\/spring\/two_vertical.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 1248,
+      "height": 3179,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/two_vertical_caption.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 1248,
+      "height": 3307,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": [
+        0,
+        3066.6667,
+        1248,
+        3306.6667
+      ]
+    },
+    {
+      "path": "examples\/spring\/two_vertical.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "spring",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 1248,
+      "height": 3179,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/two_horizontal.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 2350,
+      "height": 1878,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/two_horizontal_caption.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 2350,
+      "height": 2119,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        1757.4786,
+        2350,
+        2119.017
+      ]
+    },
+    {
+      "path": "examples\/spring\/two_horizontal.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "spring",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 2350,
+      "height": 1878,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/four_vertical.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 1650,
+      "height": 4920,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/four_vertical_caption.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 1650,
+      "height": 4920,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1341.0576
+        ],
+        [
+          84.61539,
+          1383.3654,
+          1565.3846,
+          2449.4229
+        ],
+        [
+          84.61539,
+          2491.7307,
+          1565.3846,
+          3557.7883
+        ],
+        [
+          84.61539,
+          3600.0962,
+          1565.3846,
+          4666.154
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": [
+        0,
+        4666.154,
+        1650,
+        4920
+      ]
+    },
+    {
+      "path": "examples\/spring\/four_vertical.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "spring",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 1650,
+      "height": 4920,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/four_grid.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 2350,
+      "height": 3304,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/four_grid_caption.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 2350,
+      "height": 3545,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        3183.5469,
+        2350,
+        3545.0854
+      ]
+    },
+    {
+      "path": "examples\/spring\/four_grid.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "spring",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 2350,
+      "height": 3304,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/four_horizontal.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 4992,
+      "height": 2453,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/four_horizontal_caption.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 4992,
+      "height": 2965,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": [
+        0,
+        2197.3335,
+        4992,
+        2965.3335
+      ]
+    },
+    {
+      "path": "examples\/spring\/four_horizontal.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "spring",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 4992,
+      "height": 2453,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/six_grid_2x3.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 2350,
+      "height": 4730,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/six_grid_2x3_caption.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 2350,
+      "height": 4971,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        4609.615,
+        2350,
+        4971.1533
+      ]
+    },
+    {
+      "path": "examples\/spring\/six_grid_2x3.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "spring",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 2350,
+      "height": 4730,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/six_grid_3x2.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3615,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/six_grid_3x2_caption.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3988,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ]
+    },
+    {
+      "path": "examples\/spring\/six_grid_3x2.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "spring",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3615,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/six_collage.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3383,
+      "height": 4728,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/six_collage_caption.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3265,
+      "height": 4898,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          167.4359,
+          334.8718,
+          2092.9485,
+          2874.3164
+        ],
+        [
+          2176.6665,
+          334.8718,
+          3097.564,
+          1562.7351
+        ],
+        [
+          2176.6665,
+          1646.453,
+          3097.564,
+          2874.3164
+        ],
+        [
+          167.4359,
+          2958.0344,
+          1088.3333,
+          4185.8975
+        ],
+        [
+          1172.0511,
+          2958.0344,
+          2092.9485,
+          4185.8975
+        ],
+        [
+          2176.6665,
+          2958.0344,
+          3097.564,
+          4185.8975
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3265,
+        334.8718
+      ],
+      "captionArea": [
+        0,
+        4395.1924,
+        3265,
+        4897.5
+      ]
+    },
+    {
+      "path": "examples\/spring\/six_collage.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "spring",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3383,
+      "height": 4728,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/six_collage_legacy_v1.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3615,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/spring\/six_collage_legacy_v1_caption.png",
+      "kind": "transparent-frame",
+      "season": "spring",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3988,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ]
+    },
+    {
+      "path": "frames\/summer\/two_vertical.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 1248,
+      "height": 3179,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/two_vertical_caption.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 1248,
+      "height": 3307,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": [
+        0,
+        3066.6667,
+        1248,
+        3306.6667
+      ]
+    },
+    {
+      "path": "examples\/summer\/two_vertical.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "summer",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 1248,
+      "height": 3179,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/two_horizontal.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 2350,
+      "height": 1878,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/two_horizontal_caption.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 2350,
+      "height": 2119,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        1757.4786,
+        2350,
+        2119.017
+      ]
+    },
+    {
+      "path": "examples\/summer\/two_horizontal.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "summer",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 2350,
+      "height": 1878,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/four_vertical.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 1650,
+      "height": 4920,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/four_vertical_caption.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 1650,
+      "height": 4920,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1341.0576
+        ],
+        [
+          84.61539,
+          1383.3654,
+          1565.3846,
+          2449.4229
+        ],
+        [
+          84.61539,
+          2491.7307,
+          1565.3846,
+          3557.7883
+        ],
+        [
+          84.61539,
+          3600.0962,
+          1565.3846,
+          4666.154
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": [
+        0,
+        4666.154,
+        1650,
+        4920
+      ]
+    },
+    {
+      "path": "examples\/summer\/four_vertical.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "summer",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 1650,
+      "height": 4920,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/four_grid.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 2350,
+      "height": 3304,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/four_grid_caption.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 2350,
+      "height": 3545,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        3183.5469,
+        2350,
+        3545.0854
+      ]
+    },
+    {
+      "path": "examples\/summer\/four_grid.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "summer",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 2350,
+      "height": 3304,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/four_horizontal.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 4992,
+      "height": 2453,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/four_horizontal_caption.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 4992,
+      "height": 2965,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": [
+        0,
+        2197.3335,
+        4992,
+        2965.3335
+      ]
+    },
+    {
+      "path": "examples\/summer\/four_horizontal.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "summer",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 4992,
+      "height": 2453,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/six_grid_2x3.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 2350,
+      "height": 4730,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/six_grid_2x3_caption.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 2350,
+      "height": 4971,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        4609.615,
+        2350,
+        4971.1533
+      ]
+    },
+    {
+      "path": "examples\/summer\/six_grid_2x3.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "summer",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 2350,
+      "height": 4730,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/six_grid_3x2.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3615,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/six_grid_3x2_caption.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3988,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ]
+    },
+    {
+      "path": "examples\/summer\/six_grid_3x2.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "summer",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3615,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/six_collage.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3383,
+      "height": 4728,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/six_collage_caption.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3265,
+      "height": 4898,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          167.4359,
+          334.8718,
+          2092.9485,
+          2874.3164
+        ],
+        [
+          2176.6665,
+          334.8718,
+          3097.564,
+          1562.7351
+        ],
+        [
+          2176.6665,
+          1646.453,
+          3097.564,
+          2874.3164
+        ],
+        [
+          167.4359,
+          2958.0344,
+          1088.3333,
+          4185.8975
+        ],
+        [
+          1172.0511,
+          2958.0344,
+          2092.9485,
+          4185.8975
+        ],
+        [
+          2176.6665,
+          2958.0344,
+          3097.564,
+          4185.8975
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3265,
+        334.8718
+      ],
+      "captionArea": [
+        0,
+        4395.1924,
+        3265,
+        4897.5
+      ]
+    },
+    {
+      "path": "examples\/summer\/six_collage.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "summer",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3383,
+      "height": 4728,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/six_collage_legacy_v1.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3615,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/summer\/six_collage_legacy_v1_caption.png",
+      "kind": "transparent-frame",
+      "season": "summer",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3988,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ]
+    },
+    {
+      "path": "frames\/autumn\/two_vertical.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 1248,
+      "height": 3179,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/two_vertical_caption.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 1248,
+      "height": 3307,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": [
+        0,
+        3066.6667,
+        1248,
+        3306.6667
+      ]
+    },
+    {
+      "path": "examples\/autumn\/two_vertical.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "autumn",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 1248,
+      "height": 3179,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/two_horizontal.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 2350,
+      "height": 1878,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/two_horizontal_caption.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 2350,
+      "height": 2119,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        1757.4786,
+        2350,
+        2119.017
+      ]
+    },
+    {
+      "path": "examples\/autumn\/two_horizontal.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "autumn",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 2350,
+      "height": 1878,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/four_vertical.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 1650,
+      "height": 4920,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/four_vertical_caption.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 1650,
+      "height": 4920,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1341.0576
+        ],
+        [
+          84.61539,
+          1383.3654,
+          1565.3846,
+          2449.4229
+        ],
+        [
+          84.61539,
+          2491.7307,
+          1565.3846,
+          3557.7883
+        ],
+        [
+          84.61539,
+          3600.0962,
+          1565.3846,
+          4666.154
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": [
+        0,
+        4666.154,
+        1650,
+        4920
+      ]
+    },
+    {
+      "path": "examples\/autumn\/four_vertical.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "autumn",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 1650,
+      "height": 4920,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/four_grid.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 2350,
+      "height": 3304,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/four_grid_caption.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 2350,
+      "height": 3545,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        3183.5469,
+        2350,
+        3545.0854
+      ]
+    },
+    {
+      "path": "examples\/autumn\/four_grid.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "autumn",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 2350,
+      "height": 3304,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/four_horizontal.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 4992,
+      "height": 2453,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/four_horizontal_caption.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 4992,
+      "height": 2965,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": [
+        0,
+        2197.3335,
+        4992,
+        2965.3335
+      ]
+    },
+    {
+      "path": "examples\/autumn\/four_horizontal.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "autumn",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 4992,
+      "height": 2453,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/six_grid_2x3.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 2350,
+      "height": 4730,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/six_grid_2x3_caption.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 2350,
+      "height": 4971,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        4609.615,
+        2350,
+        4971.1533
+      ]
+    },
+    {
+      "path": "examples\/autumn\/six_grid_2x3.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "autumn",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 2350,
+      "height": 4730,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/six_grid_3x2.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3615,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/six_grid_3x2_caption.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3988,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ]
+    },
+    {
+      "path": "examples\/autumn\/six_grid_3x2.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "autumn",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3615,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/six_collage.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3383,
+      "height": 4728,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/six_collage_caption.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3265,
+      "height": 4898,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          167.4359,
+          334.8718,
+          2092.9485,
+          2874.3164
+        ],
+        [
+          2176.6665,
+          334.8718,
+          3097.564,
+          1562.7351
+        ],
+        [
+          2176.6665,
+          1646.453,
+          3097.564,
+          2874.3164
+        ],
+        [
+          167.4359,
+          2958.0344,
+          1088.3333,
+          4185.8975
+        ],
+        [
+          1172.0511,
+          2958.0344,
+          2092.9485,
+          4185.8975
+        ],
+        [
+          2176.6665,
+          2958.0344,
+          3097.564,
+          4185.8975
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3265,
+        334.8718
+      ],
+      "captionArea": [
+        0,
+        4395.1924,
+        3265,
+        4897.5
+      ]
+    },
+    {
+      "path": "examples\/autumn\/six_collage.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "autumn",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3383,
+      "height": 4728,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/six_collage_legacy_v1.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3615,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/autumn\/six_collage_legacy_v1_caption.png",
+      "kind": "transparent-frame",
+      "season": "autumn",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3988,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ]
+    },
+    {
+      "path": "frames\/winter\/two_vertical.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 1248,
+      "height": 3179,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/two_vertical_caption.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 1248,
+      "height": 3307,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": [
+        0,
+        3066.6667,
+        1248,
+        3306.6667
+      ]
+    },
+    {
+      "path": "examples\/winter\/two_vertical.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "winter",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 1248,
+      "height": 3179,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/two_horizontal.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 2350,
+      "height": 1878,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/two_horizontal_caption.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 2350,
+      "height": 2119,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        1757.4786,
+        2350,
+        2119.017
+      ]
+    },
+    {
+      "path": "examples\/winter\/two_horizontal.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "winter",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 2,
+      "width": 2350,
+      "height": 1878,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/four_vertical.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 1650,
+      "height": 4920,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/four_vertical_caption.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 1650,
+      "height": 4920,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1341.0576
+        ],
+        [
+          84.61539,
+          1383.3654,
+          1565.3846,
+          2449.4229
+        ],
+        [
+          84.61539,
+          2491.7307,
+          1565.3846,
+          3557.7883
+        ],
+        [
+          84.61539,
+          3600.0962,
+          1565.3846,
+          4666.154
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": [
+        0,
+        4666.154,
+        1650,
+        4920
+      ]
+    },
+    {
+      "path": "examples\/winter\/four_vertical.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "winter",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 1650,
+      "height": 4920,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/four_grid.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 2350,
+      "height": 3304,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/four_grid_caption.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 2350,
+      "height": 3545,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        3183.5469,
+        2350,
+        3545.0854
+      ]
+    },
+    {
+      "path": "examples\/winter\/four_grid.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "winter",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 2350,
+      "height": 3304,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/four_horizontal.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 4992,
+      "height": 2453,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/four_horizontal_caption.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 4992,
+      "height": 2965,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": [
+        0,
+        2197.3335,
+        4992,
+        2965.3335
+      ]
+    },
+    {
+      "path": "examples\/winter\/four_horizontal.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "winter",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "slotCount": 4,
+      "width": 4992,
+      "height": 2453,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/six_grid_2x3.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 2350,
+      "height": 4730,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/six_grid_2x3_caption.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 2350,
+      "height": 4971,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        4609.615,
+        2350,
+        4971.1533
+      ]
+    },
+    {
+      "path": "examples\/winter\/six_grid_2x3.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "winter",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 2350,
+      "height": 4730,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/six_grid_3x2.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3615,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/six_grid_3x2_caption.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3988,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ]
+    },
+    {
+      "path": "examples\/winter\/six_grid_3x2.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "winter",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3615,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/six_collage.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3383,
+      "height": 4728,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/six_collage_caption.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3265,
+      "height": 4898,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          167.4359,
+          334.8718,
+          2092.9485,
+          2874.3164
+        ],
+        [
+          2176.6665,
+          334.8718,
+          3097.564,
+          1562.7351
+        ],
+        [
+          2176.6665,
+          1646.453,
+          3097.564,
+          2874.3164
+        ],
+        [
+          167.4359,
+          2958.0344,
+          1088.3333,
+          4185.8975
+        ],
+        [
+          1172.0511,
+          2958.0344,
+          2092.9485,
+          4185.8975
+        ],
+        [
+          2176.6665,
+          2958.0344,
+          3097.564,
+          4185.8975
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3265,
+        334.8718
+      ],
+      "captionArea": [
+        0,
+        4395.1924,
+        3265,
+        4897.5
+      ]
+    },
+    {
+      "path": "examples\/winter\/six_collage.jpg",
+      "kind": "fictional-photo-composite",
+      "season": "winter",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "slotCount": 6,
+      "width": 3383,
+      "height": 4728,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/six_collage_legacy_v1.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3615,
+      "captionBand": false,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null
+    },
+    {
+      "path": "frames\/winter\/six_collage_legacy_v1_caption.png",
+      "kind": "transparent-frame",
+      "season": "winter",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "slotCount": 6,
+      "width": 3631,
+      "height": 3988,
+      "captionBand": true,
+      "captionPrinted": false,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ]
+    }
+  ]
+}

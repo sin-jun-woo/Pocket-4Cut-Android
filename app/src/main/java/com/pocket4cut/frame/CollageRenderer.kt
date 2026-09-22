@@ -3,7 +3,6 @@ package com.pocket4cut.frame
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.LinearGradient
@@ -17,10 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.pocket4cut.core.util.AppFontCatalog
 import com.pocket4cut.core.util.ColorRGB
-import com.pocket4cut.frame.rendering.AutumnFrameVectorDecor
-import com.pocket4cut.frame.rendering.SpringFrameVectorDecor
-import com.pocket4cut.frame.rendering.SummerFrameVectorDecor
-import com.pocket4cut.frame.rendering.WinterFrameVectorDecor
+import com.pocket4cut.frame.rendering.SeasonalStickerArt
 import com.pocket4cut.ui.designsystem.theme.Season
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -50,6 +46,7 @@ object CollageRenderer {
         val captionFontName: String? = null,
         val context: Context? = null,
         val layoutVersion: Int = 2,
+        val seasonalArt: SeasonalStickerArt.Sheet? = null,
     )
 
     fun render(input: Input): Bitmap {
@@ -112,6 +109,11 @@ object CollageRenderer {
     /** Both Compose preview and JPEG export draw the same scene and layer order. */
     fun drawScene(canvas: Canvas, input: Input, layout: CollageLayoutDimensions) {
         val seasonHTML = input.customFrameDesign?.resolvedSeason
+        val seasonalArt = seasonHTML?.let { season ->
+            requireNotNull(input.seasonalArt?.takeIf { it.season == season }) {
+                "Season artwork must be loaded before drawing $season"
+            }
+        }
         val useSeasonBackdrop = seasonHTML != null && input.overrideBackgroundImage == null
 
         val outerCorner = if (useSeasonBackdrop) 0f else input.theme.cornerRadius * layout.scale
@@ -196,16 +198,8 @@ object CollageRenderer {
             }
         }
 
-        // 4. Season vector decorations
-        if (seasonHTML != null) {
-            val slotRects = layout.cells.map { RectF(it) }
-            when (seasonHTML) {
-                Season.SPRING -> SpringFrameVectorDecor.draw(canvas, layout.canvasWidth, layout.canvasHeight, true, slotRects)
-                Season.SUMMER -> SummerFrameVectorDecor.draw(canvas, layout.canvasWidth, layout.canvasHeight, true, slotRects)
-                Season.AUTUMN -> AutumnFrameVectorDecor.draw(canvas, layout.canvasWidth, layout.canvasHeight, true, slotRects)
-                Season.WINTER -> WinterFrameVectorDecor.draw(canvas, layout.canvasWidth, layout.canvasHeight, true, slotRects)
-            }
-        }
+        // 4. Generated print illustrations, placed in the real layout's free margins.
+        seasonalArt?.let { SeasonalStickerArt.draw(canvas, it, layout) }
 
         // 5. Brand, caption and date
         val effectiveBgColor = when {
@@ -240,9 +234,7 @@ object CollageRenderer {
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             color = (0xFF000000 or strokeHex).toInt()
             style = Paint.Style.STROKE
-            strokeWidth = 3f * scale
-            strokeCap = Paint.Cap.ROUND
-            pathEffect = DashPathEffect(floatArrayOf(8f * scale, 6f * scale), 0f)
+            strokeWidth = 0.65f * scale
         }
         canvas.drawRoundRect(cell, radius, radius, paint)
     }

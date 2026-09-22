@@ -240,6 +240,9 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
                 val document = persistAdjustments()
                 val snapshot = RenderSnapshot.from(document, sessions, frameType)
                 val bgColor = snapshot.customFrameDesign?.resolvedFillColor ?: snapshot.frameColor.color
+                val seasonalArt = snapshot.customFrameDesign?.resolvedSeason?.let {
+                    com.pocket4cut.frame.rendering.SeasonalStickerArt.load(getApplication(), it)
+                }
                 val input = CollageRenderer.Input(
                     images = emptyList(),
                     imageProvider = { index ->
@@ -270,6 +273,7 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
                     captionFontName = snapshot.captionFontName,
                     context = getApplication(),
                     layoutVersion = snapshot.layoutVersion,
+                    seasonalArt = seasonalArt,
                 )
                 val result = CollageRenderer.render(input)
                 try {

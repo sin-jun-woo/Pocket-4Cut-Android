@@ -1,7 +1,9 @@
 # Pocket 4Cut 이미지·그래픽 자산 가이드
 
+> **Paper Seasons 업데이트:** 아래 신뢰성 개편 기준 이후, 2026-09-22 계절 프레임 4종을 새 일러스트로 교체했다. 현행 추가 규격은 마지막 Paper Seasons 절을 참고한다.
+
 > 현행 코드 확인일: 2026-09-22 · 기준: `codex/refactor-reliability`의 앱 소스 커밋 `155ced0b44b381bb8d274d2652d6d2fd421b2973`(시작 기준 `a0eff04`).
-> 1~6절은 현재 코드/자산 기준, 날짜가 있는 아이콘·영상 절은 해당 제작 당시 기록이다. 이번 문서 갱신에서는 이미지 파일을 변경하지 않았다.
+> 위 커밋은 신뢰성 문서 정리 당시 기준이다. 1~6절의 계절 자산 설명은 이후 Paper Seasons 구현에 맞췄으며, 실제 이미지 교체·납품·검증 내역은 13절에 기록했다. 날짜가 있는 아이콘·영상 절은 해당 제작 당시의 이력이다.
 
 ## 2026-09-10 적용 기록 — Film Strip v4 런처/스토어 자산
 
@@ -38,7 +40,7 @@ HEAD `ac42903` 및 기존 미커밋 UI 변경을 포함한 작업 트리에서, 
 
 ## 1. 현행 자산과 렌더 경로
 
-프레임은 PNG 묶음이 아니라 [FrameLayouts](../app/src/main/java/com/pocket4cut/frame/FrameLayouts.kt), [FrameTheme](../app/src/main/java/com/pocket4cut/frame/FrameTheme.kt), [FrameColors](../app/src/main/java/com/pocket4cut/frame/FrameColors.kt)의 데이터와 Kotlin 그리기 코드로 구성된다. 계절 배경도 `SeasonHTMLFrameStyle` 및 `rendering/*FrameVectorDecor`의 Canvas 구현이며 WebView를 실행하지 않는다.
+프레임 기하는 [FrameLayouts](../app/src/main/java/com/pocket4cut/frame/FrameLayouts.kt), [FrameTheme](../app/src/main/java/com/pocket4cut/frame/FrameTheme.kt), [FrameColors](../app/src/main/java/com/pocket4cut/frame/FrameColors.kt)의 데이터와 Kotlin 그리기 코드로 구성된다. 2026-09-22 Paper Seasons 교체 후 계절 프레임은 `SeasonHTMLFrameStyle`의 종이색·기하 패턴과 `SeasonalStickerArt`의 새 RGBA 일러스트를 합성한다. 구형 계절 벡터 4개와 전용 anchor 코드는 제거했으며 WebView를 실행하지 않는다. 아래 역사 기록과 현행 교체 기록을 구분한다.
 
 - 사용자 장식은 `CustomFrameDecoration`의 Text/Emoji/Sticker 모델이다. 스티커 25종은 `StickerPalette`의 Material ImageVector이며 PNG/SVG 파일 자동 검색 로더는 없다.
 - [CollagePreview](../app/src/main/java/com/pocket4cut/frame/CollagePreview.kt)와 최종 JPEG는 [CollageRenderer.drawScene](../app/src/main/java/com/pocket4cut/frame/CollageRenderer.kt)을 공유한다. 미리보기와 결과에서 스티커 이름 대신 같은 vector path를 그린다.
@@ -48,7 +50,7 @@ HEAD `ac42903` 및 기존 미커밋 UI 변경을 포함한 작업 트리에서, 
 - 글꼴은 `assets/fonts/`의 TTF 13개와 시스템 글꼴을 사용한다. `AppFontCatalog`가 Compose FontFamily와 Android Typeface를 연결한다.
 - 실제 촬영본·완성 JPEG는 앱 실행 데이터다. 사용자 사진을 번들 자산이나 공개 문서 예시로 복사하지 않는다.
 
-이번 리팩터링은 코드 렌더 계약을 변경했으며 새 사진·프레임 PNG·앱 아이콘을 생성하거나 교체하지 않았다.
+신뢰성 리팩터링 자체는 코드 렌더 계약만 변경했다. 이후 Paper Seasons 작업에서 새 계절 일러스트 PNG 4개를 추가·연결했으며 아이콘과 다른 색상/사용자 스티커 카탈로그는 유지했다.
 
 ## 2. 현재 런처 PNG 규격과 검증 근거
 
@@ -75,7 +77,7 @@ HEAD `ac42903` 및 기존 미커밋 UI 변경을 포함한 작업 트리에서, 
 
 활성 출력은 `DetailEditViewModel → RenderSnapshot → CollageRenderer`다. 과거 `CollageExportMetrics`의 화면 폭 계산과 `Constants.RESULT_IMAGE_MAX_WIDTH`/이전 `CollageFinalize`를 현행 출력 규격으로 사용하지 않는다.
 
-계절 벡터의 600×1800은 그리기 기준 좌표이지 PNG 크기나 공통 출력 치수가 아니다. 계절별 좌표 변환과 safe area는 가로·세로·비대칭 배치에서 별도로 검수한다.
+새 계절 atlas는 1536×1024, 512px 셀 6개이며 프레임 전체를 늘리는 배경 이미지가 아니다. 장식을 실제 header·side·gutter·footer 영역에 배치하고 사진 슬롯·브랜드·문구 영역에서는 clip한다. 기본 8배치와 구형 비대칭 이전 배치, 문구 유무를 별도로 검사한다.
 
 ## 4. 원본·미리보기·결과 파일
 
@@ -224,3 +226,26 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 색상은 종이색 `#F0ECE3`, 먹색 `#252520`, 적색 `#C83D2D` 중심이다. 생성 프롬프트가 필요한 새 사진 작업은 없었다. 새 음성 대본은 `source/narration-script.json`, 생성 설정·공식 Qwen/whisper.cpp 출처·Apache-2.0 모델 표기와 권리/검수 한계는 `source/VOICE-NOTES.md`, 재사용 이미지 경로·치수·해시는 `visual-stills/input-manifest.json`을 참조한다. 원본 이미지의 생성 프롬프트는 기존 스토어 제작물에 남겨 두었다.
 
 실제 전사/DTW로 대본 내용을 확인했고 최종 파일의 전체 디코딩·규격·동기·음량·검은 구간을 검사했다. 선택 프레임·커버 시각 검수에서 흑백→저장/공유 연속성을 확인하고 CTA 상단 표기 겹침을 정리했다. 음색 완전 동일성·자연스러움의 직접 청취, 기기 UI/업로드 심사, 실제 Play 상태는 미검증이다.
+
+## 13. 2026-09-22 — Paper Seasons 계절 프레임 교체
+
+- 기준: `d249a01`에서 시작한 `codex/seasonal-frames` 변경. 다른 색상 프레임·사용자 스티커·앱 아이콘·촬영 사진은 교체하지 않는다.
+- 제작: 내장 전용 이미지 생성 도구로 시즌마다 6개 모티프를 새로 생성했다. 도구는 모델명/품질 선택 옵션을 노출하지 않으므로 특정 최고 모델을 선택했다고 주장하지 않는다. 사진 슬롯·문구·브랜드·안전 영역은 생성 이미지에 맡기지 않고 기존 Android 기하를 사용한다.
+- 봄: 벚꽃, 튤립, 리본, 나비, 딸기, 꽃. 종이 `#FFF6F1`, 잉크 `#9F3557`, 옅은 체크 패턴.
+- 여름: 파라솔, 튜브, 조개, 레몬, 갈매기, 해. 종이 `#EFF8F7`, 잉크 `#245A77`, 가는 세로선.
+- 가을: 은행/단풍잎, 커피, 도토리, 목도리, 책, 배. 종이 `#F5E9D5`, 잉크 `#78452D`, 가는 노트선.
+- 겨울: 장갑, 눈사람, 솔가지, 코코아, 눈꽃, 리본. 종이 `#EFF2F5`, 잉크 `#3D556B`, 옅은 격자.
+- 원본: `design/seasonal-frames/paper-seasons-v1/source/*-atlas.png` 4개, 각 1536×1024 RGBA. 원본 파일과 생성 provenance를 보존했다. 정확한 요청은 같은 폴더 `GENERATION-PROMPTS.md`에 있다.
+- 앱: `app/src/main/assets/seasonal/{spring,summer,autumn,winter}.png` 4개, 각 1536×1024 RGBA/sRGB, 512px 셀 6개, 셀 경계 최소 14px 실제 투명 여백. crop/trim/downscale/atlas 포장만 했으며 원본 장식을 재도색하지 않았다. 해시·sourceRect·알파 검사는 `asset-validation.json`에 있다.
+- 원본의 중심 알파는 최고 254이며 임의로 불투명화하지 않았다. 런타임 리샘플링 결과 일부 픽셀은 255가 될 수 있다. 밝고 어두운 배경에서 투명 가장자리와 셀 간 누출을 확인했다.
+- `SeasonalStickerArt`는 IO 디코드·최대 2개 캐시를 사용한다. atlas 1장의 ARGB 디코드 크기는 약 6MiB이고 캐시 참조는 최대 약 12MiB다. 화면/진행 중 저장이 별도로 참조하는 이미지와 최종 콜라주 메모리는 이 상한에 포함되지 않는다. 캐시에서 빠진 Bitmap을 수동 recycle하지 않는다.
+- `CollagePreview`와 최종 `DetailEditViewModel`은 같은 시즌 Sheet를 `drawScene`에 전달한다. 로딩 중/실패 시 상태를 표시하고 재시도한다. 잘못된 시즌 또는 누락된 Sheet를 단색 결과로 조용히 저장하지 않는다.
+- 측면 장식은 회전을 포함한 전체 경계가 종이 여백 안에 들어오도록 제한했다. 사진 슬롯·브랜드·문구/날짜 영역은 추가 clip으로 보호한다. 기존 큰 모서리·점선 테두리·계절 그라데이션을 제거했다.
+- 삭제: 구형 `Spring/Summer/Autumn/WinterFrameVectorDecor.kt`와 전용 `SeasonDecorAnchors.kt`. Git 이력에는 남아 있으며 사용자 완료본을 삭제하거나 다시 렌더하지 않는다.
+- 호환: `sourceSeason` 문자열과 레이아웃 ID/버전은 유지한다. 구형 6컷의 레이아웃 선택·색/계절/커스텀 선택·일반 편집에서도 같은 버전을 전달한다.
+- 전달: 현재 8배치×4계절 32종, 문구 공간 변형 32종, 구형 6컷 호환 8종으로 **투명 사진창 PNG 72장**을 출력한다. 가상 성인 사진을 넣은 예시 32장은 실제 앱과 같은 JPEG 품질 98로 제공한다. 실제 고객/사용자 사진은 사용하지 않았다.
+- 재생성: `source/prepare-assets.cjs` → QA 계측 exporter(`seasonalExport=true`) → `source/package-deliverables.cjs`. exporter는 QA의 AGP `additionalTestOutputDir`에 쓰며 Gradle이 PC로 복사한다. 일반 테스트에서는 대용량 export를 건너뛴다.
+- 앱의 최종 저장 형식은 JPEG다. 투명 프레임 PNG는 디자인 납품본이지 새로운 앱 PNG 저장 기능이 아니다. 정확한 파일별 치수·사진 칸 좌표·문구 공간·배치 버전은 납품 `manifest.json`을 따른다.
+- Instagram: 실제 최종 4계절 클래식 JPEG를 참고하여 전용 이미지 도구로 종이 포스터 시안을 생성했다. `source/instagram-promo-master.png`는 1122×1402 RGB 원본, `deliverables/instagram-promo.png`는 1080×1350 불투명 sRGB PNG다. 가상 성인 사진을 사용하며 실제 앱 캡처와 구분한다. 정확한 요청은 `source/INSTAGRAM-PROMPT.md`에 있다. 플랫폼 게시를 실행하지 않았다.
+- 패키지: `deliverables/pocket4cut-paper-seasons-v1.zip`은 103,096,843 bytes, 113개 파일(프레임 72 + 예시 32 + 모아보기 6 + manifest/README/홍보 이미지)이다. 다시 열어 전 항목의 길이·SHA-256을 대조했다. 검증 기록은 `deliverables/package-validation.json`, 별도 실제 Compose 화면은 `verification/autumn-picker-compose.png`다.
+- 권리/출처: 전용 생성 도구로 만든 독창적 계절 일러스트이며 타사 캐릭터·로고를 참조하지 않았다. 사람이 직접 그렸다고 표시하지 않는다. 생성물의 독점권·인쇄 품질·플랫폼 심사 승인은 보장하지 않는다. 실제 수행한 검증과 남은 범위는 WORKLOG에 기록한다.

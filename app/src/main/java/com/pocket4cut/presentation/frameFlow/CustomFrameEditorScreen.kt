@@ -117,6 +117,7 @@ fun CustomFrameEditorScreen(
     modifier: Modifier = Modifier,
     initialDesign: CustomFrameDesign? = null,
     onDraftChanged: (CustomFrameDesign) -> Unit = {},
+    layoutVersion: Int = 2,
 ) {
     val context = LocalContext.current
     var fillColorId by remember(initialDesign) { mutableStateOf(initialDesign?.fillColorId ?: FrameColors.all.first().id) }
@@ -205,8 +206,8 @@ fun CustomFrameEditorScreen(
             val density = LocalDensity.current
             val maxWPx = with(density) { maxWidth.toPx() }
             val maxHPx = with(density) { maxHeight.toPx() }
-            val dim = remember(frameStyle, theme, maxWPx) {
-                CollageLayoutMath.computeForPreview(frameStyle, theme, null, maxWPx.coerceAtLeast(1f))
+            val dim = remember(frameStyle, theme, maxWPx, layoutVersion) {
+                CollageLayoutMath.computeForPreview(frameStyle, theme, null, maxWPx.coerceAtLeast(1f), layoutVersion)
             }
             val pw = dim.canvasWidth
             val ph = dim.canvasHeight
@@ -228,6 +229,7 @@ fun CustomFrameEditorScreen(
                     theme = theme,
                     customFrameDesign = previewDesign,
                     customDecorations = emptyList(),
+                    layoutVersion = layoutVersion,
                     modifier = Modifier.fillMaxSize(),
                 )
 

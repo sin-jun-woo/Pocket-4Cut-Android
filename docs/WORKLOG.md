@@ -408,3 +408,33 @@ git ls-remote --heads origin codex/setup-project-guidance
 - 최적화 APK: `:app:assembleQaRelease`는 R8·리소스 축소를 적용해 성공했고 `app-qaRelease.apk`를 API 37에 `com.pocket4cut.qa`로 설치해 홈, [권한 화면](../engineering/refactor-evidence/2026-09-22/qa-r8-permission.png), 허용 뒤 [CameraX 미리보기](../engineering/refactor-evidence/2026-09-22/qa-r8-camera.png)를 확인했다. [최적화 QA 홈](../engineering/refactor-evidence/2026-09-22/qa-r8-home.png). 이는 최적화 빌드의 전 화면 기능·실제 배포 서명 검사가 아니다.
 - 미검증/위험: API 26/28/29/33/36 AVD와 실기기, 실제 cloud/device backup 복원, 모든 컷 타이밍의 Home·잠금·권한 상실, 저장/삭제 각 단계 fault injection, TalkBack/큰 글자/가로 화면, 256MiB 최대 출력 메모리 실측, 모든 색·장식·글꼴 조합, 공유 수신 앱은 완료로 표시하지 않는다. 초안 입력 debounce·NavHost I/O·촬영/삭제의 포괄적 transaction journal·원인별 복구 UI 등도 후속 작업이다.
 - 커밋/push 식별: 앱 소스·테스트·CI 커밋은 `155ced0b44b381bb8d274d2652d6d2fd421b2973`이다. 이 문서의 자체 SHA는 본문에 넣지 않는다. 최종 원격 반영은 `git log -1`, `git status --short --branch`, `git ls-remote --heads origin codex/refactor-reliability`와 최종 보고에서 확인한다.
+
+## 2026-09-22 — Paper Seasons 사계절 프레임 전면 교체 (Asia/Seoul)
+
+- 요청/범위: 봄·여름·가을·겨울만 새 일러스트와 종이 질감의 디자인으로 교체하고 2·4·6컷의 모든 배치에 적용한다. 개별 프레임 이미지와 인스타그램 홍보 이미지도 제공한다. 다른 프레임 카테고리·사용자 스티커·앱 아이콘·앱 버전·촬영 정책은 변경하지 않았다.
+- 시작 기준: `d249a01`, `codex/refactor-reliability`, 작업 트리 clean. 새 작업 브랜치 `codex/seasonal-frames`의 미커밋 변경을 포함해 검증했다. 기록 시점은 2026-09-22 18:41 KST 이후다.
+- 디자인: 전용 이미지 생성 도구로 계절별 6개씩 독창적인 다색 모티프를 생성했다. 봄은 꽃·리본·딸기, 여름은 바다·조개·레몬, 가을은 낙엽·책·커피, 겨울은 장갑·눈사람·코코아를 중심으로 구성했다. 도구가 모델/품질 선택 옵션을 노출하지 않아 특정 최고 모델을 선택했다고 주장하지 않는다. 슬롯·브랜드·문구·패턴·안전 영역은 코드로 제어한다.
+- 변경 파일: `frame/rendering/SeasonalStickerArt.kt`, `SeasonHTMLFrameStyle.kt`, `CollageRenderer.kt`, `CollagePreview.kt`, `DetailEditViewModel.kt`에 로딩·캐시·공통 렌더 연결과 실패/재시도를 구현했다. `EditScreen/EditViewModel`, `PocketNavHost`, 배치 선택 및 색/계절/커스텀 프레임 선택 화면에는 기존 6컷의 `layoutVersion` 전달을 보완했다. JSON schema·계절 ID·레이아웃 ID를 바꾸지 않았다.
+- 구형 자산 제거: 전용 `Spring/Summer/Autumn/WinterFrameVectorDecor.kt`와 `SeasonDecorAnchors.kt` 5개를 제거했다. Git 이력에서 복구할 수 있다. 저장된 결과를 다시 렌더하거나 사용자 사진·초안을 삭제하지 않았다.
+- 자산: `app/src/main/assets/seasonal/`에 1536×1024 RGBA/sRGB atlas 4개(총 약 6.95MB), `design/seasonal-frames/paper-seasons-v1/`에 생성 원본·프롬프트·가공/포장 스크립트·검증 자료를 추가했다. 캐시 참조는 최대 2장/약 12MiB이며 UI/진행 중 출력이 보유하는 이미지나 콜라주 메모리까지 포함한 상한은 아니다. 캐시 제거 시 수동 recycle하지 않는다. 새 앱 의존성은 추가하지 않았다.
+- 납품: 현행 8배치×4계절 32종, 문구 공간 변형 32종, 구형 비대칭 개편 전 6컷 호환 8종으로 투명 사진창 PNG **72장**. 가상 성인 사진을 넣은 실제 Android 렌더 JPEG **32장**, 모아보기 **6장**, **1080×1350** 홍보 PNG 1장. 클래식 세로 4컷은 **1650×4920**, 다른 배치는 기존 출력 정책을 따르며 정확한 크기는 `manifest.json`에 있다. 실제 사용자/고객 사진은 사용하지 않았다. 앱의 일반 저장은 기존처럼 JPEG다.
+- 패키지: [전체 ZIP](../design/seasonal-frames/paper-seasons-v1/deliverables/pocket4cut-paper-seasons-v1.zip), 113항목/103,096,843 bytes. ZIP을 재개봉하여 모든 항목의 길이·SHA-256이 원본과 일치함을 확인했다. archive SHA-256: `ecf1a7d655da6aec96656fb331052a1491cf844d6b1927b40323a955550044e2`. 파일 크기·해시는 `deliverables/package-validation.json`, 치수·슬롯은 `deliverables/manifest.json`, atlas 알파 검사는 `asset-validation.json`에 있다. 납품 PNG/JPEG의 형식·치수·알파는 `source/package-deliverables.cjs`가 실제 이미지와 대조해 검사했다.
+- 새 검사: `SeasonalFrameContractInstrumentedTest`의 144종 사진/브랜드/문구 보호 영역과 72종 preview/export 투영 계약, atlas·ID 저장 호환, `SeasonalLegacyPreviewInstrumentedTest`의 구형 6컷 복원, `SeasonalFramePreviewInstrumentedTest`의 실제 Compose 시즌 전환 및 V1/V2 배치 표시를 추가했다. 기존 Bitmap/출력 계약 테스트는 새 구현을 대상으로 갱신했다. 테스트 fixture 4장은 기존 가상 성인 생성 사진을 재사용했다.
+
+### 최종 실행 결과
+
+```powershell
+.\gradlew.bat :app:assembleDebug :app:assembleQaRelease :app:testDebugUnitTest :app:lintDebug --offline --console=plain
+.\gradlew.bat :app:connectedDebugAndroidTest '-Pandroid.testInstrumentationRunnerArguments.seasonalExport=true' '-Pandroid.testInstrumentationRunnerArguments.seasonalSourceRevision=d249a01+paper-seasons-v1-final-worktree' --offline --console=plain
+```
+
+- 최종 빌드: **BUILD SUCCESSFUL**, 3분 28초, 96 actionable tasks 중 17 실행/79 UP-TO-DATE. Debug 및 R8/리소스 축소 QA APK 생성 성공. 이번 최종 QA APK의 최적화 런타임은 설치하여 검증하지 않았다.
+- JVM: 실제 테스트 태스크 실행, **1/1 통과**, 실패·오류·건너뜀 0. 기본 산술 검사이며 앱 기능 전체의 근거가 아니다.
+- Lint: **오류 0, 경고 44, 힌트 2**. 기존 경고를 임의 suppress하지 않았다. 모든 경고가 기준 커밋과 항목별 동일하다고 주장하지 않는다.
+- 계측: API 37 에뮬레이터, 실제 대상이 `com.pocket4cut.qa`/`.qa.test`임을 확인 후 **45/45 통과**, 실패·오류·건너뜀 0. opt-in exporter까지 실제 실행해 최종 72 PNG/32 JPEG를 얻었다. 별도 프로덕션 패키지를 설치·초기화하거나 사진을 삭제하지 않았다.
+- 시각 검수: 4계절 밝은/어두운 배경의 atlas 가장자리, 실제 클래식 4컷 예시 4장, 전체 32종 및 각 시즌 8종 모아보기, 1080×1350 홍보 문구/사진 수/잘림을 확인했다. 중간 출력의 측면 스티커 잘림을 발견해 회전 경계까지 여백에 맞춘 후 전체 계측·출력을 다시 수행했다. 납품은 수정 후 최종 실행만 포함한다.
+- 실제 UI 증거: [가을 선택 화면](../design/seasonal-frames/paper-seasons-v1/verification/autumn-picker-compose.png), 1280×2856. 실제 Compose 자동 UI 검사에서 얻은 화면이며 HTML 시안이나 전체 앱 수동 E2E가 아니다. 현재 도구 환경에서 클라우드 전용 녹화/업로드 대신 로컬 증거 파일을 제공했다.
+- 실행 이슈와 해결: 초기 Gradle 캐시 위치/권한 오류는 기존 사용자 캐시를 지정해 해결했다. 초기 exporter는 QA 앱 삭제 후 파일을 가져올 수 없어 AGP additional test output 디렉터리로 바꾸고 재실행했다. 정책 검토의 대상 패키지 우려는 앱/계측 APK metadata와 `.qa` suffix를 대조해 해소했다. 최종 검사를 통과한 사실과 중간 환경 오류를 구분한다.
+- 미검증/남은 위험: 물리 카메라/실기기, API 26–36 전 기종, TalkBack/큰 글자/가로 모드 전체 조합, 실제 최대 해상도 저메모리 스트레스, 실제 인쇄, release 서명/AAB/Play·Instagram 게시 및 심사는 수행하지 않았다. 기존 비계절 프레임 및 일반 저장 정책은 유지했으며 새 계절 프레임에 대한 자동 계약 검사와 수동 이미지 검수 범위만 완료로 기록한다.
+- 문서: README, ARCHITECTURE, IMAGE_ASSET_GUIDE, 이 WORKLOG 및 자산 패키지 README를 갱신했다. 비밀 파일·원시 기기 로그·개인 로컬 경로는 공개 문서에 추가하지 않았다.
+- commit/push: 검토된 이번 작업 파일만 명시적으로 stage하여 `feat: 사계절 포토 프레임 전면 교체`로 커밋하고 `origin/codex/seasonal-frames`에 일반 push한다. 자기 자신을 가리키는 SHA는 이 문서에 반복 기록하지 않는다. 실제 성공 여부와 SHA는 최종 `git log -1`, `git status --short --branch`, `git ls-remote --heads origin codex/seasonal-frames` 및 완료 보고로 확인한다.

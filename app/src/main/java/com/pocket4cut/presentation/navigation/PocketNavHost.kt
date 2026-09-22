@@ -3,6 +3,7 @@ package com.pocket4cut.presentation.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -220,8 +221,10 @@ fun PocketNavHost(
             val scope = rememberCoroutineScope()
 
             var photoPaths by remember { mutableStateOf(emptyList<String>()) }
+            var layoutSelectionVersion by remember(sessionId) { mutableIntStateOf(2) }
             LaunchedEffect(sessionId) {
                 val document = sessions.getById(sessionId) ?: return@LaunchedEffect
+                layoutSelectionVersion = document.draft.layoutVersion
                 photoPaths = document.draft.selectedPhotoIdsInOrder.map { id ->
                     sessions.resolvePhotoPath(document.photos.first { it.photoId == id }).absolutePath
                 }
@@ -231,6 +234,7 @@ fun PocketNavHost(
                 selectedPhotoPaths = photoPaths,
                 requiredCount = frameType.selectCount,
                 frameType = frameType,
+                layoutVersion = layoutSelectionVersion,
                 onSelectLayout = { layoutId ->
                     scope.launch {
                         val doc = sessions.getById(sessionId) ?: return@launch
@@ -280,6 +284,7 @@ fun PocketNavHost(
 
             var theme by remember { mutableStateOf(FrameCatalog.themes(frameType).first()) }
             var initialDesign by remember { mutableStateOf<CustomFrameDesign?>(null) }
+            var layoutVersion by remember { mutableIntStateOf(2) }
 
             var flowStep by remember { mutableStateOf("choose") }
             var frameLoaded by remember { mutableStateOf(false) }
@@ -289,6 +294,7 @@ fun PocketNavHost(
                 theme = FrameCatalog.themes(frameType).firstOrNull { it.id == document.draft.themeId }
                     ?: FrameCatalog.themes(frameType).first()
                 initialDesign = document.draft.customDesignJson?.let(PendingCollageStore::deserializeDesign)
+                layoutVersion = document.draft.layoutVersion
                 frameLoaded = true
             }
 
@@ -330,6 +336,7 @@ fun PocketNavHost(
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
+                    layoutVersion = layoutVersion,
                     onBack = { saveFrame("choose", onSaved = { flowStep = "choose" }) },
                     onDismiss = { navController.popBackStack() },
                     onCompleted = { color ->
@@ -344,6 +351,7 @@ fun PocketNavHost(
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
+                    layoutVersion = layoutVersion,
                     onBack = { saveFrame("choose", onSaved = { flowStep = "choose" }) },
                     onDismiss = { navController.popBackStack() },
                     onCompleted = { season ->
@@ -359,6 +367,7 @@ fun PocketNavHost(
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
+                    layoutVersion = layoutVersion,
                     onBack = { saveFrame("choose", onSaved = { flowStep = "choose" }) },
                     onDismiss = { navController.popBackStack() },
                     initialDesign = initialDesign,

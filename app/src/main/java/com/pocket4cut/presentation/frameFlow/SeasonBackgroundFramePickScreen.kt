@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -62,6 +61,7 @@ fun SeasonBackgroundFramePickScreen(
     onDismiss: () -> Unit,
     onCompleted: (Season) -> Unit,
     modifier: Modifier = Modifier,
+    layoutVersion: Int = 2,
 ) {
     val seasons = remember { Season.entries.toList() }
     var selected by remember { mutableStateOf(Season.SPRING) }
@@ -137,6 +137,7 @@ fun SeasonBackgroundFramePickScreen(
                     frameStyle = frameStyle,
                     theme = theme,
                     customFrameDesign = seasonDesign,
+                    layoutVersion = layoutVersion,
                 )
             }
 
@@ -204,40 +205,25 @@ private fun SeasonPreviewContent(
     frameStyle: FrameStyle,
     theme: FrameTheme,
     customFrameDesign: CustomFrameDesign,
+    layoutVersion: Int,
 ) {
-    if (images.isNotEmpty()) {
-        CollagePreviewScaledToFit(
-            images = images,
-            frameType = frameType,
-            frameStyle = frameStyle,
-            theme = theme,
-            customFrameDesign = customFrameDesign,
-            modifier = Modifier
-                .shadow(
-                    elevation = 8.dp,
-                    shape = RoundedCornerShape(AppLayout.Radius.xs),
-                    clip = false,
-                    ambientColor = AppColors.Shadow.color,
-                    spotColor = AppColors.Shadow.colorMd,
-                )
-                .fillMaxWidth(),
-        )
-    } else {
-        Box(
-            modifier = Modifier
-                .shadow(
-                    elevation = 8.dp,
-                    shape = RoundedCornerShape(AppLayout.Radius.xs),
-                    clip = false,
-                    ambientColor = AppColors.Shadow.color,
-                    spotColor = AppColors.Shadow.colorMd,
-                )
-                .fillMaxWidth()
-                .aspectRatio(3f / 4f)
-                .clip(RoundedCornerShape(AppLayout.Radius.xs))
-                .background(customFrameDesign.resolvedFillColor),
-        )
-    }
+    CollagePreviewScaledToFit(
+        images = images,
+        frameType = frameType,
+        frameStyle = frameStyle,
+        theme = theme,
+        customFrameDesign = customFrameDesign,
+        layoutVersion = layoutVersion,
+        modifier = Modifier
+            .shadow(
+                elevation = 8.dp,
+                shape = RoundedCornerShape(AppLayout.Radius.xs),
+                clip = false,
+                ambientColor = AppColors.Shadow.color,
+                spotColor = AppColors.Shadow.colorMd,
+            )
+            .fillMaxWidth(),
+    )
 }
 
 @Composable
@@ -287,8 +273,8 @@ private fun SeasonCard(
 }
 
 private fun seasonDecoEmojis(season: Season): String = when (season) {
-    Season.SPRING -> "💕⭐✨💫"
-    Season.SUMMER -> "🌊☀️🐚🎐"
-    Season.AUTUMN -> "🍂🍁🌰🦊"
-    Season.WINTER -> "❄️⛄🌨️💎"
+    Season.SPRING -> "벚꽃 · 튤립 · 리본"
+    Season.SUMMER -> "파라솔 · 조개 · 레몬"
+    Season.AUTUMN -> "단풍 · 커피 · 도토리"
+    Season.WINTER -> "눈사람 · 니트 · 눈꽃"
 }

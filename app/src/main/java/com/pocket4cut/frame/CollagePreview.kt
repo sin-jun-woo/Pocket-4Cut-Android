@@ -2,12 +2,21 @@ package com.pocket4cut.frame
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
@@ -18,6 +27,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
 import com.pocket4cut.presentation.navigation.FrameType
+import com.pocket4cut.frame.rendering.SeasonalStickerArt
+import com.pocket4cut.ui.designsystem.theme.Season
+import kotlinx.coroutines.CancellationException
 import kotlin.math.min
 import kotlin.math.roundToInt
 
@@ -46,6 +58,25 @@ fun CollagePreview(
 ) {
     val density = LocalDensity.current
     val context = LocalContext.current
+    val requestedSeason = customFrameDesign?.resolvedSeason
+    var artworkRetry by remember(requestedSeason) { mutableIntStateOf(0) }
+    val artworkState by produceState<Pair<Season, Result<SeasonalStickerArt.Sheet>>?>(
+        initialValue = null, requestedSeason, artworkRetry,
+    ) {
+        value = null
+        if (requestedSeason != null) {
+            val result = try {
+                Result.success(SeasonalStickerArt.load(context.applicationContext, requestedSeason))
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                Result.failure(error)
+            }
+            value = requestedSeason to result
+        }
+    }
+    val artworkResult = artworkState?.takeIf { it.first == requestedSeason }?.second
+    val seasonalArt = artworkResult?.getOrNull()
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val containerPx = with(density) { maxWidth.toPx() }.coerceAtLeast(1f)
         // bottomCaption reserves geometry and supports legacy callers. A date-only caption
@@ -74,14 +105,25 @@ fun CollagePreview(
             captionFontName = captionFontName,
             context = context,
             layoutVersion = layoutVersion,
+            seasonalArt = seasonalArt,
         )
-        Canvas(
-            modifier = Modifier
-                .width(with(density) { dimensions.canvasWidth.toDp() })
-                .height(with(density) { dimensions.canvasHeight.toDp() }),
-        ) {
-            drawIntoCanvas { target ->
-                CollageRenderer.drawScene(target.nativeCanvas, input, dimensions)
+        val canvasModifier = Modifier
+            .width(with(density) { dimensions.canvasWidth.toDp() })
+            .height(with(density) { dimensions.canvasHeight.toDp() })
+        if (requestedSeason != null && seasonalArt == null) {
+            Box(canvasModifier, contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(if (artworkResult?.isFailure == true) "계절 프레임을 불러오지 못했습니다." else "계절 프레임을 불러오는 중입니다.")
+                    if (artworkResult?.isFailure == true) {
+                        TextButton(onClick = { artworkRetry++ }) { Text("다시 시도") }
+                    }
+                }
+            }
+        } else {
+            Canvas(modifier = canvasModifier) {
+                drawIntoCanvas { target ->
+                    CollageRenderer.drawScene(target.nativeCanvas, input, dimensions)
+                }
             }
         }
     }

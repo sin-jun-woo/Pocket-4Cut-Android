@@ -73,6 +73,7 @@ fun LayoutSelectionScreen(
     onSelectLayout: (FrameLayoutId) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
+    layoutVersion: Int = 2,
 ) {
     val layouts = remember(frameType) { FrameLayouts.bySlots(frameType.selectCount) }
     var selectedLayout by remember(layouts) {
@@ -188,6 +189,7 @@ fun LayoutSelectionScreen(
                                     frameType = frameType,
                                     frameStyle = previewStyle,
                                     theme = defaultTheme,
+                                    layoutVersion = layoutVersion,
                                     modifier = Modifier.fillMaxSize(),
                                 )
                             }

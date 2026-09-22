@@ -64,6 +64,7 @@ fun ColorFramePalettePickScreen(
     onDismiss: () -> Unit,
     onCompleted: (FrameColor) -> Unit,
     modifier: Modifier = Modifier,
+    layoutVersion: Int = 2,
 ) {
     val palette = remember(frameType) { FrameColors.colorFramePalette(frameType) }
     var selected by remember(palette) { mutableStateOf(palette.first()) }
@@ -135,6 +136,7 @@ fun ColorFramePalettePickScreen(
                     theme = theme,
                     overrideBackground = selected.color,
                     backgroundGradient = selected.gradientStops,
+                    layoutVersion = layoutVersion,
                     modifier = Modifier
                         .shadow(
                             elevation = 8.dp,

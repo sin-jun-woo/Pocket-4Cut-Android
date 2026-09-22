@@ -12,14 +12,17 @@ import androidx.lifecycle.ViewModelStore
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.pocket4cut.core.util.BitmapDecoding
+import com.pocket4cut.frame.CollageLayoutMath
 import com.pocket4cut.frame.FilterId
 import com.pocket4cut.frame.FrameCatalog
 import com.pocket4cut.frame.FrameColors
 import com.pocket4cut.frame.FrameLayoutId
 import com.pocket4cut.frame.FrameLayouts
-import com.pocket4cut.frame.rendering.SummerFrameVectorDecor
+import com.pocket4cut.frame.rendering.SeasonalStickerArt
 import com.pocket4cut.presentation.detailEdit.DetailEditViewModel
 import com.pocket4cut.presentation.navigation.FrameType
+import com.pocket4cut.ui.designsystem.theme.Season
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -28,6 +31,7 @@ import java.io.File
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 @RunWith(AndroidJUnit4::class)
 class BitmapPipelineInstrumentedTest {
@@ -172,20 +176,30 @@ class BitmapPipelineInstrumentedTest {
     }
 
     @Test
-    fun parallelSummerRendersMatchIndependentSerialRenders() {
-        fun render(adjacent: Boolean): Bitmap = Bitmap.createBitmap(240, 720, Bitmap.Config.ARGB_8888).apply {
-            SummerFrameVectorDecor.draw(Canvas(this), width.toFloat(), height.toFloat(), adjacent)
+    fun retainedSeasonalSheetsSurviveCacheEvictionAndParallelPaintsMatchSerialPaints() = runBlocking {
+        // Four retained sheets intentionally exceed the two-entry cache. A displayed or
+        // exporting scene must remain valid after the cache drops its own reference.
+        val sheets = Season.entries.map { SeasonalStickerArt.load(app, it) }
+        val layout = CollageLayoutMath.computeForPreview(
+            FrameLayouts.byId(FrameLayoutId.FOUR_GRID),
+            FrameCatalog.themes(FrameType.FOUR_CUT).first(),
+            "문구", 240f,
+        )
+        fun render(seasonIndex: Int): Bitmap = Bitmap.createBitmap(
+            layout.canvasWidth.roundToInt(), layout.canvasHeight.roundToInt(), Bitmap.Config.ARGB_8888,
+        ).apply {
+            SeasonalStickerArt.draw(Canvas(this), sheets[seasonIndex], layout)
         }
-        val expected = listOf(render(false), render(true))
+        val expected = sheets.indices.map(::render)
         val executor = Executors.newFixedThreadPool(4)
         try {
             val tasks = (0 until 4).map { worker ->
                 executor.submit {
                     repeat(12) { iteration ->
-                        val mode = (worker + iteration) % 2
-                        val actual = render(mode == 1)
+                        val mode = (worker + iteration) % sheets.size
+                        val actual = render(mode)
                         try {
-                            assertTrue("Summer paint state leaked between renders", expected[mode].sameAs(actual))
+                            assertTrue("Seasonal atlas paint state leaked between renders", expected[mode].sameAs(actual))
                         } finally {
                             actual.recycle()
                         }

@@ -1,0 +1,579 @@
+{
+  "schemaVersion": 1,
+  "archive": "pocket4cut-paper-seasons-v1.zip",
+  "archiveBytes": 103096843,
+  "archiveSha256": "ecf1a7d655da6aec96656fb331052a1491cf844d6b1927b40323a955550044e2",
+  "verifiedBy": "Reopened ZIP; every extracted entry length and SHA-256 matched its original file",
+  "originalRenderer": "Production Android CollageRenderer.drawScene / CollageRenderer.render",
+  "originalFrames": 72,
+  "originalExamples": 32,
+  "entryCount": 113,
+  "includesInstagramImage": true,
+  "entries": [
+    {
+      "path": "frames/spring/two_vertical.png",
+      "bytes": 213786,
+      "sha256": "de852c44c1cd7c67ee05fd93fbe9f754e5ec5582fa894b96be74088a10a1f8f3"
+    },
+    {
+      "path": "frames/spring/two_vertical_caption.png",
+      "bytes": 201063,
+      "sha256": "5c0261aa6ffc2c2c1d387703e0a3f3d9147dfd517a3a15e39f394920c4cfcb72"
+    },
+    {
+      "path": "examples/spring/two_vertical.jpg",
+      "bytes": 996893,
+      "sha256": "7bad827fc1a9a5175908505d46fdbb126419c21494738061f5c236b64bc2aa7e"
+    },
+    {
+      "path": "frames/spring/two_horizontal.png",
+      "bytes": 297607,
+      "sha256": "f8b048c3e95e423a542a70700af4fd2ca4126a6d734719a55feae00cfbb132bc"
+    },
+    {
+      "path": "frames/spring/two_horizontal_caption.png",
+      "bytes": 292237,
+      "sha256": "d15ec7620824e8574999fd5d8deff675bba3a978e16016077a8177a2e3adbf78"
+    },
+    {
+      "path": "examples/spring/two_horizontal.jpg",
+      "bytes": 1033340,
+      "sha256": "b47c5c8c5bfd3778fe720e441a45e9cdc03a00406dc8c3c26154abdd84bfec08"
+    },
+    {
+      "path": "frames/spring/four_vertical.png",
+      "bytes": 227309,
+      "sha256": "8cb4563256778138c37e1cb30792d6d4d387c0e47eeb71b554ba7d78d823c2b2"
+    },
+    {
+      "path": "frames/spring/four_vertical_caption.png",
+      "bytes": 222408,
+      "sha256": "5d103ec8f1f87d80031477c6420227dea71de744b1556a232670ad886e13be0d"
+    },
+    {
+      "path": "examples/spring/four_vertical.jpg",
+      "bytes": 1926285,
+      "sha256": "f50668414c8103f340c4e077513b08571184d677a06077021f5ba757e1495868"
+    },
+    {
+      "path": "frames/spring/four_grid.png",
+      "bytes": 335597,
+      "sha256": "cba5517fbada873235b7bd523f31c8f412caae114bf21719203512f124beaef8"
+    },
+    {
+      "path": "frames/spring/four_grid_caption.png",
+      "bytes": 330664,
+      "sha256": "13d8c312511c7788c89fa0f8cfbc839bb6c641721f956180b2bfe366a021df7a"
+    },
+    {
+      "path": "examples/spring/four_grid.jpg",
+      "bytes": 1833584,
+      "sha256": "9ac9f94862090095005bc7edf11ef73a9252dfa1cf73a0c30829f9a8d6eb2802"
+    },
+    {
+      "path": "frames/spring/four_horizontal.png",
+      "bytes": 1010472,
+      "sha256": "c6eedbd7f4c07516d28dc9ed6a27fe7a2ce19b3649c2d46af8fa2e0d2ea2964d"
+    },
+    {
+      "path": "frames/spring/four_horizontal_caption.png",
+      "bytes": 982794,
+      "sha256": "c432b2963baee6102689cf3dedccb5dbd6d02f1bd1faed923c31b801bbdf4680"
+    },
+    {
+      "path": "examples/spring/four_horizontal.jpg",
+      "bytes": 2190324,
+      "sha256": "bdf9b91cbe2d877f11129827b3dc3dc0667114df2072591ebc1c5a9726d2323b"
+    },
+    {
+      "path": "frames/spring/six_grid_2x3.png",
+      "bytes": 362957,
+      "sha256": "aadb52160bf43a143bed3147410acbfa606805c349959cef263424783615e0e3"
+    },
+    {
+      "path": "frames/spring/six_grid_2x3_caption.png",
+      "bytes": 357403,
+      "sha256": "3f7f86061dbde25ee2496c878506dd1df40d5bd7efebb1e9065a7c397b8d30d2"
+    },
+    {
+      "path": "examples/spring/six_grid_2x3.jpg",
+      "bytes": 2648126,
+      "sha256": "59d8020f267ca4c19a39b9a950279acf0157c5fc02dd7db202183ac094f3acbd"
+    },
+    {
+      "path": "frames/spring/six_grid_3x2.png",
+      "bytes": 641576,
+      "sha256": "ef09b221b9fb5510d833375f48b9e5317f2bd08e4b1c559da71700c16b4fad86"
+    },
+    {
+      "path": "frames/spring/six_grid_3x2_caption.png",
+      "bytes": 627940,
+      "sha256": "f1b2e3f09ac4d428fcd4cbacdd25417f6a2a71da315068eae90b8975c6dd7943"
+    },
+    {
+      "path": "examples/spring/six_grid_3x2.jpg",
+      "bytes": 2821281,
+      "sha256": "e55872c441a026c8e09c25e47fe0f83449c43264f27f41ef01e62e8e6098e772"
+    },
+    {
+      "path": "frames/spring/six_collage.png",
+      "bytes": 465381,
+      "sha256": "6bf52c2f52d20e89dc4a6fb0151a036e1dffc61aedd12791a6fc51c7dcc490f6"
+    },
+    {
+      "path": "frames/spring/six_collage_caption.png",
+      "bytes": 387781,
+      "sha256": "202bd09ad334d603a299f3c49d2647501b80dbc049dd5369bc2d29a180fc5ef7"
+    },
+    {
+      "path": "examples/spring/six_collage.jpg",
+      "bytes": 3202805,
+      "sha256": "75abc37fc496c0c91a20c5acc2866073ab3c9b3be63c0a803e29a8951536c00c"
+    },
+    {
+      "path": "frames/spring/six_collage_legacy_v1.png",
+      "bytes": 641576,
+      "sha256": "ef09b221b9fb5510d833375f48b9e5317f2bd08e4b1c559da71700c16b4fad86"
+    },
+    {
+      "path": "frames/spring/six_collage_legacy_v1_caption.png",
+      "bytes": 627940,
+      "sha256": "f1b2e3f09ac4d428fcd4cbacdd25417f6a2a71da315068eae90b8975c6dd7943"
+    },
+    {
+      "path": "frames/summer/two_vertical.png",
+      "bytes": 171112,
+      "sha256": "fb7f74072b4e6a612a51f65dbadc96517168595f005667dff7f6e9f5aa4d2338"
+    },
+    {
+      "path": "frames/summer/two_vertical_caption.png",
+      "bytes": 159655,
+      "sha256": "fc3a23f199ebf2f6161d43cd95f7608676611ae416f985cecaa5768eb1d4237d"
+    },
+    {
+      "path": "examples/summer/two_vertical.jpg",
+      "bytes": 952222,
+      "sha256": "345f24fb65bc5337076e19276245649693bedb92556a2366383803640e046e47"
+    },
+    {
+      "path": "frames/summer/two_horizontal.png",
+      "bytes": 247048,
+      "sha256": "beb808eb0219eff008ddebffb9ca75743725acb6ce206589b72bfcdf25727704"
+    },
+    {
+      "path": "frames/summer/two_horizontal_caption.png",
+      "bytes": 240925,
+      "sha256": "66f5483a2ef813a8499fa5867583a1d8ef58c331d29a8854100a398930006b1c"
+    },
+    {
+      "path": "examples/summer/two_horizontal.jpg",
+      "bytes": 952869,
+      "sha256": "aef0a7b72724d2fcb6e39ef0dbd3a619e9c1af7fe3d45521834708259294b15f"
+    },
+    {
+      "path": "frames/summer/four_vertical.png",
+      "bytes": 178115,
+      "sha256": "c3de451cb6850e3e9292022d9b788c214285dd9b5a615714c75d7415ca2d31bc"
+    },
+    {
+      "path": "frames/summer/four_vertical_caption.png",
+      "bytes": 172995,
+      "sha256": "fa0865c7fa6cdbbfd77e54d124bb515ce4989e3e6534481f2452bf905868b369"
+    },
+    {
+      "path": "examples/summer/four_vertical.jpg",
+      "bytes": 1831937,
+      "sha256": "45a5af1e09d0da150bcac929cdcbf07b6b809561418821c1e0603e03bdd51fda"
+    },
+    {
+      "path": "frames/summer/four_grid.png",
+      "bytes": 278003,
+      "sha256": "d6b4659e1a738ff1c731eb362ef89c2ea30c034f2b2460601732c7170a5a8979"
+    },
+    {
+      "path": "frames/summer/four_grid_caption.png",
+      "bytes": 272194,
+      "sha256": "6965c02a5b4cb608760209428d0147a1a8c817d1de47d32608e3889d974c6a7b"
+    },
+    {
+      "path": "examples/summer/four_grid.jpg",
+      "bytes": 1723474,
+      "sha256": "87a332653ba581e02406eef29eef625e3488bd9afe435f36b1b0c42db9411817"
+    },
+    {
+      "path": "frames/summer/four_horizontal.png",
+      "bytes": 849567,
+      "sha256": "6a3ef5309d5c552319056267186be80f28335cf594bae0d08bf3ca73face89ac"
+    },
+    {
+      "path": "frames/summer/four_horizontal_caption.png",
+      "bytes": 827086,
+      "sha256": "984f12e6f65358f3b927f6ca2c4770e47c82cd03386daa090abb6a6a78e4424f"
+    },
+    {
+      "path": "examples/summer/four_horizontal.jpg",
+      "bytes": 2082986,
+      "sha256": "ecc47fc4a9bf28a8b7cab2ff4798ab5ee0bd90322a7132349bce2f59eae732be"
+    },
+    {
+      "path": "frames/summer/six_grid_2x3.png",
+      "bytes": 300031,
+      "sha256": "9ee9524a488affeb3348dec13ed8b6662222812a17453450b550c767132c5ed5"
+    },
+    {
+      "path": "frames/summer/six_grid_2x3_caption.png",
+      "bytes": 293720,
+      "sha256": "fc6260bd21af717102111f5c2effb6def9a33f3bef5d01f7824fd85981d4fbfe"
+    },
+    {
+      "path": "examples/summer/six_grid_2x3.jpg",
+      "bytes": 2505275,
+      "sha256": "ba550eecd3053aef3839240e329c81d5c6a56f8435e4ecae229f160806ad1de6"
+    },
+    {
+      "path": "frames/summer/six_grid_3x2.png",
+      "bytes": 538432,
+      "sha256": "f2ed84e476955d1e904768c2a8102849b3c9fa7a634d039ddf414e1915533b86"
+    },
+    {
+      "path": "frames/summer/six_grid_3x2_caption.png",
+      "bytes": 525945,
+      "sha256": "5c175fa9679e0de73ede96f907ab27101990d64f06b75c02a95faaadb34787c9"
+    },
+    {
+      "path": "examples/summer/six_grid_3x2.jpg",
+      "bytes": 2644963,
+      "sha256": "fbdd8922815342a4e1b12e5589518d4112124d81b49b2aa06db42b21d2ac62bc"
+    },
+    {
+      "path": "frames/summer/six_collage.png",
+      "bytes": 398506,
+      "sha256": "712db0db978aef9d92db1e53e38acef2506d8b47d691d3929773fb67d24670b0"
+    },
+    {
+      "path": "frames/summer/six_collage_caption.png",
+      "bytes": 332540,
+      "sha256": "acfe8dcffa88eb9220f7df32162715a693a6b089f51cb47d472aa4eb40292ebf"
+    },
+    {
+      "path": "examples/summer/six_collage.jpg",
+      "bytes": 3034618,
+      "sha256": "ab6a715188325911b7570ca4c5896d70e64bea6572a5697df742ee37077246c0"
+    },
+    {
+      "path": "frames/summer/six_collage_legacy_v1.png",
+      "bytes": 538432,
+      "sha256": "f2ed84e476955d1e904768c2a8102849b3c9fa7a634d039ddf414e1915533b86"
+    },
+    {
+      "path": "frames/summer/six_collage_legacy_v1_caption.png",
+      "bytes": 525945,
+      "sha256": "5c175fa9679e0de73ede96f907ab27101990d64f06b75c02a95faaadb34787c9"
+    },
+    {
+      "path": "frames/autumn/two_vertical.png",
+      "bytes": 216196,
+      "sha256": "7167c303fd45add56971eacbe6b04ebba6885f7a0701e9f7d90b9d2c46fe3cba"
+    },
+    {
+      "path": "frames/autumn/two_vertical_caption.png",
+      "bytes": 199070,
+      "sha256": "9aee62a3f17a33a629be79641b11aca8eb92aa1afe09a9cf08a166d7f0b83c1e"
+    },
+    {
+      "path": "examples/autumn/two_vertical.jpg",
+      "bytes": 932200,
+      "sha256": "8066ae38d13c5c382c63386a78c587d1d3be20a4f4ddc6bbdfbbfb2d33237845"
+    },
+    {
+      "path": "frames/autumn/two_horizontal.png",
+      "bytes": 305198,
+      "sha256": "2589aa5287a2683e6f8bfd616b2de5912e8c8641e84fe1ee69a43115f5e3d914"
+    },
+    {
+      "path": "frames/autumn/two_horizontal_caption.png",
+      "bytes": 295225,
+      "sha256": "4f12f5c6337aadd1b4db3b5811498e73ea66bd211ea3ee2e477b455aa1f9c2e0"
+    },
+    {
+      "path": "examples/autumn/two_horizontal.jpg",
+      "bytes": 964729,
+      "sha256": "daac687f36b702ff5db5766af214416a32a4a6612ae120b22b87a78f05b26a14"
+    },
+    {
+      "path": "frames/autumn/four_vertical.png",
+      "bytes": 216715,
+      "sha256": "ca036f7b5656b33c633104234e05013fa9a3679f9546976fa176ba86db369657"
+    },
+    {
+      "path": "frames/autumn/four_vertical_caption.png",
+      "bytes": 209726,
+      "sha256": "9c085d795ea4ddb02b68cd805f8613a7d02ab67946f6cd0b04eca89be71ccf69"
+    },
+    {
+      "path": "examples/autumn/four_vertical.jpg",
+      "bytes": 1830608,
+      "sha256": "88e8d56b0b69886f3329cb3ec9959db5f3eaf3e0b49bb542070dba974051e155"
+    },
+    {
+      "path": "frames/autumn/four_grid.png",
+      "bytes": 338120,
+      "sha256": "ef23720c8d5e101942b13bfb198596f8cbabc8fb21a82a34fe507ce848759bf9"
+    },
+    {
+      "path": "frames/autumn/four_grid_caption.png",
+      "bytes": 328331,
+      "sha256": "b0e2295f14442e3b201c4dc3e2554cb07853c4504349aa24192046102c52aa9f"
+    },
+    {
+      "path": "examples/autumn/four_grid.jpg",
+      "bytes": 1734486,
+      "sha256": "c25b22eaef4d103c0498f66f101e1a7c5f65ed8b2a8da0d84251e9135f0590e5"
+    },
+    {
+      "path": "frames/autumn/four_horizontal.png",
+      "bytes": 1071402,
+      "sha256": "8201c378e01fdb0274e1570220dfe2d2a649ab8ac8237871424af1d879132844"
+    },
+    {
+      "path": "frames/autumn/four_horizontal_caption.png",
+      "bytes": 1033626,
+      "sha256": "9e5429bfd4515d0a097867e26e3ea7ddf8379a92309e83995be1ed3840384f2a"
+    },
+    {
+      "path": "examples/autumn/four_horizontal.jpg",
+      "bytes": 2105245,
+      "sha256": "d4d5240667987631e6d04351ca46aadab7c7c25d94e7fff893b0061ce79b7227"
+    },
+    {
+      "path": "frames/autumn/six_grid_2x3.png",
+      "bytes": 363482,
+      "sha256": "c08ec66bf4fc7c352243d22976af89fca87535e7c172e1f3e3dbf4ade9ac8994"
+    },
+    {
+      "path": "frames/autumn/six_grid_2x3_caption.png",
+      "bytes": 353655,
+      "sha256": "93f340fe651fb7c41feaa55f5fb782f5dbcb3b2a5bfb8aa62adad907c3b864f4"
+    },
+    {
+      "path": "examples/autumn/six_grid_2x3.jpg",
+      "bytes": 2520918,
+      "sha256": "98934b0520f5680ec3c28c5f16c679c01194cf76d588daad5bd8679574331983"
+    },
+    {
+      "path": "frames/autumn/six_grid_3x2.png",
+      "bytes": 665484,
+      "sha256": "c462adcefa50da71f4af930a20c955590ab1259d987b1e59b4eef0fc69d44082"
+    },
+    {
+      "path": "frames/autumn/six_grid_3x2_caption.png",
+      "bytes": 643930,
+      "sha256": "4a5281c6969dff7f1c8c981e4476d25404af70eee1c85edb8633a4461720fa83"
+    },
+    {
+      "path": "examples/autumn/six_grid_3x2.jpg",
+      "bytes": 2683192,
+      "sha256": "628ab12a3d21276231f2842e93d76bcf70f10454c6d361a0d40d19c1838b3023"
+    },
+    {
+      "path": "frames/autumn/six_collage.png",
+      "bytes": 499835,
+      "sha256": "99c514edfb3052e69b2c2d7aca0052872f5eddb0085476f2ec05f681ad3ae233"
+    },
+    {
+      "path": "frames/autumn/six_collage_caption.png",
+      "bytes": 404719,
+      "sha256": "805daeb0cf703b6365621bac99fb97f36165c279e601d6336dc4e84ec8c7985f"
+    },
+    {
+      "path": "examples/autumn/six_collage.jpg",
+      "bytes": 3044937,
+      "sha256": "78562c2201dd316a034746925f839f6624f8a3c9a566b2b192ea775b9731bc28"
+    },
+    {
+      "path": "frames/autumn/six_collage_legacy_v1.png",
+      "bytes": 665484,
+      "sha256": "c462adcefa50da71f4af930a20c955590ab1259d987b1e59b4eef0fc69d44082"
+    },
+    {
+      "path": "frames/autumn/six_collage_legacy_v1_caption.png",
+      "bytes": 643930,
+      "sha256": "4a5281c6969dff7f1c8c981e4476d25404af70eee1c85edb8633a4461720fa83"
+    },
+    {
+      "path": "frames/winter/two_vertical.png",
+      "bytes": 240668,
+      "sha256": "445dee245c8a68dcba87a23439537ed73bb4dafd769a23ad156a81648a6df1c0"
+    },
+    {
+      "path": "frames/winter/two_vertical_caption.png",
+      "bytes": 223892,
+      "sha256": "03f2ef128fc2296251565c841dd871547d96d368468cb1ee9e3b6f8d754658bd"
+    },
+    {
+      "path": "examples/winter/two_vertical.jpg",
+      "bytes": 977876,
+      "sha256": "49b7104fd17aa04a95ae28760f3ad5f184958cf2e8a536fd0b767be77be59b3c"
+    },
+    {
+      "path": "frames/winter/two_horizontal.png",
+      "bytes": 323402,
+      "sha256": "8ec3bafe47ad1897d4d6f145052692d51f0b5ce1e61534d27865220e13b841c3"
+    },
+    {
+      "path": "frames/winter/two_horizontal_caption.png",
+      "bytes": 316796,
+      "sha256": "808bf30dfe0385858bf6b52253d42f659a8f64a139c7d1451632b226df73fb25"
+    },
+    {
+      "path": "examples/winter/two_horizontal.jpg",
+      "bytes": 1012966,
+      "sha256": "acfdf3fccc2058cf1daffd604e486e9e7739ec38ada54ec87621f2ec709fe600"
+    },
+    {
+      "path": "frames/winter/four_vertical.png",
+      "bytes": 250642,
+      "sha256": "4f357ffbd8c231900f6c290b577a6a7c3c63382aee2ac84588e17f5013121688"
+    },
+    {
+      "path": "frames/winter/four_vertical_caption.png",
+      "bytes": 246850,
+      "sha256": "fe767639e5d35c001e1382d37f9188f00efbfa4cd3521e66350a8a23d395260d"
+    },
+    {
+      "path": "examples/winter/four_vertical.jpg",
+      "bytes": 1883065,
+      "sha256": "0c92aeefcb74d72debdff8378fe9f197aa5d8b9986f5d1350595809222bce13b"
+    },
+    {
+      "path": "frames/winter/four_grid.png",
+      "bytes": 369472,
+      "sha256": "d0658354ee865aecc6dd4e5927b3359d8a6603d8d5d149c0d8e7787c17b23680"
+    },
+    {
+      "path": "frames/winter/four_grid_caption.png",
+      "bytes": 362774,
+      "sha256": "e7cb41fb481196e3bcf00e0a9d15aa440caf63bd562733fce8a9e6f699cc1747"
+    },
+    {
+      "path": "examples/winter/four_grid.jpg",
+      "bytes": 1799703,
+      "sha256": "eb564347fe545947d6cd1b624b5249e71de61d05d780ed0cf99727a089338ab1"
+    },
+    {
+      "path": "frames/winter/four_horizontal.png",
+      "bytes": 1071913,
+      "sha256": "f9ff6e49b52384a62f2d6b65313c262743e5b097205d672b2627873193f5a7c6"
+    },
+    {
+      "path": "frames/winter/four_horizontal_caption.png",
+      "bytes": 1036176,
+      "sha256": "39a505168e7db725fe9f4b152777afbc4b841799bcd2f4d3c0d4644ad1d3fe15"
+    },
+    {
+      "path": "examples/winter/four_horizontal.jpg",
+      "bytes": 2232984,
+      "sha256": "11892dd96cf832c2bd091b6874fcb7344ae7193d36a3d905e4c089a71edb59a2"
+    },
+    {
+      "path": "frames/winter/six_grid_2x3.png",
+      "bytes": 399215,
+      "sha256": "8140d82fae2c5334d12fbfc4d444fdcd385c2dcec9a09da57a533a6bfe757565"
+    },
+    {
+      "path": "frames/winter/six_grid_2x3_caption.png",
+      "bytes": 392578,
+      "sha256": "fbf5dccae3ef6c9c15be37db2efaa6f0c7ffff9b05d7818be519855d1318d1b6"
+    },
+    {
+      "path": "examples/winter/six_grid_2x3.jpg",
+      "bytes": 2600460,
+      "sha256": "6bbbca018c90cac0bc2826629128c5162128c5d0a611d0981d253056c9a1eadf"
+    },
+    {
+      "path": "frames/winter/six_grid_3x2.png",
+      "bytes": 693080,
+      "sha256": "65a5944cdebd8ac3d6c0739b7a114cb30317b248f9456e413f7059fb2786e7e9"
+    },
+    {
+      "path": "frames/winter/six_grid_3x2_caption.png",
+      "bytes": 675846,
+      "sha256": "32d8afd12eb0005bdee4fe56549134a7851ede27c791434e44791af415e589af"
+    },
+    {
+      "path": "examples/winter/six_grid_3x2.jpg",
+      "bytes": 2793665,
+      "sha256": "7e7816bfbe81af44ca65d05a877063d5f67babef9a9cfd30e050581ac005d28e"
+    },
+    {
+      "path": "frames/winter/six_collage.png",
+      "bytes": 540249,
+      "sha256": "7f1fcc1bebd732f95bc66af4eb9ca7bca6f8ee6df21196a86b1844829f5c94dd"
+    },
+    {
+      "path": "frames/winter/six_collage_caption.png",
+      "bytes": 447026,
+      "sha256": "6d68c2c968399a9c047941db40a94c0fa15be8303abdf0db4840c1d7c53b7ced"
+    },
+    {
+      "path": "examples/winter/six_collage.jpg",
+      "bytes": 3189125,
+      "sha256": "f5d7ede76705ab60194340fb12e20915b3a1ea016496b5564c38a644824a6061"
+    },
+    {
+      "path": "frames/winter/six_collage_legacy_v1.png",
+      "bytes": 693080,
+      "sha256": "65a5944cdebd8ac3d6c0739b7a114cb30317b248f9456e413f7059fb2786e7e9"
+    },
+    {
+      "path": "frames/winter/six_collage_legacy_v1_caption.png",
+      "bytes": 675846,
+      "sha256": "32d8afd12eb0005bdee4fe56549134a7851ede27c791434e44791af415e589af"
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 95721,
+      "sha256": "8766e01f0b4f8ea5694437f3b0d20dd80c1b72cf5173fd3d407df7a5675993c5"
+    },
+    {
+      "path": "README-USAGE.txt",
+      "bytes": 1878,
+      "sha256": "5578a71e8d7c1dc44c94ca6f9dbd07b29ec98d38dc117dc24a5205bb2b599406"
+    },
+    {
+      "path": "overview-all-seasons.png",
+      "bytes": 1005405,
+      "sha256": "29344677dd3222c2516703c8ff07e1643e3b00b045bda097e3bba6bb8b3bdde9"
+    },
+    {
+      "path": "overview-spring.png",
+      "bytes": 495138,
+      "sha256": "c0d5f74d1a18952be77106bad8a7740a2f568e2dbaeea2022458415b4a9b0b4e"
+    },
+    {
+      "path": "overview-summer.png",
+      "bytes": 285128,
+      "sha256": "8a2cdce6199f5ff984f0521699431dc244a5c31242f26ca1728ae6d578061424"
+    },
+    {
+      "path": "overview-autumn.png",
+      "bytes": 336360,
+      "sha256": "661ad225eac3a47b2f2a357341844efad40706743cf1d0517d568e21a605cbff"
+    },
+    {
+      "path": "overview-winter.png",
+      "bytes": 401371,
+      "sha256": "30c3137ec55273e58e1c38061ff3ef37f2d688f54846027b0f69ecb589b7b753"
+    },
+    {
+      "path": "overview-classic-four.png",
+      "bytes": 120289,
+      "sha256": "cc33bcb3df8bb66b9d0436509cfd2359f41e22c791d25c20f6e442709f8e753a"
+    },
+    {
+      "path": "instagram-promo.png",
+      "bytes": 3159105,
+      "sha256": "c4861f69107a603da5489256f0c5e43858f7a23804abb11b37f1c8b2b47b1c1d"
+    }
+  ]
+}

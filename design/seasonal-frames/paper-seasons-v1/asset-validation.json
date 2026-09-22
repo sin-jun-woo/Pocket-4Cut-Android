@@ -1,0 +1,822 @@
+{
+  "schemaVersion": 1,
+  "method": "mechanical crop, alpha trim and downscale; generated art unchanged",
+  "atlas": {
+    "width": 1536,
+    "height": 1024,
+    "cellSize": 512,
+    "columns": 3,
+    "rows": 2,
+    "padding": 14,
+    "colorSpace": "sRGB",
+    "format": "RGBA PNG"
+  },
+  "alpha": {
+    "preserved": true,
+    "boundsThreshold": 8,
+    "boundsGuardPixels": 3,
+    "note": "The generated masters peak at alpha 254, not 255. Interior alpha >=250 is validated; no opaque fill or alpha remapping is applied."
+  },
+  "seasons": [
+    {
+      "id": "spring",
+      "source": "source/spring-atlas.png",
+      "sourceBytes": 2487999,
+      "sourceSha256": "1deede0bb132c032b46caeb4b7931b4f51754c597f6e540e04eea552d1f6c941",
+      "output": "app/src/main/assets/seasonal/spring.png",
+      "outputBytes": 1653749,
+      "outputSha256": "7ed702ac67993b97bdee3f06e1d5e35078e6513ff855c954cc6747100ac7f2ca",
+      "width": 1536,
+      "height": 1024,
+      "channels": 4,
+      "zeroAlphaPixels": 960760,
+      "nearOpaquePixels": 444185,
+      "maxAlpha": 255,
+      "boundaryMaxAlpha": 0,
+      "cells": [
+        {
+          "minX": 24,
+          "minY": 20,
+          "maxX": 486,
+          "maxY": 490,
+          "nearOpaquePixels": 69118
+        },
+        {
+          "minX": 50,
+          "minY": 14,
+          "maxX": 460,
+          "maxY": 497,
+          "nearOpaquePixels": 84395
+        },
+        {
+          "minX": 35,
+          "minY": 64,
+          "maxX": 475,
+          "maxY": 445,
+          "nearOpaquePixels": 76806
+        },
+        {
+          "minX": 34,
+          "minY": 53,
+          "maxX": 476,
+          "maxY": 458,
+          "nearOpaquePixels": 69925
+        },
+        {
+          "minX": 76,
+          "minY": 58,
+          "maxX": 435,
+          "maxY": 454,
+          "nearOpaquePixels": 70812
+        },
+        {
+          "minX": 51,
+          "minY": 63,
+          "maxX": 459,
+          "maxY": 448,
+          "nearOpaquePixels": 73129
+        }
+      ],
+      "motifs": [
+        {
+          "index": 0,
+          "name": "cherry-blossom",
+          "regionOfInterest": [
+            0,
+            0,
+            535,
+            560
+          ],
+          "sourceRect": {
+            "left": 50,
+            "top": 38,
+            "width": 465,
+            "height": 471
+          },
+          "destinationRect": {
+            "left": 23,
+            "top": 20,
+            "width": 465,
+            "height": 471
+          },
+          "scale": 1
+        },
+        {
+          "index": 1,
+          "name": "tulip-bouquet",
+          "regionOfInterest": [
+            535,
+            0,
+            1030,
+            560
+          ],
+          "sourceRect": {
+            "left": 567,
+            "top": 43,
+            "width": 435,
+            "height": 512
+          },
+          "destinationRect": {
+            "left": 562,
+            "top": 14,
+            "width": 411,
+            "height": 484
+          },
+          "scale": 0.9453125
+        },
+        {
+          "index": 2,
+          "name": "rose-ribbon",
+          "regionOfInterest": [
+            1030,
+            0,
+            1536,
+            560
+          ],
+          "sourceRect": {
+            "left": 1059,
+            "top": 132,
+            "width": 441,
+            "height": 383
+          },
+          "destinationRect": {
+            "left": 1059,
+            "top": 64,
+            "width": 441,
+            "height": 383
+          },
+          "scale": 1
+        },
+        {
+          "index": 3,
+          "name": "butterfly",
+          "regionOfInterest": [
+            0,
+            560,
+            535,
+            1024
+          ],
+          "sourceRect": {
+            "left": 49,
+            "top": 588,
+            "width": 443,
+            "height": 406
+          },
+          "destinationRect": {
+            "left": 34,
+            "top": 565,
+            "width": 443,
+            "height": 406
+          },
+          "scale": 1
+        },
+        {
+          "index": 4,
+          "name": "strawberry",
+          "regionOfInterest": [
+            535,
+            560,
+            1030,
+            1024
+          ],
+          "sourceRect": {
+            "left": 614,
+            "top": 569,
+            "width": 360,
+            "height": 398
+          },
+          "destinationRect": {
+            "left": 588,
+            "top": 569,
+            "width": 360,
+            "height": 398
+          },
+          "scale": 1
+        },
+        {
+          "index": 5,
+          "name": "pink-flower",
+          "regionOfInterest": [
+            1030,
+            560,
+            1536,
+            1024
+          ],
+          "sourceRect": {
+            "left": 1079,
+            "top": 579,
+            "width": 409,
+            "height": 386
+          },
+          "destinationRect": {
+            "left": 1075,
+            "top": 575,
+            "width": 409,
+            "height": 386
+          },
+          "scale": 1
+        }
+      ]
+    },
+    {
+      "id": "summer",
+      "source": "source/summer-atlas.png",
+      "sourceBytes": 2310322,
+      "sourceSha256": "9a0581d61c66b9725aff38435b46e0408f51dcefe8dd44d6e779eb953a90481c",
+      "output": "app/src/main/assets/seasonal/summer.png",
+      "outputBytes": 1481123,
+      "outputSha256": "1e68bd2de8959ae16785813c181bb7239c49b364b8a577676ed568d7b4342ba3",
+      "width": 1536,
+      "height": 1024,
+      "channels": 4,
+      "zeroAlphaPixels": 975008,
+      "nearOpaquePixels": 467454,
+      "maxAlpha": 254,
+      "boundaryMaxAlpha": 0,
+      "cells": [
+        {
+          "minX": 17,
+          "minY": 30,
+          "maxX": 493,
+          "maxY": 482,
+          "nearOpaquePixels": 70180
+        },
+        {
+          "minX": 44,
+          "minY": 48,
+          "maxX": 466,
+          "maxY": 462,
+          "nearOpaquePixels": 78736
+        },
+        {
+          "minX": 50,
+          "minY": 78,
+          "maxX": 460,
+          "maxY": 433,
+          "nearOpaquePixels": 90216
+        },
+        {
+          "minX": 26,
+          "minY": 49,
+          "maxX": 485,
+          "maxY": 461,
+          "nearOpaquePixels": 105032
+        },
+        {
+          "minX": 54,
+          "minY": 73,
+          "maxX": 458,
+          "maxY": 437,
+          "nearOpaquePixels": 54708
+        },
+        {
+          "minX": 31,
+          "minY": 32,
+          "maxX": 480,
+          "maxY": 479,
+          "nearOpaquePixels": 68582
+        }
+      ],
+      "motifs": [
+        {
+          "index": 0,
+          "name": "parasol",
+          "regionOfInterest": [
+            0,
+            0,
+            516,
+            509
+          ],
+          "sourceRect": {
+            "left": 23,
+            "top": 43,
+            "width": 477,
+            "height": 454
+          },
+          "destinationRect": {
+            "left": 17,
+            "top": 29,
+            "width": 477,
+            "height": 454
+          },
+          "scale": 1
+        },
+        {
+          "index": 1,
+          "name": "lifebuoy",
+          "regionOfInterest": [
+            524,
+            0,
+            1013,
+            509
+          ],
+          "sourceRect": {
+            "left": 561,
+            "top": 62,
+            "width": 423,
+            "height": 415
+          },
+          "destinationRect": {
+            "left": 556,
+            "top": 48,
+            "width": 423,
+            "height": 415
+          },
+          "scale": 1
+        },
+        {
+          "index": 2,
+          "name": "seashells",
+          "regionOfInterest": [
+            1021,
+            0,
+            1536,
+            509
+          ],
+          "sourceRect": {
+            "left": 1060,
+            "top": 101,
+            "width": 411,
+            "height": 356
+          },
+          "destinationRect": {
+            "left": 1074,
+            "top": 78,
+            "width": 411,
+            "height": 356
+          },
+          "scale": 1
+        },
+        {
+          "index": 3,
+          "name": "lemon",
+          "regionOfInterest": [
+            0,
+            515,
+            516,
+            1024
+          ],
+          "sourceRect": {
+            "left": 46,
+            "top": 534,
+            "width": 460,
+            "height": 413
+          },
+          "destinationRect": {
+            "left": 26,
+            "top": 561,
+            "width": 460,
+            "height": 413
+          },
+          "scale": 1
+        },
+        {
+          "index": 4,
+          "name": "seagull",
+          "regionOfInterest": [
+            524,
+            515,
+            1013,
+            1024
+          ],
+          "sourceRect": {
+            "left": 573,
+            "top": 568,
+            "width": 406,
+            "height": 366
+          },
+          "destinationRect": {
+            "left": 565,
+            "top": 585,
+            "width": 406,
+            "height": 366
+          },
+          "scale": 1
+        },
+        {
+          "index": 5,
+          "name": "sun",
+          "regionOfInterest": [
+            1021,
+            515,
+            1536,
+            1024
+          ],
+          "sourceRect": {
+            "left": 1061,
+            "top": 528,
+            "width": 450,
+            "height": 448
+          },
+          "destinationRect": {
+            "left": 1055,
+            "top": 544,
+            "width": 450,
+            "height": 448
+          },
+          "scale": 1
+        }
+      ]
+    },
+    {
+      "id": "autumn",
+      "source": "source/autumn-atlas.png",
+      "sourceBytes": 2625413,
+      "sourceSha256": "ac84b6cb22de86cb95ed94a9cb63830fb8bbef5be41894aa01a79c859dfd4946",
+      "output": "app/src/main/assets/seasonal/autumn.png",
+      "outputBytes": 1877843,
+      "outputSha256": "1ca7b86ef82fcab1f0f703c42af7310a0cf4042f6322203af53192f7d7f282e5",
+      "width": 1536,
+      "height": 1024,
+      "channels": 4,
+      "zeroAlphaPixels": 851380,
+      "nearOpaquePixels": 608390,
+      "maxAlpha": 255,
+      "boundaryMaxAlpha": 0,
+      "cells": [
+        {
+          "minX": 36,
+          "minY": 48,
+          "maxX": 474,
+          "maxY": 462,
+          "nearOpaquePixels": 87341
+        },
+        {
+          "minX": 25,
+          "minY": 72,
+          "maxX": 486,
+          "maxY": 438,
+          "nearOpaquePixels": 117024
+        },
+        {
+          "minX": 65,
+          "minY": 43,
+          "maxX": 446,
+          "maxY": 467,
+          "nearOpaquePixels": 85487
+        },
+        {
+          "minX": 36,
+          "minY": 25,
+          "maxX": 475,
+          "maxY": 486,
+          "nearOpaquePixels": 110603
+        },
+        {
+          "minX": 14,
+          "minY": 68,
+          "maxX": 496,
+          "maxY": 443,
+          "nearOpaquePixels": 120678
+        },
+        {
+          "minX": 68,
+          "minY": 34,
+          "maxX": 443,
+          "maxY": 477,
+          "nearOpaquePixels": 87257
+        }
+      ],
+      "motifs": [
+        {
+          "index": 0,
+          "name": "gingko-maple-leaves",
+          "regionOfInterest": [
+            0,
+            0,
+            520,
+            505
+          ],
+          "sourceRect": {
+            "left": 55,
+            "top": 63,
+            "width": 440,
+            "height": 415
+          },
+          "destinationRect": {
+            "left": 36,
+            "top": 48,
+            "width": 440,
+            "height": 415
+          },
+          "scale": 1
+        },
+        {
+          "index": 1,
+          "name": "coffee-cup",
+          "regionOfInterest": [
+            520,
+            0,
+            1040,
+            505
+          ],
+          "sourceRect": {
+            "left": 543,
+            "top": 110,
+            "width": 462,
+            "height": 367
+          },
+          "destinationRect": {
+            "left": 537,
+            "top": 72,
+            "width": 462,
+            "height": 367
+          },
+          "scale": 1
+        },
+        {
+          "index": 2,
+          "name": "acorns",
+          "regionOfInterest": [
+            1040,
+            0,
+            1536,
+            505
+          ],
+          "sourceRect": {
+            "left": 1097,
+            "top": 55,
+            "width": 382,
+            "height": 425
+          },
+          "destinationRect": {
+            "left": 1089,
+            "top": 43,
+            "width": 382,
+            "height": 425
+          },
+          "scale": 1
+        },
+        {
+          "index": 3,
+          "name": "knit-scarf",
+          "regionOfInterest": [
+            0,
+            505,
+            520,
+            1024
+          ],
+          "sourceRect": {
+            "left": 48,
+            "top": 511,
+            "width": 440,
+            "height": 462
+          },
+          "destinationRect": {
+            "left": 36,
+            "top": 537,
+            "width": 440,
+            "height": 462
+          },
+          "scale": 1
+        },
+        {
+          "index": 4,
+          "name": "books",
+          "regionOfInterest": [
+            520,
+            505,
+            1040,
+            1024
+          ],
+          "sourceRect": {
+            "left": 535,
+            "top": 557,
+            "width": 493,
+            "height": 383
+          },
+          "destinationRect": {
+            "left": 526,
+            "top": 580,
+            "width": 484,
+            "height": 376
+          },
+          "scale": 0.9817444219066938
+        },
+        {
+          "index": 5,
+          "name": "pear",
+          "regionOfInterest": [
+            1040,
+            505,
+            1536,
+            1024
+          ],
+          "sourceRect": {
+            "left": 1111,
+            "top": 513,
+            "width": 376,
+            "height": 444
+          },
+          "destinationRect": {
+            "left": 1092,
+            "top": 546,
+            "width": 376,
+            "height": 444
+          },
+          "scale": 1
+        }
+      ]
+    },
+    {
+      "id": "winter",
+      "source": "source/winter-atlas.png",
+      "sourceBytes": 2644423,
+      "sourceSha256": "bfe026d027c5a6c2813b1853a708079bc42334ee283c51164a9d3246dd13a36b",
+      "output": "app/src/main/assets/seasonal/winter.png",
+      "outputBytes": 1939235,
+      "outputSha256": "437c39e5ff6f3513ef4a917cd2b3b3d4c2a41c50b4d8fc6d5b5d58eea8c4f6c2",
+      "width": 1536,
+      "height": 1024,
+      "channels": 4,
+      "zeroAlphaPixels": 805770,
+      "nearOpaquePixels": 560509,
+      "maxAlpha": 255,
+      "boundaryMaxAlpha": 0,
+      "cells": [
+        {
+          "minX": 16,
+          "minY": 28,
+          "maxX": 495,
+          "maxY": 483,
+          "nearOpaquePixels": 100513
+        },
+        {
+          "minX": 77,
+          "minY": 14,
+          "maxX": 434,
+          "maxY": 497,
+          "nearOpaquePixels": 97229
+        },
+        {
+          "minX": 33,
+          "minY": 23,
+          "maxX": 476,
+          "maxY": 486,
+          "nearOpaquePixels": 69142
+        },
+        {
+          "minX": 33,
+          "minY": 41,
+          "maxX": 478,
+          "maxY": 469,
+          "nearOpaquePixels": 126701
+        },
+        {
+          "minX": 56,
+          "minY": 27,
+          "maxX": 455,
+          "maxY": 484,
+          "nearOpaquePixels": 54799
+        },
+        {
+          "minX": 14,
+          "minY": 25,
+          "maxX": 497,
+          "maxY": 486,
+          "nearOpaquePixels": 112125
+        }
+      ],
+      "motifs": [
+        {
+          "index": 0,
+          "name": "mittens",
+          "regionOfInterest": [
+            0,
+            0,
+            530,
+            520
+          ],
+          "sourceRect": {
+            "left": 30,
+            "top": 58,
+            "width": 480,
+            "height": 456
+          },
+          "destinationRect": {
+            "left": 16,
+            "top": 28,
+            "width": 480,
+            "height": 456
+          },
+          "scale": 1
+        },
+        {
+          "index": 1,
+          "name": "snowman",
+          "regionOfInterest": [
+            530,
+            0,
+            1030,
+            520
+          ],
+          "sourceRect": {
+            "left": 598,
+            "top": 15,
+            "width": 372,
+            "height": 502
+          },
+          "destinationRect": {
+            "left": 589,
+            "top": 14,
+            "width": 358,
+            "height": 484
+          },
+          "scale": 0.9641434262948207
+        },
+        {
+          "index": 2,
+          "name": "snowy-pine",
+          "regionOfInterest": [
+            1030,
+            0,
+            1536,
+            520
+          ],
+          "sourceRect": {
+            "left": 1060,
+            "top": 36,
+            "width": 445,
+            "height": 465
+          },
+          "destinationRect": {
+            "left": 1057,
+            "top": 23,
+            "width": 445,
+            "height": 465
+          },
+          "scale": 1
+        },
+        {
+          "index": 3,
+          "name": "cocoa-cup",
+          "regionOfInterest": [
+            0,
+            520,
+            530,
+            1024
+          ],
+          "sourceRect": {
+            "left": 60,
+            "top": 546,
+            "width": 446,
+            "height": 429
+          },
+          "destinationRect": {
+            "left": 33,
+            "top": 553,
+            "width": 446,
+            "height": 429
+          },
+          "scale": 1
+        },
+        {
+          "index": 4,
+          "name": "snowflake",
+          "regionOfInterest": [
+            530,
+            520,
+            1010,
+            1024
+          ],
+          "sourceRect": {
+            "left": 566,
+            "top": 529,
+            "width": 400,
+            "height": 458
+          },
+          "destinationRect": {
+            "left": 568,
+            "top": 539,
+            "width": 400,
+            "height": 458
+          },
+          "scale": 1
+        },
+        {
+          "index": 5,
+          "name": "tartan-ribbon",
+          "regionOfInterest": [
+            1010,
+            520,
+            1536,
+            1024
+          ],
+          "sourceRect": {
+            "left": 1019,
+            "top": 523,
+            "width": 490,
+            "height": 468
+          },
+          "destinationRect": {
+            "left": 1038,
+            "top": 537,
+            "width": 484,
+            "height": 462
+          },
+          "scale": 0.9877551020408163
+        }
+      ]
+    }
+  ]
+}

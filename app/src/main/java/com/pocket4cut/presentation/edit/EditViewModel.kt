@@ -54,6 +54,7 @@ data class EditUiState(
     val seasonId: String? = null,
     val customFrameDesign: CustomFrameDesign? = null,
     val allowsColorEditInEditor: Boolean = true,
+    val layoutVersion: Int = 2,
 )
 
 class EditViewModel(app: Application) : AndroidViewModel(app) {
@@ -126,6 +127,7 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
                         seasonId = draft.seasonId,
                         customFrameDesign = design,
                         allowsColorEditInEditor = draft.backgroundType != "season" && design?.sourceSeason == null,
+                        layoutVersion = draft.layoutVersion,
                         textFontSize = draft.textFontSize,
                         dateFontSize = draft.dateFontSize,
                         captionFontName = draft.captionFontName,
