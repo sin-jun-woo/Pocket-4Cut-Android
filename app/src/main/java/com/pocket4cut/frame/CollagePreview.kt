@@ -82,9 +82,10 @@ fun CollagePreview(
         // bottomCaption reserves geometry and supports legacy callers. A date-only caption
         // must not also be drawn as user text, or the date appears twice.
         val caption = captionTextPart ?: bottomCaption?.takeIf { captionDatePart == null }
-        val dimensions = remember(containerPx, frameStyle, theme, bottomCaption, layoutVersion) {
+        val hasCaption = !caption.isNullOrBlank() || !captionDatePart.isNullOrBlank()
+        val dimensions = remember(containerPx, frameStyle, theme, hasCaption, layoutVersion) {
             CollageLayoutMath.computeForPreview(
-                frameStyle, theme, bottomCaption, containerPx, layoutVersion,
+                frameStyle, theme, if (hasCaption) "caption" else null, containerPx, layoutVersion,
             )
         }
         val input = CollageRenderer.Input(

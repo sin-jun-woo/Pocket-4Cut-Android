@@ -36,6 +36,30 @@ class FileImageStorage(
         File(dir, "${UUID.randomUUID()}.jpg")
     }
 
+    suspend fun isPublishedCaptureValid(sessionId: String, index: Int): Boolean =
+        withContext(Dispatchers.IO) {
+            val file = publishedCaptureFile(sessionId, index)
+            file.isFile && isValidJpeg(file)
+        }
+
+    suspend fun isCaptureFileValid(file: File): Boolean = withContext(Dispatchers.IO) {
+        file.isFile && isValidJpeg(file)
+    }
+
+    /** Preserve a damaged, unrecorded capture for inspection before the same slot is retaken. */
+    suspend fun quarantineDamagedCapture(sessionId: String, index: Int): File? =
+        withContext(Dispatchers.IO) {
+            val file = publishedCaptureFile(sessionId, index)
+            if (!file.exists()) return@withContext null // A previous attempt already moved it.
+            check(file.isFile && !isValidJpeg(file)) { "Only a damaged capture may be quarantined" }
+            val quarantine = File(captureDir(sessionId), ".quarantine").apply {
+                check(isDirectory || mkdirs()) { "Unable to create capture quarantine" }
+            }
+            val target = File(quarantine, "${file.nameWithoutExtension}_${UUID.randomUUID()}.jpg")
+            check(!target.exists() && file.renameTo(target)) { "Unable to quarantine damaged capture" }
+            target
+        }
+
     suspend fun publishCaptureFile(pending: File, sessionId: String, index: Int): File =
         withContext(Dispatchers.IO) {
             require(pending.parentFile?.canonicalFile == File(captureDir(sessionId), ".pending").canonicalFile)
@@ -121,6 +145,12 @@ class FileImageStorage(
     }
 
     private fun captureDir(sessionId: String): File = File(picturesBaseDir(), "captures/$sessionId")
+
+    private fun publishedCaptureFile(sessionId: String, index: Int): File {
+        require(sessionId.matches(Regex("[A-Za-z0-9_-]{1,100}")))
+        require(index > 0)
+        return File(captureDir(sessionId), "cap_${index.toString().padStart(2, '0')}.jpg")
+    }
 
     private fun resultsDir(): File = File(picturesBaseDir(), "results")
 

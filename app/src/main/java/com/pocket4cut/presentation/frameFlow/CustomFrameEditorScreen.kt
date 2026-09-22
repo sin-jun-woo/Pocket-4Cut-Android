@@ -1,6 +1,7 @@
 package com.pocket4cut.presentation.frameFlow
 
 import android.graphics.Bitmap
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -52,8 +53,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -67,7 +66,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-import androidx.compose.ui.zIndex
 import com.pocket4cut.core.util.AppFontCatalog
 import com.pocket4cut.frame.CollageLayoutMath
 import com.pocket4cut.frame.CollagePreviewScaledToFit
@@ -111,12 +109,13 @@ fun CustomFrameEditorScreen(
     frameType: FrameType,
     frameStyle: FrameStyle,
     theme: FrameTheme,
-    onBack: () -> Unit,
-    onDismiss: () -> Unit,
-    onCompleted: (CustomFrameDesign) -> Unit,
+    onBack: (CustomFrameDesign, () -> Unit) -> Unit,
+    onDismiss: (CustomFrameDesign, () -> Unit) -> Unit,
+    onCompleted: (CustomFrameDesign, () -> Unit) -> Unit,
     modifier: Modifier = Modifier,
     initialDesign: CustomFrameDesign? = null,
     onDraftChanged: (CustomFrameDesign) -> Unit = {},
+    saveError: String? = null,
     layoutVersion: Int = 2,
 ) {
     val context = LocalContext.current
@@ -136,12 +135,17 @@ fun CustomFrameEditorScreen(
     val design = remember(fillColorId, decorations) {
         CustomFrameDesign(fillColorId = fillColorId, decorations = decorations)
     }
+    var leaving by remember { mutableStateOf(false) }
+    fun leave(toHome: Boolean) {
+        if (leaving) return
+        leaving = true
+        val onFailure = { leaving = false }
+        if (toHome) onDismiss(design, onFailure) else onBack(design, onFailure)
+    }
+    BackHandler { leave(toHome = false) }
     LaunchedEffect(design) {
         delay(200)
-        onDraftChanged(design)
-    }
-    val previewDesign = remember(fillColorId) {
-        CustomFrameDesign(fillColorId = fillColorId, decorations = emptyList())
+        if (!leaving) onDraftChanged(design)
     }
 
     Column(
@@ -164,7 +168,7 @@ fun CustomFrameEditorScreen(
                 modifier = Modifier.width(AppLayout.Height.IconButton.md),
                 contentAlignment = Alignment.CenterStart,
             ) {
-                IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(onClick = { leave(toHome = false) }, variant = IconButtonVariant.SOLID) {
                     Icon(
                         imageVector = Icons.Default.ChevronLeft,
                         contentDescription = "이전 단계",
@@ -184,7 +188,7 @@ fun CustomFrameEditorScreen(
                 modifier = Modifier.width(AppLayout.Height.IconButton.md),
                 contentAlignment = Alignment.CenterEnd,
             ) {
-                IconCircleButton(onClick = onDismiss, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(onClick = { leave(toHome = true) }, variant = IconButtonVariant.SOLID) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "작업 잠시 멈추기",
@@ -196,6 +200,14 @@ fun CustomFrameEditorScreen(
         }
 
         HorizontalDivider(thickness = 1.dp, color = AppColors.Border.subtle)
+        if (saveError != null) {
+            Text(
+                text = saveError,
+                color = AppColors.Semantic.error,
+                style = AppTypography.caption1,
+                modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal, vertical = AppSpacing.xs),
+            )
+        }
 
         BoxWithConstraints(
             modifier = Modifier
@@ -227,8 +239,7 @@ fun CustomFrameEditorScreen(
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
-                    customFrameDesign = previewDesign,
-                    customDecorations = emptyList(),
+                    customFrameDesign = design,
                     layoutVersion = layoutVersion,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -274,11 +285,10 @@ fun CustomFrameEditorScreen(
                         },
                 )
 
-                decorations.forEach { dec ->
-                    val handle = 52.dp
+                decorations.firstOrNull { it.id == selectedId }?.let { dec ->
+                    val handle = 28.dp
                     Box(
                         modifier = Modifier
-                            .zIndex(if (dec.id == selectedId) 2f else 1f)
                             .align(Alignment.TopStart)
                             .offset(
                                 x = with(density) { (ox + dec.position.x * sw).toDp() } - handle,
@@ -286,17 +296,8 @@ fun CustomFrameEditorScreen(
                             )
                             .size(handle * 2)
                             .clearAndSetSemantics {}
-                            .graphicsLayer {
-                                transformOrigin = TransformOrigin.Center
-                                rotationZ = Math.toDegrees(dec.rotationRadians.toDouble()).toFloat()
-                                scaleX = dec.scale
-                                scaleY = dec.scale
-                            }
-                            ,
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        DecorationPreviewContent(decoration = dec, context = context)
-                    }
+                            .border(1.dp, AppColors.Accent.pink, CircleShape),
+                    )
                 }
             }
         }
@@ -583,7 +584,12 @@ fun CustomFrameEditorScreen(
             Spacer(Modifier.height(AppSpacing.lg))
             PrimaryButton(
                 text = "이 프레임으로 계속",
-                onClick = { onCompleted(design) },
+                onClick = {
+                    if (!leaving) {
+                        leaving = true
+                        onCompleted(design) { leaving = false }
+                    }
+                },
                 fullWidth = true,
             )
             Spacer(Modifier.height(AppSpacing.Layout.ctaBottomSpace))
@@ -801,41 +807,6 @@ private fun BackgroundColorChip(
             Box(Modifier.fillMaxSize().background(brush))
         } else {
             Box(Modifier.fillMaxSize().background(frameColor.color))
-        }
-    }
-}
-
-@Composable
-private fun DecorationPreviewContent(
-    decoration: CustomFrameDecoration,
-    context: android.content.Context,
-) {
-    when (val k = decoration.kind) {
-        is CustomFrameDecoration.Kind.Text -> {
-            Text(
-                text = k.content,
-                style = AppTypography.title3.copy(
-                    fontFamily = AppFontCatalog.fontFamily(context, decoration.fontName),
-                    color = Color(0xFF000000L or (k.textColorARGB and 0xFFFFFFL)),
-                ),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.Center,
-            )
-        }
-        is CustomFrameDecoration.Kind.Emoji -> {
-            Text(text = k.content, fontSize = 28.sp)
-        }
-        is CustomFrameDecoration.Kind.Sticker -> {
-            val p = StickerPalette.fromAssetId(k.assetId)
-            if (p != null) {
-                Icon(
-                    imageVector = p.icon,
-                    contentDescription = p.displayName,
-                    tint = Color(0xFF000000L or (k.colorRGB and 0xFFFFFFL)),
-                    modifier = Modifier.size(32.dp),
-                )
-            }
         }
     }
 }

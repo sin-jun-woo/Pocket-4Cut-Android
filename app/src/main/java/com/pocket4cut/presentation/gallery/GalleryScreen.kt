@@ -10,6 +10,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -20,9 +22,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +38,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.pocket4cut.data.local.ResultPublicationIssue
+import com.pocket4cut.data.local.ResultPublicationIssueKind
 import com.pocket4cut.domain.model.SessionStage
 import com.pocket4cut.ui.designsystem.*
 import com.pocket4cut.ui.designsystem.components.*
@@ -64,9 +70,15 @@ fun GalleryScreen(
     var longPressedItemId by remember { mutableStateOf<String?>(null) }
     var deleteTarget by remember { mutableStateOf<GalleryItem?>(null) }
     var discardTarget by remember { mutableStateOf<GalleryDraftItem?>(null) }
+    var quarantineTarget by remember { mutableStateOf<ResultPublicationIssue?>(null) }
+    var hideUnreadableTarget by remember { mutableStateOf<String?>(null) }
+    var showHiddenRecords by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) { viewModel.load() }
     LaunchedEffect(viewMode) { longPressedItemId = null }
+    LaunchedEffect(uiState.hiddenSessionIds.size) {
+        if (uiState.hiddenSessionIds.isEmpty()) showHiddenRecords = false
+    }
 
     Box(
         modifier = modifier
@@ -136,14 +148,26 @@ fun GalleryScreen(
                 }
 
                 section == GallerySection.DRAFTS -> {
-                    DraftContent(
-                        drafts = uiState.drafts,
-                        onResume = { item ->
-                            if (item.stage == SessionStage.NEEDS_RECOVERY) viewModel.reportRecoveryRequired()
-                            else onResumeDraft(item.sessionId, item.stage)
-                        },
-                        onDiscard = { discardTarget = it },
-                    )
+                    Column(Modifier.fillMaxSize()) {
+                        if (uiState.hiddenSessionIds.isNotEmpty()) {
+                            SecondaryButton(
+                                text = "숨긴 손상 기록 ${uiState.hiddenSessionIds.size}개 관리",
+                                onClick = { showHiddenRecords = true },
+                                modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal)
+                                    .padding(bottom = AppSpacing.sm),
+                                fullWidth = true,
+                            )
+                        }
+                        DraftContent(
+                            drafts = uiState.drafts,
+                            onResume = { item ->
+                                if (item.stage == SessionStage.NEEDS_RECOVERY) viewModel.inspectRecovery(item.sessionId)
+                                else onResumeDraft(item.sessionId, item.stage)
+                            },
+                            onDiscard = { discardTarget = it },
+                            modifier = Modifier.weight(1f),
+                        )
+                    }
                 }
 
                 uiState.items.isEmpty() -> {
@@ -229,7 +253,138 @@ fun GalleryScreen(
             },
             onCancel = { deleteTarget = null; discardTarget = null },
         )
+
+        if (uiState.recovery != null && quarantineTarget == null && hideUnreadableTarget == null) {
+            val recovery = uiState.recovery!!
+            AlertDialog(
+                onDismissRequest = viewModel::dismissRecovery,
+                title = { Text("작업 복구") },
+                text = {
+                    Column(
+                        modifier = Modifier.heightIn(max = 360.dp).verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+                    ) {
+                        when {
+                            recovery.isLoading -> CircularProgressIndicator(color = AppColors.Accent.pink)
+                            recovery.documentNeedsRecovery -> {
+                                Text(recovery.message.orEmpty(), style = AppTypography.body)
+                                SecondaryButton(
+                                    text = "이전 정상본 복구 시도",
+                                    onClick = { viewModel.recoverDocument(recovery.sessionId) },
+                                    fullWidth = true,
+                                )
+                                if (recovery.canHideUnreadable) {
+                                    SecondaryButton(
+                                        text = "손상 기록 목록에서 숨기기",
+                                        onClick = { hideUnreadableTarget = recovery.sessionId },
+                                        fullWidth = true,
+                                    )
+                                }
+                            }
+                            recovery.publicationIssues.isEmpty() -> {
+                                Text(recovery.message.orEmpty(), style = AppTypography.body)
+                                if (recovery.canHideUnreadable) {
+                                    SecondaryButton(
+                                        text = "손상 기록 목록에서 숨기기",
+                                        onClick = { hideUnreadableTarget = recovery.sessionId },
+                                        fullWidth = true,
+                                    )
+                                }
+                            }
+                            else -> {
+                                Text(
+                                    "완료된 결과와 촬영 원본은 보존되어 있습니다. 아래 미완료 결과 후보만 격리하면 작업을 다시 열 수 있습니다.",
+                                    style = AppTypography.body,
+                                )
+                                recovery.publicationIssues.forEach { issue ->
+                                    SecondaryButton(
+                                        text = "${publicationIssueLabel(issue.kind)} · 결과 ${issue.resultId.take(8)} 격리",
+                                        onClick = { quarantineTarget = issue },
+                                        fullWidth = true,
+                                    )
+                                }
+                                recovery.message?.let { message ->
+                                    Text(message, color = AppColors.Semantic.error, style = AppTypography.caption1)
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = viewModel::dismissRecovery) { Text("닫기") }
+                },
+            )
+        }
+
+        val candidate = quarantineTarget
+        ConfirmDialog(
+            visible = candidate != null,
+            title = "미완료 결과를 격리할까요?",
+            message = "이 결과 후보의 게시 기록과 남아 있는 JPEG를 앱 전용 격리 위치로 옮깁니다. 촬영 원본, 이미 완성한 결과, 사진첩 사본은 유지됩니다. 세션 전체를 삭제하면 격리 자료도 정리됩니다.",
+            confirmText = "격리하고 복구",
+            cancelText = "취소",
+            isDestructive = false,
+            onConfirm = {
+                candidate?.let { issue ->
+                    uiState.recovery?.sessionId?.let { sessionId ->
+                        viewModel.quarantinePublication(sessionId, issue.resultId)
+                    }
+                }
+                quarantineTarget = null
+            },
+            onCancel = { quarantineTarget = null },
+        )
+
+        ConfirmDialog(
+            visible = hideUnreadableTarget != null,
+            title = "손상 기록을 목록에서 숨길까요?",
+            message = "읽을 수 없는 세션 기록과 촬영 원본·완료본은 삭제하지 않고 그대로 보존합니다. 이 기록은 앱 목록에서 보이지 않게 됩니다. 소유권을 확인할 수 없어 다른 세션의 앱 내부 파일 삭제도 안전을 위해 차단됩니다.",
+            confirmText = "기록 숨기기",
+            cancelText = "취소",
+            isDestructive = false,
+            onConfirm = {
+                hideUnreadableTarget?.let(viewModel::hideUnreadableSession)
+                hideUnreadableTarget = null
+            },
+            onCancel = { hideUnreadableTarget = null },
+        )
+
+        if (showHiddenRecords && uiState.hiddenSessionIds.isNotEmpty()) {
+            AlertDialog(
+                onDismissRequest = { showHiddenRecords = false },
+                title = { Text("숨긴 손상 기록") },
+                text = {
+                    Column(
+                        modifier = Modifier.heightIn(max = 360.dp).verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+                    ) {
+                        Text(
+                            "기록을 다시 표시하면 복구 필요 카드가 돌아옵니다. 이 동작은 JSON·사진 파일을 바꾸지 않습니다. 숨긴 기록이 있는 동안 다른 세션 파일 삭제는 보호를 위해 차단됩니다.",
+                            style = AppTypography.body,
+                        )
+                        uiState.hiddenSessionIds.forEach { id ->
+                            SecondaryButton(
+                                text = "기록 ${id.take(8)} 다시 표시",
+                                onClick = { viewModel.unhideSession(id); showHiddenRecords = false },
+                                fullWidth = true,
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showHiddenRecords = false }) { Text("닫기") }
+                },
+            )
+        }
     }
+}
+
+private fun publicationIssueLabel(kind: ResultPublicationIssueKind): String = when (kind) {
+    ResultPublicationIssueKind.MISSING_JPEG -> "완료되지 않은 이미지"
+    ResultPublicationIssueKind.INVALID_JPEG -> "손상된 이미지"
+    ResultPublicationIssueKind.INVALID_JOURNAL -> "손상된 게시 기록"
+    ResultPublicationIssueKind.CONFLICT -> "서로 다른 결과 기록"
+    ResultPublicationIssueKind.QUARANTINE_INCOMPLETE -> "격리 재시도 필요"
 }
 
 /* ── Header ── */
@@ -514,9 +669,10 @@ private fun DraftContent(
     drafts: List<GalleryDraftItem>,
     onResume: (GalleryDraftItem) -> Unit,
     onDiscard: (GalleryDraftItem) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     if (drafts.isEmpty()) {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("진행 중인 작업이 없어요", style = AppTypography.body,
                 color = AppColors.Text.secondary)
         }
@@ -524,7 +680,7 @@ private fun DraftContent(
     }
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = Modifier.fillMaxSize().padding(horizontal = AppSpacing.Screen.horizontal),
+        modifier = modifier.fillMaxSize().padding(horizontal = AppSpacing.Screen.horizontal),
         horizontalArrangement = Arrangement.spacedBy(AppSpacing.Component.cardGap),
         verticalArrangement = Arrangement.spacedBy(AppSpacing.Component.cardGap),
         contentPadding = PaddingValues(bottom = AppSpacing.xxxl),

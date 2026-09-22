@@ -107,6 +107,78 @@ class SessionDocumentRepositoryInstrumentedTest {
             .any { it.name.startsWith("$id.corrupt.") })
     }
 
+    @Test fun galleryScanExposesUnreadableSessionWithoutHidingHealthySessions() = runBlocking {
+        val healthyId = UUID.randomUUID().toString()
+        val damagedId = UUID.randomUUID().toString()
+        val healthyPhoto = captureFile(healthyId, "cap_00.jpg")
+        val healthyBytes = healthyPhoto.readBytes()
+        val healthy = repository.create(SessionDocument(
+            sessionId = healthyId, createdAt = 1_700_000_000_000L,
+            captureCount = 4, selectedCount = 2,
+        ))
+        repository.appendCapture(healthyId, healthy.revision,
+            PhotoRef(UUID.randomUUID().toString(), "captures/$healthyId/cap_00.jpg", 0))
+        val damaged = repository.create(SessionDocument(
+            sessionId = damagedId, createdAt = 1_700_000_000_001L,
+            captureCount = 4, selectedCount = 2,
+        ))
+        repository.update(damagedId, damaged.revision) { it.copy(draft = it.draft.copy(caption = "latest")) }
+        val directory = File(context.filesDir, "session_documents")
+        File(directory, "$damagedId.json").writeText("{damaged")
+        File(directory, "$damagedId.json.lastgood").writeText("{also damaged")
+
+        val scan = SessionDocumentRepository(context).scanForGallery()
+        assertEquals(listOf(healthyId), scan.documents.map { it.sessionId })
+        assertEquals(listOf(damagedId), scan.unreadableSessionIds)
+        assertTrue(File(directory, "$damagedId.json").exists())
+        assertTrue(File(directory, "$damagedId.json.lastgood").exists())
+
+        val damagedBytes = File(directory, "$damagedId.json").readBytes()
+        repository.hideUnreadableSession(damagedId)
+        val afterHide = SessionDocumentRepository(context)
+        assertEquals(listOf(healthyId), afterHide.list().map { it.sessionId })
+        assertTrue(afterHide.scanForGallery().unreadableSessionIds.isEmpty())
+        assertEquals(null, afterHide.getById(damagedId))
+        assertEquals(damagedBytes.toList(), File(directory, "$damagedId.json").readBytes().toList())
+        assertEquals(healthyBytes.toList(), healthyPhoto.readBytes().toList())
+        try {
+            afterHide.requestDelete(healthyId)
+            throw AssertionError("Deletion proceeded while an unreadable record may reference the photo")
+        } catch (_: SessionStorageException) { }
+        assertEquals(healthyBytes.toList(), healthyPhoto.readBytes().toList())
+
+        assertEquals(listOf(damagedId), afterHide.listHiddenSessionIds())
+        afterHide.unhideSession(damagedId)
+        assertTrue(afterHide.listHiddenSessionIds().isEmpty())
+        assertEquals(listOf(damagedId), afterHide.scanForGallery().unreadableSessionIds)
+        assertEquals(damagedBytes.toList(), File(directory, "$damagedId.json").readBytes().toList())
+    }
+
+    @Test fun deletingSessionClearsOnlyKnownPendingResultFile() = runBlocking {
+        val id = UUID.randomUUID().toString()
+        val otherId = UUID.randomUUID().toString()
+        val resultId = UUID.randomUUID().toString()
+        val created = repository.create(SessionDocument(
+            sessionId = id, createdAt = 1_700_000_000_000L,
+            captureCount = 4, selectedCount = 2,
+        ))
+        repository.prepareResultPublication(id, created.revision,
+            ResultRecord(resultId, created.revision, "results/${id}_${resultId}.jpg", 8, 8, 1L))
+        val resultRoot = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "Pocket4Cut/results").apply { mkdirs() }
+        val ownPending = File(resultRoot, ".${id}_${resultId}.tmp").apply {
+            writeBytes(byteArrayOf(0x12, 0x34))
+        }
+        val otherPending = File(resultRoot, ".${otherId}_${resultId}.tmp").apply {
+            writeBytes(byteArrayOf(0x56, 0x78))
+        }
+
+        repository.requestDelete(id)
+        assertFalse(ownPending.exists())
+        assertTrue(otherPending.exists())
+        assertEquals(null, repository.getById(id))
+    }
+
     @Test fun deletingSessionRemovesOnlyItsRecoveryArtifacts() = runBlocking {
         val id = UUID.randomUUID().toString()
         val otherId = UUID.randomUUID().toString()
@@ -171,6 +243,28 @@ class SessionDocumentRepositoryInstrumentedTest {
         assertTrue(repository.migrateLegacy().isEmpty())
         assertEquals(null, repository.getById(id))
         assertFalse(repository.list().any { it.sessionId == id })
+    }
+
+    @Test fun deletionResumesFromDurableTombstoneAfterProcessRestart() = runBlocking {
+        val id = UUID.randomUUID().toString()
+        val photo = captureFile(id, "cap_00.jpg")
+        val repositoryBeforeRestart = SessionDocumentRepository(context)
+        val created = repositoryBeforeRestart.create(SessionDocument(
+            sessionId = id, createdAt = 1_700_000_000_000L,
+            captureCount = 4, selectedCount = 2,
+        ))
+        repositoryBeforeRestart.appendCapture(id, created.revision,
+            PhotoRef(UUID.randomUUID().toString(), "captures/$id/cap_00.jpg", 0))
+
+        // Fault injection: process death after a delete intent, before any owned file is removed.
+        val tombstone = File(context.filesDir, "session_documents/tombstones/$id.deleted")
+        tombstone.parentFile!!.mkdirs()
+        tombstone.writeText(id)
+        val restarted = SessionDocumentRepository(context)
+        assertFalse(restarted.list().any { it.sessionId == id })
+        assertFalse(photo.exists())
+        assertEquals(null, restarted.getById(id))
+        assertFalse(SessionDocumentRepository(context).list().any { it.sessionId == id })
     }
 
     @Test fun deletionPreservesFileReferencedByAnotherSessionAcrossPathFormats() = runBlocking {

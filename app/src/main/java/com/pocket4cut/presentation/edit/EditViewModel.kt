@@ -61,6 +61,7 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     private val storage = FileImageStorage(app.applicationContext)
     private val sessions = SessionDocumentRepository(app.applicationContext)
     private var persistJob: Job? = null
+    private var navigationInFlight = false
     private val persistMutex = Mutex()
     private var basePhotoIds: List<String> = emptyList()
 
@@ -266,26 +267,38 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun leave(onSaved: () -> Unit) {
+        if (navigationInFlight) return
+        navigationInFlight = true
         viewModelScope.launch {
             try {
                 persistJob?.cancelAndJoin()
                 persistSnapshot(_uiState.value, SessionStage.EDIT)
                 onSaved()
+            } catch (cause: kotlinx.coroutines.CancellationException) {
+                throw cause
             } catch (cause: Exception) {
                 _uiState.update { it.copy(errorMessage = cause.message ?: "편집 내용을 저장하지 못했습니다.") }
+            } finally {
+                navigationInFlight = false
             }
         }
     }
 
     fun persistPendingForDetailEdit(sessionId: String, onSaved: () -> Unit) {
+        if (navigationInFlight) return
+        navigationInFlight = true
         val s = _uiState.value
         viewModelScope.launch {
             try {
                 persistJob?.cancelAndJoin()
                 persistSnapshot(s, SessionStage.DETAIL)
                 onSaved()
+            } catch (cause: kotlinx.coroutines.CancellationException) {
+                throw cause
             } catch (cause: Exception) {
                 _uiState.update { it.copy(errorMessage = cause.message ?: "편집 내용을 저장하지 못했습니다.") }
+            } finally {
+                navigationInFlight = false
             }
         }
     }

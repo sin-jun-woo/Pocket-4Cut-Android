@@ -7,6 +7,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import android.view.ScaleGestureDetector
+import android.view.MotionEvent
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
@@ -75,6 +77,10 @@ fun CaptureScreen(
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsState()
+    BackHandler {
+        viewModel.pause()
+        onBack()
+    }
     var completedNavigationId by rememberSaveable { mutableStateOf<String?>(null) }
     var hasPermission by remember {
         mutableStateOf(
@@ -86,7 +92,10 @@ fun CaptureScreen(
     ) { hasPermission = it }
 
     val previewView = remember {
-        PreviewView(context).apply { scaleType = PreviewView.ScaleType.FILL_CENTER }
+        PreviewView(context).apply {
+            scaleType = PreviewView.ScaleType.FILL_CENTER
+            contentDescription = "카메라 미리보기"
+        }
     }
 
     LaunchedEffect(hasPermission) {
@@ -132,20 +141,26 @@ fun CaptureScreen(
 
     LaunchedEffect(hasPermission, previewView) {
         if (!hasPermission) return@LaunchedEffect
+        var scaled = false
         val detector = ScaleGestureDetector(
             context,
             object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
                 private var baseZoom = 1f
                 private var spanAccum = 1f
                 override fun onScaleBegin(d: ScaleGestureDetector): Boolean {
-                    baseZoom = viewModel.uiState.value.zoomRatio; spanAccum = 1f; return true
+                    baseZoom = viewModel.uiState.value.zoomRatio; spanAccum = 1f; scaled = true; return true
                 }
                 override fun onScale(d: ScaleGestureDetector): Boolean {
                     spanAccum *= d.scaleFactor; viewModel.setZoomRatio(baseZoom * spanAccum); return true
                 }
             },
         )
-        previewView.setOnTouchListener { _, event -> detector.onTouchEvent(event); true }
+        previewView.setOnTouchListener { view, event ->
+            if (event.actionMasked == MotionEvent.ACTION_DOWN) scaled = false
+            detector.onTouchEvent(event)
+            if (event.actionMasked == MotionEvent.ACTION_UP && !scaled) view.performClick()
+            true
+        }
     }
 
     LaunchedEffect(uiState.phase, uiState.sessionId) {
@@ -372,7 +387,14 @@ fun CaptureScreen(
 
                 // Shutter button (ready / idle / failed)
                 if (canControl) {
-                    if (uiState.sessionId != null) {
+                    if (uiState.recoveryBlocked) {
+                        PrimaryButton(text = "홈으로 돌아가기", onClick = onBack)
+                    } else if (uiState.damagedCaptureIndex != null) {
+                        PrimaryButton(
+                            text = "손상 파일 격리 후 다시 촬영",
+                            onClick = viewModel::quarantineDamagedCaptureAndResume,
+                        )
+                    } else if (uiState.sessionId != null) {
                         PrimaryButton(text = "이어서 촬영", onClick = viewModel::resume)
                     } else if (uiState.phase == CapturePhase.FAILED) {
                         PrimaryButton(

@@ -1,6 +1,7 @@
 package com.pocket4cut.presentation.detailEdit
 
 import android.graphics.Bitmap
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -158,6 +159,23 @@ fun DetailEditScreen(
     val uiState by viewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    var leaving by remember { mutableStateOf(false) }
+    fun requestLeave() {
+        if (leaving) return
+        leaving = true
+        scope.launch {
+            try {
+                viewModel.leave(onBack)
+            } catch (cause: kotlinx.coroutines.CancellationException) {
+                throw cause
+            } catch (cause: Exception) {
+                errorMessage = cause.message ?: "보정값을 저장하지 못했습니다."
+            } finally {
+                leaving = false
+            }
+        }
+    }
+    BackHandler { requestLeave() }
 
     val dateString = dateText
     val overlayText = remember(customText, showDate, dateString) {
@@ -191,12 +209,7 @@ fun DetailEditScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                IconCircleButton(onClick = {
-                    scope.launch {
-                        runCatching { viewModel.leave(onBack) }
-                            .onFailure { errorMessage = it.message ?: "보정값을 저장하지 못했습니다." }
-                    }
-                }, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(onClick = ::requestLeave, variant = IconButtonVariant.SOLID) {
                     Icon(Icons.Default.Close, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
                 }
                 Text("상세 편집", style = AppTypography.title2, color = AppColors.Text.primary)

@@ -40,6 +40,18 @@ class UnsupportedSessionVersionException(val version: Int) :
     SessionStoreException("Unsupported session format version $version")
 class SessionStorageException(message: String, cause: Throwable? = null) : SessionStoreException(message, cause)
 
+enum class ResultPublicationIssueKind {
+    MISSING_JPEG, INVALID_JPEG, INVALID_JOURNAL, CONFLICT, QUARANTINE_INCOMPLETE,
+}
+
+data class ResultPublicationIssue(val resultId: String, val kind: ResultPublicationIssueKind)
+
+/** Gallery can show damaged documents individually while the strict list() API still fails. */
+data class SessionScan(
+    val documents: List<SessionDocument>,
+    val unreadableSessionIds: List<String>,
+)
+
 /**
  * One document per session. All instances share the same process lock; AtomicFile protects an
  * interrupted write, while a validated last-good copy protects against syntactically bad data.
@@ -47,7 +59,10 @@ class SessionStorageException(message: String, cause: Throwable? = null) : Sessi
 class SessionDocumentRepository(private val context: Context) {
     private val documentsDir = File(context.filesDir, "session_documents")
     private val tombstonesDir = File(documentsDir, "tombstones")
+    private val hiddenDir = File(documentsDir, "hidden")
     private val resultPublicationsDir = File(context.filesDir, "result_publications")
+    private val quarantineIntentsDir = File(context.filesDir, "result_quarantine_intents")
+    private val quarantinedPublicationsDir = File(context.filesDir, "result_publication_quarantine")
     private val picturesRoot = File(
         context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
             ?: throw SessionStorageException("App-owned picture storage is unavailable"),
@@ -57,7 +72,8 @@ class SessionDocumentRepository(private val context: Context) {
     suspend fun create(document: SessionDocument): SessionDocument = ioLocked {
         validate(document)
         if (document.revision != 0L) throw SessionStorageException("New session revision must be zero")
-        if (atomicExists(documentFile(document.sessionId)) || tombstoneFile(document.sessionId).exists()) {
+        if (atomicExists(documentFile(document.sessionId)) || tombstoneFile(document.sessionId).exists() ||
+            atomicExists(hiddenFile(document.sessionId))) {
             throw SessionConflictException(document.sessionId)
         }
         val dated = if (document.draft.dateText.isBlank()) {
@@ -70,6 +86,10 @@ class SessionDocumentRepository(private val context: Context) {
 
     suspend fun getById(id: String): SessionDocument? = ioLocked {
         validateId(id)
+        if (atomicExists(hiddenFile(id))) {
+            emit(null, id)
+            return@ioLocked null
+        }
         if (!atomicExists(documentFile(id)) && !tombstoneFile(id).exists()) migrateLegacyLocked()
         val publicationNeedsRecovery = !tombstoneFile(id).exists() && replayResultPublicationsLocked(id)
         readDocumentLocked(id)?.takeIf {
@@ -96,6 +116,74 @@ class SessionDocumentRepository(private val context: Context) {
             .map { if (it.sessionId in publicationRecoveryIds) it.copy(stage = SessionStage.NEEDS_RECOVERY) else it }
             .sortedByDescending { it.updatedAt }
     }
+
+    suspend fun scanForGallery(): SessionScan = ioLocked {
+        migrateLegacyLocked()
+        val ids = documentsDir.listFiles().orEmpty()
+            .filter { it.isFile && (it.name.endsWith(".json") || it.name.endsWith(".json.bak")) }
+            .map { it.name.removeSuffix(".bak").removeSuffix(".json") }
+            .distinct()
+        val documents = mutableListOf<SessionDocument>()
+        val unreadable = mutableListOf<String>()
+        ids.forEach { id ->
+            if (atomicExists(hiddenFile(id))) return@forEach
+            val first = try { readDocumentLocked(id) }
+            catch (_: SessionStoreException) {
+                unreadable += id
+                null
+            } ?: return@forEach
+            if (first.stage == SessionStage.DELETED || tombstoneFile(id).exists()) {
+                finishDeleteLocked(first)
+                return@forEach
+            }
+            val visible = try {
+                val publicationNeedsRecovery = replayResultPublicationsLocked(id)
+                readDocumentLocked(id)?.let { current ->
+                    if (publicationNeedsRecovery) current.copy(stage = SessionStage.NEEDS_RECOVERY)
+                    else current
+                }
+            } catch (_: SessionStoreException) {
+                unreadable += id
+                null
+            }
+            if (visible != null) documents += visible
+        }
+        SessionScan(documents.sortedByDescending { it.updatedAt }, unreadable)
+    }
+
+    /** Hide an unreadable record while retaining its JSON, photos, results and export history. */
+    suspend fun hideUnreadableSession(id: String) = ioLocked {
+        validateId(id)
+        if (atomicExists(hiddenFile(id))) return@ioLocked
+        if (tombstoneFile(id).exists()) throw SessionStorageException("Session deletion is in progress")
+        if (!atomicExists(documentFile(id))) throw SessionMissingException(id)
+        val readable = try { readDocumentLocked(id); true }
+        catch (_: SessionStoreException) { false }
+        if (readable) throw SessionStorageException("Readable sessions cannot be hidden as damaged")
+        writeAtomic(hiddenFile(id), id.toByteArray(StandardCharsets.UTF_8))
+        emit(null, id)
+    }
+
+    suspend fun listHiddenSessionIds(): List<String> = ioLocked { hiddenSessionIdsLocked() }
+
+    /** Restores visibility only; no session JSON or photo is rewritten. */
+    suspend fun unhideSession(id: String) = ioLocked {
+        validateId(id)
+        val marker = hiddenFile(id)
+        if (!atomicExists(marker)) throw SessionMissingException(id)
+        if (!atomicExists(documentFile(id))) throw SessionStorageException("Preserved session document is missing")
+        listOf(File(marker.path + ".new"), marker, File(marker.path + ".bak")).forEach { part ->
+            if (part.exists() && !part.delete()) throw SessionStorageException("Could not restore hidden session")
+        }
+        emit(null, id)
+    }
+
+    private fun hiddenSessionIdsLocked(): List<String> = hiddenDir.listFiles().orEmpty()
+        .filter { it.isFile && (it.name.endsWith(".hidden") || it.name.endsWith(".hidden.bak")) }
+        .map { it.name.removeSuffix(".bak").removeSuffix(".hidden") }
+        .filter { it.matches(Regex("[A-Za-z0-9_-]{1,100}")) }
+        .distinct()
+        .sorted()
 
     fun observe(id: String): Flow<SessionDocument?> {
         validateId(id)
@@ -182,16 +270,151 @@ class SessionDocumentRepository(private val context: Context) {
             ?: throw SessionStorageException("Result JPEG has not been published")
     }
 
+    /** Lists unresolved result publications without treating a damaged session document as repairable. */
+    suspend fun listResultPublicationIssues(id: String): List<ResultPublicationIssue> = ioLocked {
+        validateId(id)
+        val current = readDocumentLocked(id) ?: throw SessionMissingException(id)
+        if (current.stage == SessionStage.NEEDS_RECOVERY || tombstoneFile(id).exists()) {
+            throw SessionCorruptException(id)
+        }
+        replayResultPublicationsLocked(id)
+        val unfinished = quarantineIntentIdsLocked(id).toSet()
+        (publicationIdsLocked(id) + unfinished).distinct().map { resultId ->
+            ResultPublicationIssue(resultId, if (resultId in unfinished) {
+                ResultPublicationIssueKind.QUARANTINE_INCOMPLETE
+            } else publicationIssueKindLocked(id, resultId))
+        }
+    }
+
+    /**
+     * Explicitly abandons only an unpublished result candidate. Its journal and JPEG are moved to
+     * app-owned quarantine, not erased. A durable intent lets the next read finish an interrupted
+     * move. Existing results and captured originals are never moved.
+     */
+    suspend fun quarantineResultPublication(id: String, resultId: String): SessionDocument = ioLocked {
+        validateId(id)
+        validateId(resultId)
+        val current = readDocumentLocked(id) ?: throw SessionMissingException(id)
+        if (current.stage == SessionStage.NEEDS_RECOVERY || tombstoneFile(id).exists()) {
+            throw SessionCorruptException(id)
+        }
+        if (resultId !in publicationIdsLocked(id) && !atomicExists(quarantineIntentFile(id, resultId))) {
+            throw SessionStorageException("Result publication issue is missing")
+        }
+        if (!atomicExists(quarantineIntentFile(id, resultId))) {
+            val issue = publicationIssueKindLocked(id, resultId)
+            if (current.results.any { it.resultId == resultId } && issue != ResultPublicationIssueKind.CONFLICT) {
+                throw SessionStorageException("A completed result cannot be quarantined")
+            }
+            writeAtomic(quarantineIntentFile(id, resultId), resultId.toByteArray(StandardCharsets.UTF_8))
+        }
+        finishQuarantineLocked(id, resultId)
+        val remaining = replayResultPublicationsLocked(id)
+        val restored = readDocumentLocked(id) ?: throw SessionMissingException(id)
+        val visible = if (remaining) restored.copy(stage = SessionStage.NEEDS_RECOVERY) else restored
+        emit(visible)
+        visible
+    }
+
     private fun replayResultPublicationsLocked(id: String): Boolean {
         val current = readDocumentLocked(id) ?: return false
         if (current.stage == SessionStage.DELETED || current.stage == SessionStage.NEEDS_RECOVERY ||
             tombstoneFile(id).exists()) return false
         var needsRecovery = false
+        quarantineIntentIdsLocked(id).forEach { resultId ->
+            try { finishQuarantineLocked(id, resultId) }
+            catch (_: SessionStoreException) { needsRecovery = true }
+        }
+        val unfinishedQuarantines = quarantineIntentIdsLocked(id).toSet()
         publicationIdsLocked(id).forEach { resultId ->
-            try { completeResultPublicationLocked(id, resultId, requireFile = false) }
+            if (resultId in unfinishedQuarantines) {
+                needsRecovery = true
+                return@forEach
+            }
+            try {
+                if (completeResultPublicationLocked(id, resultId, requireFile = false) == null) {
+                    needsRecovery = true
+                }
+            }
             catch (_: SessionStoreException) { needsRecovery = true }
         }
         return needsRecovery
+    }
+
+    private fun publicationIssueKindLocked(id: String, resultId: String): ResultPublicationIssueKind {
+        val record = try { readPublicationLocked(id, resultId) }
+        catch (_: SessionStoreException) { return ResultPublicationIssueKind.INVALID_JOURNAL }
+            ?: return ResultPublicationIssueKind.INVALID_JOURNAL
+        val current = readDocumentLocked(id) ?: throw SessionMissingException(id)
+        if (current.results.any { it.resultId == resultId && it != record } ||
+            current.photos.any { resolvePhotoPath(it).canonicalFile == resolveResultPath(record).canonicalFile } ||
+            current.results.any { it.resultId != resultId &&
+                resolveResultPath(it).canonicalFile == resolveResultPath(record).canonicalFile }
+        ) return ResultPublicationIssueKind.CONFLICT
+        val file = resolveResultPath(record)
+        return when {
+            !file.isFile -> ResultPublicationIssueKind.MISSING_JPEG
+            !resultJpegMatchesRecord(file, record) -> ResultPublicationIssueKind.INVALID_JPEG
+            else -> ResultPublicationIssueKind.CONFLICT // A valid file should have replayed already.
+        }
+    }
+
+    private fun quarantineIntentFile(id: String, resultId: String): File =
+        File(File(quarantineIntentsDir, id), "$resultId.json")
+
+    private fun quarantineIntentIdsLocked(id: String): List<String> = File(quarantineIntentsDir, id)
+        .listFiles().orEmpty()
+        .filter { it.isFile && (it.name.endsWith(".json") || it.name.endsWith(".json.bak")) }
+        .map { it.name.removeSuffix(".bak").removeSuffix(".json") }
+        .distinct()
+
+    private fun finishQuarantineLocked(id: String, resultId: String) {
+        validateId(id)
+        validateId(resultId)
+        val intent = quarantineIntentFile(id, resultId)
+        if (!atomicExists(intent)) return
+        val current = readDocumentLocked(id) ?: throw SessionMissingException(id)
+        val candidate = File(picturesRoot, "results/${id}_${resultId}.jpg")
+        val isCompleted = current.results.any { result ->
+            result.resultId == resultId || resolveResultPath(result).canonicalFile == candidate.canonicalFile
+        }
+        if (!isCompleted) {
+            moveToQuarantineLocked(candidate,
+                File(picturesRoot, "recovery_quarantine/$id/$resultId.jpg"))
+        }
+        val resultRoot = File(picturesRoot, "results").canonicalFile
+        val pendingJpeg = File(resultRoot, ".${id}_${resultId}.tmp")
+        if (pendingJpeg.exists()) {
+            if (pendingJpeg.canonicalFile.parentFile != resultRoot) {
+                throw SessionStorageException("Unsafe pending result path")
+            }
+            moveToQuarantineLocked(pendingJpeg,
+                File(picturesRoot, "recovery_quarantine/$id/$resultId.tmp"))
+        }
+        val sourceJournal = publicationFile(id, resultId)
+        val targetJournal = File(File(quarantinedPublicationsDir, id), resultId)
+        listOf("", ".bak", ".new").forEach { suffix ->
+            moveToQuarantineLocked(File(sourceJournal.path + suffix),
+                File(targetJournal, "publication.json$suffix"))
+        }
+        val journalDirectory = publicationDirectory(id)
+        if (journalDirectory.listFiles().isNullOrEmpty()) journalDirectory.delete()
+        listOf(".new", ".bak", "").forEach { suffix ->
+            val part = File(intent.path + suffix)
+            if (part.exists() && !part.delete()) {
+                throw SessionStorageException("Could not finish result quarantine")
+            }
+        }
+        intent.parentFile?.let { if (it.listFiles().isNullOrEmpty()) it.delete() }
+    }
+
+    private fun moveToQuarantineLocked(source: File, destination: File) {
+        if (!source.exists()) return
+        if (destination.exists()) throw SessionStorageException("Result quarantine target already exists")
+        if (destination.parentFile?.mkdirs() == false && destination.parentFile?.isDirectory != true) {
+            throw SessionStorageException("Could not create result quarantine directory")
+        }
+        if (!source.renameTo(destination)) throw SessionStorageException("Could not quarantine result artifact")
     }
 
     private fun completeResultPublicationLocked(
@@ -217,7 +440,7 @@ class SessionDocumentRepository(private val context: Context) {
             if (requireFile) throw SessionStorageException("Result JPEG has not been published")
             return null
         }
-        if (!isJpeg(file)) throw SessionCorruptException(id)
+        if (!resultJpegMatchesRecord(file, record)) throw SessionCorruptException(id)
         if (current.photos.any { resolvePhotoPath(it).canonicalFile == file.canonicalFile } ||
             current.results.any { resolveResultPath(it).canonicalFile == file.canonicalFile }
         ) throw SessionConflictException(id)
@@ -292,6 +515,9 @@ class SessionDocumentRepository(private val context: Context) {
     /** Public MediaStore copies are deliberately outside this deletion boundary. */
     suspend fun requestDelete(id: String, expectedRevision: Long? = null) = ioLocked {
         validateId(id)
+        if (hiddenSessionIdsLocked().isNotEmpty()) {
+            throw SessionStorageException("Physical deletion is blocked while an unreadable session is preserved")
+        }
         val current = readDocumentLocked(id) ?: throw SessionMissingException(id)
         if (expectedRevision != null && current.revision != expectedRevision) throw SessionConflictException(id)
         if (!tombstoneFile(id).exists()) {
@@ -305,6 +531,9 @@ class SessionDocumentRepository(private val context: Context) {
     }
 
     private fun finishDeleteLocked(current: SessionDocument) {
+        if (hiddenSessionIdsLocked().isNotEmpty()) {
+            throw SessionStorageException("Physical deletion is blocked while an unreadable session is preserved")
+        }
         val id = current.sessionId
         if (!tombstoneFile(id).exists()) {
             writeAtomic(tombstoneFile(id), id.toByteArray(StandardCharsets.UTF_8))
@@ -355,7 +584,20 @@ class SessionDocumentRepository(private val context: Context) {
         )
         pending.forEach { if (it.exists() && !it.delete()) throw SessionStorageException("Could not delete legacy draft") }
         removeLegacyRowLocked(id)
+        val resultsRoot = File(picturesRoot, "results").canonicalFile
+        (current.results.map { it.resultId } + publicationIds).distinct().forEach { resultId ->
+            validateId(resultId)
+            val pendingJpeg = File(resultsRoot, ".${id}_${resultId}.tmp")
+            if (pendingJpeg.exists()) {
+                if (pendingJpeg.canonicalFile.parentFile != resultsRoot || !pendingJpeg.delete()) {
+                    throw SessionStorageException("Could not delete owned pending result")
+                }
+            }
+        }
         publicationIds.forEach { deletePublicationLocked(id, it) }
+        deleteSessionDirectoryLocked(quarantineIntentsDir, id)
+        deleteSessionDirectoryLocked(quarantinedPublicationsDir, id)
+        deleteSessionDirectoryLocked(File(picturesRoot, "recovery_quarantine"), id)
         val documentsCanonical = documentsDir.canonicalFile
         val corruptName = Regex("${Regex.escape(id)}\\.corrupt\\.[0-9]+")
         documentsDir.listFiles().orEmpty().filter { entry -> corruptName.matches(entry.name) }
@@ -374,6 +616,24 @@ class SessionDocumentRepository(private val context: Context) {
             File(file.path + ".bak").let { backup ->
                 if (backup.exists() && !backup.delete()) throw SessionStorageException("Could not delete session backup")
             }
+        }
+    }
+
+    private fun deleteSessionDirectoryLocked(root: File, id: String) {
+        validateId(id)
+        val directory = File(root, id)
+        if (!directory.exists()) return
+        val canonicalRoot = root.canonicalFile
+        val canonicalDirectory = directory.canonicalFile
+        if (canonicalDirectory.parentFile != canonicalRoot) {
+            throw SessionStorageException("Invalid recovery artifact directory")
+        }
+        directory.walkBottomUp().forEach { entry ->
+            val canonical = entry.canonicalFile
+            if (canonical != canonicalDirectory &&
+                !canonical.path.startsWith(canonicalDirectory.path + File.separator)
+            ) throw SessionStorageException("Unsafe recovery artifact path")
+            if (!entry.delete()) throw SessionStorageException("Could not delete recovery artifact")
         }
     }
 
@@ -494,7 +754,8 @@ class SessionDocumentRepository(private val context: Context) {
             catch (cause: Throwable) { throw SessionCorruptException("legacy row $index", cause) }
             validateId(id)
             if (!rowIds.add(id)) throw SessionCorruptException("duplicate legacy session $id")
-            if (tombstoneFile(id).exists() || atomicExists(documentFile(id))) continue
+            if (tombstoneFile(id).exists() || atomicExists(hiddenFile(id)) ||
+                atomicExists(documentFile(id))) continue
             val document = try { migrateLegacyRow(row) }
             catch (cause: Throwable) { throw SessionCorruptException(id, cause) }
             validate(document)
@@ -515,7 +776,8 @@ class SessionDocumentRepository(private val context: Context) {
         }.orEmpty()
         for (id in (captureIds + pendingIds).distinct()) {
             validateId(id)
-            if (id in rowIds || tombstoneFile(id).exists() || atomicExists(documentFile(id))) continue
+            if (id in rowIds || tombstoneFile(id).exists() || atomicExists(hiddenFile(id)) ||
+                atomicExists(documentFile(id))) continue
             val document = try { migrateUnindexedLegacyDraft(id) }
             catch (cause: Throwable) { throw SessionCorruptException(id, cause) }
             validate(document)
@@ -664,6 +926,7 @@ class SessionDocumentRepository(private val context: Context) {
         ?.filter { it.isFile && (it.name.endsWith(".json") || it.name.endsWith(".json.bak")) }
         ?.map { it.name.removeSuffix(".bak").removeSuffix(".json") }
         ?.distinct()
+        ?.filterNot { atomicExists(hiddenFile(it)) }
         ?.map { readDocumentLocked(it) ?: error("Missing document") }
         .orEmpty()
 
@@ -760,6 +1023,7 @@ class SessionDocumentRepository(private val context: Context) {
     private fun atomicExists(file: File): Boolean = file.exists() || File(file.path + ".bak").exists()
     private fun lastGoodFile(id: String): File { validateId(id); return File(documentsDir, "$id.json.lastgood") }
     private fun tombstoneFile(id: String): File { validateId(id); return File(tombstonesDir, "$id.deleted") }
+    private fun hiddenFile(id: String): File { validateId(id); return File(hiddenDir, "$id.hidden") }
     private fun validateId(id: String) {
         if (!id.matches(Regex("[A-Za-z0-9_-]{1,100}"))) throw SessionStorageException("Invalid session identifier")
     }
@@ -783,6 +1047,12 @@ class SessionDocumentRepository(private val context: Context) {
         val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         BitmapFactory.decodeFile(file.absolutePath, options)
         return options.outWidth > 0 && options.outHeight > 0
+    }
+    private fun resultJpegMatchesRecord(file: File, record: ResultRecord): Boolean {
+        if (!isJpeg(file)) return false
+        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeFile(file.absolutePath, options)
+        return options.outWidth == record.width && options.outHeight == record.height
     }
     private fun key(id: String): String = "${context.filesDir.absolutePath}:$id"
     private fun emit(document: SessionDocument?) {

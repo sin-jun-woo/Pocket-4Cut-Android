@@ -1,5 +1,6 @@
 package com.pocket4cut.presentation.edit
 
+import androidx.activity.compose.BackHandler
 import android.graphics.Bitmap
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -98,6 +99,8 @@ fun EditScreen(
     val focusManager = LocalFocusManager.current
     var showFontSheet by remember { mutableStateOf(false) }
     var showColorSheet by remember { mutableStateOf(false) }
+
+    BackHandler(enabled = !showFontSheet && !showColorSheet) { viewModel.leave(onBack) }
 
     Box(
         modifier = modifier

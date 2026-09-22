@@ -8,6 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.pocket4cut.data.local.SessionDocumentRepository
 import com.pocket4cut.data.local.SessionCorruptException
+import com.pocket4cut.data.local.ResultPublicationIssueKind
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.domain.model.ResultRecord
 import com.pocket4cut.domain.model.SessionDocument
@@ -57,6 +58,9 @@ class ResultPublicationJournalInstrumentedTest {
             repository.prepareResultPublication(id, created.revision, next)
             val damagedFile = File(pictures, "${id}_${nextId}.jpg")
             damagedFile.writeBytes(byteArrayOf(0xff.toByte(), 0xd8.toByte(), 0xff.toByte(), 0xd9.toByte()))
+            val unfinishedEncoding = File(pictures, ".${id}_${nextId}.tmp")
+            val unfinishedBytes = byteArrayOf(0x12, 0x34, 0x56)
+            unfinishedEncoding.writeBytes(unfinishedBytes)
             val journal = File(context.filesDir, "result_publications/$id/$nextId.json")
 
             val restarted = SessionDocumentRepository(context)
@@ -70,6 +74,106 @@ class ResultPublicationJournalInstrumentedTest {
             try { restarted.update(id, created.revision) { it.copy(draft = it.draft.copy(caption = "changed")) } }
             catch (_: SessionCorruptException) { blocked = true }
             assertTrue(blocked)
+
+            assertEquals(ResultPublicationIssueKind.INVALID_JPEG,
+                restarted.listResultPublicationIssues(id).single().kind)
+            val damagedBytes = damagedFile.readBytes()
+            val resolved = restarted.quarantineResultPublication(id, nextId)
+            assertEquals(SessionStage.RESULT, resolved.stage)
+            assertEquals(listOf(previous), resolved.results)
+            assertFalse(journal.exists())
+            assertFalse(damagedFile.exists())
+            assertFalse(unfinishedEncoding.exists())
+            val quarantinedJpeg = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                "Pocket4Cut/recovery_quarantine/$id/$nextId.jpg")
+            assertArrayEquals(damagedBytes, quarantinedJpeg.readBytes())
+            assertArrayEquals(unfinishedBytes, File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                "Pocket4Cut/recovery_quarantine/$id/$nextId.tmp").readBytes())
+            assertArrayEquals(previousBytes, previousFile.readBytes())
+            assertTrue(restarted.listResultPublicationIssues(id).isEmpty())
+            assertEquals("changed", restarted.update(id, resolved.revision) {
+                it.copy(draft = it.draft.copy(caption = "changed"))
+            }.draft.caption)
+            restarted.requestDelete(id)
+            assertFalse(quarantinedJpeg.exists())
+            assertFalse(previousFile.exists())
+        } finally {
+            assertTrue(testRoot.canonicalPath.startsWith(app.cacheDir.canonicalPath + File.separator))
+            testRoot.deleteRecursively()
+        }
+    }
+
+    @Test fun interruptedQuarantineResumesAndEmptyPublicationDoesNotBlockDraft() = runBlocking {
+        val app = InstrumentationRegistry.getInstrumentation().targetContext
+        val testRoot = File(app.cacheDir, "empty-result-journal-test-${UUID.randomUUID()}").apply { mkdirs() }
+        val context = object : ContextWrapper(app) {
+            override fun getFilesDir(): File = File(testRoot, "files").apply { mkdirs() }
+            override fun getExternalFilesDir(type: String?): File =
+                File(testRoot, "external/$type").apply { mkdirs() }
+        }
+        try {
+            val id = UUID.randomUUID().toString()
+            val resultId = UUID.randomUUID().toString()
+            val repository = SessionDocumentRepository(context)
+            val created = repository.create(SessionDocument(
+                sessionId = id, createdAt = 1_700_000_000_000L,
+                captureCount = 4, selectedCount = 2,
+            ))
+            repository.prepareResultPublication(id, created.revision, ResultRecord(
+                resultId, created.revision, "results/${id}_${resultId}.jpg", 8, 8, 1L,
+            ))
+            val restarted = SessionDocumentRepository(context)
+            assertEquals(SessionStage.NEEDS_RECOVERY, restarted.getById(id)?.stage)
+            assertEquals(ResultPublicationIssueKind.MISSING_JPEG,
+                restarted.listResultPublicationIssues(id).single().kind)
+
+            // A crash after writing the user's quarantine intent must replay without a JPEG.
+            val intent = File(context.filesDir, "result_quarantine_intents/$id/$resultId.json")
+            intent.parentFile!!.mkdirs()
+            intent.writeText(resultId)
+            val resumed = SessionDocumentRepository(context).getById(id)!!
+            assertEquals(SessionStage.CAPTURE, resumed.stage)
+            assertTrue(SessionDocumentRepository(context).listResultPublicationIssues(id).isEmpty())
+            assertFalse(intent.exists())
+            assertTrue(File(context.filesDir,
+                "result_publication_quarantine/$id/$resultId/publication.json").isFile)
+            assertEquals("resumed", restarted.update(id, resumed.revision) {
+                it.copy(draft = it.draft.copy(caption = "resumed"))
+            }.draft.caption)
+        } finally {
+            assertTrue(testRoot.canonicalPath.startsWith(app.cacheDir.canonicalPath + File.separator))
+            testRoot.deleteRecursively()
+        }
+    }
+
+    @Test fun replayRejectsValidJpegWithWrongRecordedDimensions() = runBlocking {
+        val app = InstrumentationRegistry.getInstrumentation().targetContext
+        val testRoot = File(app.cacheDir, "wrong-result-size-test-${UUID.randomUUID()}").apply { mkdirs() }
+        val context = object : ContextWrapper(app) {
+            override fun getFilesDir(): File = File(testRoot, "files").apply { mkdirs() }
+            override fun getExternalFilesDir(type: String?): File =
+                File(testRoot, "external/$type").apply { mkdirs() }
+        }
+        try {
+            val id = UUID.randomUUID().toString()
+            val resultId = UUID.randomUUID().toString()
+            val repository = SessionDocumentRepository(context)
+            val created = repository.create(SessionDocument(
+                sessionId = id, createdAt = 1_700_000_000_000L,
+                captureCount = 4, selectedCount = 2,
+            ))
+            repository.prepareResultPublication(id, created.revision, ResultRecord(
+                resultId, created.revision, "results/${id}_${resultId}.jpg", 8, 8, 1L,
+            ))
+            val bitmap = Bitmap.createBitmap(4, 4, Bitmap.Config.ARGB_8888)
+            try { FileImageStorage(context).saveImmutableResult(bitmap, id, resultId) }
+            finally { bitmap.recycle() }
+
+            val restarted = SessionDocumentRepository(context)
+            assertEquals(SessionStage.NEEDS_RECOVERY, restarted.getById(id)?.stage)
+            assertEquals(ResultPublicationIssueKind.INVALID_JPEG,
+                restarted.listResultPublicationIssues(id).single().kind)
+            assertTrue(restarted.getById(id)!!.results.isEmpty())
         } finally {
             assertTrue(testRoot.canonicalPath.startsWith(app.cacheDir.canonicalPath + File.separator))
             testRoot.deleteRecursively()

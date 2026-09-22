@@ -1,6 +1,6 @@
 # Pocket 4Cut 현재 구현 아키텍처
 
-> 확인일: 2026-09-22. 기준은 `codex/refactor-reliability`의 앱 소스 커밋 `155ced0b44b381bb8d274d2652d6d2fd421b2973`이다. 시작 기준은 `a0eff04`였으며 본문에 미커밋 기능 변경을 포함하지 않는다.
+> 확인일: 2026-09-22. 기준은 `codex/release-readiness`의 현재 구현이며, 이번 작업 시작 HEAD는 `6c815cb2ce3c665989e80512ffde1e71f268f86a`다. 본문에는 이 브랜치에서 추가한 복구·렌더·화면 이탈 코드를 포함한다. 실제 검사 결과와 커밋 상태는 [출시 준비 검증](../engineering/RELEASE_READINESS_2026-09-22.md)을 따른다.
 > 아래는 소스에서 확인한 구현이다. 커밋·push 및 빌드·기기 검증 결과는 [WORKLOG](WORKLOG.md)의 해당 실행 기록을 따른다. 코드의 존재를 테스트 통과나 모든 장애 복구 완료로 해석하지 않는다.
 
 루트의 [ARCHITECTURE.md](../ARCHITECTURE.md)는 목표 계층과 예시를 포함한 초기 설계 문서다. 이 문서는 현재 호출 관계와 저장 계약을 설명하며, 이전 감사 결과를 현행 결함 목록으로 그대로 옮기지 않는다.
@@ -74,7 +74,7 @@ flowchart LR
 - Edit는 문구·필터·순서 등을 자동 저장하고, 상세 편집 이동과 화면 내 나가기에서 저장 완료 후 콜백을 실행한다. Detail은 보정을 photo ID별로 저장한다.
 - 모든 route가 ID 하나만 받도록 바뀐 것은 아니다. frameType·선택 인덱스·layout/theme 인자와 Base64 결과 경로가 아직 존재한다. 실제 선택·순서·보정 복원의 기준은 세션 문서다.
 
-일반 뒤로 가기는 자료를 유지한다. 다만 전 화면의 시스템 뒤로 처리와 마지막 편집 입력 flush가 통일된 것은 아니며, 일반 편집의 120ms 지연 저장 직전 강제 종료까지 무손실로 보장하지 않는다.
+일반 뒤로 가기는 자료를 유지한다. 일반·상세 편집의 시스템 뒤로 및 커스텀 프레임 이탈은 저장 완료 경로로 연결된다. 문구 입력 debounce 직후 **프로세스를 강제로 종료**하는 경우까지 무손실로 보장하는 것은 아니다.
 
 ## 3. 세션 문서와 레거시 이전
 
@@ -88,7 +88,7 @@ flowchart LR
 
 [SessionDocumentRepository](../app/src/main/java/com/pocket4cut/data/local/SessionDocumentRepository.kt)는 `filesDir/session_documents/<id>.json`을 저장한다. 모든 인스턴스가 프로세스 Mutex를 공유하고 `expectedRevision`을 검사한다. `AtomicFile`로 쓰며 정상 이전 문서를 `<id>.json.lastgood`에 보관한다. 손상 시 복구 사본을 `NEEDS_RECOVERY`로 표시하고 `recover()`는 손상 원문을 별도 파일로 보존한다. 미래 스키마는 지원 오류로 반환한다. 결과 JPEG 게시 의도는 별도 `filesDir/result_publications/<id>/<resultId>.json` AtomicFile에 선기록한다. 이 장치는 다중 프로세스 잠금이나 모든 JPEG와 JSON 사이의 단일 트랜잭션을 뜻하지 않는다.
 
-게시 저널의 새 결과 JPEG가 손상되면 정상 문서와 이전 완료본은 계속 열람할 수 있다. 조회 응답은 복구 필요 단계로 표시되며 편집/새 결과 준비는 거부된다. 현재 `recover()`는 손상된 세션 JSON 복구에 한정되고, 손상 결과 저널을 사용자 조작으로 격리·폐기하는 UI는 없다.
+게시 저널의 새 결과 JPEG가 손상되면 정상 문서와 이전 완료본은 계속 열람할 수 있다. 조회 응답은 복구 필요 단계로 표시되며 편집/새 결과 준비는 거부된다. 보관함의 후보별 격리 조작은 미완료 게시 JPEG·`.tmp`와 journal만 앱 소유 복구 위치로 옮긴다. 중단된 격리는 intent를 읽어 재개한다. `recover()`는 손상된 세션 JSON의 직전 정상본 복구에 한정하며, 미래 스키마를 이전 버전으로 덮어쓰지 않는다. 읽을 수 없는 문서 하나가 정상 세션의 보관함 표시를 막지 않도록 `scanForGallery()`를 사용한다. 마지막 정상본도 없는 문서는 확인 후 숨김 marker만 기록하며 원본 JSON·JPEG를 바꾸지 않는다. 숨긴 기록 목록에서 marker를 제거해 다시 표시할 수 있다. 숨긴 문서가 존재하는 동안에는 다른 세션 사진의 참조 여부를 판정할 수 없어 물리 파일 삭제를 중단한다.
 
 레거시 이전은 다음과 같다.
 

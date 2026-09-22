@@ -46,6 +46,9 @@ import com.pocket4cut.presentation.settings.ContactFeedbackScreen
 import com.pocket4cut.presentation.settings.PrivacyPolicyScreen
 import com.pocket4cut.presentation.settings.SettingsScreen
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 @Composable
 fun PocketNavHost(
@@ -75,12 +78,16 @@ fun PocketNavHost(
             var draftLoadError by remember { mutableStateOf<String?>(null) }
             LaunchedEffect(Unit) {
                 runCatching {
-                    SessionDocumentRepository(context).list().firstOrNull { session ->
+                    SessionDocumentRepository(context).scanForGallery()
+                }.onSuccess { scan ->
+                    recentDraft = scan.documents.firstOrNull { session ->
                         session.stage != SessionStage.RESULT && session.stage != SessionStage.DELETED &&
                             session.stage != SessionStage.NEEDS_RECOVERY
                     }
-                }.onSuccess { recentDraft = it }
-                    .onFailure { draftLoadError = "저장된 작업을 읽을 수 없습니다. 보관함에서 확인해 주세요." }
+                    draftLoadError = if (scan.unreadableSessionIds.isNotEmpty()) {
+                        "일부 저장된 작업은 복구가 필요합니다. 보관함에서 확인해 주세요."
+                    } else null
+                }.onFailure { draftLoadError = "저장된 작업을 읽을 수 없습니다. 보관함에서 확인해 주세요." }
             }
             HomeScreen(
                 onStart = { navController.navigate(Routes.FRAME_TYPE_SELECT) },
@@ -269,6 +276,7 @@ fun PocketNavHost(
             val context = LocalContext.current
             val sessions = remember(context) { SessionDocumentRepository(context) }
             val scope = rememberCoroutineScope()
+            val frameSaveMutex = remember(sessionId) { Mutex() }
             val frameLayoutId = remember(layoutIdStr) {
                 runCatching { FrameLayoutId.valueOf(layoutIdStr) }.getOrElse { FrameLayoutId.FOUR_VERTICAL }
             }
@@ -288,6 +296,7 @@ fun PocketNavHost(
 
             var flowStep by remember { mutableStateOf("choose") }
             var frameLoaded by remember { mutableStateOf(false) }
+            var frameSaveError by remember { mutableStateOf<String?>(null) }
             LaunchedEffect(sessionId) {
                 val document = sessions.getById(sessionId) ?: return@LaunchedEffect
                 flowStep = document.draft.frameStep
@@ -298,16 +307,27 @@ fun PocketNavHost(
                 frameLoaded = true
             }
 
-            fun saveFrame(step: String, onSaved: () -> Unit = {},
+            fun saveFrame(step: String, onSaved: () -> Unit = {}, onFailed: () -> Unit = {},
                           transform: (com.pocket4cut.domain.model.SessionDraft) -> com.pocket4cut.domain.model.SessionDraft = { it }) {
                 scope.launch {
-                    val document = sessions.getById(sessionId) ?: return@launch
-                    sessions.update(sessionId, document.revision) { current ->
-                        current.copy(stage = if (step == "edit") SessionStage.EDIT else SessionStage.FRAME,
-                            draft = transform(current.draft).copy(themeId = theme.id,
-                                frameStep = if (step == "edit") current.draft.frameStep else step))
+                    try {
+                        frameSaveMutex.withLock {
+                            val document = sessions.getById(sessionId)
+                                ?: error("편집할 작업을 찾지 못했습니다.")
+                            sessions.update(sessionId, document.revision) { current ->
+                                current.copy(stage = if (step == "edit") SessionStage.EDIT else SessionStage.FRAME,
+                                    draft = transform(current.draft).copy(themeId = theme.id,
+                                        frameStep = if (step == "edit") current.draft.frameStep else step))
+                            }
+                        }
+                        frameSaveError = null
+                        onSaved()
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
+                    } catch (failure: Exception) {
+                        frameSaveError = failure.message ?: "프레임을 저장하지 못했습니다. 다시 시도해 주세요."
+                        onFailed()
                     }
-                    onSaved()
                 }
             }
 
@@ -368,15 +388,29 @@ fun PocketNavHost(
                     frameStyle = frameStyle,
                     theme = theme,
                     layoutVersion = layoutVersion,
-                    onBack = { saveFrame("choose", onSaved = { flowStep = "choose" }) },
-                    onDismiss = { navController.popBackStack() },
+                    onBack = { design, failed ->
+                        saveFrame("choose", onSaved = {
+                            initialDesign = design
+                            flowStep = "choose"
+                        }, onFailed = failed) {
+                            it.copy(customDesignJson = PendingCollageStore.serializeDesign(design),
+                                frameColorId = design.fillColorId, backgroundType = "solid")
+                        }
+                    },
+                    onDismiss = { design, failed ->
+                        saveFrame("custom", onSaved = { navController.popBackStack() }, onFailed = failed) {
+                            it.copy(customDesignJson = PendingCollageStore.serializeDesign(design),
+                                frameColorId = design.fillColorId, backgroundType = "solid")
+                        }
+                    },
                     initialDesign = initialDesign,
+                    saveError = frameSaveError,
                     onDraftChanged = { design ->
                         saveFrame("custom") { it.copy(customDesignJson = PendingCollageStore.serializeDesign(design),
                             frameColorId = design.fillColorId, backgroundType = "solid") }
                     },
-                    onCompleted = { design ->
-                        saveFrame("edit", onSaved = { navigateToEdit() }) {
+                    onCompleted = { design, failed ->
+                        saveFrame("edit", onSaved = { navigateToEdit() }, onFailed = failed) {
                             it.copy(frameColorId = design.fillColorId, backgroundType = "solid",
                                 seasonId = null, customDesignJson = PendingCollageStore.serializeDesign(design))
                         }

@@ -9,6 +9,8 @@ import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.text.Layout
+import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
 import android.graphics.Color as AColor
@@ -257,15 +259,22 @@ object CollageRenderer {
                 is CustomFrameDecoration.Kind.Text -> {
                     val pt = maxOf(base * kind.fontScale * dec.scale, 4f)
                     val tf = if (context != null) AppFontCatalog.typeface(context, dec.fontName) else Typeface.DEFAULT
-                    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    val paint = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
                         color = (0xFF000000 or (kind.textColorARGB and 0xFFFFFF)).toInt()
                         textSize = pt
                         typeface = tf
-                        textAlign = Paint.Align.CENTER
                     }
-                    val fm = paint.fontMetrics
-                    val y = -(fm.ascent + fm.descent) / 2f
-                    canvas.drawText(kind.content, 0f, y, paint)
+                    // The editor's text handle is two lines wide. Keep the printed
+                    // text proportional to the frame, without changing its source.
+                    val width = (base * 0.27f * dec.scale).roundToInt().coerceAtLeast(1)
+                    val lines = StaticLayout.Builder.obtain(kind.content, 0, kind.content.length, paint, width)
+                        .setAlignment(Layout.Alignment.ALIGN_CENTER)
+                        .setMaxLines(2)
+                        .setEllipsize(TextUtils.TruncateAt.END)
+                        .setIncludePad(false)
+                        .build()
+                    canvas.translate(-width / 2f, -lines.height / 2f)
+                    lines.draw(canvas)
                 }
                 is CustomFrameDecoration.Kind.Emoji -> {
                     val pt = maxOf(base * 0.11f * dec.scale, 10f)
