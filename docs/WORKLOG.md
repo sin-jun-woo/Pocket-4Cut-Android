@@ -391,3 +391,20 @@ git ls-remote --heads origin codex/setup-project-guidance
 - 남은 문제 / 향후 제안:
 - commit/push를 수행한 경우 식별 방법과 결과:
 ```
+
+## 2026-09-22 — 신뢰성·이미지 품질 개편 (Asia/Seoul)
+
+- 요청/범위: [전면 감사](../engineering/EMULATOR_AUDIT_2026-09-22.md)의 E01–E10·C01–C15를 근거로 사진 원본 보존, 편집 초안·복구, 미리보기/출력 통합, 내보내기 중복 방지, QA 격리, 접근성/문서/CI를 개선한다. 원래 감사 기록은 수정하지 않았다.
+- 시작 기준: `a0eff0498d50fc160938138ed6cfb701f89721a4`, 시작 브랜치 `codex/reels-promo`, 작업 트리 clean. 작업 브랜치는 `codex/refactor-reliability`다. 아래는 이 브랜치의 변경 코드를 포함하며 시작 HEAD의 기능이라고 주장하지 않는다.
+- 데이터: `SessionDocument`/codec/repository, 세션별 schema·revision, 프로세스 Mutex·AtomicFile·직전 정상본, 기존 JSON 이전·tombstone·소유권 확인 삭제, 결과·내보내기 기록을 추가했다. 새 캡처는 pending JPEG를 게시하고 원본을 재압축하지 않는다. 결과는 ID별 고유 파일이며 선기록 AtomicFile 저널로 파일 게시 후 문서 기록 전 중단을 재생한다. 세션 삭제는 해당 결과 저널·손상 원문도 확인 후 정리한다.
+- 흐름: 촬영 일시정지/사용자 재개·늦은 callback 방어, 세션 생성 중 Home 일시정지, 손상 pending 촬영 파일 차단, 선택/일반/상세 편집의 PhotoId 기반 순서·보정 자동 저장, 홈·보관함 초안 이어하기, 오류 표시, 카메라 권한 재확인, Android 구버전 사진첩 쓰기 권한 경로를 연결했다.
+- 이미지: `RenderSnapshot`, 공통 Canvas scene, vector 스티커, color ID/gradient, 문구·날짜, 레이어 순서, 비대칭 6컷 배치 버전, 기기 독립 출력 크기를 추가했다. 일반 편집 필터는 원본을 공통 Canvas에서 직접 그려 전체 사진의 반복 Bitmap 복제를 제거했다. 6컷의 계절 footer 간격, 커스텀 장식 위치, 날짜만 켠 문구의 중복도 수정했다. 원본은 컷별로 디코드하며 preview 취소/교체와 EXIF 8방향을 검사한다.
+- 앱/검사 경계: `com.pocket4cut.qa` debug/qaRelease, 설정만 백업하는 두 XML, optional camera 선언, Android CI, 기본 렌더 진단·출력·저장·비트맵 계측 테스트를 추가했다. README/AGENTS/ARCHITECTURE/IMAGE_ASSET_GUIDE를 현행 작업 트리에 맞췄다.
+- 사용자 자료 보존: 시작할 때 미커밋 작업이 없었다. UI·계측은 분리된 QA 패키지만 대상으로 했고 배포 패키지 초기화·사진 삭제를 실행하지 않았다. QA 결과는 가상 카메라 합성 장면이다.
+- 수동 API 37: QA 2컷 4장 촬영 후 프로세스 종료·재실행, 홈 이어하기, 선택, 필름 블랙 프레임 편집, 1248×3179px JPEG 생성·사진첩 저장·보관함 재열기를 확인했다. [검증 기록과 화면](../engineering/REFACTOR_VERIFICATION_2026-09-22.md)에 실행 범위와 남은 항목을 분리했다.
+- 실행 명령: `.\gradlew.bat :app:assembleDebug :app:assembleQaRelease :app:testDebugUnitTest :app:lintDebug --offline --console=plain`과 `.\gradlew.bat :app:connectedDebugAndroidTest --offline --console=plain`. 처음에는 촬영 반복문 `SuspiciousIndentation`, 마지막 통합 직전에는 API 29 `MediaStore.setIncludePending` 호출의 버전 주석 누락으로 Lint 오류가 각각 1개 있었다. 해당 코드만 수정한 뒤 같은 빌드·JVM·Lint 명령을 재실행해 **BUILD SUCCESSFUL**을 확인했다. 중간 실패를 성공으로 합치지 않는다.
+- 최종 Lint: 오류 0, 경고 77, 힌트 2. 수정 전 감사의 경고 총수 77과 같다. 현재 경고 종류는 UseKtx 51, UnusedResources 8, ModifierParameter 6, IconLauncherShape 5, IconXmlAndPng 2, 그 밖의 단일 항목 5개다. 경고 전체의 기준 커밋 대비 항목별 동일성은 대조하지 않았다. `StaticFieldLeak`과 `ClickableViewAccessibility` 등 남은 경고는 별도 검토 대상이다.
+- 선택 실행: 기존 렌더 진단 7/7과 출력 크기/배치 버전 2/2 통과. 마지막 전체 `.\gradlew.bat :app:connectedDebugAndroidTest --offline --console=plain`은 API 37 QA 패키지에서 **38/38 통과, 실패·오류·건너뜀 0**이었다. 접근성 5개, pending MediaStore 재개, 결과 journal 손상, 촬영 JPEG 검증, 비대칭 6컷 footer, 필터 Bitmap 수명 검사를 포함한다. JVM 기본 테스트는 1개 통과했으나 앱 흐름 증거가 아니다. Gradle의 `UP-TO-DATE` 표시와 기기 계측의 실제 38개 실행을 구분한다.
+- 최적화 APK: `:app:assembleQaRelease`는 R8·리소스 축소를 적용해 성공했고 `app-qaRelease.apk`를 API 37에 `com.pocket4cut.qa`로 설치해 홈, [권한 화면](../engineering/refactor-evidence/2026-09-22/qa-r8-permission.png), 허용 뒤 [CameraX 미리보기](../engineering/refactor-evidence/2026-09-22/qa-r8-camera.png)를 확인했다. [최적화 QA 홈](../engineering/refactor-evidence/2026-09-22/qa-r8-home.png). 이는 최적화 빌드의 전 화면 기능·실제 배포 서명 검사가 아니다.
+- 미검증/위험: API 26/28/29/33/36 AVD와 실기기, 실제 cloud/device backup 복원, 모든 컷 타이밍의 Home·잠금·권한 상실, 저장/삭제 각 단계 fault injection, TalkBack/큰 글자/가로 화면, 256MiB 최대 출력 메모리 실측, 모든 색·장식·글꼴 조합, 공유 수신 앱은 완료로 표시하지 않는다. 초안 입력 debounce·NavHost I/O·촬영/삭제의 포괄적 transaction journal·원인별 복구 UI 등도 후속 작업이다.
+- 커밋/push 식별: 앱 소스·테스트·CI 커밋은 `155ced0b44b381bb8d274d2652d6d2fd421b2973`이다. 이 문서의 자체 SHA는 본문에 넣지 않는다. 최종 원격 반영은 `git log -1`, `git status --short --branch`, `git ls-remote --heads origin codex/refactor-reliability`와 최종 보고에서 확인한다.

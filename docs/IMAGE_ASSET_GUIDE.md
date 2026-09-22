@@ -1,11 +1,11 @@
 # Pocket 4Cut 이미지·그래픽 자산 가이드
 
-> 확인일: 2026-09-10 · 기준: 기존 HEAD `95140a0`와 미커밋 로컬 코드 변경을 포함한 작업 트리.
-> 최초 문서 조사에서는 자산을 변경하지 않았다. 이후 런처 아이콘 변경은 바로 아래 갱신 기록을 따른다.
+> 현행 코드 확인일: 2026-09-22 · 기준: `codex/refactor-reliability`의 앱 소스 커밋 `155ced0b44b381bb8d274d2652d6d2fd421b2973`(시작 기준 `a0eff04`).
+> 1~6절은 현재 코드/자산 기준, 날짜가 있는 아이콘·영상 절은 해당 제작 당시 기록이다. 이번 문서 갱신에서는 이미지 파일을 변경하지 않았다.
 
-## 2026-09-10 최신 갱신 — Film Strip v4 런처/스토어 자산
+## 2026-09-10 적용 기록 — Film Strip v4 런처/스토어 자산
 
-HEAD `ac42903`과 미커밋 UI 변경을 유지한 작업 트리에서 사용자가 네 컷/필름 사진 중심 아이콘 및 피처 그래픽 제작·적용을 요청했다. 후속 요청에 따라 인화지 하단에 소문자 `pocket4cut`을 추가했다. 아래 Print Booth v1과 1~2절의 자산 규격 설명은 각각 이전 시점 기록이다.
+HEAD `ac42903`과 미커밋 UI 변경을 유지한 작업 트리에서 사용자가 네 컷/필름 사진 중심 아이콘 및 피처 그래픽 제작·적용을 요청했다. 후속 요청에 따라 인화지 하단에 소문자 `pocket4cut`을 추가했다. 아래 Print Booth v1은 이전 시점 기록이며, 현행 리소스 규격은 1~2절에서 확인한다.
 
 - 현재 컬러 원본은 `design/branding/film-strip-v4/source/icon-with-wordmark.png`. 네 컷 인물 사진·인화지·필름 표현을 위해 image_gen으로 제작한 래스터를 사용한다. 인물은 가상의 성인이며 사용자 사진을 사용하지 않았다.
 - `mipmap-anydpi/ic_launcher.xml`, `ic_launcher_round.xml`은 실제 새 density PNG `@drawable/ic_launcher_foreground`를 참조한다. 기존 전경 XML 이름은 새 PNG를 가리키는 호환 alias로 갱신했다. 배경은 `#1B1B19`다.
@@ -21,7 +21,7 @@ HEAD `ac42903`과 미커밋 UI 변경을 유지한 작업 트리에서 사용자
 
 ## 2026-09-10 이전 갱신 — Print Booth v1 런처 아이콘
 
-HEAD `ac42903` 및 기존 미커밋 UI 변경을 포함한 작업 트리에서, 사용자의 앱 아이콘 제작·적용 요청으로 런처 자산을 교체했다. 아래 1~2절의 이전 그라데이션·동일 monochrome 설명은 교체 전 조사 기록이다. 프레임·저장 JPEG 렌더링 계약은 이 작업에서 변경하지 않았다.
+HEAD `ac42903` 및 기존 미커밋 UI 변경을 포함한 작업 트리에서, 사용자의 앱 아이콘 제작·적용 요청으로 런처 자산을 교체했다. 이 절은 Film Strip v4로 교체되기 전 이력이며 현행 파일 규격은 1~2절을 따른다. 프레임·저장 JPEG 렌더링 계약은 이 작업에서 변경하지 않았다.
 
 - 브랜드 원본: `app/src/main/assets/branding/pocket_4cut_app_icon.svg`, 1024×1024, `viewBox="18 18 72 72"`. 앱은 여전히 SVG를 직접 읽지 않는다.
 - 적응형 아이콘의 배경: 기존 `ic_launcher_background.xml`을 인쇄 빨강 `#C83D2D` 단색으로 교체.
@@ -36,108 +36,94 @@ HEAD `ac42903` 및 기존 미커밋 UI 변경을 포함한 작업 트리에서, 
 
 스토어 휴대전화 소개 이미지는 `design/play-store/print-booth-v1/`에 제작하며, 등록용 이미지·실제 Compose 화면 렌더·예시 생성 사진·검증용 전체 보기를 구분한다. `docs/`에는 예시 사진이나 원시 캡처를 복사하지 않는다.
 
-## 1. 현행 자산의 구분
+## 1. 현행 자산과 렌더 경로
 
-현재 앱의 프레임과 장식은 대부분 파일 이미지가 아닌 Kotlin 코드로 그린다. 아래 파일 경로는 저장소 루트 기준이며, 개발자 컴퓨터의 절대 경로나 사용자 사진을 뜻하지 않는다.
+프레임은 PNG 묶음이 아니라 [FrameLayouts](../app/src/main/java/com/pocket4cut/frame/FrameLayouts.kt), [FrameTheme](../app/src/main/java/com/pocket4cut/frame/FrameTheme.kt), [FrameColors](../app/src/main/java/com/pocket4cut/frame/FrameColors.kt)의 데이터와 Kotlin 그리기 코드로 구성된다. 계절 배경도 `SeasonHTMLFrameStyle` 및 `rendering/*FrameVectorDecor`의 Canvas 구현이며 WebView를 실행하지 않는다.
 
-- **프레임 배치·색:** `app/src/main/java/com/pocket4cut/frame/FrameLayouts.kt`, `FrameTheme.kt`, `FrameColors.kt`에 정의되어 있다. 프레임 전체를 담은 PNG 묶음을 읽는 구조가 아니다.
-- **계절 배경·패턴:** 같은 `frame/` 아래 `SeasonHTMLFrameStyle.kt`, `SeasonBackgroundFrameFactory.kt`와 `rendering/*FrameVectorDecor.kt`, `SeasonDecorAnchors.kt`를 사용한다. 이름에 HTML이 있어도 HTML/WebView를 실행하지 않는다. 배경색, 그라데이션, 곡선·도형·글자를 Compose와 Android Canvas로 그린다.
-- **사용자 장식:** `CustomFrameDecoration.kt`의 Text/Emoji/Sticker 모델이다. 텍스트와 이모지는 문자열이며, 스티커 25종은 `StickerPalette.kt`에 연결된 Compose Material `ImageVector`다. 스티커 PNG/SVG 파일을 자동 검색하는 로더는 없다.
-- **앱 UI 아이콘:** 화면과 디자인 시스템 컴포넌트가 주로 Material `Icons`를 직접 사용한다. UI 아이콘과 최종 콜라주에 들어가는 장식은 용도와 렌더 경로가 다르다.
-- **런처 아이콘:** `app/src/main/res/`의 density별 PNG, adaptive-icon XML, 배경 shape XML을 사용한다. 실제 파일 규격은 아래에 기록했다.
-- **브랜드 SVG:** `app/src/main/assets/branding/pocket_4cut_app_icon.svg` 한 개가 있다. SVG의 `width`/`height`는 1024, `viewBox`는 `0 0 256 256`이다. 현재 앱 코드에서 이 SVG를 읽는 호출이나 SVG decoder 의존성은 확인되지 않았다. 이 파일의 존재는 런타임 SVG 지원을 의미하지 않는다.
-- **글꼴:** `app/src/main/assets/fonts/`에 TTF 13개가 있다. `core/util/AppFontCatalog.kt`가 파일명을 정확히 지정해 Compose `FontFamily`와 Android `Typeface`를 읽는다. 시스템 기본 글꼴도 선택할 수 있다.
-- **실제 촬영본·완성 JPEG:** 실행 중 앱 전용 저장소에 생성한다. 앱에 번들된 디자인 자산이 아니다.
+- 사용자 장식은 `CustomFrameDecoration`의 Text/Emoji/Sticker 모델이다. 스티커 25종은 `StickerPalette`의 Material ImageVector이며 PNG/SVG 파일 자동 검색 로더는 없다.
+- [CollagePreview](../app/src/main/java/com/pocket4cut/frame/CollagePreview.kt)와 최종 JPEG는 [CollageRenderer.drawScene](../app/src/main/java/com/pocket4cut/frame/CollageRenderer.kt)을 공유한다. 미리보기와 결과에서 스티커 이름 대신 같은 vector path를 그린다.
+- [StickerVectorPainter](../app/src/main/java/com/pocket4cut/frame/StickerVectorPainter.kt)는 현재 카탈로그 vector의 group 변환과 path를 Android Canvas로 옮긴다. 임의 SVG의 모든 stroke·clip·gradient·alpha 기능을 지원하는 범용 벡터 로더는 아니다.
+- UI 기능 아이콘은 주로 Compose Material Icons다. 장식의 저장 ID와 UI 아이콘의 컴포넌트 식별자를 혼동하지 않는다.
+- 브랜드 `app/src/main/assets/branding/pocket_4cut_app_icon.svg`는 1024×1024, `viewBox="0 0 1024 1024"`인 PNG 참조 wrapper다. 인접 `pocket_4cut_app_icon.png`가 필요하며 자체 완결 벡터나 Android 런타임 SVG 지원을 뜻하지 않는다.
+- 글꼴은 `assets/fonts/`의 TTF 13개와 시스템 글꼴을 사용한다. `AppFontCatalog`가 Compose FontFamily와 Android Typeface를 연결한다.
+- 실제 촬영본·완성 JPEG는 앱 실행 데이터다. 사용자 사진을 번들 자산이나 공개 문서 예시로 복사하지 않는다.
 
-브랜드 SVG에는 글자와 이모지 요소도 있다. 어떤 도구·글꼴로 PNG를 재생성했는지 확인하지 않고 기존 런처 PNG를 SVG의 자동 변환 결과로 단정하지 않는다. 현재 저장소에서 검증된 자동 재생성 경로는 확인하지 못했다.
+이번 리팩터링은 코드 렌더 계약을 변경했으며 새 사진·프레임 PNG·앱 아이콘을 생성하거나 교체하지 않았다.
 
-## 2. 실제 런처 PNG 규격과 알파
+## 2. 현재 런처 PNG 규격과 검증 근거
 
-PNG 15개를 직접 읽어 IHDR의 치수·bit depth·color type을 확인하고, 디코딩한 모든 픽셀의 알파 최솟값·최댓값을 검사했다.
+현재 launcher는 위 Film Strip v4다. 2026-09-22에 리소스 PNG 15개의 SHA-256을 `design/branding/film-strip-v4/asset-validation.json`의 출력 기록과 대조해 모두 일치함을 확인했다. 아래 치수·알파는 그 동일 파일의 기존 검증 기록이다. 이번 문서 작업에서 전체 픽셀 검사나 실기기 런처 시각 검수를 다시 수행한 것은 아니다.
 
-`app/src/main/res/mipmap-<density>/`에는 `ic_launcher.png`와 `ic_launcher_round.png`가 각각 있다. 두 이름 모두 같은 density에서 아래 치수를 사용한다.
+- `mipmap-mdpi/hdpi/xhdpi/xxhdpi/xxxhdpi`의 `ic_launcher.png`, `ic_launcher_round.png`: 각각 48, 72, 96, 144, 192px 정사각형.
+- `drawable-mdpi/hdpi/xhdpi/xxhdpi/xxxhdpi/ic_launcher_foreground.png`: 각각 108, 162, 216, 324, 432px 정사각형.
+- 15개 모두 8bit RGBA PNG다. 일반 launcher와 컬러 foreground는 알파 255인 불투명 이미지다. round PNG는 알파 0~255의 마스크 투명도를 가진다.
+- adaptive icon XML은 background `ic_launcher_background`, foreground `ic_launcher_foreground`, monochrome `ic_launcher_monochrome`을 각각 참조한다.
+- 현재 배경은 `#1B1B19` 단색이다. monochrome은 독립 단색 벡터이며 컬러 사진 foreground를 재사용하지 않는다.
+- 원본 생성·권리/출처·export script·안전영역 검사 기준은 Film Strip v4 제작 기록에 남아 있다. 이전 Print Booth의 파일 규격·시각 결과는 역사 기록으로만 읽는다.
 
-- `mipmap-mdpi`: 각각 **48×48px**.
-- `mipmap-hdpi`: 각각 **72×72px**.
-- `mipmap-xhdpi`: 각각 **96×96px**.
-- `mipmap-xxhdpi`: 각각 **144×144px**.
-- `mipmap-xxxhdpi`: 각각 **192×192px**.
+## 3. 프레임 기하와 기기 독립 출력
 
-`app/src/main/res/drawable-<density>/ic_launcher_foreground.png`의 치수는 다음과 같다.
+[CollageLayoutMath](../app/src/main/java/com/pocket4cut/frame/CollageLayoutMath.kt)가 사진 셀·캔버스·브랜드·문구/날짜 영역을 계산한다. 이미지 시안에서 슬롯을 눈대중으로 재구성하지 않는다.
 
-- `drawable-mdpi`: **108×108px**.
-- `drawable-hdpi`: **162×162px**.
-- `drawable-xhdpi`: **216×216px**.
-- `drawable-xxhdpi`: **324×324px**.
-- `drawable-xxxhdpi`: **432×432px**.
+- ID는 `TWO_VERTICAL`, `TWO_HORIZONTAL`, `FOUR_VERTICAL`, `FOUR_GRID`, `FOUR_HORIZONTAL`, `SIX_GRID_2X3`, `SIX_GRID_3X2`, `SIX_COLLAGE`의 8개다.
+- 클래식 `FOUR_VERTICAL`은 1650×4920px 고정이다. 문구/날짜 영역은 고정 높이 안의 사진 영역에 영향을 준다.
+- 그 외 신규 출력은 [CollageOutputSize](../app/src/main/java/com/pocket4cut/frame/CollageOutputSize.kt)가 기하를 기준으로 결정한다. 가장 작은 슬롯 짧은 변 1024px를 목표로 하며 16,000,000 pixels·각 변 8192px를 상한으로 둔다. 상한에 걸리면 슬롯 목표보다 작아질 수 있다.
+- 문구·날짜·theme·배치가 같으면 기기 화면 폭이 출력 치수를 바꾸지 않는다. 모든 배치가 같은 가로/세로 치수를 사용하는 것은 아니다.
+- `SIX_COLLAGE` layoutVersion 2는 첫 사진이 큰 슬롯을 차지하는 비대칭 6컷이다. legacy layoutVersion 1은 이전 3×2 기하를 유지한다. 기존 완료 JPEG는 새 기하로 자동 변환하지 않는다.
+- 일반 grid는 theme의 outerPadding/cellSpacing을 사용한다. 2컷 가로 및 새 6컷 콜라주에는 별도 기하 규칙이 있으므로 FrameStyle.padding/gap만 읽어 슬롯을 추정하지 않는다.
+- 사진은 셀에 aspect-fill로 들어가므로 가장자리가 잘릴 수 있다. 원본 전체를 항상 fit하는 계약이 아니다.
 
-15개 모두 **PNG color type 6, 채널당 8bit RGBA**다. 실제 픽셀 검사에서도 각 파일에 alpha=0과 alpha=255가 모두 존재했다. 즉 알파 채널만 선언된 불투명 파일이 아니라 완전 투명 영역을 포함한다. 이 검사는 이미지 품질·런처 마스크·테마 아이콘의 실기기 표시 검증을 대체하지 않는다.
+활성 출력은 `DetailEditViewModel → RenderSnapshot → CollageRenderer`다. 과거 `CollageExportMetrics`의 화면 폭 계산과 `Constants.RESULT_IMAGE_MAX_WIDTH`/이전 `CollageFinalize`를 현행 출력 규격으로 사용하지 않는다.
 
-`res/mipmap-anydpi/ic_launcher.xml`과 `ic_launcher_round.xml`은 모두 다음 리소스를 참조한다.
+계절 벡터의 600×1800은 그리기 기준 좌표이지 PNG 크기나 공통 출력 치수가 아니다. 계절별 좌표 변환과 safe area는 가로·세로·비대칭 배치에서 별도로 검수한다.
 
-- background: `@drawable/ic_launcher_background`.
-- foreground: `@drawable/ic_launcher_foreground`.
-- monochrome: 동일한 `@drawable/ic_launcher_foreground`.
+## 4. 원본·미리보기·결과 파일
 
-배경은 `res/drawable/ic_launcher_background.xml`의 불투명 선형 그라데이션 shape다. 전경 PNG의 투명 영역을 통해 이 배경이 보이는 구조다. 현재 monochrome도 같은 전경을 재사용하므로 별도 단색 원본이 있다고 가정하지 않는다.
-
-## 3. 프레임 기하와 최종 해상도
-
-실제 좌표의 기준은 `frame/CollageLayoutMath.kt`다. 참고 PNG에서 셀 위치를 눈대중으로 추출하는 방식보다 코드의 캔버스·셀·문구 영역을 먼저 확인해야 한다.
-
-- 레이아웃 ID는 `TWO_VERTICAL`, `TWO_HORIZONTAL`, `FOUR_VERTICAL`, `FOUR_GRID`, `FOUR_HORIZONTAL`, `SIX_GRID_2X3`, `SIX_GRID_3X2`, `SIX_COLLAGE`의 8개다.
-- **클래식 `FOUR_VERTICAL`의 최종 크기는 1650×4920px 고정**이다. 문구 또는 날짜가 있으면 고정 높이 안에서 사진 셀 높이가 줄어든다.
-- **그 외 활성 최종 출력은 시스템 화면 폭을 720~2160px로 제한**한다. `core/util/CollageExportMetrics.kt`에서 화면 폭이 320px 미만으로 보고되면 먼저 1170px를 대체값으로 사용한다. 일반 출력은 기기별 해상도가 같다고 보장되지 않는다.
-- 일반 레이아웃의 높이는 행·열, 셀 비율, 여백·간격, 브랜드와 문구/날짜 영역으로 계산한다. 문구 또는 날짜가 생기면 전체 높이가 증가한다. 모든 프레임에 적용할 고정 높이 하나는 없다.
-- `FrameStyle.padding/gap`은 현재 실제 기하 계산에 쓰이지 않는다. `FrameTheme.outerPadding/cellSpacing`을 사용하고, 2컷 가로만 20/10 기준값을 별도로 적용한다. 현재 `SIX_COLLAGE`와 `SIX_GRID_3X2`는 실제 기하가 같다.
-- 사진은 셀에 중앙 aspect-fill로 그려 가장자리가 잘릴 수 있다. 원본의 모든 영역이 결과에 들어가는 fit 방식이 아니다.
-
-활성 출력은 `presentation/detailEdit/DetailEditViewModel.kt`에서 `CollageRenderer.Input`을 만든다. `Constants.RESULT_IMAGE_MAX_WIDTH = 2560`은 이전 `presentation/edit/CollageFinalize.kt` 경로에서 쓰는 값이며 현재 공통 출력 규격으로 사용하면 안 된다.
-
-계절 벡터의 **600×1800**은 그리기용 기준 좌표 공간이다. 현재 PNG 파일 크기나 최종 출력 해상도가 아니다. 봄·여름은 균일 배율과 가운데 정렬을, 가을·겨울은 가로·세로 독립 배율을 사용한다. 가로형·격자형 프레임에서 동일한 모양 비율이 보장된다고 가정하지 않는다. 반복 점·눈꽃 등의 패턴도 코드로 그리며, 현재 재사용하는 raster tile 파일은 없다.
-
-## 4. 사진 파일명·보관·내보내기의 현행 규칙
-
-`data/storage/FileImageStorage.kt`가 사용하는 논리적 경로는 다음과 같다. `<sessionId>`는 촬영 시작 때 생성한 UUID다.
+[FileImageStorage](../app/src/main/java/com/pocket4cut/data/storage/FileImageStorage.kt)의 활성 파일 구조는 다음과 같다.
 
 ```text
 getExternalFilesDir(Pictures)/Pocket4Cut/
+  captures/<sessionId>/.pending/<uuid>.jpg
   captures/<sessionId>/cap_01.jpg
   captures/<sessionId>/cap_02.jpg
-  ...
-  results/<sessionId>_result.jpg
+  results/<sessionId>_<resultId>.jpg
 ```
 
-- 촬영 파일 번호는 1부터 시작하며 두 자리로 채운다. 예: `cap_01.jpg`, `cap_08.jpg`, `cap_10.jpg`.
-- 촬영 목록은 파일명순으로 읽고 선택 인덱스가 이 목록을 가리킨다. 기존 촬영 파일명을 임의로 바꾸거나 폴더에 무관한 파일을 섞으면 대응 관계가 깨질 수 있다. 현재 목록 로더에는 이미지 확장자 필터도 없다.
-- 매 컷 촬영 파일 저장 직후 `BitmapDecoding.rewriteJpegMaxLongEdge()`가 EXIF 회전·반사를 실제 픽셀에 반영해 **긴 변 최대 2048px, JPEG 품질 92**로 덮어쓴다. 이것이 정상 완료된 세션 원본 규격이다. 현재 호출부는 실패 반환값을 확인하지 않으므로 모든 파일이 반드시 정규화되었다고 단정할 수는 없다.
-- 기본 편집은 `decodeSampled(..., 720)`, 프레임 선택은 512, 상세 편집 진입은 2048, 최종 상세 처리는 3072를 요청한다. 이 요청치는 bitmap의 긴 변 상한이 아니다. 양쪽 치수에 따른 sampling 때문에 더 큰 bitmap이 반환될 수 있다. 3072로 다시 읽어도 이미 2048로 축소된 원본의 세부 정보가 복원되지는 않는다.
-- 결과는 **JPEG 품질 98**로 `<sessionId>_result.jpg`에 저장한다. 동일 세션의 재생성은 같은 경로를 사용한다. 결과는 PNG나 투명 이미지가 아니다.
-- `presentation/result/ResultScreen.kt`는 완성 JPEG를 공용 사진첩으로 복사한다. API29+에서는 MediaStore의 `Pictures/Pocket4Cut` 경로와 `image/jpeg` MIME을 지정한다. 이 단계는 기존 JPEG의 byte copy이며 재렌더링·재압축 과정이 아니다.
-- 공유도 완성 파일을 FileProvider URI로 전달하는 방식이다. 앱 전용 결과 파일과 공용 사진첩 사본은 별개다.
+- 새 촬영은 CameraX JPEG를 임시 경로에서 촬영 슬롯으로 게시하고 photo ID를 세션 문서에 연결한다. 기존 슬롯이 있으면 덮어쓰지 않는다.
+- 활성 촬영 경로는 `rewriteJpegMaxLongEdge()`를 호출하지 않는다. 원본을 2048px/JPEG 92로 덮어쓰는 이전 동작과 구분한다. 촬영 JPEG의 실제 치수는 CameraX/기기 입력에 따르며 모든 촬영본이 같은 고정 치수라고 가정하지 않는다.
+- 이전 버전에 이미 축소된 사진은 그 바이트를 보존한다. 마이그레이션이나 큰 해상도 재렌더링이 소실된 세부 정보를 되살리지는 않는다.
+- 기본 편집은 720, 프레임 선택은 512, 상세 편집 진입은 2048, 최종 상세 처리는 3072px 크기를 요청하여 디코드한다. sampling 요청은 이미지 긴 변의 엄격한 상한이 아니다. 별도 디스크 proxy 캐시는 아직 없고 미리보기 Bitmap을 메모리에 보유한다.
+- 최종 렌더의 imageProvider는 필요한 원본을 한 장씩 보정해 반환하고 슬롯을 그린 뒤 그 Bitmap을 회수한다. UI Bitmap의 수명과 구분한다.
+- 새 결과는 JPEG 품질 98로 임시 인코딩·sync 후 고유 `<sessionId>_<resultId>.jpg`를 게시한다. 같은 세션의 다음 적용은 기존 결과를 교체하지 않고 새 결과를 만든다.
+- legacy `results/<sessionId>_result.jpg`는 이전 결과로 보존한다. 활성 촬영 파일 목록 helper는 `cap_[숫자].jpg` 패턴만 읽는다.
+- 사진 선택·순서·보정의 기준은 [SessionDocument](../app/src/main/java/com/pocket4cut/domain/model/SessionDocument.kt)의 photo ID다. 파일명이나 배열 위치를 논리 ID 대신 사용하지 않는다.
 
-촬영본·완성본·세션 JSON은 사용자의 실행 데이터다. 제작용 자산 폴더나 문서 예시에 실제 사진, 실제 세션 UUID, 기기 절대 경로를 복사하지 않는다.
+[GalleryExporter](../app/src/main/java/com/pocket4cut/data/export/GalleryExporter.kt)는 결과 JPEG를 공용 `Pictures/Pocket4Cut/`에 byte copy한다. 표시 파일명은 결과 ID와 export operation ID를 포함한다. 저장 상태·URI를 기록해 기존 정상 결과 저장을 재사용하며 복사 과정에 SHA-256 검사를 사용한다. 공유는 파일 검증 후 FileProvider URI를 전달한다. 앱 내부 결과와 공용 사본의 삭제 범위는 다르다.
 
-## 5. 색·투명도·장식 변환의 현행 계약
+사진·초안·세션/export 기록은 Android 클라우드와 기기 이전의 백업 허용 대상에서 제외되어 있다. 설정 SharedPreferences만 백업하며, 미내보낸 촬영 자료의 다른 기기 자동 복원을 보장하지 않는다. 삭제·legacy 이전·실패 복구의 상세 범위는 [ARCHITECTURE](ARCHITECTURE.md)를 따른다.
 
-중간 합성 bitmap은 `ARGB_8888`이므로 메모리 안에서는 알파 채널을 가진다. 그러나 최종 JPEG는 알파를 보존하지 않는다. 투명 PNG를 별도 완성본으로 내보내는 사용자 기능도 현재 없다.
+## 5. 색·투명도·장식 변환
 
-`CustomFrameDecoration.position`은 캔버스 전체 기준 정규화 중심 좌표 `(x, y)`다. `scale`은 크기 배율이고 저장 필드는 `rotationRadians`다. 최종 장식 크기의 기준은 `min(canvasWidth, canvasHeight)`이며, 텍스트·이모지·스티커가 각각 다른 비율을 사용한다. 사진 셀 내부 좌표와 혼동하지 않는다.
+합성 Bitmap은 ARGB_8888이지만 최종 JPEG는 알파를 보존하지 않는다. 투명 PNG 완성본 내보내기 기능은 없다. 원본 제작 자산의 투명도와 최종 불투명 JPEG를 구분한다.
 
-스티커 `colorRGB`, caption 색, `ColorRGB` 유틸은 24bit RGB를 사용하고 렌더 때 불투명 alpha를 붙인다. `textColorARGB`라는 이름의 텍스트 장식 값도 현재 Renderer는 하위 RGB만 취하고 alpha=255로 그린다. 따라서 모델에 ARGB 값이 있다고 해서 장식의 사용자 지정 반투명도를 지원한다고 설명하면 안 된다. 계절 벡터에 코드로 지정된 Paint alpha는 별도다.
+`CustomFrameDecoration.position`은 캔버스 전체 기준 정규화 중심 좌표다. `scale`은 배율, `rotationRadians`는 라디안이며 커스텀 편집기의 degree 제스처를 라디안으로 변환한다. 일반 미리보기와 최종 출력은 같은 drawScene에서 장식 변환을 수행한다. 커스텀 편집기의 터치 영역·오버레이까지 모든 화면 크기에서 픽셀 정합이 검증된 것은 아니다.
 
-현재 코드에서는 프레임 색 45개와 카탈로그 색을 제공한다. hologram/sunset/aurora의 `gradientBrush`는 팔레트 표시 일부에만 쓰이며 실제 프레임은 단색 `color`로 처리한다. 사진용 필터는 ORIGINAL/SOFT/FILM/BW의 ColorMatrix 처리이며 프레임·장식 전체에 동일 필터를 씌우는 구조는 아니다.
+스티커/문구 색은 24bit RGB를 불투명 색으로 그린다. `textColorARGB`라는 이름만 보고 사용자 지정 반투명 장식을 지원한다고 설명하지 않는다. 계절 Paint의 별도 alpha는 다른 기능이다.
 
-## 6. 자산 제작·교체 전에 알아야 할 구현 제약
+[FrameColors](../app/src/main/java/com/pocket4cut/frame/FrameColors.kt)는 기본 색과 `catalog_<theme.id>`를 모두 조회한다. hologram/sunset/aurora는 gradientStops를 렌더러의 LinearGradient에 전달한다. 커스텀 프레임 후 색 변경도 디자인의 fillColorId에 반영한다. 사진 필터 ORIGINAL/SOFT/FILM/BW는 사진에 적용하며 프레임·장식 전체에 같은 필터를 씌우지 않는다.
 
-아래는 확인된 코드상의 차이다. 새 이미지를 만들어도 이 차이가 자동으로 해결되지는 않으며, 이번 문서 작성에서는 수정하지 않았다.
+## 6. 현행 개선과 남은 자산 검증
 
-1. `CollagePreview`는 스티커 `ImageVector`를 보여 주지만 `CollageRenderer`는 스티커의 `displayName`을 글자로 그린다. 현재 스티커를 완성 JPEG와 동일한 아이콘으로 내보낸다고 보장할 수 없다.
-2. 일반 미리보기는 장식 크기와 레이어에 scale을 중복 적용한다. 커스텀 편집기는 고정 sp/dp, 일반 미리보기는 캔버스 폭, 최종 출력은 짧은 변을 크기 기준으로 사용한다.
-3. 커스텀 편집 제스처의 회전값은 degree인데 현재 `rotationRadians`에 그대로 더한다. 디자인 파일에 보정 각도를 넣어 이 코드 오류를 상쇄하는 방식은 기준을 더 혼란스럽게 한다.
-4. `CollageLayoutMath.computeForPreview()`가 문구 존재 표시로 공백을 넘겨 문구 영역을 만들지 못한다. 최종 출력에는 실제 문구·날짜 영역이 생기므로 사진 셀 또는 캔버스 높이가 달라진다.
-5. Renderer API에는 `overrideBackgroundImage: Bitmap?`가 있지만 활성 제작 흐름에 이미지 파일 배경 선택 기능이 연결되어 있지 않다. Preview에도 인자는 있으나 실제 배경 bitmap을 그리지 않는다. `assets/`에 프레임 PNG나 SVG를 추가하기만 하면 앱이 사용하는 구조가 아니다.
-6. 계절 점선의 그리기 순서, footer의 pixel offset, 계절 anchor 변환에도 preview/export 차이가 있다. 프레임은 최종 저장 JPEG까지 비교해야 한다.
+소스에서 연결된 개선은 스티커 path 출력, 미리보기/최종 drawScene 공유, 실제 문구 영역, 카탈로그 색 왕복, gradient stops, 라디안 회전, 버전별 6컷 기하, 고정된 출력 정책이다. 이전 감사에서 재현한 현상을 현재도 그대로 발생한다고 적지 않으며, 수정 코드가 있다는 이유로 모든 자산 조합 검증이 완료됐다고 적지도 않는다.
+
+다음 사항은 여전히 확인해야 한다.
+
+1. 현재 StickerVectorPainter는 한 색으로 path를 채우는 카탈로그 대응 코드다. 다중 색·stroke·clip·trim·path별 alpha가 필요한 새 벡터는 렌더 계약을 먼저 확장해야 한다.
+2. 계절별 anchor, 긴 문구/날짜, 모든 글꼴·이모지, 장식 극단 크기/회전은 8배치에서 비교한다. 같은 painter 사용만으로 폰트 환경 차이·모든 크롭 품질까지 검증되지는 않는다.
+3. Renderer/Preview API는 background Bitmap을 받을 수 있지만 사용자가 외부 PNG/SVG 배경을 고르는 흐름은 없다. 자산 파일 추가만으로 자동 연결되지 않는다.
+4. 원본 사진의 ICC/광색역/HDR을 모두 명시적으로 변환·검증하는 파이프라인은 아니다. 출력 픽셀 상한은 전체 앱 메모리 상한도 아니다.
+5. 계측 소스에 렌더 계약과 출력 정책 검사가 존재한다. 실행 횟수·통과 여부·합성 fixture/물리 카메라 범위는 해당 검증 기록에서 확인한다.
+
 
 ## 7. 신규 자산 제작 제안 — 아직 구현된 규칙이 아님
 
@@ -170,7 +156,7 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 
 - 신규 bitmap 크기는 최종 그리기 영역의 pixel 크기와 사용자가 허용받은 최대 scale을 기준으로 정한다. 모든 스티커를 임의의 512px로, 모든 프레임을 1024px로 통일하는 규칙은 없다.
 - 클래식 전체 overlay를 검토한다면 기준 캔버스는 1650×4920px다. 다만 문구·날짜 유무로 셀이 달라지므로 외곽 크기가 같다는 것만으로 슬롯 정합성이 보장되지는 않는다.
-- 일반 레이아웃용 전체 이미지는 최대 폭 2160px만 알고 제작하지 않는다. 대상 레이아웃·문구 상태별 실제 높이와 셀 좌표를 먼저 산출한다. device-dependent 출력 폭을 바꾸는 작업은 별도 렌더 정책 변경이다.
+- 일반 배치용 전체 이미지는 CollageOutputSize와 layoutVersion을 기준으로 실제 가로/세로 치수·슬롯 좌표를 산출한다. 1024px 슬롯 목표와 16MP/8192px 상한만으로 모든 overlay의 크기를 하나로 정하지 않는다.
 - 제작 후보의 색 공간은 sRGB로 통일하는 방향을 검토한다. 현재 코드가 모든 입력에 명시적으로 색 공간 변환·ICC 검증을 수행하는 것은 아니다.
 - 투명 가장자리는 흰색·검정·밝은 색·어두운 색 바탕에서 확인한다. 축소 후 번짐, 색 테두리, 잘린 그림자, 불필요하게 큰 투명 여백을 점검한다. 투명 제작 PNG를 JPEG로 변환해 납품하지 않는다.
 - 새 자산을 최종 JPEG에 합칠 때는 먼저 의도한 불투명 프레임 배경에 합성한다. JPEG 저장만으로 투명 영역의 최종 배경색이 원하는 색이 된다고 기대하지 않는다.
@@ -178,7 +164,7 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 
 ## 8. 디자인 시안과 공개 문서의 경계
 
-확인 시점에 `design/`는 Git 미추적 별도 작업물이었다. `design/mockups/print-booth-v1/`에는 HTML로 만든 화면 PNG·스타일 보드·전체 보기와 제작 원본이 있다. 해당 시안 문서는 화면 PNG를 1080×2400px로 설명하지만, 이는 Android 기기 실행 캡처나 최종 콜라주의 출력 규격이 아니다. 이번 문서 변경에 시안 파일을 함께 포함하거나 재생성하지 않는다. 새 checkout에 이 폴더가 없어도 이 가이드의 현행 코드 설명은 독립적으로 읽을 수 있다.
+최초 2026-09-10 조사 당시 `design/`는 Git 미추적 작업물이었으나, 이를 현재 Git 상태로 일반화하지 않는다. `design/mockups/print-booth-v1/`에는 HTML로 만든 화면 PNG·스타일 보드·전체 보기와 제작 원본이 있다. 해당 시안 문서는 화면 PNG를 1080×2400px로 설명하지만, 이는 Android 기기 실행 캡처나 최종 콜라주의 출력 규격이 아니다. 이번 문서 변경에 시안 파일을 함께 포함하거나 재생성하지 않는다. 새 checkout에 이 폴더가 없어도 이 가이드의 현행 코드 설명은 독립적으로 읽을 수 있다.
 
 `.github/workflows/github-pages.yml`은 main의 `docs/**` 변경을 계기로 `docs/` 전체를 Pages artifact로 업로드한다. 이 문서 및 이 폴더에는 공개 가능한 설명만 넣는다. 개인 사진, 세션 초안, 서명 자료, 인증 정보, 개발자 절대 경로를 자산 예시나 검증 첨부물로 추가하지 않는다.
 
@@ -191,7 +177,7 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 5. 화면 preview뿐 아니라 실제 저장 JPEG를 열어 사진 슬롯, 장식 모양·색·위치·회전·크기, caption과 알파 경계를 확인한다.
 6. 검증한 범위와 미검증 범위를 작업 기록에 남긴다. 이 가이드의 현재 규격을 바꿨다면 해당 근거 코드와 설명을 함께 갱신한다.
 
-이번 확인은 코드·자산 목록·PNG 헤더 및 픽셀 알파 검사다. 런처 마스크와 themed icon, 실제 촬영부터 저장까지의 기기 시각 검증, 새로운 파일 자산 로더 또는 변환 파이프라인 검증은 수행하지 않았다.
+2026-09-22 문서 갱신에서는 현재 코드·리소스 참조·기존 검증 기록과 PNG 해시 일치를 확인했다. 픽셀 알파·런처 마스크 검사를 이번에 재실행한 것은 아니다. 실제 촬영부터 저장까지의 시각 검증, 새로운 자산 로더와 변환 파이프라인 검증은 별도 실행 기록으로 구분한다.
 
 ## 10. 2026-09-10 릴스 홍보 자산 — Film Story v1
 
