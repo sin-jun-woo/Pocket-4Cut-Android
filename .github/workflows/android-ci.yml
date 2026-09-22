@@ -26,6 +26,8 @@ jobs:
         run: ./gradlew :app:assembleDebug :app:testDebugUnitTest :app:lintDebug :app:assembleQaRelease --console=plain
 
   instrumented:
+    # Emulator coverage is opt-in for release preparation; retain the matrix for manual verification.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
