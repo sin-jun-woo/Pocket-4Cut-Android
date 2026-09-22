@@ -1,0 +1,43 @@
+﻿{
+    "CheckedAt":  "2026-09-22T10:30:07.8885705Z",
+    "File":  "Pocket4Cut-Seasons-Reels-Package.zip",
+    "Bytes":  10939270,
+    "SHA256":  "52EF98E2D0C58048CD9CAAC1A6F3DCEE6AE70FC9EE6229AE9573ED510E90E0C2",
+    "Entries":  [
+                    {
+                        "File":  "Pocket4Cut-Reels-Seasons-Voice.mp4",
+                        "SHA256":  "4583FC67FBF61DD9FE2F65C393B14E8F67864DAF8F225EF94EB659D6CFA96DFB",
+                        "Match":  true
+                    },
+                    {
+                        "File":  "Pocket4Cut-Seasons-Narration.mp3",
+                        "SHA256":  "7ECDFE242D79E799E6CD9BB8F9637D1AD5AF05B891A684CE1AD024EE10DBB530",
+                        "Match":  true
+                    },
+                    {
+                        "File":  "Pocket4Cut-Seasons-Cover.jpg",
+                        "SHA256":  "0D2A1830E5D38B4DDC0BD5FCA764199E17275C44DD371802C28328D97B0AD0D0",
+                        "Match":  true
+                    },
+                    {
+                        "File":  "INSTAGRAM-CAPTION.txt",
+                        "SHA256":  "65D51DB93156F2B77073D075221F72FA1E46B7BEB2EFAB860677FEEC308405F1",
+                        "Match":  true
+                    },
+                    {
+                        "File":  "CAPTIONS-KO.srt",
+                        "SHA256":  "1996D6B85728EF6B09A2DA461C052F8B976863424582A73E4D8411F3308F623C",
+                        "Match":  true
+                    },
+                    {
+                        "File":  "NARRATION-KO.txt",
+                        "SHA256":  "D086BE5A327F8785CE6A2B33B004FCC5F4C80DD99EEA17C4E4631CDA4238B068",
+                        "Match":  true
+                    },
+                    {
+                        "File":  "UPLOAD-GUIDE.md",
+                        "SHA256":  "47B32DB044AC3B679A9E1279567E9686C537BE672EE88B5B64DC30FA2D534549",
+                        "Match":  true
+                    }
+                ]
+}

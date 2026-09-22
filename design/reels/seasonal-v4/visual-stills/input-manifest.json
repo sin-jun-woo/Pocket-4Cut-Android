@@ -1,0 +1,75 @@
+{
+  "note": "Existing fictional adult sample photos, four-season production CollageRenderer JPEG exports, a previously captured result action row, and the current brand icon. Editorial animation, not a device recording.",
+  "assets": [
+    {
+      "id": "icon",
+      "file": "design/play-store/film-strip-v4/app-icon-master-1024.png",
+      "width": 1024,
+      "height": 1024,
+      "sha256": "fdbf0be23d2301297844a071db9458b95fdf4d885f02a3c65f20b691dc354c51"
+    },
+    {
+      "id": "result",
+      "file": "design/play-store/print-booth-v1/raw-screenshots/result.png",
+      "width": 1080,
+      "height": 2400,
+      "sha256": "8cabc56126adb96aa86e8a08266e337f468615fc66c52fc6cee9aa4e68aa3f6d"
+    },
+    {
+      "id": "spring",
+      "file": "design/seasonal-frames/paper-seasons-v1/deliverables/examples/spring/four_vertical.jpg",
+      "width": 1650,
+      "height": 4920,
+      "sha256": "f50668414c8103f340c4e077513b08571184d677a06077021f5ba757e1495868"
+    },
+    {
+      "id": "summer",
+      "file": "design/seasonal-frames/paper-seasons-v1/deliverables/examples/summer/four_vertical.jpg",
+      "width": 1650,
+      "height": 4920,
+      "sha256": "45a5af1e09d0da150bcac929cdcbf07b6b809561418821c1e0603e03bdd51fda"
+    },
+    {
+      "id": "autumn",
+      "file": "design/seasonal-frames/paper-seasons-v1/deliverables/examples/autumn/four_vertical.jpg",
+      "width": 1650,
+      "height": 4920,
+      "sha256": "88e8d56b0b69886f3329cb3ec9959db5f3eaf3e0b49bb542070dba974051e155"
+    },
+    {
+      "id": "winter",
+      "file": "design/seasonal-frames/paper-seasons-v1/deliverables/examples/winter/four_vertical.jpg",
+      "width": 1650,
+      "height": 4920,
+      "sha256": "0c92aeefcb74d72debdff8378fe9f197aa5d8b9986f5d1350595809222bce13b"
+    },
+    {
+      "id": "two",
+      "file": "design/seasonal-frames/paper-seasons-v1/deliverables/examples/spring/two_horizontal.jpg",
+      "width": 2350,
+      "height": 1878,
+      "sha256": "b47c5c8c5bfd3778fe720e441a45e9cdc03a00406dc8c3c26154abdd84bfec08"
+    },
+    {
+      "id": "four",
+      "file": "design/seasonal-frames/paper-seasons-v1/deliverables/examples/summer/four_grid.jpg",
+      "width": 2350,
+      "height": 3304,
+      "sha256": "87a332653ba581e02406eef29eef625e3488bd9afe435f36b1b0c42db9411817"
+    },
+    {
+      "id": "six",
+      "file": "design/seasonal-frames/paper-seasons-v1/deliverables/examples/autumn/six_collage.jpg",
+      "width": 3383,
+      "height": 4728,
+      "sha256": "78562c2201dd316a034746925f839f6624f8a3c9a566b2b192ea775b9731bc28"
+    },
+    {
+      "id": "photo2",
+      "file": "design/play-store/print-booth-v1/demo-photos/demo_02.jpg",
+      "width": 627,
+      "height": 627,
+      "sha256": "f1db2811e4f4bb49eb6850774257e068f45d30f6b7f1b51edf44f5b7a5219232"
+    }
+  ]
+}

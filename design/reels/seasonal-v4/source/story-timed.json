@@ -1,0 +1,169 @@
+{
+  "duration": 23,
+  "source": "Local Whisper ASR transcript comparison and experimental DTW token timing",
+  "voiceOffsetSeconds": 0.12,
+  "captionLeadSeconds": 0.05,
+  "note": "Estimated phrase timing. Layout-count cuts follow the actual spoken 2/4/6 DTW token moments. No exact voice-similarity claim.",
+  "scenes": [
+    {
+      "start": 0,
+      "end": 2.57,
+      "id": "hook",
+      "lines": [
+        "같은 사진도, 계절에 따라 달라져요."
+      ],
+      "voiceStart": 0.42,
+      "voiceEnd": 2.62,
+      "phraseIndex": 0
+    },
+    {
+      "start": 2.57,
+      "end": 4.43,
+      "id": "solution",
+      "lines": [
+        "프레임이 새로워졌어요."
+      ],
+      "voiceStart": 2.62,
+      "voiceEnd": 4.36,
+      "phraseIndex": 1
+    },
+    {
+      "start": 4.43,
+      "end": 6.59,
+      "id": "spring",
+      "lines": [
+        "봄에는 꽃과 리본으로 화사하게."
+      ],
+      "voiceStart": 4.48,
+      "voiceEnd": 6.43,
+      "phraseIndex": 2
+    },
+    {
+      "start": 6.59,
+      "end": 8.59,
+      "id": "summer",
+      "lines": [
+        "여름에는 바다 소품으로 시원하게."
+      ],
+      "voiceStart": 6.64,
+      "voiceEnd": 8.48,
+      "phraseIndex": 3
+    },
+    {
+      "start": 8.59,
+      "end": 10.71,
+      "id": "autumn",
+      "lines": [
+        "가을에는 낙엽과 커피로 포근하게."
+      ],
+      "voiceStart": 8.64,
+      "voiceEnd": 10.64,
+      "phraseIndex": 4
+    },
+    {
+      "start": 10.71,
+      "end": 13.01,
+      "id": "winter",
+      "lines": [
+        "겨울에는 니트와 눈꽃으로 따뜻하게."
+      ],
+      "voiceStart": 10.76,
+      "voiceEnd": 12.91,
+      "phraseIndex": 5
+    },
+    {
+      "start": 13.01,
+      "end": 13.55,
+      "id": "layout",
+      "lines": [
+        "2컷 · 4컷 · 6컷"
+      ],
+      "variant": "two",
+      "voiceStart": 13.06,
+      "voiceEnd": 14.56,
+      "phraseIndex": 6
+    },
+    {
+      "start": 13.55,
+      "end": 14.05,
+      "id": "layout",
+      "lines": [
+        "2컷 · 4컷 · 6컷"
+      ],
+      "variant": "four",
+      "voiceStart": 13.06,
+      "voiceEnd": 14.56,
+      "phraseIndex": 6
+    },
+    {
+      "start": 14.05,
+      "end": 14.67,
+      "id": "layout",
+      "lines": [
+        "2컷 · 4컷 · 6컷"
+      ],
+      "variant": "six",
+      "voiceStart": 13.06,
+      "voiceEnd": 14.56,
+      "phraseIndex": 6
+    },
+    {
+      "start": 14.67,
+      "end": 16.41,
+      "id": "layout",
+      "lines": [
+        "8가지 배치도 취향대로."
+      ],
+      "variant": "gallery",
+      "voiceStart": 14.72,
+      "voiceEnd": 15.94,
+      "phraseIndex": 7
+    },
+    {
+      "start": 16.41,
+      "end": 17.67,
+      "id": "save",
+      "lines": [
+        "마음에 들면 저장하고"
+      ],
+      "voiceStart": 16.46,
+      "voiceEnd": 17.48,
+      "phraseIndex": 8
+    },
+    {
+      "start": 17.67,
+      "end": 19.03,
+      "id": "save",
+      "lines": [
+        "친구에게 바로 공유해요."
+      ],
+      "variant": "share",
+      "voiceStart": 17.72,
+      "voiceEnd": 18.88,
+      "phraseIndex": 9
+    },
+    {
+      "start": 19.03,
+      "end": 20.43,
+      "id": "cta",
+      "lines": [
+        "오늘의 계절을 담아 보세요."
+      ],
+      "voiceStart": 19.08,
+      "voiceEnd": 20.26,
+      "phraseIndex": 10
+    },
+    {
+      "start": 20.43,
+      "end": 23,
+      "id": "cta",
+      "lines": [
+        "Pocket4Cut"
+      ],
+      "variant": "end",
+      "voiceStart": 20.48,
+      "voiceEnd": 21.08,
+      "phraseIndex": 11
+    }
+  ]
+}

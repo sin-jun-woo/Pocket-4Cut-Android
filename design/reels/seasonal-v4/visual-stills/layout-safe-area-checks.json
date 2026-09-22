@@ -1,0 +1,191 @@
+{
+  "note": "Full source images retain their aspect ratio and fit non-overlapping reserved boxes. No layout scene uses a source crop.",
+  "bounds": {
+    "left": 60,
+    "right": 1000,
+    "top": 420,
+    "bottom": 1700
+  },
+  "checks": [
+    {
+      "asset": "two",
+      "sourceWidth": 2350,
+      "sourceHeight": 1878,
+      "left": 82.84420059000007,
+      "right": 967.1557994099999,
+      "top": 701.2235787295244,
+      "bottom": 1418.7764212704756,
+      "reserved": {
+        "left": 80,
+        "top": 450,
+        "right": 970,
+        "bottom": 1670
+      }
+    },
+    {
+      "asset": "two",
+      "sourceWidth": 2350,
+      "sourceHeight": 1878,
+      "left": 80.12262509000004,
+      "right": 969.87737491,
+      "top": 699.0152233954763,
+      "bottom": 1420.9847766045236,
+      "reserved": {
+        "left": 80,
+        "top": 450,
+        "right": 970,
+        "bottom": 1670
+      }
+    },
+    {
+      "asset": "four",
+      "sourceWidth": 2350,
+      "sourceHeight": 3304,
+      "left": 83.70036602603756,
+      "right": 966.2996339739625,
+      "top": 453.89879182000004,
+      "bottom": 1666.10120818,
+      "reserved": {
+        "left": 80,
+        "top": 450,
+        "right": 970,
+        "bottom": 1670
+      }
+    },
+    {
+      "asset": "four",
+      "sourceWidth": 2350,
+      "sourceHeight": 3304,
+      "left": 80.98406043062272,
+      "right": 969.0159395693772,
+      "top": 450.16809281999997,
+      "bottom": 1669.8319071800001,
+      "reserved": {
+        "left": 80,
+        "top": 450,
+        "right": 970,
+        "bottom": 1670
+      }
+    },
+    {
+      "asset": "six",
+      "sourceWidth": 3383,
+      "sourceHeight": 4728,
+      "left": 82.84420059000001,
+      "right": 967.15579941,
+      "top": 456.08683436436127,
+      "bottom": 1663.9131656356387,
+      "reserved": {
+        "left": 80,
+        "top": 450,
+        "right": 970,
+        "bottom": 1670
+      }
+    },
+    {
+      "asset": "six",
+      "sourceWidth": 3383,
+      "sourceHeight": 4728,
+      "left": 80.12262508999999,
+      "right": 969.8773749100001,
+      "top": 452.36960329351575,
+      "bottom": 1667.6303967064841,
+      "reserved": {
+        "left": 80,
+        "top": 450,
+        "right": 970,
+        "bottom": 1670
+      }
+    },
+    {
+      "asset": "two",
+      "sourceWidth": 2350,
+      "sourceHeight": 1878,
+      "left": 214.6854726822673,
+      "right": 845.3145273177327,
+      "top": 431.64580146500003,
+      "bottom": 943.354198535,
+      "reserved": {
+        "left": 170,
+        "top": 430,
+        "right": 890,
+        "bottom": 945
+      }
+    },
+    {
+      "asset": "four",
+      "sourceWidth": 2350,
+      "sourceHeight": 3304,
+      "left": 71.37416432999999,
+      "right": 498.62583567,
+      "top": 1049.8357160096255,
+      "bottom": 1630.1642839903745,
+      "reserved": {
+        "left": 70,
+        "top": 1010,
+        "right": 500,
+        "bottom": 1670
+      }
+    },
+    {
+      "asset": "six",
+      "sourceWidth": 3383,
+      "sourceHeight": 4728,
+      "left": 561.37416433,
+      "right": 988.62583567,
+      "top": 1051.3852380816438,
+      "bottom": 1628.6147619183562,
+      "reserved": {
+        "left": 560,
+        "top": 1010,
+        "right": 990,
+        "bottom": 1670
+      }
+    },
+    {
+      "asset": "two",
+      "sourceWidth": 2350,
+      "sourceHeight": 1878,
+      "left": 212.74463577933142,
+      "right": 847.2553642206685,
+      "top": 430.070957215,
+      "bottom": 944.929042785,
+      "reserved": {
+        "left": 170,
+        "top": 430,
+        "right": 890,
+        "bottom": 945
+      }
+    },
+    {
+      "asset": "four",
+      "sourceWidth": 2350,
+      "sourceHeight": 3304,
+      "left": 70.05924583000001,
+      "right": 499.94075417,
+      "top": 1048.0496849152987,
+      "bottom": 1631.9503150847013,
+      "reserved": {
+        "left": 70,
+        "top": 1010,
+        "right": 500,
+        "bottom": 1670
+      }
+    },
+    {
+      "asset": "six",
+      "sourceWidth": 3383,
+      "sourceHeight": 4728,
+      "left": 560.05924583,
+      "right": 989.94075417,
+      "top": 1049.6087446690879,
+      "bottom": 1630.3912553309121,
+      "reserved": {
+        "left": 560,
+        "top": 1010,
+        "right": 990,
+        "bottom": 1670
+      }
+    }
+  ]
+}

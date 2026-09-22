@@ -1,0 +1,26 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "audioSha256": "19952818721bb6e3db6776f2ad6a2373180fdd4575ade73248714555d3687679",
+      "durationSeconds": 21.92,
+      "rendered": false,
+      "alignmentReady": false,
+      "reason": "ASR differs at 사계절 and 여덟 가지 배치에서. A single prompt-free greedy-decoding diagnostic retained the same differences. This does not prove whether speech or recognition caused the ambiguity.",
+      "handling": "Original WAV, mastering and failed ASR records preserved in ignored build/reels-seasonal-v4/attempt-01. No failed transcript was replaced with expected words.",
+      "revision": "Simplified solution and layout explanation while retaining the same meaning, reference audio and generation settings; eight-layout information remains in the on-screen caption."
+    },
+    {
+      "attempt": 2,
+      "audioSha256": "a03ecd67aec028c403b2b0e68bfc4a380d471f82eb5f62f5b25803a443ff4c92",
+      "durationSeconds": 20.96,
+      "alignmentReady": true,
+      "normalizedCharacters": 136,
+      "editDistance": 0,
+      "timedScenes": 14,
+      "masterDurationSeconds": 23,
+      "evidence": "local-voice-job.json, asr-input.json, asr-result.json, narration-master.json",
+      "handling": "Fresh prompt-free local ASR matched the revised narration. The original recognizer output is preserved; no phonetic or spelling corrections were used."
+    }
+  ]
+}

@@ -1,0 +1,1322 @@
+{
+  "provider": "Local whisper.cpp ASR, not supplied-text forced transcription",
+  "modelType": "small",
+  "language": "ko",
+  "transcript": " 같은 사진도 계절에 따라 달라져요. 포켓네컷 프레임이 새로워졌어요. 봄에는 꽃과 리본으로 화사하게. 여름에는 바다 소품으로 시원하게. 가을에는 낙엽과 커피로 포근하게. 겨울에는 니트와 눈꽃으로 따뜻하게. 두컷, 네컷, 여섯컷. 배치도 취향대로 바꿔보세요. 마음에 들면 저장하고 친구에게 바로 공유해요. 오늘의 계절을 담아보세요. 포켓네컷",
+  "expectedTranscript": "같은 사진도, 계절에 따라 달라져요. 포켓네컷, 프레임이 새로워졌어요. 봄에는 꽃과 리본으로 화사하게. 여름에는 바다 소품으로 시원하게. 가을에는 낙엽과 커피로 포근하게. 겨울에는 니트와 눈꽃으로 따뜻하게. 두 컷, 네 컷, 여섯 컷. 배치도 취향대로 바꿔 보세요. 마음에 들면 저장하고, 친구에게 바로 공유해요. 오늘의 계절을 담아 보세요. 포켓네컷.",
+  "comparison": {
+    "normalizedTranscriptEqualsExpected": true,
+    "expectedNormalized": "같은사진도계절에따라달라져요포켓4컷프레임이새로워졌어요봄에는꽃과리본으로화사하게여름에는바다소품으로시원하게가을에는낙엽과커피로포근하게겨울에는니트와눈꽃으로따뜻하게2컷4컷6컷배치도취향대로바꿔보세요마음에들면저장하고친구에게바로공유해요오늘의계절을담아보세요포켓4컷",
+    "recognizedNormalized": "같은사진도계절에따라달라져요포켓4컷프레임이새로워졌어요봄에는꽃과리본으로화사하게여름에는바다소품으로시원하게가을에는낙엽과커피로포근하게겨울에는니트와눈꽃으로따뜻하게2컷4컷6컷배치도취향대로바꿔보세요마음에들면저장하고친구에게바로공유해요오늘의계절을담아보세요포켓4컷",
+    "expectedCharacterCount": 136,
+    "recognizedCharacterCount": 136,
+    "editDistance": 0,
+    "differences": [],
+    "normalization": [
+      "Ignore whitespace and punctuation; Latin letter case is ignored.",
+      "Only Korean 2/4/6/8 number forms immediately before 컷, 장 or 가지 are mapped to digits.",
+      "No phonetic, brand-name, spelling, synonym or ASR-error corrections are applied."
+    ]
+  },
+  "units": {
+    "jsonOffsets": "milliseconds / 1000",
+    "t_dtw": "centiseconds / 100"
+  },
+  "limitations": [
+    "Recognition agreement is not a subjective listening or voice-similarity assessment.",
+    "DTW token moments and inferred phrase ends are estimates, not sample-accurate word boundaries.",
+    "A nonzero exit status must stop downstream rendering; an older story file is not updated on failure."
+  ],
+  "master": {
+    "durationSeconds": 23,
+    "voiceTimeOffsetSeconds": 0.12,
+    "sha256": "2d427e3171cdd930e0ba50cb9877dcf8b1ecd5964cff81fd5182e23174b10573"
+  },
+  "segments": [
+    {
+      "index": 0,
+      "text": " 같은 사진도 계절에 따라 달라져요.",
+      "startSeconds": 0,
+      "endSeconds": 2.36,
+      "tokens": [
+        {
+          "text": " 같은",
+          "id": 10005,
+          "probability": 0.646977,
+          "startSeconds": 0,
+          "endSeconds": 0.21,
+          "dtwCentiseconds": 30,
+          "dtwSeconds": 0.3
+        },
+        {
+          "text": " 사",
+          "id": 4744,
+          "probability": 0.948552,
+          "startSeconds": 0.31,
+          "endSeconds": 0.43,
+          "dtwCentiseconds": 56,
+          "dtwSeconds": 0.56
+        },
+        {
+          "text": "진도",
+          "id": 1372,
+          "probability": 0.99563,
+          "startSeconds": 0.43,
+          "endSeconds": 0.98,
+          "dtwCentiseconds": 68,
+          "dtwSeconds": 0.68
+        },
+        {
+          "text": " 계",
+          "id": 10603,
+          "probability": 0.926953,
+          "startSeconds": 1.08,
+          "endSeconds": 1.13,
+          "dtwCentiseconds": 114,
+          "dtwSeconds": 1.14
+        },
+        {
+          "text": "절",
+          "id": 23583,
+          "probability": 0.984525,
+          "startSeconds": 1.13,
+          "endSeconds": 1.27,
+          "dtwCentiseconds": 132,
+          "dtwSeconds": 1.32
+        },
+        {
+          "text": "에",
+          "id": 1517,
+          "probability": 0.998456,
+          "startSeconds": 1.27,
+          "endSeconds": 1.38,
+          "dtwCentiseconds": 142,
+          "dtwSeconds": 1.42
+        },
+        {
+          "text": " 따라",
+          "id": 24453,
+          "probability": 0.993257,
+          "startSeconds": 1.46,
+          "endSeconds": 1.7,
+          "dtwCentiseconds": 156,
+          "dtwSeconds": 1.56
+        },
+        {
+          "text": " 달라",
+          "id": 42407,
+          "probability": 0.997881,
+          "startSeconds": 1.7,
+          "endSeconds": 1.99,
+          "dtwCentiseconds": 196,
+          "dtwSeconds": 1.96
+        },
+        {
+          "text": "져",
+          "id": 17383,
+          "probability": 0.980552,
+          "startSeconds": 1.99,
+          "endSeconds": 2.13,
+          "dtwCentiseconds": 216,
+          "dtwSeconds": 2.16
+        },
+        {
+          "text": "요",
+          "id": 1495,
+          "probability": 0.998791,
+          "startSeconds": 2.13,
+          "endSeconds": 2.31,
+          "dtwCentiseconds": 232,
+          "dtwSeconds": 2.32
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.664444,
+          "startSeconds": 2.33,
+          "endSeconds": 2.35,
+          "dtwCentiseconds": 234,
+          "dtwSeconds": 2.34
+        }
+      ],
+      "joinedTokenText": " 같은 사진도 계절에 따라 달라져요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 1,
+      "text": " 포켓네컷 프레임이 새로워졌어요.",
+      "startSeconds": 2.36,
+      "endSeconds": 4.24,
+      "tokens": [
+        {
+          "text": " 포",
+          "id": 17101,
+          "probability": 0.881508,
+          "startSeconds": 2.36,
+          "endSeconds": 2.43,
+          "dtwCentiseconds": 250,
+          "dtwSeconds": 2.5
+        },
+        {
+          "text": "켓",
+          "id": 12397,
+          "probability": 0.980068,
+          "startSeconds": 2.48,
+          "endSeconds": 2.65,
+          "dtwCentiseconds": 264,
+          "dtwSeconds": 2.64
+        },
+        {
+          "text": "네",
+          "id": 17507,
+          "probability": 0.62708,
+          "startSeconds": 2.67,
+          "endSeconds": 2.73,
+          "dtwCentiseconds": 278,
+          "dtwSeconds": 2.78
+        },
+        {
+          "text": "컷",
+          "id": 13302,
+          "probability": 0.796043,
+          "startSeconds": 2.73,
+          "endSeconds": 3,
+          "dtwCentiseconds": 292,
+          "dtwSeconds": 2.92
+        },
+        {
+          "text": " 프레",
+          "id": 32051,
+          "probability": 0.748053,
+          "startSeconds": 3,
+          "endSeconds": 3.34,
+          "dtwCentiseconds": 316,
+          "dtwSeconds": 3.16
+        },
+        {
+          "text": "임",
+          "id": 13311,
+          "probability": 0.998925,
+          "startSeconds": 3.44,
+          "endSeconds": 3.5,
+          "dtwCentiseconds": 336,
+          "dtwSeconds": 3.36
+        },
+        {
+          "text": "이",
+          "id": 1129,
+          "probability": 0.997752,
+          "startSeconds": 3.5,
+          "endSeconds": 3.6,
+          "dtwCentiseconds": 344,
+          "dtwSeconds": 3.44
+        },
+        {
+          "text": " 새로",
+          "id": 32594,
+          "probability": 0.834348,
+          "startSeconds": 3.6,
+          "endSeconds": 3.74,
+          "dtwCentiseconds": 362,
+          "dtwSeconds": 3.62
+        },
+        {
+          "text": "워",
+          "id": 10086,
+          "probability": 0.992998,
+          "startSeconds": 3.82,
+          "endSeconds": 3.9,
+          "dtwCentiseconds": 380,
+          "dtwSeconds": 3.8
+        },
+        {
+          "text": "졌",
+          "id": 25001,
+          "probability": 0.969938,
+          "startSeconds": 3.9,
+          "endSeconds": 4,
+          "dtwCentiseconds": 388,
+          "dtwSeconds": 3.88
+        },
+        {
+          "text": "어요",
+          "id": 4213,
+          "probability": 0.997231,
+          "startSeconds": 4,
+          "endSeconds": 4.24,
+          "dtwCentiseconds": 416,
+          "dtwSeconds": 4.16
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.880908,
+          "startSeconds": 4.24,
+          "endSeconds": 4.24,
+          "dtwCentiseconds": 424,
+          "dtwSeconds": 4.24
+        }
+      ],
+      "joinedTokenText": " 포켓네컷 프레임이 새로워졌어요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 2,
+      "text": " 봄에는 꽃과 리본으로 화사하게.",
+      "startSeconds": 4.24,
+      "endSeconds": 6.36,
+      "tokens": [
+        {
+          "text": " 봄",
+          "id": 8649,
+          "probability": 0.971111,
+          "startSeconds": 4.24,
+          "endSeconds": 4.6,
+          "dtwCentiseconds": 436,
+          "dtwSeconds": 4.36
+        },
+        {
+          "text": "에는",
+          "id": 11357,
+          "probability": 0.991787,
+          "startSeconds": 4.6,
+          "endSeconds": 4.83,
+          "dtwCentiseconds": 464,
+          "dtwSeconds": 4.64
+        },
+        {
+          "text": " 꽃",
+          "id": 45703,
+          "probability": 0.990541,
+          "startSeconds": 4.86,
+          "endSeconds": 4.96,
+          "dtwCentiseconds": 494,
+          "dtwSeconds": 4.94
+        },
+        {
+          "text": "과",
+          "id": 7097,
+          "probability": 0.996691,
+          "startSeconds": 4.96,
+          "endSeconds": 5.08,
+          "dtwCentiseconds": 520,
+          "dtwSeconds": 5.2
+        },
+        {
+          "text": " 리본",
+          "id": 31427,
+          "probability": 0.974381,
+          "startSeconds": 5.08,
+          "endSeconds": 5.56,
+          "dtwCentiseconds": 536,
+          "dtwSeconds": 5.36
+        },
+        {
+          "text": "으로",
+          "id": 4130,
+          "probability": 0.988996,
+          "startSeconds": 5.56,
+          "endSeconds": 5.79,
+          "dtwCentiseconds": 568,
+          "dtwSeconds": 5.68
+        },
+        {
+          "text": " 화",
+          "id": 20661,
+          "probability": 0.994569,
+          "startSeconds": 5.8,
+          "endSeconds": 5.92,
+          "dtwCentiseconds": 588,
+          "dtwSeconds": 5.88
+        },
+        {
+          "text": "사",
+          "id": 5727,
+          "probability": 0.991246,
+          "startSeconds": 5.92,
+          "endSeconds": 6.04,
+          "dtwCentiseconds": 598,
+          "dtwSeconds": 5.98
+        },
+        {
+          "text": "하게",
+          "id": 8601,
+          "probability": 0.980937,
+          "startSeconds": 6.04,
+          "endSeconds": 6.31,
+          "dtwCentiseconds": 622,
+          "dtwSeconds": 6.22
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.378747,
+          "startSeconds": 6.32,
+          "endSeconds": 6.36,
+          "dtwCentiseconds": 640,
+          "dtwSeconds": 6.4
+        }
+      ],
+      "joinedTokenText": " 봄에는 꽃과 리본으로 화사하게.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 3,
+      "text": " 여름에는 바다 소품으로 시원하게.",
+      "startSeconds": 6.36,
+      "endSeconds": 8.36,
+      "tokens": [
+        {
+          "text": " 여름",
+          "id": 8228,
+          "probability": 0.996535,
+          "startSeconds": 6.36,
+          "endSeconds": 6.85,
+          "dtwCentiseconds": 652,
+          "dtwSeconds": 6.52
+        },
+        {
+          "text": "에는",
+          "id": 11357,
+          "probability": 0.998058,
+          "startSeconds": 6.85,
+          "endSeconds": 7.09,
+          "dtwCentiseconds": 678,
+          "dtwSeconds": 6.78
+        },
+        {
+          "text": " 바",
+          "id": 12704,
+          "probability": 0.987984,
+          "startSeconds": 7.09,
+          "endSeconds": 7.21,
+          "dtwCentiseconds": 708,
+          "dtwSeconds": 7.08
+        },
+        {
+          "text": "다",
+          "id": 1235,
+          "probability": 0.992579,
+          "startSeconds": 7.21,
+          "endSeconds": 7.33,
+          "dtwCentiseconds": 722,
+          "dtwSeconds": 7.22
+        },
+        {
+          "text": " 소",
+          "id": 10614,
+          "probability": 0.89253,
+          "startSeconds": 7.33,
+          "endSeconds": 7.45,
+          "dtwCentiseconds": 736,
+          "dtwSeconds": 7.36
+        },
+        {
+          "text": "품",
+          "id": 13936,
+          "probability": 0.961551,
+          "startSeconds": 7.45,
+          "endSeconds": 7.57,
+          "dtwCentiseconds": 756,
+          "dtwSeconds": 7.56
+        },
+        {
+          "text": "으로",
+          "id": 4130,
+          "probability": 0.997963,
+          "startSeconds": 7.57,
+          "endSeconds": 7.74,
+          "dtwCentiseconds": 770,
+          "dtwSeconds": 7.7
+        },
+        {
+          "text": " 시",
+          "id": 5710,
+          "probability": 0.997457,
+          "startSeconds": 7.82,
+          "endSeconds": 7.91,
+          "dtwCentiseconds": 792,
+          "dtwSeconds": 7.92
+        },
+        {
+          "text": "원",
+          "id": 7573,
+          "probability": 0.996909,
+          "startSeconds": 7.93,
+          "endSeconds": 8.05,
+          "dtwCentiseconds": 802,
+          "dtwSeconds": 8.02
+        },
+        {
+          "text": "하게",
+          "id": 8601,
+          "probability": 0.996269,
+          "startSeconds": 8.05,
+          "endSeconds": 8.36,
+          "dtwCentiseconds": 824,
+          "dtwSeconds": 8.24
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.912592,
+          "startSeconds": 8.36,
+          "endSeconds": 8.36,
+          "dtwCentiseconds": 846,
+          "dtwSeconds": 8.46
+        }
+      ],
+      "joinedTokenText": " 여름에는 바다 소품으로 시원하게.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 4,
+      "text": " 가을에는 낙엽과 커피로 포근하게.",
+      "startSeconds": 8.36,
+      "endSeconds": 10.52,
+      "tokens": [
+        {
+          "text": " 가",
+          "id": 4147,
+          "probability": 0.996816,
+          "startSeconds": 8.36,
+          "endSeconds": 8.43,
+          "dtwCentiseconds": 852,
+          "dtwSeconds": 8.52
+        },
+        {
+          "text": "을",
+          "id": 1638,
+          "probability": 0.972392,
+          "startSeconds": 8.48,
+          "endSeconds": 8.58,
+          "dtwCentiseconds": 862,
+          "dtwSeconds": 8.62
+        },
+        {
+          "text": "에는",
+          "id": 11357,
+          "probability": 0.992559,
+          "startSeconds": 8.61,
+          "endSeconds": 8.82,
+          "dtwCentiseconds": 880,
+          "dtwSeconds": 8.8
+        },
+        {
+          "text": " 낙",
+          "id": 2079,
+          "probability": 0.763523,
+          "startSeconds": 8.84,
+          "endSeconds": 9.16,
+          "dtwCentiseconds": 898,
+          "dtwSeconds": 8.98
+        },
+        {
+          "text": "엽",
+          "id": 44944,
+          "probability": 0.976379,
+          "startSeconds": 9.17,
+          "endSeconds": 9.28,
+          "dtwCentiseconds": 916,
+          "dtwSeconds": 9.16
+        },
+        {
+          "text": "과",
+          "id": 7097,
+          "probability": 0.993771,
+          "startSeconds": 9.28,
+          "endSeconds": 9.34,
+          "dtwCentiseconds": 938,
+          "dtwSeconds": 9.38
+        },
+        {
+          "text": " 커피로",
+          "id": 45326,
+          "probability": 0.977073,
+          "startSeconds": 9.44,
+          "endSeconds": 9.98,
+          "dtwCentiseconds": 970,
+          "dtwSeconds": 9.7
+        },
+        {
+          "text": " 포",
+          "id": 17101,
+          "probability": 0.983171,
+          "startSeconds": 9.98,
+          "endSeconds": 10.07,
+          "dtwCentiseconds": 1006,
+          "dtwSeconds": 10.06
+        },
+        {
+          "text": "근",
+          "id": 17904,
+          "probability": 0.997172,
+          "startSeconds": 10.14,
+          "endSeconds": 10.2,
+          "dtwCentiseconds": 1020,
+          "dtwSeconds": 10.2
+        },
+        {
+          "text": "하게",
+          "id": 8601,
+          "probability": 0.993299,
+          "startSeconds": 10.2,
+          "endSeconds": 10.52,
+          "dtwCentiseconds": 1038,
+          "dtwSeconds": 10.38
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.894975,
+          "startSeconds": 10.52,
+          "endSeconds": 10.52,
+          "dtwCentiseconds": 1062,
+          "dtwSeconds": 10.62
+        }
+      ],
+      "joinedTokenText": " 가을에는 낙엽과 커피로 포근하게.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 5,
+      "text": " 겨울에는 니트와 눈꽃으로 따뜻하게.",
+      "startSeconds": 10.52,
+      "endSeconds": 12.8,
+      "tokens": [
+        {
+          "text": " 겨",
+          "id": 2525,
+          "probability": 0.995002,
+          "startSeconds": 10.52,
+          "endSeconds": 10.81,
+          "dtwCentiseconds": 1064,
+          "dtwSeconds": 10.64
+        },
+        {
+          "text": "울",
+          "id": 15580,
+          "probability": 0.996174,
+          "startSeconds": 10.83,
+          "endSeconds": 10.93,
+          "dtwCentiseconds": 1078,
+          "dtwSeconds": 10.78
+        },
+        {
+          "text": "에는",
+          "id": 11357,
+          "probability": 0.992133,
+          "startSeconds": 10.93,
+          "endSeconds": 11.13,
+          "dtwCentiseconds": 1098,
+          "dtwSeconds": 10.98
+        },
+        {
+          "text": " 니",
+          "id": 35362,
+          "probability": 0.948571,
+          "startSeconds": 11.14,
+          "endSeconds": 11.24,
+          "dtwCentiseconds": 1120,
+          "dtwSeconds": 11.2
+        },
+        {
+          "text": "트",
+          "id": 8857,
+          "probability": 0.978988,
+          "startSeconds": 11.24,
+          "endSeconds": 11.34,
+          "dtwCentiseconds": 1134,
+          "dtwSeconds": 11.34
+        },
+        {
+          "text": "와",
+          "id": 7590,
+          "probability": 0.97819,
+          "startSeconds": 11.34,
+          "endSeconds": 11.44,
+          "dtwCentiseconds": 1148,
+          "dtwSeconds": 11.48
+        },
+        {
+          "text": " 눈",
+          "id": 15333,
+          "probability": 0.9648,
+          "startSeconds": 11.44,
+          "endSeconds": 11.5,
+          "dtwCentiseconds": 1164,
+          "dtwSeconds": 11.64
+        },
+        {
+          "text": "꽃",
+          "id": 166,
+          "probability": 0.619969,
+          "startSeconds": 11.6,
+          "endSeconds": 11.84,
+          "dtwCentiseconds": 1180,
+          "dtwSeconds": 11.8
+        },
+        {
+          "text": "으로",
+          "id": 4130,
+          "probability": 0.952721,
+          "startSeconds": 11.84,
+          "endSeconds": 12.05,
+          "dtwCentiseconds": 1204,
+          "dtwSeconds": 12.04
+        },
+        {
+          "text": " 따뜻",
+          "id": 15933,
+          "probability": 0.996561,
+          "startSeconds": 12.05,
+          "endSeconds": 12.46,
+          "dtwCentiseconds": 1220,
+          "dtwSeconds": 12.2
+        },
+        {
+          "text": "하게",
+          "id": 8601,
+          "probability": 0.998447,
+          "startSeconds": 12.46,
+          "endSeconds": 12.79,
+          "dtwCentiseconds": 1264,
+          "dtwSeconds": 12.64
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.920074,
+          "startSeconds": 12.79,
+          "endSeconds": 12.8,
+          "dtwCentiseconds": 1282,
+          "dtwSeconds": 12.82
+        }
+      ],
+      "joinedTokenText": " 겨울에는 니트와 눈꽃으로 따뜻하게.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 6,
+      "text": " 두컷, 네컷, 여섯컷.",
+      "startSeconds": 12.8,
+      "endSeconds": 14.44,
+      "tokens": [
+        {
+          "text": " 두",
+          "id": 11915,
+          "probability": 0.767018,
+          "startSeconds": 12.8,
+          "endSeconds": 12.87,
+          "dtwCentiseconds": 1294,
+          "dtwSeconds": 12.94
+        },
+        {
+          "text": "컷",
+          "id": 13302,
+          "probability": 0.529834,
+          "startSeconds": 12.93,
+          "endSeconds": 13.17,
+          "dtwCentiseconds": 1318,
+          "dtwSeconds": 13.18
+        },
+        {
+          "text": ",",
+          "id": 11,
+          "probability": 0.83052,
+          "startSeconds": 13.17,
+          "endSeconds": 13.36,
+          "dtwCentiseconds": 1340,
+          "dtwSeconds": 13.4
+        },
+        {
+          "text": " 네",
+          "id": 8808,
+          "probability": 0.890831,
+          "startSeconds": 13.36,
+          "endSeconds": 13.45,
+          "dtwCentiseconds": 1348,
+          "dtwSeconds": 13.48
+        },
+        {
+          "text": "컷",
+          "id": 13302,
+          "probability": 0.961384,
+          "startSeconds": 13.45,
+          "endSeconds": 13.73,
+          "dtwCentiseconds": 1368,
+          "dtwSeconds": 13.68
+        },
+        {
+          "text": ",",
+          "id": 11,
+          "probability": 0.988548,
+          "startSeconds": 13.73,
+          "endSeconds": 13.92,
+          "dtwCentiseconds": 1388,
+          "dtwSeconds": 13.88
+        },
+        {
+          "text": " 여",
+          "id": 5518,
+          "probability": 0.722479,
+          "startSeconds": 13.92,
+          "endSeconds": 14.01,
+          "dtwCentiseconds": 1398,
+          "dtwSeconds": 13.98
+        },
+        {
+          "text": "섯",
+          "id": 37526,
+          "probability": 0.997358,
+          "startSeconds": 14.01,
+          "endSeconds": 14.09,
+          "dtwCentiseconds": 1414,
+          "dtwSeconds": 14.14
+        },
+        {
+          "text": "컷",
+          "id": 13302,
+          "probability": 0.949579,
+          "startSeconds": 14.1,
+          "endSeconds": 14.44,
+          "dtwCentiseconds": 1428,
+          "dtwSeconds": 14.28
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.42682,
+          "startSeconds": 14.44,
+          "endSeconds": 14.44,
+          "dtwCentiseconds": 1454,
+          "dtwSeconds": 14.54
+        }
+      ],
+      "joinedTokenText": " 두컷, 네컷, 여섯컷.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 7,
+      "text": " 배치도 취향대로 바꿔보세요.",
+      "startSeconds": 14.44,
+      "endSeconds": 16.12,
+      "tokens": [
+        {
+          "text": " 배",
+          "id": 14155,
+          "probability": 0.962819,
+          "startSeconds": 14.44,
+          "endSeconds": 14.51,
+          "dtwCentiseconds": 1460,
+          "dtwSeconds": 14.6
+        },
+        {
+          "text": "치도",
+          "id": 4741,
+          "probability": 0.938843,
+          "startSeconds": 14.51,
+          "endSeconds": 14.79,
+          "dtwCentiseconds": 1470,
+          "dtwSeconds": 14.7
+        },
+        {
+          "text": " 취",
+          "id": 28880,
+          "probability": 0.998056,
+          "startSeconds": 14.79,
+          "endSeconds": 14.86,
+          "dtwCentiseconds": 1504,
+          "dtwSeconds": 15.04
+        },
+        {
+          "text": "향",
+          "id": 24318,
+          "probability": 0.993055,
+          "startSeconds": 14.86,
+          "endSeconds": 14.93,
+          "dtwCentiseconds": 1518,
+          "dtwSeconds": 15.18
+        },
+        {
+          "text": "대로",
+          "id": 167,
+          "probability": 0.989389,
+          "startSeconds": 14.93,
+          "endSeconds": 15.21,
+          "dtwCentiseconds": 1522,
+          "dtwSeconds": 15.22
+        },
+        {
+          "text": " 바꿔보세요",
+          "id": 45795,
+          "probability": 0.991834,
+          "startSeconds": 15.21,
+          "endSeconds": 15.82,
+          "dtwCentiseconds": 1558,
+          "dtwSeconds": 15.58
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.980213,
+          "startSeconds": 15.9,
+          "endSeconds": 16.12,
+          "dtwCentiseconds": 1614,
+          "dtwSeconds": 16.14
+        }
+      ],
+      "joinedTokenText": " 배치도 취향대로 바꿔보세요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 8,
+      "text": " 마음에 들면 저장하고 친구에게 바로 공유해요.",
+      "startSeconds": 16.12,
+      "endSeconds": 18.76,
+      "tokens": [
+        {
+          "text": " 마음에",
+          "id": 43093,
+          "probability": 0.971593,
+          "startSeconds": 16.12,
+          "endSeconds": 16.53,
+          "dtwCentiseconds": 1634,
+          "dtwSeconds": 16.34
+        },
+        {
+          "text": " 들",
+          "id": 6275,
+          "probability": 0.91092,
+          "startSeconds": 16.53,
+          "endSeconds": 16.66,
+          "dtwCentiseconds": 1654,
+          "dtwSeconds": 16.54
+        },
+        {
+          "text": "면",
+          "id": 21448,
+          "probability": 0.990701,
+          "startSeconds": 16.66,
+          "endSeconds": 16.79,
+          "dtwCentiseconds": 1670,
+          "dtwSeconds": 16.7
+        },
+        {
+          "text": " 저",
+          "id": 4841,
+          "probability": 0.993817,
+          "startSeconds": 16.79,
+          "endSeconds": 16.92,
+          "dtwCentiseconds": 1688,
+          "dtwSeconds": 16.88
+        },
+        {
+          "text": "장",
+          "id": 4573,
+          "probability": 0.996001,
+          "startSeconds": 16.92,
+          "endSeconds": 17.05,
+          "dtwCentiseconds": 1702,
+          "dtwSeconds": 17.02
+        },
+        {
+          "text": "하고",
+          "id": 7040,
+          "probability": 0.995837,
+          "startSeconds": 17.05,
+          "endSeconds": 17.36,
+          "dtwCentiseconds": 1724,
+          "dtwSeconds": 17.24
+        },
+        {
+          "text": " 친구",
+          "id": 28307,
+          "probability": 0.821072,
+          "startSeconds": 17.36,
+          "endSeconds": 17.64,
+          "dtwCentiseconds": 1760,
+          "dtwSeconds": 17.6
+        },
+        {
+          "text": "에게",
+          "id": 15989,
+          "probability": 0.997769,
+          "startSeconds": 17.64,
+          "endSeconds": 17.91,
+          "dtwCentiseconds": 1782,
+          "dtwSeconds": 17.82
+        },
+        {
+          "text": " 바로",
+          "id": 15965,
+          "probability": 0.991665,
+          "startSeconds": 17.91,
+          "endSeconds": 18.18,
+          "dtwCentiseconds": 1810,
+          "dtwSeconds": 18.1
+        },
+        {
+          "text": " 공",
+          "id": 9273,
+          "probability": 0.984898,
+          "startSeconds": 18.18,
+          "endSeconds": 18.33,
+          "dtwCentiseconds": 1836,
+          "dtwSeconds": 18.36
+        },
+        {
+          "text": "유",
+          "id": 19062,
+          "probability": 0.993174,
+          "startSeconds": 18.33,
+          "endSeconds": 18.45,
+          "dtwCentiseconds": 1848,
+          "dtwSeconds": 18.48
+        },
+        {
+          "text": "해요",
+          "id": 15788,
+          "probability": 0.928989,
+          "startSeconds": 18.5,
+          "endSeconds": 18.76,
+          "dtwCentiseconds": 1866,
+          "dtwSeconds": 18.66
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.934893,
+          "startSeconds": 18.76,
+          "endSeconds": 18.76,
+          "dtwCentiseconds": 1878,
+          "dtwSeconds": 18.78
+        }
+      ],
+      "joinedTokenText": " 마음에 들면 저장하고 친구에게 바로 공유해요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 9,
+      "text": " 오늘의 계절을 담아보세요.",
+      "startSeconds": 18.76,
+      "endSeconds": 20.2,
+      "tokens": [
+        {
+          "text": " 오늘",
+          "id": 8880,
+          "probability": 0.979744,
+          "startSeconds": 18.76,
+          "endSeconds": 18.92,
+          "dtwCentiseconds": 1896,
+          "dtwSeconds": 18.96
+        },
+        {
+          "text": "의",
+          "id": 2785,
+          "probability": 0.968348,
+          "startSeconds": 18.92,
+          "endSeconds": 18.98,
+          "dtwCentiseconds": 1908,
+          "dtwSeconds": 19.08
+        },
+        {
+          "text": " 계",
+          "id": 10603,
+          "probability": 0.999535,
+          "startSeconds": 19.01,
+          "endSeconds": 19.07,
+          "dtwCentiseconds": 1920,
+          "dtwSeconds": 19.2
+        },
+        {
+          "text": "절",
+          "id": 23583,
+          "probability": 0.99698,
+          "startSeconds": 19.08,
+          "endSeconds": 19.16,
+          "dtwCentiseconds": 1936,
+          "dtwSeconds": 19.36
+        },
+        {
+          "text": "을",
+          "id": 1638,
+          "probability": 0.990635,
+          "startSeconds": 19.16,
+          "endSeconds": 19.22,
+          "dtwCentiseconds": 1948,
+          "dtwSeconds": 19.48
+        },
+        {
+          "text": " 담아보세요",
+          "id": 2515,
+          "probability": 0.922185,
+          "startSeconds": 19.24,
+          "endSeconds": 20.14,
+          "dtwCentiseconds": 1962,
+          "dtwSeconds": 19.62
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.913819,
+          "startSeconds": 20.2,
+          "endSeconds": 20.2,
+          "dtwCentiseconds": 2028,
+          "dtwSeconds": 20.28
+        }
+      ],
+      "joinedTokenText": " 오늘의 계절을 담아보세요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 10,
+      "text": " 포켓네컷",
+      "startSeconds": 20.2,
+      "endSeconds": 20.96,
+      "tokens": [
+        {
+          "text": " 포",
+          "id": 17101,
+          "probability": 0.996831,
+          "startSeconds": 20.2,
+          "endSeconds": 20.27,
+          "dtwCentiseconds": 2036,
+          "dtwSeconds": 20.36
+        },
+        {
+          "text": "켓",
+          "id": 12397,
+          "probability": 0.994452,
+          "startSeconds": 20.33,
+          "endSeconds": 20.56,
+          "dtwCentiseconds": 2052,
+          "dtwSeconds": 20.52
+        },
+        {
+          "text": "네",
+          "id": 17507,
+          "probability": 0.992949,
+          "startSeconds": 20.56,
+          "endSeconds": 20.63,
+          "dtwCentiseconds": 2066,
+          "dtwSeconds": 20.66
+        },
+        {
+          "text": "컷",
+          "id": 13302,
+          "probability": 0.978347,
+          "startSeconds": 20.65,
+          "endSeconds": 20.96,
+          "dtwCentiseconds": 2082,
+          "dtwSeconds": 20.82
+        }
+      ],
+      "joinedTokenText": " 포켓네컷",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    }
+  ],
+  "issues": [],
+  "warnings": [],
+  "readyForRender": true,
+  "joinedTokenTranscript": " 같은 사진도 계절에 따라 달라져요. 포켓네컷 프레임이 새로워졌어요. 봄에는 꽃과 리본으로 화사하게. 여름에는 바다 소품으로 시원하게. 가을에는 낙엽과 커피로 포근하게. 겨울에는 니트와 눈꽃으로 따뜻하게. 두컷, 네컷, 여섯컷. 배치도 취향대로 바꿔보세요. 마음에 들면 저장하고 친구에게 바로 공유해요. 오늘의 계절을 담아보세요. 포켓네컷",
+  "captionPhrases": [
+    {
+      "id": "hook",
+      "text": "같은 사진도, 계절에 따라 달라져요.",
+      "lines": [
+        "같은 사진도, 계절에 따라 달라져요."
+      ],
+      "phraseIndex": 0,
+      "normalizedStart": 0,
+      "normalizedEnd": 14,
+      "rawVoiceStart": 0.3,
+      "rawVoiceEnd": 2.5,
+      "voiceStart": 0.42,
+      "voiceEnd": 2.62,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "solution",
+      "text": "포켓네컷, 프레임이 새로워졌어요.",
+      "lines": [
+        "프레임이 새로워졌어요."
+      ],
+      "phraseIndex": 1,
+      "normalizedStart": 14,
+      "normalizedEnd": 28,
+      "rawVoiceStart": 2.5,
+      "rawVoiceEnd": 4.24,
+      "voiceStart": 2.62,
+      "voiceEnd": 4.36,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "spring",
+      "text": "봄에는 꽃과 리본으로 화사하게.",
+      "lines": [
+        "봄에는 꽃과 리본으로 화사하게."
+      ],
+      "phraseIndex": 2,
+      "normalizedStart": 28,
+      "normalizedEnd": 41,
+      "rawVoiceStart": 4.36,
+      "rawVoiceEnd": 6.31,
+      "voiceStart": 4.48,
+      "voiceEnd": 6.43,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "summer",
+      "text": "여름에는 바다 소품으로 시원하게.",
+      "lines": [
+        "여름에는 바다 소품으로 시원하게."
+      ],
+      "phraseIndex": 3,
+      "normalizedStart": 41,
+      "normalizedEnd": 55,
+      "rawVoiceStart": 6.52,
+      "rawVoiceEnd": 8.36,
+      "voiceStart": 6.64,
+      "voiceEnd": 8.48,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "autumn",
+      "text": "가을에는 낙엽과 커피로 포근하게.",
+      "lines": [
+        "가을에는 낙엽과 커피로 포근하게."
+      ],
+      "phraseIndex": 4,
+      "normalizedStart": 55,
+      "normalizedEnd": 69,
+      "rawVoiceStart": 8.52,
+      "rawVoiceEnd": 10.52,
+      "voiceStart": 8.64,
+      "voiceEnd": 10.64,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "winter",
+      "text": "겨울에는 니트와 눈꽃으로 따뜻하게.",
+      "lines": [
+        "겨울에는 니트와 눈꽃으로 따뜻하게."
+      ],
+      "phraseIndex": 5,
+      "normalizedStart": 69,
+      "normalizedEnd": 84,
+      "rawVoiceStart": 10.64,
+      "rawVoiceEnd": 12.79,
+      "voiceStart": 10.76,
+      "voiceEnd": 12.91,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "layout",
+      "text": "두 컷, 네 컷, 여섯 컷.",
+      "lines": [
+        "2컷 · 4컷 · 6컷"
+      ],
+      "variant": "counts",
+      "phraseIndex": 6,
+      "normalizedStart": 84,
+      "normalizedEnd": 90,
+      "rawVoiceStart": 12.94,
+      "rawVoiceEnd": 14.44,
+      "voiceStart": 13.06,
+      "voiceEnd": 14.56,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "layout",
+      "text": "배치도 취향대로 바꿔 보세요.",
+      "lines": [
+        "8가지 배치도 취향대로."
+      ],
+      "variant": "gallery",
+      "phraseIndex": 7,
+      "normalizedStart": 90,
+      "normalizedEnd": 102,
+      "rawVoiceStart": 14.6,
+      "rawVoiceEnd": 15.82,
+      "voiceStart": 14.72,
+      "voiceEnd": 15.94,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "save",
+      "text": "마음에 들면 저장하고,",
+      "lines": [
+        "마음에 들면 저장하고"
+      ],
+      "phraseIndex": 8,
+      "normalizedStart": 102,
+      "normalizedEnd": 111,
+      "rawVoiceStart": 16.34,
+      "rawVoiceEnd": 17.36,
+      "voiceStart": 16.46,
+      "voiceEnd": 17.48,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "save",
+      "text": "친구에게 바로 공유해요.",
+      "lines": [
+        "친구에게 바로 공유해요."
+      ],
+      "variant": "share",
+      "phraseIndex": 9,
+      "normalizedStart": 111,
+      "normalizedEnd": 121,
+      "rawVoiceStart": 17.6,
+      "rawVoiceEnd": 18.76,
+      "voiceStart": 17.72,
+      "voiceEnd": 18.88,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "cta",
+      "text": "오늘의 계절을 담아 보세요.",
+      "lines": [
+        "오늘의 계절을 담아 보세요."
+      ],
+      "phraseIndex": 10,
+      "normalizedStart": 121,
+      "normalizedEnd": 132,
+      "rawVoiceStart": 18.96,
+      "rawVoiceEnd": 20.14,
+      "voiceStart": 19.08,
+      "voiceEnd": 20.26,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "cta",
+      "text": "포켓네컷.",
+      "lines": [
+        "Pocket4Cut"
+      ],
+      "variant": "end",
+      "phraseIndex": 11,
+      "normalizedStart": 132,
+      "normalizedEnd": 136,
+      "rawVoiceStart": 20.36,
+      "rawVoiceEnd": 20.96,
+      "voiceStart": 20.48,
+      "voiceEnd": 21.08,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    }
+  ],
+  "inputVoiceSha256": "a03ecd67aec028c403b2b0e68bfc4a380d471f82eb5f62f5b25803a443ff4c92",
+  "inputSha256": "61c6365a4f373ca16ad31d57b75ecda428dcb8a9797ab56c37eb7cb74c006e22"
+}

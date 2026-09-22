@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-09-22T10:21:02.197Z",
+  "source": "audio/narration-original.wav",
+  "sourceSha256": "a03ecd67aec028c403b2b0e68bfc4a380d471f82eb5f62f5b25803a443ff4c92",
+  "convertedPcmSha256": "342a70436c49ae065cdc8187864cd088bc2e85c3267ad1b98737f5d77337958d",
+  "asrJsonSha256": "61c6365a4f373ca16ad31d57b75ecda428dcb8a9797ab56c37eb7cb74c006e22",
+  "whisperVersion": "b4938",
+  "model": "small-q5_1",
+  "modelSha256": "ae85e4a935d7a567bd102fe55afc16bb595bdb618e11b2fc7591bc08120411bb",
+  "local": true,
+  "language": "ko",
+  "dtw": "small",
+  "flashAttention": false,
+  "expectedTextPromptUsed": false
+}

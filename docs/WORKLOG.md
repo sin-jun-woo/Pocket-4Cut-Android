@@ -449,3 +449,19 @@ git ls-remote --heads origin codex/setup-project-guidance
 - 미실행: 앱 파일 변경이 없어 Gradle 빌드/단위/계측을 반복하지 않았다. 이전 45/45 결과를 이번에 새로 실행한 것으로 계산하지 않는다. Instagram 실제 게시·압축·자르기·심사는 하지 않았다.
 - 보존/권리: 사용자 사진이나 타사 캐릭터를 넣지 않았다. 이미지 생성 도구의 실제 요청을 남겼으며 사람이 직접 그렸다고 표시하지 않는다. 기존 ZIP은 그대로 유지하고 새 PNG를 별도 제공한다.
 - Git: 위 이미지·제작 기록·문서만 명시적으로 stage하여 `design: 전체 계절 레이아웃 홍보 이미지 추가`로 커밋 후 현재 작업 브랜치에 일반 push한다. 실제 SHA/원격 일치/작업 트리 상태는 최종 명령과 완료 보고에서 확인한다.
+
+## 2026-09-22 — 마지막 릴스 틀을 유지한 사계절 소개 영상 (Asia/Seoul)
+
+- 요청/범위: 마지막 제작 릴스의 기본 틀을 유지하고 내용만 새 봄·여름·가을·겨울 프레임 소개로 바꾼다. 기준 `6d0c151d473d942ae5da70c8c745cda5f8f4377b`, `codex/seasonal-frames`, 시작 작업 트리 clean. 납품 검증/포장은 2026-09-22 19:30 KST에 완료했다.
+- 확인한 원본: 설명 오버레이 제거까지 반영된 `reference-v3/deliverables/Pocket4Cut-Reels-Reference-Voice.mp4` 23초 버전이다. 원본 코드·음성·스토리·encoded contact sheet를 대조하고 v1/v2로 되돌리지 않았다.
+- 변경 파일: 새 `design/reels/seasonal-v4/`의 제작 코드·대본·WAV·스틸·검증 JSON·MP4/MP3/커버/자막·ZIP·README, 이 WORKLOG와 IMAGE_ASSET_GUIDE. 기존 앱 소스·리소스·Gradle·이전 릴스·사용자 사진·사계절 프레임 원본을 변경하지 않았다.
+- 영상: 이전 종이색·타이포그래피·인화사진·전환·검색 안내를 유지하고 실제 사계절 Android 렌더 JPEG를 사용했다. 네 시즌 전체 프레임/장식 확대, 대표 2·4·6컷, 8배치 안내, 저장/공유를 14장면으로 구성했다. 저장→공유는 같은 겨울 프레임/사진 순서를 유지한다. 음악·효과음과 이전에 제거한 설명 오버레이를 추가하지 않았다. 가상 성인 사진을 재사용했고 실제 기기 연속 녹화로 표시하지 않는다.
+- 음성: 기존 Qwen3-TTS 1.7B Base, 같은 승인된 참조·Korean/seed 91026/CPU float32 SDPA/6스레드 설정을 오프라인으로 사용했다. 모델/tokenizer/참조 해시와 기존 Python 환경을 확인했고 `pip check` 오류 0이었다. 추가 설치·다운로드·외부 전송은 없다. SoX/flash-attn 미설치 경고는 비치명적이었고 기존 SDPA 경로가 완료됐다.
+- 중간 실패: 첫 21.92초 음성에서 두 표현의 ASR 결과가 대본과 달라 타이밍/렌더 가드가 중단했다. 정답 프롬프트 없는 추가 탐욕 디코딩에서도 차이가 남았고 음성 오류인지 인식 오류인지 단정하지 않았다. 두 문구만 간결하게 바꿔 동일 조건으로 재생성했다. 첫 WAV·마스터·전사·생성 기록은 ignored `build/reels-seasonal-v4/attempt-01`에 보존했으며 참조와 사용자 자료를 삭제하지 않았다. ASR 원문을 정답으로 대체하거나 발음 오차 허용을 늘리지 않았다.
+- 최종 음성: 20.960초 / 24 kHz / mono / float32 WAV, SHA-256 `a03ecd67aec028c403b2b0e68bfc4a380d471f82eb5f62f5b25803a443ff4c92`. 생성 206.672초, 명령 전체 221.188초, exit 0. 배속·발화 잘라내기 없이 0.12초 시작 여유와 끝 안내 시간을 둔 23초 / 48 kHz / stereo / PCM24 마스터로 처리했다.
+- 실행: `node --check`로 제작 JS 문법을 확인했다. `node --test design/reels/seasonal-v4/source/test-time-captions.cjs` **10/10 통과**. `master-narration.cjs` → `transcribe-narration.cjs` → `time-captions.cjs`가 최종 성공했다. 로컬 whisper.cpp b4938/small-q5_1의 정답 프롬프트 없는 전사를 보존하고 명시한 공백/문장부호/개수 표기만 정규화해 **136자 일치, 편집 거리 0**, 실제 토큰 시각으로 14장면을 생성했다.
+- 시각 실행: `render-seasons.cjs --stills`에서 **28스틸·41텍스트 경계·12프레임 배치 경계**를 확인했다. 이어 `render-seasons.cjs`로 실제 690프레임을 인코딩했다. 계절별 장식/문구, 사진창 수, 비대칭 6컷, 저장/공유 연속성, 커버/CTA 잘림을 독립 정지화면 검수에서도 확인했다. 최종 MP4에서 추출한 모아보기와 계절 확대 장면도 검수했다. 의도한 배경 사진의 화면 밖 배치와 주요 프레임 누락을 구분했다.
+- 최종 내보내기: `export-seasons.cjs` 성공. **23.000초 / 1080×1920 / 30 fps / 690프레임 / H.264 BT.709 / AAC 48 kHz stereo**, 9,984,514 bytes. 전체 영상·음성 디코딩 PASS, A/V 길이 일치 PASS, faststart PASS, 검은 구간 0, 커버 크기 PASS, 최종 −16.0 LUFS / −2.4 dBTP. MP4 SHA-256 `4583fc67fbf61dd9fe2f65c393b14e8f67864daf8f225ef94eb659d6cfa96dfb`.
+- 전달: `Pocket4Cut-Seasons-Cover.jpg` 1080×1920, 23초 내레이션 MP3, SRT·대본·게시글·업로드 안내. `powershell -NoProfile -ExecutionPolicy Bypass -File design/reels/seasonal-v4/source/package-seasons.ps1` 성공, **7항목 모두 원본 해시 일치**, ZIP 10,939,270 bytes, SHA-256 `52ef98e2d0c58048cd9caac1a6f3dcee6ae70fc9ee6229ae9573ed510e90e0c2`. 사용자 원본 영상·참조 음성/대사·개인 경로·비밀값은 납품 및 공개 문서에 포함하지 않는다.
+- 미실행/한계: 앱 파일 변경이 없어 Android 빌드·JVM·계측 테스트는 반복하지 않았다. 이전 앱 검사 결과를 이번 실행으로 계산하지 않는다. 직접 청취/주관적 자연스러움/음색 동일성, 휴대전화 재생, Instagram 게시·압축·자르기·심사, Play 검색·배포 상태는 미검증이다. 게시 전에 배포 앱의 새 계절 프레임 적용 여부와 음성을 확인해야 한다.
+- Git: 위 작업 파일만 정확한 경로로 stage하고 staged diff/공백/공개 정보 범위를 검사한 뒤 `feat: 사계절 프레임 릴스 홍보 영상 추가`로 커밋하고 현재 원격 브랜치에 일반 push한다. 자체 SHA는 반복 amend 없이 최종 `git log -1`, `git status --short --branch`, `git ls-remote --heads origin codex/seasonal-frames` 및 완료 보고에서 확인한다.
