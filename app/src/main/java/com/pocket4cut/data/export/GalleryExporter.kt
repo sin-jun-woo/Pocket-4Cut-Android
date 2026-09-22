@@ -45,6 +45,23 @@ class GalleryExporter(
     private val context: Context,
     private val sessions: SessionDocumentRepository = SessionDocumentRepository(context),
 ) {
+    /** A recorded COMPLETED state is not proof that the public copy still exists unchanged. */
+    suspend fun isNormalCopyVerified(sessionId: String, resultId: String): Boolean =
+        withContext(Dispatchers.IO) {
+            exportMutex.withLock {
+                val document = sessions.getById(sessionId) ?: return@withLock false
+                val result = document.results.firstOrNull { it.resultId == resultId }
+                    ?: return@withLock false
+                val op = document.exportOperations.asReversed().firstOrNull {
+                    it.resultId == resultId && !it.isCopy && it.status != ExportStatus.FAILED
+                }?.takeIf { it.status == ExportStatus.COMPLETED } ?: return@withLock false
+                val source = sessions.resolveResultPath(result)
+                val uri = op.uri?.let(Uri::parse) ?: return@withLock false
+                source.isFile && isRecordedRow(op, uri) && sameBytes(source, uri) &&
+                    (Build.VERSION.SDK_INT < 29 || isPending(uri) == false)
+            }
+        }
+
     suspend fun export(
         sessionId: String,
         resultId: String,
@@ -149,11 +166,19 @@ class GalleryExporter(
         var op = initial
         if (op.status == ExportStatus.COMPLETED) {
             val uri = op.uri?.let(Uri::parse) ?: return ExportOutcome.NeedsRecovery(op.operationId)
-            return if (isRecordedRow(op, uri) && sameBytes(source, uri) &&
+            if (isRecordedRow(op, uri) && sameBytes(source, uri) &&
                 (Build.VERSION.SDK_INT < 29 || isPending(uri) == false)
             ) {
-                ExportOutcome.AlreadySaved(uri)
-            } else ExportOutcome.NeedsRecovery(op.operationId)
+                return ExportOutcome.AlreadySaved(uri)
+            }
+            // Retry only when the recorded URI is definitely gone and no row with the
+            // operation's name remains. A renamed or modified row must not be duplicated.
+            val matches = try { findMatchingRow(op.displayName) }
+            catch (_: Exception) { return ExportOutcome.NeedsRecovery(op.operationId) }
+            if (rowExists(uri) != false || matches.isNotEmpty() || !canRetryMissingInsert(op)) {
+                return ExportOutcome.NeedsRecovery(op.operationId)
+            }
+            op = mark(sessionId, op.operationId, ExportStatus.NEEDS_RECOVERY, null, clearUri = true)
         }
         if (op.status == ExportStatus.FAILED) {
             return ExportOutcome.Failed("Previous gallery export failed")
@@ -161,15 +186,22 @@ class GalleryExporter(
         if (op.status == ExportStatus.NEEDS_RECOVERY) {
             val matches = try { findMatchingRow(op.displayName) }
             catch (_: Exception) { return ExportOutcome.NeedsRecovery(op.operationId) }
-            if (matches.isEmpty() && op.uri == null && canRetryMissingInsert(op)) {
-                op = mark(sessionId, op.operationId, ExportStatus.PREPARED, null)
+            val recordedRowGone = op.uri?.let(Uri::parse)?.let { rowExists(it) == false } ?: true
+            if (matches.isEmpty() && recordedRowGone && canRetryMissingInsert(op)) {
+                op = mark(sessionId, op.operationId, ExportStatus.PREPARED, null, clearUri = true)
             } else if (matches.size != 1 || (op.uri != null && matches.single().toString() != op.uri)) {
                 return ExportOutcome.NeedsRecovery(op.operationId)
             } else {
                 val matched = matches.single()
                 val verified = runCatching { sha256(source).contentEquals(sha256(matched)) }.getOrDefault(false)
-                if (!verified) return ExportOutcome.NeedsRecovery(op.operationId)
-                op = mark(sessionId, op.operationId, ExportStatus.COPIED, matched.toString())
+                op = when {
+                    verified -> mark(sessionId, op.operationId, ExportStatus.COPIED, matched.toString())
+                    // A crash after insert but before recording its URI leaves an owned pending
+                    // row that may contain no bytes or only a partial copy. Resume that row.
+                    op.uri == null && Build.VERSION.SDK_INT >= 29 && isPending(matched) == true ->
+                        mark(sessionId, op.operationId, ExportStatus.INSERTED, matched.toString())
+                    else -> return ExportOutcome.NeedsRecovery(op.operationId)
+                }
             }
         }
         var uri = op.uri?.let(Uri::parse)
@@ -250,10 +282,13 @@ class GalleryExporter(
 
     private suspend fun mark(
         sessionId: String, operationId: String, status: ExportStatus, uri: String?,
+        clearUri: Boolean = false,
     ): ExportOperation {
         val updated = mutate(sessionId) { document ->
             val operations = document.exportOperations.map {
-                if (it.operationId == operationId) it.copy(status = status, uri = uri ?: it.uri) else it
+                if (it.operationId == operationId) {
+                    it.copy(status = status, uri = if (clearUri) null else uri ?: it.uri)
+                } else it
             }
             document.copy(exportOperations = operations)
         }
@@ -338,6 +373,12 @@ class GalleryExporter(
 
     private fun isRecordedRow(op: ExportOperation, uri: Uri): Boolean =
         runCatching { findMatchingRow(op.displayName).singleOrNull() == uri }.getOrDefault(false)
+
+    /** Null means the provider could not establish whether the row still exists. */
+    private fun rowExists(uri: Uri): Boolean? = try {
+        context.contentResolver.query(uri, arrayOf(MediaStore.Images.Media._ID), null, null, null)
+            ?.use { it.moveToFirst() }
+    } catch (_: Exception) { null }
 
     private fun isPending(uri: Uri): Boolean? = try {
         context.contentResolver.query(uri, arrayOf(MediaStore.Images.Media.IS_PENDING), null, null, null)

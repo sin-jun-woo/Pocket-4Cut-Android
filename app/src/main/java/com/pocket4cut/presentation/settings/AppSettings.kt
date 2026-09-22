@@ -51,6 +51,7 @@ object AppSettings {
 
     fun updateCountdownSeconds(value: Int) {
         val clamped = value.coerceIn(COUNTDOWN_MIN, COUNTDOWN_MAX)
+        if (clamped == countdownSeconds) return
         countdownSeconds = clamped
         prefs.edit().putInt("countdownSeconds", clamped).apply()
     }

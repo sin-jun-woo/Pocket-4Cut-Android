@@ -1,6 +1,7 @@
 # Pocket 4Cut 현재 구현 아키텍처
 
 > 확인일: 2026-09-22. 기준은 `codex/release-readiness`의 현재 구현이며, 이번 작업 시작 HEAD는 `6c815cb2ce3c665989e80512ffde1e71f268f86a`다. 본문에는 이 브랜치에서 추가한 복구·렌더·화면 이탈 코드를 포함한다. 실제 검사 결과와 커밋 상태는 [출시 준비 검증](../engineering/RELEASE_READINESS_2026-09-22.md)을 따른다.
+> 2026-09-22 실기기 후속 작업은 시작 HEAD `1b705cb3cd813efc062eefeed807f595e4b7adf2` 이후의 미커밋 코드까지 반영한다. 실행 범위와 남은 관문은 [실기기 최종 출시 후보 검증](../engineering/PHYSICAL_RELEASE_VERIFICATION_2026-09-22.md)을 따른다.
 > 아래는 소스에서 확인한 구현이다. 커밋·push 및 빌드·기기 검증 결과는 [WORKLOG](WORKLOG.md)의 해당 실행 기록을 따른다. 코드의 존재를 테스트 통과나 모든 장애 복구 완료로 해석하지 않는다.
 
 루트의 [ARCHITECTURE.md](../ARCHITECTURE.md)는 목표 계층과 예시를 포함한 초기 설계 문서다. 이 문서는 현재 호출 관계와 저장 계약을 설명하며, 이전 감사 결과를 현행 결함 목록으로 그대로 옮기지 않는다.
@@ -16,6 +17,8 @@
 - `qaRelease`: release 설정을 상속하되 QA applicationId와 debug 서명을 사용한다. 최적화된 QA APK이며 스토어 배포 APK가 아니다.
 
 [MainActivity](../app/src/main/java/com/pocket4cut/MainActivity.kt)는 테마·설정 복원, edge-to-edge와 시스템바 설정, 화면 켜짐 유지, Compose 테마와 Scaffold, NavHost를 연결한다.
+
+[HomeScreen](../app/src/main/java/com/pocket4cut/presentation/home/HomeScreen.kt)의 상단 라벨과 홈의 프린트 미리보기 브랜드 문구는 `Pocket 4Cut`으로 통일했다. 마지막 QA APK의 실기기 Home UI 트리에서 두 문자열을 확인했다. 이 UI 문자열은 최종 결과 JPEG의 별도 렌더 입력과 구분한다.
 
 ```mermaid
 flowchart TD
@@ -69,12 +72,15 @@ flowchart LR
 
 - Home은 수정 시각이 가장 최근인 재개 가능한 초안 하나를 보여 준다. 초안은 여러 개 보존되며 Gallery에서도 나열한다. `NEEDS_RECOVERY`는 자동 이어하기 대상에서 제외한다.
 - Capture는 새 세션을 촬영 전에 만들고 `SavedStateHandle`에 세션 ID를 둔다. `ON_STOP`에서 일시 중지하고 복귀 후 사용자 재개 동작을 기다린다. 진행 중인 단일 촬영은 완료 파일 게시를 마친 뒤 멈추는 경로가 있다.
-- Selection은 저장된 photo ID 순서를 인덱스로 변환하여 화면을 복원한다. 선택 변경과 다음 단계 이동을 저장소에 반영한다.
+- Capture의 빠른 전·후면 전환은 별도 `cameraSwitchJob`과 기존 CameraX 바인딩 Mutex를 함께 사용한다. 바인딩 완료 전 전환 중복 입력과 촬영 시작/재개를 보류하고, 실패 시 원래 렌즈 재바인딩을 시도한다. 이것은 모든 제조사의 카메라 연결 실패를 자동 복구한다는 보장은 아니다.
+- Selection은 저장된 photo ID 순서를 인덱스로 변환하여 화면을 복원한다. 선택 변경과 다음 단계 이동을 저장소에 반영한다. 시스템 뒤로가기도 화면 닫기 버튼과 동일한 작업 일시정지 확인창을 사용한다. `홈으로`는 저장 성공을 확인한 뒤 NavHost가 Home route까지 pop하며, 저장 중에는 중복 이탈·선택·다음 입력을 막고 실패하면 화면에 남는다. 보관함에서 재개한 선택 화면도 이 정책을 따른다. 관련 내비게이션 계측과 보관함 재개 후 실제 수동 Home 이동을 확인했다.
 - 프레임 선택 단계·커스텀 디자인은 세션 초안에 기록한다. 하위 화면은 여전히 하나의 frame destination 안에서 전환한다.
 - Edit는 문구·필터·순서 등을 자동 저장하고, 상세 편집 이동과 화면 내 나가기에서 저장 완료 후 콜백을 실행한다. Detail은 보정을 photo ID별로 저장한다.
 - 모든 route가 ID 하나만 받도록 바뀐 것은 아니다. frameType·선택 인덱스·layout/theme 인자와 Base64 결과 경로가 아직 존재한다. 실제 선택·순서·보정 복원의 기준은 세션 문서다.
 
 일반 뒤로 가기는 자료를 유지한다. 일반·상세 편집의 시스템 뒤로 및 커스텀 프레임 이탈은 저장 완료 경로로 연결된다. 문구 입력 debounce 직후 **프로세스를 강제로 종료**하는 경우까지 무손실로 보장하는 것은 아니다.
+
+설정의 카운트다운 슬라이더는 [AppSettings](../app/src/main/java/com/pocket4cut/presentation/settings/AppSettings.kt)의 현재 값을 직접 표시하고 값 변화 때 SharedPreferences에 반영한다. `SettingsScreen`의 닫기 콜백은 [NavigationGuard](../app/src/main/java/com/pocket4cut/presentation/navigation/NavigationGuard.kt)를 거쳐 현재 destination이 설정일 때만 pop하므로 빠른 연타가 홈까지 제거하지 않는다. 화면 켜짐 유지 설정의 기존 계약은 이번 실기기 변경에서 건드리지 않았다.
 
 ## 3. 세션 문서와 레거시 이전
 
@@ -87,6 +93,8 @@ flowchart LR
 - ExportOperation: 작업/결과 ID, 상태, URI, 표시 파일명, 생성 시각, 새 사본 여부.
 
 [SessionDocumentRepository](../app/src/main/java/com/pocket4cut/data/local/SessionDocumentRepository.kt)는 `filesDir/session_documents/<id>.json`을 저장한다. 모든 인스턴스가 프로세스 Mutex를 공유하고 `expectedRevision`을 검사한다. `AtomicFile`로 쓰며 정상 이전 문서를 `<id>.json.lastgood`에 보관한다. 손상 시 복구 사본을 `NEEDS_RECOVERY`로 표시하고 `recover()`는 손상 원문을 별도 파일로 보존한다. 미래 스키마는 지원 오류로 반환한다. 결과 JPEG 게시 의도는 별도 `filesDir/result_publications/<id>/<resultId>.json` AtomicFile에 선기록한다. 이 장치는 다중 프로세스 잠금이나 모든 JPEG와 JSON 사이의 단일 트랜잭션을 뜻하지 않는다.
+
+단일 구형 `sessions.json` 가져오기가 실패해도 `scanForGallery()`는 읽을 수 있는 새 세션별 문서를 반환하고, `legacyMigrationError`를 함께 올린다. Home/보관함은 구형 자료의 미표시 가능성을 사용자에게 알린다. 소유 관계를 판단할 수 없으므로 이 상태에서는 새 세션의 실제 파일 삭제를 시작하지 않으며, 삭제 저널의 마무리도 보류한다. 구형 원본 파일 자체는 보존한다. 격리된 손상 fixture의 정상 결과 표시·원문 보존·삭제 차단 계측은 통과했다. 실제 사용자 구형 파일을 손상시킨 검사는 아니다.
 
 게시 저널의 새 결과 JPEG가 손상되면 정상 문서와 이전 완료본은 계속 열람할 수 있다. 조회 응답은 복구 필요 단계로 표시되며 편집/새 결과 준비는 거부된다. 보관함의 후보별 격리 조작은 미완료 게시 JPEG·`.tmp`와 journal만 앱 소유 복구 위치로 옮긴다. 중단된 격리는 intent를 읽어 재개한다. `recover()`는 손상된 세션 JSON의 직전 정상본 복구에 한정하며, 미래 스키마를 이전 버전으로 덮어쓰지 않는다. 읽을 수 없는 문서 하나가 정상 세션의 보관함 표시를 막지 않도록 `scanForGallery()`를 사용한다. 마지막 정상본도 없는 문서는 확인 후 숨김 marker만 기록하며 원본 JSON·JPEG를 바꾸지 않는다. 숨긴 기록 목록에서 marker를 제거해 다시 표시할 수 있다. 숨긴 문서가 존재하는 동안에는 다른 세션 사진의 참조 여부를 판정할 수 없어 물리 파일 삭제를 중단한다.
 
@@ -150,10 +158,13 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 
 [GalleryExporter](../app/src/main/java/com/pocket4cut/data/export/GalleryExporter.kt)가 `AUTO`, `SAVE`, `SAVE_COPY`와 결과 상태를 정의한다. ResultScreen의 일반 UI는 자동/수동 저장을 사용하며 새 사본 저장은 exporter API에 존재한다.
 
+- ResultScreen의 결과 경로 조회는 `scanForGallery()`에서 정상 세션별 문서를 독립적으로 찾는다. 관계없는 손상 세션별 문서나 구형 단일 `sessions.json` 오류 때문에 정상 완료본의 결과 ID 연결을 모두 잃지 않도록 하고, 구형 오류는 별도 경고로 전달한다. 화면 `ON_RESUME`에는 exporter가 기록된 일반 사본의 MediaStore 행·바이트·pending 상태를 검사해 저장 완료 표시를 다시 계산한다. 구형 단일 파일이 손상된 경우 그 안의 아직 옮겨지지 않은 작업은 자동 복구됐다고 표시하지 않는다.
 - 정상 결과별 기존 작업을 재사용하고, insert 전 operation ID와 표시 파일명을 저장한다.
 - PREPARED → INSERTED → COPIED → PUBLISHED → COMPLETED 상태와 URI를 세션 문서에 기록한다. 복사 중에는 SHA-256으로 원본/공용 사본 바이트를 비교한다.
 - API 29 이상은 pending 행을 만든 뒤 공개하고, update 결과를 확인한다. 복사 실패는 생성 행 삭제를 시도하고 불확실하면 `NEEDS_RECOVERY`로 남긴다.
 - API 29 이상에서는 pending 행도 조회해 PREPARED 작업 이후 중단되었을 때 동일 작업과 MediaStore 행을 재사용한다. 행이 없음을 확인한 경우에만 같은 작업으로 삽입을 다시 시작한다.
+- 기록 URI가 없는 작업에서 같은 작업 이름의 **pending 행**이 확인되었지만 바이트가 불완전할 때는 그 행을 INSERTED 단계로 이어받아 같은 결과를 다시 복사한다. 새 행을 무조건 추가하거나 공개·소유 불명 행을 덮어쓰지 않는다. 격리된 부분 pending 행 계측은 연결 실기기에서 통과했다. 실제 저장 도중 강제 프로세스 종료의 모든 타이밍을 검사한 것은 아니다.
+- 기록된 COMPLETED URI의 행이 실제로 사라지고 같은 작업 이름의 다른 행도 없음을 확인한 때만 기존 operation ID로 삽입을 재개한다. 바이트가 달라졌거나 provider의 응답이 불명확하면 중복 삽입 대신 `NEEDS_RECOVERY`로 남긴다.
 - API 26–28은 WRITE 권한을 확인하고 ResultScreen이 runtime 요청·허용 후 재시도를 수행한다. 소유자를 확정할 수 없는 구버전 중단 행은 자동 재삽입 대신 복구 필요로 반환한다.
 - 새 렌더 결과로 이동할 때만 auto route 표시를 전달한다. Gallery에서 결과를 여는 것만으로 자동 저장하지 않으며 legacy 완료본은 AUTO를 거부한다.
 - 공유는 앱 소유 결과를 확인한 뒤 FileProvider content URI와 임시 읽기 권한을 사용한다. 외부 수신 앱에서의 실제 전송은 별도 검증 대상이다.

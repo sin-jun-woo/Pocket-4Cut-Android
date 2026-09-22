@@ -66,6 +66,7 @@ data class GalleryUiState(
     val items: List<GalleryItem> = emptyList(),
     val drafts: List<GalleryDraftItem> = emptyList(),
     val unreadableSessionIds: Set<String> = emptySet(),
+    val legacyMigrationFailed: Boolean = false,
     val hiddenSessionIds: List<String> = emptyList(),
     val recovery: GalleryRecoveryState? = null,
 ) {
@@ -147,6 +148,7 @@ class GalleryViewModel(app: Application) : AndroidViewModel(app) {
                 _uiState.update {
                     it.copy(isLoading = false, items = items, drafts = drafts,
                         unreadableSessionIds = scan.unreadableSessionIds.toSet(),
+                        legacyMigrationFailed = scan.legacyMigrationError != null,
                         hiddenSessionIds = hidden)
                 }
             } catch (t: Exception) {

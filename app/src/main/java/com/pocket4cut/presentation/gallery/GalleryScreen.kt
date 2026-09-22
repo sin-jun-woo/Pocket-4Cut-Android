@@ -130,6 +130,16 @@ fun GalleryScreen(
                     onModeSelected = { viewMode = it },
                 )
             }
+            if (uiState.legacyMigrationFailed) {
+                Text(
+                    text = "이전 버전의 저장 기록을 읽지 못했습니다. 원본은 보존되어 있으며, 정상적으로 읽힌 작업은 아래에 표시됩니다.",
+                    color = AppColors.Semantic.error,
+                    style = AppTypography.caption1,
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = AppSpacing.Screen.horizontal)
+                        .padding(bottom = AppSpacing.md),
+                )
+            }
             when {
                 uiState.isLoading -> {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

@@ -94,6 +94,7 @@ class CaptureViewModel(app: Application, private val savedState: SavedStateHandl
     private var pendingRebind = false
     private var deferredBindOnJob: Job? = null
     private var cameraBindJob: Job? = null
+    private var cameraSwitchJob: Job? = null
     private var cameraBindRequest = 0L
     private val cameraBindMutex = Mutex()
 
@@ -166,50 +167,44 @@ class CaptureViewModel(app: Application, private val savedState: SavedStateHandl
 
     fun switchCamera() {
         if (_uiState.value.phase !in setOf(CapturePhase.READY, CapturePhase.PAUSED, CapturePhase.FAILED)) return
-        if (cameraBindJob?.isActive == true) return
+        if (cameraBindJob?.isActive == true || cameraSwitchJob?.isActive == true) return
         val lifecycleOwner = boundLifecycleOwner?.get() ?: return
         val previewView = boundPreviewView?.get() ?: return
         val previous = _uiState.value.isFrontCamera
-        val phaseBefore = _uiState.value.phase
-        _uiState.update { it.copy(isFrontCamera = !previous) }
-        viewModelScope.launch {
-            runCatching {
-                val lensFacing = if (_uiState.value.isFrontCamera) {
-                    CameraSelector.LENS_FACING_FRONT
-                } else {
-                    CameraSelector.LENS_FACING_BACK
-                }
-                engine.bind(lifecycleOwner, previewView, lensFacing)
-                cameraBound = true
-                val range = engine.zoomRatioRange() ?: (1f to 1f)
-                val resetZoom = range.first
-                engine.setZoomRatio(resetZoom)
-                val applied = engine.currentZoomRatio()?.coerceIn(range.first, range.second) ?: resetZoom
-                _uiState.update {
-                    it.copy(
-                        phase = phaseBefore,
-                        errorMessage = if (it.damagedCaptureIndex == null && !it.recoveryBlocked) null else it.errorMessage,
-                        minZoom = range.first,
-                        maxZoom = range.second,
-                        zoomRatio = applied,
-                    )
-                }
-            }.onFailure { t ->
-                cameraBound = false
-                _uiState.update {
-                    it.copy(
-                        isFrontCamera = previous,
-                        phase = CapturePhase.FAILED,
-                        errorMessage = t.message ?: "카메라 전환에 실패했습니다.",
-                    )
-                }
-                runCatching {
-                    val fallbackFacing = if (previous) {
-                        CameraSelector.LENS_FACING_FRONT
-                    } else {
-                        CameraSelector.LENS_FACING_BACK
+        cameraSwitchJob = viewModelScope.launch {
+            cameraBindMutex.withLock {
+                try {
+                    val lensFacing = if (previous) CameraSelector.LENS_FACING_BACK else CameraSelector.LENS_FACING_FRONT
+                    engine.bind(lifecycleOwner, previewView, lensFacing)
+                    cameraBound = true
+                    val range = engine.zoomRatioRange() ?: (1f to 1f)
+                    val resetZoom = range.first
+                    engine.setZoomRatio(resetZoom)
+                    val applied = engine.currentZoomRatio()?.coerceIn(range.first, range.second) ?: resetZoom
+                    _uiState.update {
+                        it.copy(
+                            isFrontCamera = !previous,
+                            errorMessage = if (it.damagedCaptureIndex == null && !it.recoveryBlocked) null else it.errorMessage,
+                            minZoom = range.first,
+                            maxZoom = range.second,
+                            zoomRatio = applied,
+                        )
                     }
-                    engine.bind(lifecycleOwner, previewView, fallbackFacing)
+                } catch (t: Exception) {
+                    if (t is CancellationException) throw t
+                    cameraBound = false
+                    _uiState.update {
+                        it.copy(
+                            phase = CapturePhase.FAILED,
+                            errorMessage = t.message ?: "카메라 전환에 실패했습니다.",
+                        )
+                    }
+                    try {
+                        val fallbackFacing = if (previous) CameraSelector.LENS_FACING_FRONT else CameraSelector.LENS_FACING_BACK
+                        engine.bind(lifecycleOwner, previewView, fallbackFacing)
+                    } catch (fallback: Exception) {
+                        if (fallback is CancellationException) throw fallback
+                    }
                 }
             }
         }
@@ -231,6 +226,7 @@ class CaptureViewModel(app: Application, private val savedState: SavedStateHandl
 
     fun start(frameType: FrameType) {
         if (captureJob?.isActive == true) return
+        if (cameraSwitchJob?.isActive == true) return
         if (_uiState.value.phase !in setOf(CapturePhase.READY, CapturePhase.IDLE)) return
         val id = UUID.randomUUID().toString()
         pauseRequested = false
@@ -325,6 +321,7 @@ class CaptureViewModel(app: Application, private val savedState: SavedStateHandl
 
     fun resume() {
         if (_uiState.value.phase !in setOf(CapturePhase.PAUSED, CapturePhase.FAILED)) return
+        if (cameraSwitchJob?.isActive == true) return
         if (_uiState.value.damagedCaptureIndex != null || _uiState.value.recoveryBlocked) return
         val id = _uiState.value.sessionId ?: return
         if (captureJob?.isActive == true) return
@@ -470,6 +467,7 @@ class CaptureViewModel(app: Application, private val savedState: SavedStateHandl
     override fun onCleared() {
         super.onCleared()
         cameraBindJob?.cancel()
+        cameraSwitchJob?.cancel()
         deferredBindOnJob = null
         pendingRebind = false
         boundLifecycleOwner = null

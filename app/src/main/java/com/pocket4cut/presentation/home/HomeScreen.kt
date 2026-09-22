@@ -71,7 +71,7 @@ fun HomeScreen(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "POCKET / 4CUT",
+                        text = "Pocket 4Cut",
                         style = AppTypography.caption1.copy(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.4.sp,
@@ -213,7 +213,7 @@ private fun PrintStripPreview() {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "POCKET 4CUT",
+                text = "Pocket 4Cut",
                 style = AppTypography.caption2.copy(fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp),
                 color = AppColors.Text.primary,
             )

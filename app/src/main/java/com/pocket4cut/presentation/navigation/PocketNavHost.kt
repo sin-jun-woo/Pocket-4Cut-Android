@@ -84,9 +84,13 @@ fun PocketNavHost(
                         session.stage != SessionStage.RESULT && session.stage != SessionStage.DELETED &&
                             session.stage != SessionStage.NEEDS_RECOVERY
                     }
-                    draftLoadError = if (scan.unreadableSessionIds.isNotEmpty()) {
-                        "일부 저장된 작업은 복구가 필요합니다. 보관함에서 확인해 주세요."
-                    } else null
+                    draftLoadError = when {
+                        scan.legacyMigrationError != null ->
+                            "이전 버전의 저장 기록을 읽지 못했습니다. 원본은 보존되어 있으며 보관함에서 읽을 수 있는 작업을 확인할 수 있습니다."
+                        scan.unreadableSessionIds.isNotEmpty() ->
+                            "일부 저장된 작업은 복구가 필요합니다. 보관함에서 확인해 주세요."
+                        else -> null
+                    }
                 }.onFailure { draftLoadError = "저장된 작업을 읽을 수 없습니다. 보관함에서 확인해 주세요." }
             }
             HomeScreen(
@@ -104,7 +108,7 @@ fun PocketNavHost(
         // Settings
         composable(Routes.SETTINGS) {
             SettingsScreen(
-                onBack = { navController.popBackStack() },
+                onBack = { navController.popBackStackIfCurrent(Routes.SETTINGS) },
                 onPrivacyPolicy = { navController.navigate(Routes.PRIVACY_POLICY) },
                 onContactFeedback = { navController.navigate(Routes.CONTACT_FEEDBACK) },
             )
@@ -202,7 +206,7 @@ fun PocketNavHost(
             SelectionScreen(
                 frameType = FrameType.fromId(frameTypeId),
                 sessionId = sessionId,
-                onBack = { navController.popBackStack() },
+                onBack = { navController.popSelectionToHome() },
                 onDone = { selectedIndexes ->
                     val encoded = NavCodec.encodeIndexes(selectedIndexes)
                     navController.navigate("${Routes.LAYOUT_SELECTION}/${frameTypeId}/$sessionId/$encoded")

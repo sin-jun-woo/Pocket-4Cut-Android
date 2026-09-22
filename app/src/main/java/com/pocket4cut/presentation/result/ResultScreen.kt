@@ -33,9 +33,11 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -49,13 +51,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.pocket4cut.data.export.ExportMode
 import com.pocket4cut.data.export.ExportOutcome
 import com.pocket4cut.data.export.GalleryExporter
 import com.pocket4cut.data.local.SessionDocumentRepository
-import com.pocket4cut.domain.model.ExportStatus
 import com.pocket4cut.presentation.settings.AppSettings
 import com.pocket4cut.ui.designsystem.AppColors
 import com.pocket4cut.ui.designsystem.AppLayout
@@ -68,10 +72,25 @@ import com.pocket4cut.ui.designsystem.components.IconCircleButton
 import com.pocket4cut.ui.designsystem.components.PrimaryButton
 import com.pocket4cut.ui.designsystem.components.SecondaryButton
 import java.io.File
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private val BottomChromeReserve = 184.dp
+
+/** A damaged, unrelated session must not hide a healthy result. */
+internal suspend fun findResultLink(
+    sessions: SessionDocumentRepository,
+    resultFile: File,
+): Pair<String, String>? {
+    val path = resultFile.canonicalPath
+    return sessions.scanForGallery().documents.firstNotNullOfOrNull { document ->
+        document.results.firstOrNull { record ->
+            runCatching { sessions.resolveResultPath(record).canonicalPath == path }
+                .getOrDefault(false)
+        }?.let { document.sessionId to it.resultId }
+    }
+}
 
 @Composable
 fun ResultScreen(
@@ -82,11 +101,13 @@ fun ResultScreen(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val file = remember(resultPath) { File(resultPath) }
 
     var isSaving by remember { mutableStateOf(false) }
-    var isSaved by remember { mutableStateOf(false) }
+    var isSaved by remember(resultPath) { mutableStateOf(false) }
     var resultLink by remember(resultPath) { mutableStateOf<Pair<String, String>?>(null) }
+    var resumeRevision by remember(resultPath) { mutableIntStateOf(0) }
 
     var toastMessage by remember { mutableStateOf<String?>(null) }
     var toastType by remember { mutableStateOf(AppToastType.Success) }
@@ -131,27 +152,29 @@ fun ResultScreen(
         }
     }
 
-    LaunchedEffect(resultPath) {
-        runCatching {
-            sessions.list().firstNotNullOfOrNull { document ->
-                document.results.firstOrNull { record ->
-                    sessions.resolveResultPath(record).canonicalPath == file.canonicalPath
-                }?.let { record ->
-                    (document.sessionId to record.resultId) to document.exportOperations.any {
-                        it.resultId == record.resultId && it.status == ExportStatus.COMPLETED
-                    }
-                }
-            }
-        }.onSuccess { match ->
-            resultLink = match?.first
-            isSaved = match?.second == true
+    DisposableEffect(lifecycleOwner, resultPath) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) resumeRevision++
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    LaunchedEffect(resultPath, resumeRevision) {
+        try {
+            val match = findResultLink(sessions, file)
+            resultLink = match
+            isSaved = match?.let { exporter.isNormalCopyVerified(it.first, it.second) } == true
             if (match == null) {
                 toastType = AppToastType.Error
                 toastMessage = "저장된 결과를 찾을 수 없습니다."
             }
-        }.onFailure {
+        } catch (error: Exception) {
+            if (error is CancellationException) throw error
+            resultLink = null
+            isSaved = false
             toastType = AppToastType.Error
-            toastMessage = it.message ?: "결과 정보를 읽을 수 없습니다."
+            toastMessage = error.message ?: "결과 정보를 읽을 수 없습니다."
         }
     }
 

@@ -21,6 +21,7 @@ import com.pocket4cut.domain.model.SessionStage
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Assume.assumeTrue
 import org.junit.Test
@@ -31,6 +32,75 @@ import java.util.UUID
 
 @RunWith(AndroidJUnit4::class)
 class GalleryExporterInstrumentedTest {
+    @Test fun deletedCompletedMediaRowCanBeRecreatedOnceWithSameOperation() = runBlocking {
+        assumeTrue(Build.VERSION.SDK_INT >= 29)
+        val app = InstrumentationRegistry.getInstrumentation().targetContext
+        val testRoot = File(app.cacheDir, "gallery-deleted-test-${UUID.randomUUID()}").apply { mkdirs() }
+        val context = isolatedContext(app, testRoot)
+        val id = UUID.randomUUID().toString()
+        val resultId = UUID.randomUUID().toString()
+        val resultPath = "results/${id}_${resultId}.jpg"
+        val repository = SessionDocumentRepository(context)
+        val exporter = GalleryExporter(context, repository)
+        try {
+            val bytes = jpegBytes()
+            File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Pocket4Cut/$resultPath")
+                .apply { parentFile!!.mkdirs(); writeBytes(bytes) }
+            repository.create(SessionDocument(
+                sessionId = id, createdAt = 1_700_000_000_000L,
+                captureCount = 4, selectedCount = 2, stage = SessionStage.RESULT,
+                results = listOf(ResultRecord(resultId, 0, resultPath, 4, 4, 1L)),
+            ))
+            val first = exporter.export(id, resultId) as ExportOutcome.Saved
+            val operation = repository.getById(id)!!.exportOperations.single()
+            assertTrue(exporter.isNormalCopyVerified(id, resultId))
+            assertEquals(1, context.contentResolver.delete(first.uri, null, null))
+            assertFalse(exporter.isNormalCopyVerified(id, resultId))
+            val retried = exporter.export(id, resultId) as ExportOutcome.Saved
+            assertTrue(first.uri != retried.uri)
+            assertEquals(1, countRows(context, operation.displayName))
+            assertEquals(operation.operationId, repository.getById(id)!!.exportOperations.single().operationId)
+            assertArrayEquals(bytes, context.contentResolver.openInputStream(retried.uri)!!.use { it.readBytes() })
+            assertTrue(exporter.export(id, resultId) is ExportOutcome.AlreadySaved)
+        } finally {
+            repository.getById(id)?.exportOperations?.forEach { deleteRows(context, it.displayName) }
+            assertTrue(testRoot.canonicalPath.startsWith(app.cacheDir.canonicalPath + File.separator))
+            testRoot.deleteRecursively()
+        }
+    }
+
+    @Test fun changedCompletedMediaRowIsNotDuplicatedOrOverwritten() = runBlocking {
+        assumeTrue(Build.VERSION.SDK_INT >= 29)
+        val app = InstrumentationRegistry.getInstrumentation().targetContext
+        val testRoot = File(app.cacheDir, "gallery-changed-test-${UUID.randomUUID()}").apply { mkdirs() }
+        val context = isolatedContext(app, testRoot)
+        val id = UUID.randomUUID().toString()
+        val resultId = UUID.randomUUID().toString()
+        val resultPath = "results/${id}_${resultId}.jpg"
+        val repository = SessionDocumentRepository(context)
+        val exporter = GalleryExporter(context, repository)
+        try {
+            File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Pocket4Cut/$resultPath")
+                .apply { parentFile!!.mkdirs(); writeBytes(jpegBytes()) }
+            repository.create(SessionDocument(
+                sessionId = id, createdAt = 1_700_000_000_000L,
+                captureCount = 4, selectedCount = 2, stage = SessionStage.RESULT,
+                results = listOf(ResultRecord(resultId, 0, resultPath, 4, 4, 1L)),
+            ))
+            val first = exporter.export(id, resultId) as ExportOutcome.Saved
+            val changed = "externally changed copy".toByteArray()
+            context.contentResolver.openOutputStream(first.uri, "wt")!!.use { it.write(changed) }
+            assertFalse(exporter.isNormalCopyVerified(id, resultId))
+            assertTrue(exporter.export(id, resultId) is ExportOutcome.NeedsRecovery)
+            assertEquals(1, countRows(context, repository.getById(id)!!.exportOperations.single().displayName))
+            assertArrayEquals(changed, context.contentResolver.openInputStream(first.uri)!!.use { it.readBytes() })
+        } finally {
+            repository.getById(id)?.exportOperations?.forEach { deleteRows(context, it.displayName) }
+            assertTrue(testRoot.canonicalPath.startsWith(app.cacheDir.canonicalPath + File.separator))
+            testRoot.deleteRecursively()
+        }
+    }
+
     @Test fun preparedExportWithoutMediaRowResumesAfterRestartOnlyOnce() = runBlocking {
         assumeTrue(Build.VERSION.SDK_INT >= 29)
         val app = InstrumentationRegistry.getInstrumentation().targetContext
@@ -110,6 +180,54 @@ class GalleryExporterInstrumentedTest {
             assertTrue(outcome is ExportOutcome.Saved)
             assertEquals(pending, (outcome as ExportOutcome.Saved).uri)
             assertEquals(1, countRows(context, displayName))
+        } finally {
+            deleteRows(context, displayName)
+            assertTrue(testRoot.canonicalPath.startsWith(app.cacheDir.canonicalPath + File.separator))
+            testRoot.deleteRecursively()
+        }
+    }
+
+    @Test fun recoveryWithoutRecordedUriCompletesItsPartialPendingRow() = runBlocking {
+        assumeTrue(Build.VERSION.SDK_INT >= 29)
+        val app = InstrumentationRegistry.getInstrumentation().targetContext
+        val testRoot = File(app.cacheDir, "gallery-recovery-test-${UUID.randomUUID()}").apply { mkdirs() }
+        val context = isolatedContext(app, testRoot)
+        val id = UUID.randomUUID().toString()
+        val resultId = UUID.randomUUID().toString()
+        val operationId = UUID.randomUUID().toString()
+        val displayName = "Pocket4Cut_${resultId}_${operationId}.jpg"
+        try {
+            val bytes = jpegBytes()
+            val resultPath = "results/${id}_${resultId}.jpg"
+            File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Pocket4Cut/$resultPath")
+                .apply { parentFile!!.mkdirs(); writeBytes(bytes) }
+            val repository = SessionDocumentRepository(context)
+            repository.create(SessionDocument(
+                sessionId = id, createdAt = 1_700_000_000_000L,
+                captureCount = 4, selectedCount = 2, stage = SessionStage.RESULT,
+                results = listOf(ResultRecord(resultId, 0, resultPath, 4, 4, 1L)),
+                exportOperations = listOf(ExportOperation(
+                    operationId, resultId, ExportStatus.NEEDS_RECOVERY, null, displayName, 1L,
+                )),
+            ))
+            val pending = context.contentResolver.insert(
+                MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY),
+                ContentValues().apply {
+                    put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
+                    put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+                    put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Pocket4Cut/")
+                    put(MediaStore.Images.Media.IS_PENDING, 1)
+                },
+            ) ?: error("Could not create isolated pending row")
+            context.contentResolver.openOutputStream(pending)?.use { it.write(bytes, 0, bytes.size / 2) }
+                ?: error("Could not write partial pending row")
+
+            val outcome = GalleryExporter(context, repository).export(id, resultId)
+            assertTrue(outcome is ExportOutcome.Saved)
+            assertEquals(pending, (outcome as ExportOutcome.Saved).uri)
+            assertEquals(1, countRows(context, displayName))
+            assertArrayEquals(bytes, context.contentResolver.openInputStream(pending)!!.use { it.readBytes() })
+            assertEquals(ExportStatus.COMPLETED, repository.getById(id)!!.exportOperations.single().status)
         } finally {
             deleteRows(context, displayName)
             assertTrue(testRoot.canonicalPath.startsWith(app.cacheDir.canonicalPath + File.separator))

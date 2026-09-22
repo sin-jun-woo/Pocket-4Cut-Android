@@ -249,7 +249,7 @@ private fun CameraSection() {
 
 @Composable
 private fun CountdownSlider() {
-    var sliderValue by remember { mutableFloatStateOf(AppSettings.countdownSeconds.toFloat()) }
+    val countdownSeconds = AppSettings.countdownSeconds
     Row(
         modifier = Modifier.padding(vertical = AppSpacing.sm, horizontal = AppSpacing.md),
         horizontalArrangement = Arrangement.spacedBy(AppSpacing.md),
@@ -281,15 +281,15 @@ private fun CountdownSlider() {
                     )
                 }
                 Text(
-                    "${sliderValue.roundToInt()}초",
+                    "${countdownSeconds}초",
                     style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
                     color = AppColors.Accent.pink,
                 )
             }
             Slider(
-                value = sliderValue,
-                onValueChange = { sliderValue = it },
-                onValueChangeFinished = { AppSettings.updateCountdownSeconds(sliderValue.roundToInt()) },
+                value = countdownSeconds.toFloat(),
+                onValueChange = { AppSettings.updateCountdownSeconds(it.roundToInt()) },
+                modifier = Modifier.semantics { contentDescription = "카운트다운 시간" },
                 valueRange = AppSettings.COUNTDOWN_MIN.toFloat()..AppSettings.COUNTDOWN_MAX.toFloat(),
                 steps = AppSettings.COUNTDOWN_MAX - AppSettings.COUNTDOWN_MIN - 1,
                 colors = SliderDefaults.colors(

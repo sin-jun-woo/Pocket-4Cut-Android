@@ -50,6 +50,8 @@ data class ResultPublicationIssue(val resultId: String, val kind: ResultPublicat
 data class SessionScan(
     val documents: List<SessionDocument>,
     val unreadableSessionIds: List<String>,
+    /** Legacy data remains untouched when migration fails; healthy new documents stay visible. */
+    val legacyMigrationError: SessionStoreException? = null,
 )
 
 /**
@@ -118,7 +120,12 @@ class SessionDocumentRepository(private val context: Context) {
     }
 
     suspend fun scanForGallery(): SessionScan = ioLocked {
-        migrateLegacyLocked()
+        val legacyMigrationError = try {
+            migrateLegacyLocked()
+            null
+        } catch (error: SessionStoreException) {
+            error
+        }
         val ids = documentsDir.listFiles().orEmpty()
             .filter { it.isFile && (it.name.endsWith(".json") || it.name.endsWith(".json.bak")) }
             .map { it.name.removeSuffix(".bak").removeSuffix(".json") }
@@ -133,7 +140,8 @@ class SessionDocumentRepository(private val context: Context) {
                 null
             } ?: return@forEach
             if (first.stage == SessionStage.DELETED || tombstoneFile(id).exists()) {
-                finishDeleteLocked(first)
+                // Keep the deletion intent until the legacy index can be checked safely.
+                if (legacyMigrationError == null) finishDeleteLocked(first)
                 return@forEach
             }
             val visible = try {
@@ -148,7 +156,7 @@ class SessionDocumentRepository(private val context: Context) {
             }
             if (visible != null) documents += visible
         }
-        SessionScan(documents.sortedByDescending { it.updatedAt }, unreadable)
+        SessionScan(documents.sortedByDescending { it.updatedAt }, unreadable, legacyMigrationError)
     }
 
     /** Hide an unreadable record while retaining its JSON, photos, results and export history. */
@@ -518,6 +526,9 @@ class SessionDocumentRepository(private val context: Context) {
         if (hiddenSessionIdsLocked().isNotEmpty()) {
             throw SessionStorageException("Physical deletion is blocked while an unreadable session is preserved")
         }
+        // A damaged legacy index may still reference this session's photos or result.
+        // Verify and migrate it before writing a deletion intent or removing any file.
+        migrateLegacyLocked()
         val current = readDocumentLocked(id) ?: throw SessionMissingException(id)
         if (expectedRevision != null && current.revision != expectedRevision) throw SessionConflictException(id)
         if (!tombstoneFile(id).exists()) {
@@ -534,6 +545,7 @@ class SessionDocumentRepository(private val context: Context) {
         if (hiddenSessionIdsLocked().isNotEmpty()) {
             throw SessionStorageException("Physical deletion is blocked while an unreadable session is preserved")
         }
+        migrateLegacyLocked()
         val id = current.sessionId
         if (!tombstoneFile(id).exists()) {
             writeAtomic(tombstoneFile(id), id.toByteArray(StandardCharsets.UTF_8))

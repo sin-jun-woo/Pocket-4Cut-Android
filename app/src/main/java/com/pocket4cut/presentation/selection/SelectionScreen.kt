@@ -1,5 +1,6 @@
 package com.pocket4cut.presentation.selection
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.animateDpAsState
@@ -91,6 +92,11 @@ fun SelectionScreen(
     val remaining = max - selectedCount
 
     var showExitConfirm by remember { mutableStateOf(false) }
+    var isLeaving by remember { mutableStateOf(false) }
+
+    BackHandler(enabled = !showExitConfirm) {
+        if (!isLeaving) showExitConfirm = true
+    }
 
     ConfirmDialog(
         visible = showExitConfirm,
@@ -99,8 +105,11 @@ fun SelectionScreen(
         confirmText = "홈으로",
         cancelText = "취소",
         onConfirm = {
-            showExitConfirm = false
-            viewModel.leave(onBack)
+            if (!isLeaving) {
+                isLeaving = true
+                showExitConfirm = false
+                viewModel.leave(onSaved = onBack, onFailed = { isLeaving = false })
+            }
         },
         onCancel = { showExitConfirm = false },
         variant = ConfirmDialogVariant.Default,
@@ -129,7 +138,7 @@ fun SelectionScreen(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     IconCircleButton(
-                        onClick = { showExitConfirm = true },
+                        onClick = { if (!isLeaving) showExitConfirm = true },
                         variant = IconButtonVariant.SOLID,
                     ) {
                         Icon(
@@ -268,7 +277,7 @@ fun SelectionScreen(
                                         photoNumber = index + 1,
                                         selectionOrder = if (isSelected) order + 1 else null,
                                         canSelect = selectedCount < max,
-                                        onToggle = { viewModel.toggle(index, max) },
+                                        onToggle = { if (!isLeaving) viewModel.toggle(index, max) },
                                     ),
                             ) {
                                 AsyncImage(
@@ -339,7 +348,7 @@ fun SelectionScreen(
             PrimaryButton(
                 text = if (isDone) "다음" else "${remaining}장 더 선택해주세요",
                 onClick = { if (isDone) viewModel.complete(onDone) },
-                enabled = isDone,
+                enabled = isDone && !isLeaving,
                 fullWidth = true,
             )
             if (!isDone) {

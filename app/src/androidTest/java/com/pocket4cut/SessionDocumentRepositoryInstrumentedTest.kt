@@ -7,6 +7,7 @@ import android.os.Environment
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.pocket4cut.data.local.SessionConflictException
+import com.pocket4cut.data.local.SessionCorruptException
 import com.pocket4cut.data.local.SessionDocumentRepository
 import com.pocket4cut.data.local.SessionStorageException
 import com.pocket4cut.domain.model.PhotoRef
@@ -15,6 +16,7 @@ import com.pocket4cut.domain.model.ExportStatus
 import com.pocket4cut.domain.model.ResultRecord
 import com.pocket4cut.domain.model.SessionDocument
 import com.pocket4cut.domain.model.SessionStage
+import com.pocket4cut.presentation.result.findResultLink
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONObject
@@ -152,6 +154,41 @@ class SessionDocumentRepositoryInstrumentedTest {
         assertTrue(afterHide.listHiddenSessionIds().isEmpty())
         assertEquals(listOf(damagedId), afterHide.scanForGallery().unreadableSessionIds)
         assertEquals(damagedBytes.toList(), File(directory, "$damagedId.json").readBytes().toList())
+    }
+
+    @Test fun corruptLegacyIndexDoesNotHideHealthyResultOrPermitUnsafeDeletion() = runBlocking {
+        val id = UUID.randomUUID().toString()
+        val resultId = UUID.randomUUID().toString()
+        val source = captureFile(id, "source.jpg")
+        val result = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "Pocket4Cut/results/$resultId.jpg").apply {
+            parentFile!!.mkdirs()
+            source.copyTo(this)
+        }
+        val resultBytes = result.readBytes()
+        repository.create(SessionDocument(
+            sessionId = id, createdAt = 1_700_000_000_000L,
+            captureCount = 4, selectedCount = 2, stage = SessionStage.RESULT,
+            results = listOf(ResultRecord(resultId, 0, "results/$resultId.jpg", 4, 4, 1L)),
+        ))
+        val legacy = File(context.filesDir, "sessions.json").apply { writeText("{damaged") }
+        val legacyBytes = legacy.readBytes()
+
+        val scan = SessionDocumentRepository(context).scanForGallery()
+        assertEquals(listOf(id), scan.documents.map { it.sessionId })
+        assertTrue(scan.unreadableSessionIds.isEmpty())
+        assertTrue(scan.legacyMigrationError is SessionCorruptException)
+        assertEquals(id to resultId, findResultLink(SessionDocumentRepository(context), result))
+        assertEquals(legacyBytes.toList(), legacy.readBytes().toList())
+
+        try {
+            repository.requestDelete(id)
+            throw AssertionError("Deletion proceeded without validating the legacy index")
+        } catch (_: SessionCorruptException) { }
+        assertEquals(resultBytes.toList(), result.readBytes().toList())
+        assertEquals(legacyBytes.toList(), legacy.readBytes().toList())
+        assertTrue(File(context.filesDir, "session_documents/$id.json").isFile)
+        assertFalse(File(context.filesDir, "session_documents/tombstones/$id.deleted").exists())
     }
 
     @Test fun deletingSessionClearsOnlyKnownPendingResultFile() = runBlocking {

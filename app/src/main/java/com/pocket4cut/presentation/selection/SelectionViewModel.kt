@@ -100,14 +100,15 @@ class SelectionViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun leave(onSaved: () -> Unit) {
-        val id = currentSessionId ?: return
+    fun leave(onSaved: () -> Unit, onFailed: () -> Unit) {
+        val id = currentSessionId ?: run { onSaved(); return }
         val selected = _uiState.value.selectedIndexes
         viewModelScope.launch {
             runCatching { writeMutex.withLock { persistSelection(id, selected, SessionStage.SELECT) } }
                 .onSuccess { onSaved() }
                 .onFailure { cause ->
                     _uiState.update { it.copy(errorMessage = cause.message ?: "선택을 저장하지 못했습니다.") }
+                    onFailed()
                 }
         }
     }
