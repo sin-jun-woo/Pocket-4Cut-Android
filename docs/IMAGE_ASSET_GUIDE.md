@@ -112,6 +112,8 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 
 출시 권리 검토에서 `assets/fonts/`의 TTF 13개에 대한 라이선스 전문·파일별 원본 URL/해시가 저장소에 없음을 확인했다. 파일명 기준으로 배민 4종(`BMHANNAPro`, `BMJUA_ttf`, `BMKkubulimTTF`, `BMYEONSUNG_ttf`), 카페24 3종, GC컴퍼니 `Jalnan2TTF` 1종, 네이버 나눔/클로바 5종이다. 이는 이름으로 분류한 것이며 바이너리 출처·허가 확인이 아니다. [우아한형제들](https://www.woowahan.com/fonts/license), [카페24](https://help.cafe24.com/faq/web-hosting/introduce/new-renewal-change/cafe24_free_fonts_usage/), [GC컴퍼니](https://gccompany.co.kr/font), [네이버](https://hangeul.naver.com/font)의 공식 배포 조건과 각 파일 원본을 대조하고, 필요한 저작권 표시·라이선스 전문을 배포물에 포함해야 한다. 특히 네이버·우아한형제들의 고지 조건을 확인해야 한다. 현재 파일을 임의로 재배포 가능하다고 판정하지 않는다.
 
+후속 공개 자료 대조에서는 GC컴퍼니 공식 페이지가 연결한 [잘난체 ZIP](https://framerusercontent.com/assets/uK4mTd9JFejCoAXNZyXHV6glsI.zip)의 `Jalnan2/Jalnan2TTF.ttf`와 앱 파일의 SHA-256이 모두 `bd0028223d1e69c0bf76266bee52931be26a5f8a9fce517bb8765371d57836a3`으로 **1개 파일의 원본 동일성**을 확인했다. 공식 페이지가 연결한 [라이선스 안내 PDF](https://drive.google.com/file/d/1TFGKe-QLRnx2IHpJO3ZH3pVUYjQwMx7L/view?usp=sharing) 3쪽은 앱 임베딩/번들 재배포의 저작권 안내·라이선스 전문 포함 조건을 제시한다. 현재 배포물에 그 전문이 없으므로 이 파일도 권리 관문을 통과했다고 표시하지 않는다. 나머지 12개 TTF는 공식 배포본과 바이트 일치 여부가 미확인이다.
+
 스티커/문구 색은 24bit RGB를 불투명 색으로 그린다. `textColorARGB`라는 이름만 보고 사용자 지정 반투명 장식을 지원한다고 설명하지 않는다. 계절 Paint의 별도 alpha는 다른 기능이다.
 
 [FrameColors](../app/src/main/java/com/pocket4cut/frame/FrameColors.kt)는 기본 색과 `catalog_<theme.id>`를 모두 조회한다. hologram/sunset/aurora는 gradientStops를 렌더러의 LinearGradient에 전달한다. 커스텀 프레임 후 색 변경도 디자인의 fillColorId에 반영한다. 사진 필터 ORIGINAL/SOFT/FILM/BW는 사진에 적용하며 프레임·장식 전체에 같은 필터를 씌우지 않는다.

@@ -33,7 +33,7 @@ Android 배포 설정은 `minSdk 26`, `targetSdk 36`, `compileSdk 36`, 배포 ID
 
 `debug`와 R8 `qaRelease`는 `com.pocket4cut.qa`로 설치해 배포 앱 데이터를 건드리지 않는다. 릴리스 AAB는 빌드·서명·Manifest 확인 대상이며, 실제 스토어 업로드/게시를 이 보고서의 로컬 테스트로 대체하지 않는다. 로컬에는 API 37 `Pixel_10_Pro` AVD 하나만 확인했다. 나머지 API와 물리 전·후면 카메라, TalkBack 실사용, 실제 클라우드 백업·기기 이전은 별도의 실행 증거가 필요하다.
 
-앱에 포함된 TTF 13개의 파일별 공식 원본·라이선스 전문은 저장소에서 찾지 못했다. [네이버 글꼴 정책](https://hangeul.naver.com/font)은 번들 시 저작권 안내와 라이선스 전문을 포함하도록 안내하고, [카페24 안내](https://cafe24.zendesk.com/hc/ko/articles/18299360301593-%EC%B9%B4%ED%8E%9824%EC%97%90%EC%84%9C-%EC%A0%9C%EA%B3%B5%EB%90%98%EB%8A%94-%ED%8F%B0%ED%8A%B8%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%A0-%EC%88%98-%EC%9E%88%EB%82%98%EC%9A%94)는 카페24 폰트의 소프트웨어 번들을 허용한다고 설명한다. 이 일반 정책이 현재 파일 13개 각각의 출처·수정 여부·고지 충족을 증명하지는 않는다. 파일을 임의로 제거하거나 허가를 추정하지 않았다.
+앱에 포함된 TTF 13개의 라이선스 전문·파일별 공식 원본 기록은 저장소에서 찾지 못했다. 후속 공개 배포본 대조로 `Jalnan2TTF` 1개는 공식 ZIP과 해시가 같음을 확인했으나 배포물 고지 조건은 충족하지 못했다. [네이버 글꼴 정책](https://hangeul.naver.com/font)은 번들 시 저작권 안내와 라이선스 전문을 포함하도록 안내하고, [카페24 안내](https://help.cafe24.com/faq/web-hosting/introduce/new-renewal-change/cafe24_free_fonts_usage/)는 카페24 폰트의 소프트웨어 번들을 허용한다고 설명한다. 이 일반 정책이 나머지 파일 각각의 출처·수정 여부·고지 충족을 증명하지는 않는다. 파일을 임의로 제거하거나 허가를 추정하지 않았다.
 
 ## E01–E10 재검토
 
@@ -121,10 +121,14 @@ AGP가 생성한 release merged Manifest는 `com.pocket4cut`, `versionCode=5`, `
 
 저장소의 `docs/privacy-policy.html`은 공개 페이지의 소스일 뿐이다. 2026-09-22에 앱에 표시하던 `https://sin-jun-woo.github.io/Pocket-4Cut-Android/privacy-policy.html`을 익명 HTTP 요청으로 확인하니 **404**였다. GitHub Pages API도 익명 요청에서 404였으므로 실제 Pages 설정을 확인할 수 없었다. 도달하지 않는 웹 링크는 앱 내 방침 전문에서 제거했다. 전문 자체는 앱에서 볼 수 있고, 공개 URL 배포·익명 접속 확인은 Play 제출 전 필수 관문이다. 현재 `origin/main`은 과거 커밋 `4527a05`이고 이 작업 브랜치의 정책 HTML이 배포 브랜치에 들어갔다고 주장하지 않는다.
 
-글꼴 13종은 파일명상 우아한형제들 4종, 카페24 3종, GC컴퍼니 `Jalnan2TTF` 1종, 네이버 계열 5종으로 분류했다. [우아한형제들 공식 조건](https://www.woowahan.com/fonts/license), [카페24 안내](https://help.cafe24.com/faq/web-hosting/introduce/new-renewal-change/cafe24_free_fonts_usage/), [GC컴퍼니 공식 배포](https://gccompany.co.kr/font), [네이버 공식 배포](https://hangeul.naver.com/font)를 찾았으나 현재 13개 TTF 각각의 원본 URL·해시·포함해야 할 고지 전문은 저장소에 없다. 법적 사용 가능성을 추정하지 않으며 파일별 확인과 고지가 끝나기 전 출시 승인하지 않는다.
+글꼴 13종은 파일명상 우아한형제들 4종, 카페24 3종, GC컴퍼니 `Jalnan2TTF` 1종, 네이버 계열 5종으로 분류했다. [우아한형제들 공식 조건](https://www.woowahan.com/fonts/license), [카페24 안내](https://help.cafe24.com/faq/web-hosting/introduce/new-renewal-change/cafe24_free_fonts_usage/), [GC컴퍼니 공식 배포](https://gccompany.co.kr/font), [네이버 공식 배포](https://hangeul.naver.com/font)를 찾았으나 조사 시작 시 저장소에는 13개 TTF 각각의 원본 URL·해시·포함해야 할 고지 전문이 없었다. 아래처럼 1개는 외부 공식 ZIP과 대조했지만, 파일별 고지가 끝나기 전 출시 승인하지 않는다.
+
+GC컴퍼니 공식 페이지가 연결한 잘난체 ZIP의 `Jalnan2/Jalnan2TTF.ttf`는 앱의 `Jalnan2TTF.ttf`와 SHA-256 `bd0028223d1e69c0bf76266bee52931be26a5f8a9fce517bb8765371d57836a3`으로 일치했다. 같은 페이지가 연결한 [라이선스 PDF](https://drive.google.com/file/d/1TFGKe-QLRnx2IHpJO3ZH3pVUYjQwMx7L/view?usp=sharing) 3쪽은 앱 임베딩 및 번들 배포에서 저작권 안내·라이선스 전문 포함 조건을 제시한다. 현재 배포물에 해당 고지가 없어 이 1개도 출시 권리 관문은 **미통과**다. 나머지 12개 파일의 공식 바이너리 동일성은 미확인이다.
 
 ## 후속 범위 변경 — 에뮬레이터 추가 검사 제외
 
 사용자가 2026-09-22에 에뮬레이터 테스트를 더 진행하지 말라고 명시했다. 이미 수행한 API 37 로컬 계측과 원격 실패 사실은 위에 그대로 보존하되, 이후 자동 push/PR CI의 계측 job을 `workflow_dispatch` 수동 실행에만 허용한다. Debug 빌드·JVM·Lint·R8 QA 빌드 job은 push/PR에서 계속 실행한다. 이는 **실패 검사를 고친 결과가 아니라 검사 범위를 사용자의 지시에 맞춘 것**이다. API 26/28 실패 원인과 구형 사진첩 권한 경로는 미확인으로 남는다.
 
 현재 Pages 워크플로는 `main`의 `docs/**` 변경 또는 수동 실행에서 배포를 시도하며, 최초 Pages Source 설정은 저장소 설정에서 필요하다고 명시돼 있다. 현재 브랜치 파일이 익명으로 열리는 것과 예정된 Pages URL이 HTTP 200인 것은 다르다. [Google Play 개인정보 정책](https://support.google.com/googleplay/android-developer/answer/10144311?hl=en)에 맞춰 실제 공개 URL, 앱 내 방침, Console의 Data safety 신고를 일치시켜 확인하기 전에는 제출 가능으로 표시하지 않는다.
+
+범위 변경 커밋 `263c2fea6f7db8e05c5024706565c2896db495ea`의 [공개 CI 실행 35727793916](https://github.com/sin-jun-woo/Pocket-4Cut-Android/actions/runs/35727793916)은 **build success**, **instrumented skipped**로 완료됐다. 이 build job은 Debug 빌드·JVM 단위 테스트·Debug Lint·R8 QA APK를 실행한다. 계측 skipped를 통과나 API 26/28 결함 해소로 계산하지 않는다. 이 커밋은 앞서 검증한 앱 소스에 변경이 없는 워크플로/문서 커밋이다.
