@@ -438,3 +438,14 @@ git ls-remote --heads origin codex/setup-project-guidance
 - 미검증/남은 위험: 물리 카메라/실기기, API 26–36 전 기종, TalkBack/큰 글자/가로 모드 전체 조합, 실제 최대 해상도 저메모리 스트레스, 실제 인쇄, release 서명/AAB/Play·Instagram 게시 및 심사는 수행하지 않았다. 기존 비계절 프레임 및 일반 저장 정책은 유지했으며 새 계절 프레임에 대한 자동 계약 검사와 수동 이미지 검수 범위만 완료로 기록한다.
 - 문서: README, ARCHITECTURE, IMAGE_ASSET_GUIDE, 이 WORKLOG 및 자산 패키지 README를 갱신했다. 비밀 파일·원시 기기 로그·개인 로컬 경로는 공개 문서에 추가하지 않았다.
 - commit/push: 검토된 이번 작업 파일만 명시적으로 stage하여 `feat: 사계절 포토 프레임 전면 교체`로 커밋하고 `origin/codex/seasonal-frames`에 일반 push한다. 자기 자신을 가리키는 SHA는 이 문서에 반복 기록하지 않는다. 실제 성공 여부와 SHA는 최종 `git log -1`, `git status --short --branch`, `git ls-remote --heads origin codex/seasonal-frames` 및 완료 보고로 확인한다.
+
+## 2026-09-22 — 전체 계절/레이아웃 홍보 이미지 추가 (Asia/Seoul)
+
+- 요청/범위: 사용자가 지정한 `design/seasonal-frames/paper-seasons-v1/deliverables/overview-all-seasons.png`를 바탕으로 Instagram 홍보 이미지 1장을 추가한다. 기준 `0e5212e`, `codex/seasonal-frames`, 시작 작업 트리 clean.
+- 변경: 내장 전용 이미지 도구로 4계절×8배치를 모은 컬렉션 포스터를 생성했다. `instagram-layouts-promo-v2-master.png`(1122×1402)와 `instagram-layouts-promo-v2.png`(1080×1350, 불투명 sRGB PNG, 2,045,862 bytes)를 원본/납품으로 분리했다. 앱 코드·런타임 자산·기존 overview·첫 홍보 이미지·ZIP은 변경하지 않았다.
+- 관련 파일: 자산 폴더의 `source/INSTAGRAM-LAYOUTS-V2-PROMPT.md`, `source/export-instagram-layouts-v2.cjs`, `verification/instagram-layouts-v2-validation.json`, README, IMAGE_ASSET_GUIDE 및 이 작업 기록. 새 이미지가 기존 ZIP에 들어 있다고 표기하지 않는다.
+- 생성/검수: 전용 이미지 도구에 원본 overview를 참조로 제공했다. 큰 제목과 32조합 안내, 4계절 라벨, 2·4·6컷 안내, 4행×8개의 완전한 프레임 외곽을 시각 확인했다. 가로 4컷처럼 작은 창은 확대 검수했다. 실제 Android 스크린샷이나 픽셀 동일 렌더가 아니라 홍보 시안으로 구분하며 원래 프레임 파일이 정확한 제품 기준이다.
+- 실행: `node --check design/seasonal-frames/paper-seasons-v1/source/export-instagram-layouts-v2.cjs` 및 `node design/seasonal-frames/paper-seasons-v1/source/export-instagram-layouts-v2.cjs` 성공. source/reference/delivery를 전체 디코드하고 비업스케일·4:5 비율·1080×1350·PNG·sRGB·알파 없음 및 SHA-256을 확인했다. 산출물 SHA-256은 `c21811c03568a409d57600f298d3657fd146711a9b4aa4c059afa7f3fddac64e`다.
+- 미실행: 앱 파일 변경이 없어 Gradle 빌드/단위/계측을 반복하지 않았다. 이전 45/45 결과를 이번에 새로 실행한 것으로 계산하지 않는다. Instagram 실제 게시·압축·자르기·심사는 하지 않았다.
+- 보존/권리: 사용자 사진이나 타사 캐릭터를 넣지 않았다. 이미지 생성 도구의 실제 요청을 남겼으며 사람이 직접 그렸다고 표시하지 않는다. 기존 ZIP은 그대로 유지하고 새 PNG를 별도 제공한다.
+- Git: 위 이미지·제작 기록·문서만 명시적으로 stage하여 `design: 전체 계절 레이아웃 홍보 이미지 추가`로 커밋 후 현재 작업 브랜치에 일반 push한다. 실제 SHA/원격 일치/작업 트리 상태는 최종 명령과 완료 보고에서 확인한다.

@@ -249,3 +249,12 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 - Instagram: 실제 최종 4계절 클래식 JPEG를 참고하여 전용 이미지 도구로 종이 포스터 시안을 생성했다. `source/instagram-promo-master.png`는 1122×1402 RGB 원본, `deliverables/instagram-promo.png`는 1080×1350 불투명 sRGB PNG다. 가상 성인 사진을 사용하며 실제 앱 캡처와 구분한다. 정확한 요청은 `source/INSTAGRAM-PROMPT.md`에 있다. 플랫폼 게시를 실행하지 않았다.
 - 패키지: `deliverables/pocket4cut-paper-seasons-v1.zip`은 103,096,843 bytes, 113개 파일(프레임 72 + 예시 32 + 모아보기 6 + manifest/README/홍보 이미지)이다. 다시 열어 전 항목의 길이·SHA-256을 대조했다. 검증 기록은 `deliverables/package-validation.json`, 별도 실제 Compose 화면은 `verification/autumn-picker-compose.png`다.
 - 권리/출처: 전용 생성 도구로 만든 독창적 계절 일러스트이며 타사 캐릭터·로고를 참조하지 않았다. 사람이 직접 그렸다고 표시하지 않는다. 생성물의 독점권·인쇄 품질·플랫폼 심사 승인은 보장하지 않는다. 실제 수행한 검증과 남은 범위는 WORKLOG에 기록한다.
+
+## 14. 2026-09-22 — 전체 레이아웃 Instagram 포스터 v2
+
+- 기준: `0e5212e`, `codex/seasonal-frames`, 시작 작업 트리 clean. 사용자가 `overview-all-seasons.png`를 지정하여 새 홍보 이미지 1장을 요청했다.
+- 제작: 내장 전용 이미지 생성 도구에 기존 3840×2920 모아보기를 제품 참조로 전달했다. 따뜻한 종이 바탕, 사계절 컬러 구분, 4행×8개 프레임, 큰 한글 제목의 컬렉션형 이미지다. 모델명·품질 선택 옵션은 노출되지 않는다.
+- 파일: `design/seasonal-frames/paper-seasons-v1/source/instagram-layouts-promo-v2-master.png`(1122×1402, RGB/sRGB, 생성 원본), `deliverables/instagram-layouts-promo-v2.png`(1080×1350, 불투명 RGB/sRGB PNG, 2,045,862 bytes).
+- 주 문구: “계절도, 프레임도 / 내 취향대로.”, “사계절 × 8가지 레이아웃, 총 32종”, “2컷 · 4컷 · 6컷으로 오늘을 남겨보세요.”. 32종은 네 계절과 여덟 배치의 조합 수이며 서로 다른 계절 일러스트가 32세트라는 뜻이 아니다.
+- 출처·검증: `source/INSTAGRAM-LAYOUTS-V2-PROMPT.md`에 실제 생성 요청, `source/export-instagram-layouts-v2.cjs`에 크기/색 공간 변환, `verification/instagram-layouts-v2-validation.json`에 참조·원본·납품 이미지 규격과 SHA-256을 기록했다. 사진창은 비워 두었으며 사용자 사진은 사용하지 않았다.
+- 구분: 생성 홍보 시안이므로 작은 브랜드 글자나 장식은 Android 렌더와 픽셀 단위로 같지 않다. 정확한 프레임 PNG와 overview는 기존 파일이 기준이다. 앱 코드·기존 프레임·첫 홍보 이미지·113항목 ZIP은 변경하지 않았으며 새 이미지는 별도 다운로드다. 실제 Instagram 게시/자동 자르기/압축 검사는 하지 않았다.

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "productReference": {
+    "path": "deliverables/overview-all-seasons.png",
+    "bytes": 1005405,
+    "sha256": "29344677dd3222c2516703c8ff07e1643e3b00b045bda097e3bba6bb8b3bdde9",
+    "format": "png",
+    "width": 3840,
+    "height": 2920,
+    "space": "srgb",
+    "hasAlpha": true
+  },
+  "master": {
+    "path": "source/instagram-layouts-promo-v2-master.png",
+    "bytes": 1880090,
+    "sha256": "10c0abd63e6226963c3a9aff3359351bb10ee271efe21c842fee07c55eb4063c",
+    "format": "png",
+    "width": 1122,
+    "height": 1402,
+    "space": "srgb",
+    "hasAlpha": false
+  },
+  "delivery": {
+    "path": "deliverables/instagram-layouts-promo-v2.png",
+    "bytes": 2045862,
+    "sha256": "c21811c03568a409d57600f298d3657fd146711a9b4aa4c059afa7f3fddac64e",
+    "format": "png",
+    "width": 1080,
+    "height": 1350,
+    "space": "srgb",
+    "hasAlpha": false
+  },
+  "conversion": "1080x1350 cover resize; opaque sRGB PNG; no content repaint",
+  "semanticReview": "Separate human-readable review in docs/WORKLOG.md; dimensions and hashes do not prove text or layout accuracy",
+  "existingZipRebuilt": false
+}

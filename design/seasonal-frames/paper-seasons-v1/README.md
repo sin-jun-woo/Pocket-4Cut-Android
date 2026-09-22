@@ -7,6 +7,7 @@
 - [전체 다운로드 ZIP](deliverables/pocket4cut-paper-seasons-v1.zip): 113개 파일, 103,096,843 bytes(약 98.32 MiB). 해제한 모든 파일의 길이·SHA-256을 원본과 대조했다.
 - [전체 32종 모아보기](deliverables/overview-all-seasons.png), [클래식 4컷 모아보기](deliverables/overview-classic-four.png).
 - [인스타그램 홍보 이미지](deliverables/instagram-promo.png): 1080×1350, 4:5, 불투명 sRGB PNG. 실제 프레임을 참고한 인화지 포스터 시안이며 앱 화면 캡처가 아니다.
+- [전체 레이아웃 인스타그램 홍보 이미지 v2](deliverables/instagram-layouts-promo-v2.png): 1080×1350, 4:5, 불투명 sRGB PNG. 사용자 지정 모아보기를 참고한 4계절×8배치 컬렉션 포스터다. 별도 추가 파일이며 위 기존 ZIP에는 포함하지 않았다. 생성 원본·[프롬프트](source/INSTAGRAM-LAYOUTS-V2-PROMPT.md)·규격 검증 기록도 보존했다.
 - [실제 Compose 화면 검증 캡처](verification/autumn-picker-compose.png): API 37 QA 계절 선택 화면, 1280×2856. 자동 UI 테스트 중 캡처했으며 전체 촬영 흐름의 수동 검증을 뜻하지 않는다.
 - `deliverables/frames/`: 사진창이 실제 투명한 프레임 PNG 72개. 기본 32개, 문구 공간 변형 32개, 구형 배치 8개.
 - `deliverables/examples/`: 기존의 가상 성인 사진을 넣은 실제 Android 렌더 JPEG 32개. 사용자가 촬영한 사진이 아닙니다.
