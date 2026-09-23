@@ -14,7 +14,6 @@ import com.pocket4cut.domain.model.PhotoRef
 import com.pocket4cut.domain.model.SessionDocument
 import com.pocket4cut.domain.model.SessionDraft
 import com.pocket4cut.frame.FilterId
-import com.pocket4cut.frame.CollageLayoutMath
 import com.pocket4cut.frame.CollageRenderer
 import com.pocket4cut.frame.FrameCatalog
 import com.pocket4cut.frame.FrameColors
@@ -102,7 +101,7 @@ class BitmapOwnershipInstrumentedTest {
     }
 
     @Test
-    fun editFilterSwitchReusesOriginalsAndSceneAppliesLatestFilter() {
+    fun editFilterSwitchKeepsRetainedPreviewDrawableAndPublishesLatestFilter() {
         val sessionId = "bitmap-lifetime-${System.nanoTime()}"
         val storage = FileImageStorage(app)
         val sessionStore = SessionDocumentRepository(app)
@@ -147,8 +146,9 @@ class BitmapOwnershipInstrumentedTest {
                 viewModel.uiState.value.orderedImages.size == 2 &&
                     viewModel.uiState.value.filterChipThumbnails.size == FilterId.entries.size
             }
-            val retainedImage = viewModel.uiState.value.orderedImages.first()
-            retained += retainedImage
+            val retainedImages = viewModel.uiState.value.orderedImages
+            val retainedImage = retainedImages.first()
+            retained += retainedImages
             instrumentation.runOnMainSync {
                 viewModel.beforeFilterPreviewPublishForTest = {
                     throw IllegalStateException("synthetic filter preview failure")
@@ -175,23 +175,43 @@ class BitmapOwnershipInstrumentedTest {
                 viewModel.setFilter(FilterId.BW)
                 viewModel.setFilter(FilterId.ORIGINAL)
                 viewModel.setFilter(FilterId.FILM)
+                viewModel.setFilter(FilterId.BW)
+            }
+            awaitCondition("latest BW preview publication") {
+                val latest = viewModel.uiState.value
+                latest.selectedFilter == FilterId.BW &&
+                    latest.orderedImages.size == retainedImages.size &&
+                    latest.orderedImages.firstOrNull() !== retainedImage &&
+                    latest.errorMessage == null
+            }
+            awaitCondition("latest BW preview persistence") {
+                runBlocking {
+                    sessionStore.getById(sessionId)?.draft?.filterId == FilterId.BW.name
+                }
             }
             val state = viewModel.uiState.value
-            assertTrue(state.selectedFilter == FilterId.FILM)
-            assertTrue(state.orderedImages.first() === retainedImage)
+            assertTrue(state.selectedFilter == FilterId.BW)
+            assertTrue(state.orderedImages.zip(retainedImages).all { (latest, previous) ->
+                latest !== previous
+            })
+            assertFalse(
+                "Latest BW preview must differ from the retained original preview",
+                state.orderedImages.first().sameAs(retainedImages.first()),
+            )
+            retainedImages.forEach(::assertDrawable)
             val style = FrameLayouts.byId(FrameLayoutId.TWO_HORIZONTAL)
             val theme = FrameCatalog.themes(FrameType.TWO_CUT).first()
             val original = CollageRenderer.render(
-                state.orderedImages, style, theme, null, FilterId.ORIGINAL, null, null, 390,
+                retainedImages, style, theme, null, FilterId.ORIGINAL, null, null, 390,
             )
             val selected = CollageRenderer.render(
-                state.orderedImages, style, theme, null, state.selectedFilter, null, null, 390,
+                state.orderedImages, style, theme, null, FilterId.ORIGINAL, null, null, 390,
             )
             try {
-                val cell = CollageLayoutMath.compute(style, theme, null, null, 390f).cells.first()
-                val x = cell.centerX().toInt()
-                val y = cell.centerY().toInt()
-                assertTrue("Latest filter must affect common-scene output", original.getPixel(x, y) != selected.getPixel(x, y))
+                assertFalse(
+                    "Latest filter must affect common-scene output",
+                    original.sameAs(selected),
+                )
             } finally {
                 original.recycle()
                 selected.recycle()
