@@ -16,9 +16,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import android.graphics.Bitmap
+import com.pocket4cut.data.importing.PhotoImportRepository
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.data.local.SessionDocumentRepository
 import com.pocket4cut.domain.model.SessionDocument
+import com.pocket4cut.domain.model.InputSource
 import com.pocket4cut.domain.model.SessionStage
 import com.pocket4cut.frame.FilterId
 import com.pocket4cut.frame.FrameCatalog
@@ -40,6 +42,7 @@ import com.pocket4cut.presentation.gallery.GalleryScreen
 import com.pocket4cut.presentation.home.HomeScreen
 import com.pocket4cut.presentation.launch.LaunchScreen
 import com.pocket4cut.presentation.layoutSelection.LayoutSelectionScreen
+import com.pocket4cut.presentation.photoImport.PhotoImportScreen
 import com.pocket4cut.presentation.result.ResultScreen
 import com.pocket4cut.presentation.selection.SelectionScreen
 import com.pocket4cut.presentation.settings.ContactFeedbackScreen
@@ -76,32 +79,46 @@ fun PocketNavHost(
             val context = LocalContext.current
             var recentDraft by remember { mutableStateOf<SessionDocument?>(null) }
             var draftLoadError by remember { mutableStateOf<String?>(null) }
+            var galleryCount by remember { mutableIntStateOf(0) }
             LaunchedEffect(Unit) {
                 runCatching {
-                    SessionDocumentRepository(context).scanForGallery()
-                }.onSuccess { scan ->
+                    val importRecoveries = PhotoImportRepository(context).recoverAll()
+                    SessionDocumentRepository(context).scanForGallery() to importRecoveries
+                }.onSuccess { (scan, importRecoveries) ->
+                    galleryCount = scan.documents.sumOf { it.results.size }
                     recentDraft = scan.documents.firstOrNull { session ->
                         session.stage != SessionStage.RESULT && session.stage != SessionStage.DELETED &&
                             session.stage != SessionStage.NEEDS_RECOVERY
                     }
                     draftLoadError = when {
+                        importRecoveries.any { it.failures.isNotEmpty() || it.needsReselection } ->
+                            "일부 앨범 가져오기를 복구하지 못했습니다. 작업 보관함에서 확인해 주세요."
                         scan.legacyMigrationError != null ->
-                            "이전 버전의 저장 기록을 읽지 못했습니다. 원본은 보존되어 있으며 보관함에서 읽을 수 있는 작업을 확인할 수 있습니다."
+                            "이전 버전의 저장 기록을 읽지 못했습니다. 원본은 보존되어 있으며 작업 보관함에서 읽을 수 있는 작업을 확인할 수 있습니다."
                         scan.unreadableSessionIds.isNotEmpty() ->
-                            "일부 저장된 작업은 복구가 필요합니다. 보관함에서 확인해 주세요."
+                            "일부 저장된 작업은 복구가 필요합니다. 작업 보관함에서 확인해 주세요."
                         else -> null
                     }
-                }.onFailure { draftLoadError = "저장된 작업을 읽을 수 없습니다. 보관함에서 확인해 주세요." }
+                }.onFailure { draftLoadError = "저장된 작업을 읽을 수 없습니다. 작업 보관함에서 확인해 주세요." }
             }
             HomeScreen(
-                onStart = { navController.navigate(Routes.FRAME_TYPE_SELECT) },
+                onCamera = {
+                    navController.navigate("${Routes.FRAME_TYPE_SELECT}/${InputSource.CAMERA.name}")
+                },
+                onAlbum = {
+                    navController.navigate("${Routes.FRAME_TYPE_SELECT}/${InputSource.ALBUM.name}")
+                },
                 onGallery = { navController.navigate(Routes.GALLERY) },
                 onResume = recentDraft?.let { draft ->
                     { navController.navigate(resumeRoute(draft)) }
                 },
-                resumeLabel = recentDraft?.let { "${it.selectedCount}컷 이어서 작업하기" },
+                resumeLabel = recentDraft?.let {
+                    val source = if (it.inputSource == InputSource.ALBUM) "앨범" else "카메라"
+                    "$source ${it.selectedCount}컷 이어서 작업하기"
+                },
                 notice = draftLoadError,
                 onSettings = { navController.navigate(Routes.SETTINGS) },
+                galleryCount = galleryCount,
             )
         }
 
@@ -146,11 +163,59 @@ fun PocketNavHost(
         }
 
         // Frame Type Select
-        composable(Routes.FRAME_TYPE_SELECT) {
+        composable(
+            route = "${Routes.FRAME_TYPE_SELECT}/{${Routes.Args.INPUT_SOURCE}}",
+            arguments = listOf(navArgument(Routes.Args.INPUT_SOURCE) { type = NavType.StringType }),
+        ) { entry ->
+            val inputSource = runCatching {
+                InputSource.valueOf(entry.arguments?.getString(Routes.Args.INPUT_SOURCE).orEmpty())
+            }.getOrDefault(InputSource.CAMERA)
             FrameTypeSelectScreen(
+                inputSource = inputSource,
                 onBack = { navController.popBackStack() },
                 onSelected = { frameType ->
-                    navController.navigate("${Routes.CAPTURE}/${frameType.id}")
+                    val destination = when (inputSource) {
+                        InputSource.CAMERA -> "${Routes.CAPTURE}/${frameType.id}"
+                        InputSource.ALBUM -> "${Routes.PHOTO_IMPORT}/${frameType.id}"
+                    }
+                    navController.navigate(destination)
+                },
+            )
+        }
+
+        // Album import. A route with session ID is used only when resuming a saved import draft.
+        composable(
+            route = "${Routes.PHOTO_IMPORT}/{${Routes.Args.FRAME_TYPE}}",
+            arguments = listOf(navArgument(Routes.Args.FRAME_TYPE) { type = NavType.StringType }),
+        ) { entry ->
+            val frameType = FrameType.fromId(entry.arguments?.getString(Routes.Args.FRAME_TYPE).orEmpty())
+            PhotoImportScreen(
+                frameType = frameType,
+                resumeSessionId = null,
+                onBack = { navController.popBackStack() },
+                onDone = { sessionId ->
+                    val selected = NavCodec.encodeIndexes((0 until frameType.selectCount).toList())
+                    navController.navigate("${Routes.LAYOUT_SELECTION}/${frameType.id}/$sessionId/$selected")
+                },
+            )
+        }
+
+        composable(
+            route = "${Routes.PHOTO_IMPORT}/{${Routes.Args.FRAME_TYPE}}/{${Routes.Args.SESSION_ID}}",
+            arguments = listOf(
+                navArgument(Routes.Args.FRAME_TYPE) { type = NavType.StringType },
+                navArgument(Routes.Args.SESSION_ID) { type = NavType.StringType },
+            ),
+        ) { entry ->
+            val frameType = FrameType.fromId(entry.arguments?.getString(Routes.Args.FRAME_TYPE).orEmpty())
+            val sessionId = entry.arguments?.getString(Routes.Args.SESSION_ID).orEmpty()
+            PhotoImportScreen(
+                frameType = frameType,
+                resumeSessionId = sessionId,
+                onBack = { navController.popBackStack() },
+                onDone = { id ->
+                    val selected = NavCodec.encodeIndexes((0 until frameType.selectCount).toList())
+                    navController.navigate("${Routes.LAYOUT_SELECTION}/${frameType.id}/$id/$selected")
                 },
             )
         }
@@ -556,9 +621,11 @@ fun PocketNavHost(
 }
 
 private fun resumeRoute(document: SessionDocument): String {
-    val frameType = FrameType.entries.firstOrNull { it.captureCount == document.captureCount }
-        ?: FrameType.FOUR_CUT
+    val frameType = FrameType.fromId(document.frameTypeId)
     val id = document.sessionId
+    if (document.stage == SessionStage.IMPORT && document.inputSource == InputSource.ALBUM) {
+        return "${Routes.PHOTO_IMPORT}/${frameType.id}/$id"
+    }
     if (document.stage == SessionStage.CAPTURE) return "${Routes.CAPTURE}/${frameType.id}/$id"
     if (document.stage == SessionStage.SELECT) return "${Routes.SELECTION}/${frameType.id}/$id"
     val orderedPhotos = document.photos.sortedBy { it.captureIndex }

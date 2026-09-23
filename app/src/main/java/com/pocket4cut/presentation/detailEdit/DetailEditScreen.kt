@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,6 +32,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Crop
 import androidx.compose.material.icons.filled.Flip
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
@@ -46,6 +48,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -62,6 +65,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import com.pocket4cut.ui.designsystem.components.accessibleRange
@@ -69,11 +73,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pocket4cut.frame.CollagePreviewScaledToFit
+import com.pocket4cut.frame.CollageLayoutMath
 import com.pocket4cut.frame.FilterId
 import com.pocket4cut.frame.FrameColor
 import com.pocket4cut.frame.FrameStyle
 import com.pocket4cut.frame.FrameTheme
+import com.pocket4cut.frame.PhotoCropTransform
 import com.pocket4cut.domain.model.PhotoAdjustments
+import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.ui.designsystem.AppColors
 import com.pocket4cut.ui.designsystem.AppLayout
@@ -84,6 +91,8 @@ import com.pocket4cut.ui.designsystem.components.IconCircleButton
 import com.pocket4cut.ui.designsystem.components.LoadingOverlay
 import com.pocket4cut.ui.designsystem.components.PrimaryButton
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 
 /* ── UI ↔ Model conversion (iOS-exact ranges) ──────────────────── */
@@ -160,6 +169,7 @@ fun DetailEditScreen(
     val scope = rememberCoroutineScope()
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var leaving by remember { mutableStateOf(false) }
+    var cropEditorOpen by remember { mutableStateOf(false) }
     fun requestLeave() {
         if (leaving) return
         leaving = true
@@ -192,6 +202,39 @@ fun DetailEditScreen(
     }
     val captionTextPart = remember(customText) { customText.trim().takeIf { it.isNotEmpty() } }
     val captionDatePart = remember(showDate, dateString) { if (showDate) dateString else null }
+    val cropTransforms = uiState.slotAdjustments.map {
+        PhotoCropTransform(it.crop, it.quarterTurnsClockwise, it.isFlippedHorizontally)
+    }
+    val selectedSlotAspectRatio = remember(
+        frameStyle,
+        theme,
+        layoutVersion,
+        customText,
+        showDate,
+        dateString,
+        uiState.selectedSlotIndex,
+    ) {
+        val dimensions = CollageLayoutMath.compute(
+            frameStyle = frameStyle,
+            theme = theme,
+            text = customText.takeIf { it.isNotBlank() },
+            dateString = dateString.takeIf { showDate },
+            outputWidthPx = 390f,
+            layoutVersion = layoutVersion,
+        )
+        dimensions.cells.getOrNull(uiState.selectedSlotIndex)?.let { cell ->
+            (cell.width() / cell.height()).takeIf { it.isFinite() && it > 0f }
+        } ?: frameStyle.cellAspectWidthOverHeight
+    }
+    val selectedSourcePath = imagePaths.getOrNull(uiState.selectedSlotIndex)
+    val selectedSourceDimensions by produceState<BitmapDecoding.ImageDimensions?>(
+        initialValue = null,
+        key1 = selectedSourcePath,
+    ) {
+        value = selectedSourcePath?.let { path ->
+            withContext(Dispatchers.IO) { BitmapDecoding.orientedDimensions(path) }
+        }
+    }
 
     Box(modifier = modifier.fillMaxSize().background(AppColors.Background.primary)) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -240,6 +283,7 @@ fun DetailEditScreen(
                     val previewBackground = customFrameDesign?.resolvedFillColor ?: frameColor.color
                     CollagePreviewScaledToFit(
                         images = uiState.collagePreviewImages,
+                        cropTransforms = cropTransforms,
                         frameType = frameType,
                         frameStyle = frameStyle,
                         theme = theme,
@@ -419,6 +463,32 @@ fun DetailEditScreen(
                     }
                 }
 
+                Spacer(Modifier.height(AppSpacing.sm))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(min = 48.dp)
+                        .clip(RoundedCornerShape(AppLayout.Radius.md))
+                        .background(AppColors.Background.tertiary)
+                        .border(1.dp, AppColors.Border.subtle, RoundedCornerShape(AppLayout.Radius.md))
+                        .clickable { cropEditorOpen = true }
+                        .semantics {
+                            contentDescription = "현재 사진 자르기"
+                            role = Role.Button
+                        }
+                        .padding(horizontal = AppSpacing.md, vertical = AppSpacing.sm),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    Icon(Icons.Default.Crop, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
+                    Spacer(Modifier.width(AppSpacing.xs))
+                    Text(
+                        "자르기",
+                        style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
+                        color = AppColors.Text.primary,
+                    )
+                }
+
                 Spacer(Modifier.height(AppSpacing.lg))
 
                 val adj = uiState.slotAdjustments.getOrNull(uiState.selectedSlotIndex)
@@ -465,6 +535,26 @@ fun DetailEditScreen(
         }
 
         LoadingOverlay(visible = uiState.isRendering)
+        if (cropEditorOpen) {
+            val selectedIndex = uiState.selectedSlotIndex
+            val selectedBitmap = uiState.collagePreviewImages.getOrNull(selectedIndex)
+                ?: orderedImages.getOrNull(selectedIndex)
+            val selectedAdjustment = uiState.slotAdjustments.getOrNull(selectedIndex)
+            if (selectedBitmap != null && selectedAdjustment != null) {
+                CropEditorScreen(
+                    bitmap = selectedBitmap,
+                    initialCrop = selectedAdjustment.crop,
+                    quarterTurnsClockwise = selectedAdjustment.quarterTurnsClockwise,
+                    flipHorizontal = selectedAdjustment.isFlippedHorizontally,
+                    slotAspectRatio = selectedSlotAspectRatio,
+                    sourceDimensions = selectedSourceDimensions,
+                    onPreview = viewModel::previewCurrentCrop,
+                    onCommit = viewModel::commitCurrentCrop,
+                    onDismiss = { cropEditorOpen = false },
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+        }
     }
 }
 

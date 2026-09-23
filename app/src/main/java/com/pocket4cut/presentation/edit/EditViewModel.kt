@@ -6,10 +6,12 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.pocket4cut.core.util.BitmapAdjustments
 import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.data.local.SessionDocumentRepository
 import com.pocket4cut.domain.model.SessionStage
+import com.pocket4cut.domain.model.PhotoAdjustments
 import com.pocket4cut.frame.CustomFrameDesign
 import com.pocket4cut.frame.FilterDefs
 import com.pocket4cut.frame.FilterId
@@ -17,6 +19,7 @@ import com.pocket4cut.frame.FrameColor
 import com.pocket4cut.frame.FrameColors
 import com.pocket4cut.frame.FrameLayoutId
 import com.pocket4cut.frame.FrameLayouts
+import com.pocket4cut.frame.PhotoCropTransform
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.presentation.settings.AppSettings
 import kotlinx.coroutines.Dispatchers
@@ -55,6 +58,14 @@ data class EditUiState(
     val customFrameDesign: CustomFrameDesign? = null,
     val allowsColorEditInEditor: Boolean = true,
     val layoutVersion: Int = 2,
+    val cropTransforms: List<PhotoCropTransform> = emptyList(),
+)
+
+private data class LoadedEditData(
+    val document: com.pocket4cut.domain.model.SessionDocument,
+    val photoIds: List<String>,
+    val images: List<Bitmap>,
+    val cropTransforms: List<PhotoCropTransform>,
 )
 
 class EditViewModel(app: Application) : AndroidViewModel(app) {
@@ -64,6 +75,8 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     private var navigationInFlight = false
     private val persistMutex = Mutex()
     private var basePhotoIds: List<String> = emptyList()
+    private var baseCropTransforms: List<PhotoCropTransform> = emptyList()
+    private var loadGeneration = 0L
 
     private val _uiState = MutableStateFlow(EditUiState())
     val uiState: StateFlow<EditUiState> = _uiState
@@ -82,7 +95,7 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         selectedIndexes: List<Int>,
         frameLayoutId: FrameLayoutId,
     ) {
-        if (lastSessionId == sessionId && originalImages.isNotEmpty()) return
+        val generation = ++loadGeneration
         lastFrameType = frameType
         lastFrameLayoutId = frameLayoutId
         lastSelectedIndexes = selectedIndexes
@@ -104,12 +117,36 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
                     val photo = document.photos.firstOrNull { it.photoId == id } ?: error("선택한 사진이 없습니다.")
                     sessions.resolvePhotoPath(photo).also { check(it.isFile) { "사진 파일이 없습니다." } }.absolutePath
                 }
+                val adjustments = ids.map { id -> document.draft.adjustmentsByPhotoId[id] ?: PhotoAdjustments() }
                 val bitmaps = withContext(Dispatchers.IO) {
-                    paths.map { BitmapDecoding.decodeSampled(it, reqSize = 720) ?: error("사진을 열 수 없습니다.") }
+                    paths.mapIndexed { index, path ->
+                        val decoded = BitmapDecoding.decodeSampled(path, reqSize = 720)
+                            ?: error("사진을 열 수 없습니다.")
+                        applyPerPhotoAdjustments(decoded, adjustments[index])
+                    }
                 }
-                Triple(document, ids, bitmaps)
-            }.onSuccess { (document, ids, bitmaps) ->
+                LoadedEditData(
+                    document = document,
+                    photoIds = ids,
+                    images = bitmaps,
+                    cropTransforms = adjustments.map { adjustment ->
+                        PhotoCropTransform(
+                            crop = adjustment.crop,
+                            quarterTurnsClockwise = ((adjustment.rotationDegrees / 90) % 4 + 4) % 4,
+                            flipHorizontal = adjustment.flipHorizontal,
+                        )
+                    },
+                )
+            }.onSuccess { loaded ->
+                if (generation != loadGeneration) {
+                    loaded.images.forEach(Bitmap::recycle)
+                    return@onSuccess
+                }
+                val document = loaded.document
+                val ids = loaded.photoIds
+                val bitmaps = loaded.images
                 basePhotoIds = ids
+                baseCropTransforms = loaded.cropTransforms
                 originalImages = bitmaps
                 val order = bitmaps.indices.toList()
                 val draft = document.draft
@@ -133,11 +170,14 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
                         dateFontSize = draft.dateFontSize,
                         captionFontName = draft.captionFontName,
                         captionColorRGB = draft.captionColorRgb,
+                        cropTransforms = loaded.cropTransforms,
                     )
                 }
                 buildFilterChipThumbnails()
             }.onFailure { t ->
-                _uiState.update { it.copy(isLoading = false, errorMessage = t.message) }
+                if (generation == loadGeneration) {
+                    _uiState.update { it.copy(isLoading = false, errorMessage = t.message) }
+                }
             }
         }
     }
@@ -319,7 +359,42 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     private fun rebuildOrderedAndFilteredImages() {
         val order = _uiState.value.order
         val ordered = order.mapNotNull { originalImages.getOrNull(it) }
-        _uiState.update { it.copy(orderedImages = ordered) }
+        val crops = order.mapNotNull { baseCropTransforms.getOrNull(it) }
+        _uiState.update { it.copy(orderedImages = ordered, cropTransforms = crops) }
+    }
+
+    private fun applyPerPhotoAdjustments(source: Bitmap, adjustment: PhotoAdjustments): Bitmap {
+        var bitmap = source
+        try {
+            repeat(((adjustment.rotationDegrees / 90) % 4 + 4) % 4) {
+                val rotated = BitmapAdjustments.rotate90(bitmap)
+                if (rotated !== bitmap) bitmap.recycle()
+                bitmap = rotated
+            }
+            if (adjustment.flipHorizontal) {
+                val flipped = BitmapAdjustments.flipHorizontal(bitmap)
+                if (flipped !== bitmap) bitmap.recycle()
+                bitmap = flipped
+            }
+            if (
+                adjustment.brightness != 0f ||
+                adjustment.contrast != 1f ||
+                adjustment.saturation != 1f
+            ) {
+                val adjusted = BitmapAdjustments.applyColorAdjustments(
+                    bitmap,
+                    adjustment.brightness,
+                    adjustment.contrast,
+                    adjustment.saturation,
+                )
+                if (adjusted !== bitmap) bitmap.recycle()
+                bitmap = adjusted
+            }
+            return bitmap
+        } catch (cause: Throwable) {
+            bitmap.recycle()
+            throw cause
+        }
     }
 
     companion object {

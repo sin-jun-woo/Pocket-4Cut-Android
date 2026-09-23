@@ -3,11 +3,13 @@ package com.pocket4cut.presentation.gallery
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.pocket4cut.data.importing.PhotoImportRepository
 import com.pocket4cut.data.local.ResultPublicationIssue
 import com.pocket4cut.data.local.SessionCorruptException
 import com.pocket4cut.data.local.SessionDocumentRepository
 import com.pocket4cut.data.local.SessionStoreException
 import com.pocket4cut.domain.model.ResultRecord
+import com.pocket4cut.domain.model.InputSource
 import com.pocket4cut.domain.model.SessionDocument
 import com.pocket4cut.domain.model.SessionStage
 import kotlinx.coroutines.CancellationException
@@ -43,6 +45,7 @@ data class GalleryDraftItem(
     val totalShots: Int,
     val updatedAt: Long,
     val thumbnailPath: String?,
+    val inputSource: InputSource? = null,
 )
 
 data class GalleryBucket(
@@ -108,6 +111,7 @@ data class GalleryUiState(
 
 class GalleryViewModel(app: Application) : AndroidViewModel(app) {
     private val sessions = SessionDocumentRepository(app.applicationContext)
+    private val imports = PhotoImportRepository(app.applicationContext, sessions)
 
     private val _uiState = MutableStateFlow(GalleryUiState())
     val uiState: StateFlow<GalleryUiState> = _uiState
@@ -116,6 +120,7 @@ class GalleryViewModel(app: Application) : AndroidViewModel(app) {
         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
         viewModelScope.launch {
             try {
+                val importRecoveries = imports.recoverAll()
                 val scan = sessions.scanForGallery()
                 val hidden = sessions.listHiddenSessionIds()
                 val list = scan.documents
@@ -133,6 +138,7 @@ class GalleryViewModel(app: Application) : AndroidViewModel(app) {
                         thumbnailPath = document.photos.lastOrNull()?.let { photo ->
                             sessions.resolvePhotoPath(photo).absolutePath
                         },
+                        inputSource = document.inputSource,
                     )
                 }.plus(scan.unreadableSessionIds.map { sessionId ->
                     GalleryDraftItem(
@@ -149,7 +155,13 @@ class GalleryViewModel(app: Application) : AndroidViewModel(app) {
                     it.copy(isLoading = false, items = items, drafts = drafts,
                         unreadableSessionIds = scan.unreadableSessionIds.toSet(),
                         legacyMigrationFailed = scan.legacyMigrationError != null,
-                        hiddenSessionIds = hidden)
+                        hiddenSessionIds = hidden,
+                        errorMessage = if (importRecoveries.any {
+                                recovery -> recovery.failures.isNotEmpty() || recovery.needsReselection
+                            }
+                        ) {
+                            "일부 앨범 가져오기를 복구하지 못했습니다. 다시 선택이 필요한 사진을 확인해 주세요."
+                        } else null)
                 }
             } catch (t: Exception) {
                 if (t is CancellationException) throw t

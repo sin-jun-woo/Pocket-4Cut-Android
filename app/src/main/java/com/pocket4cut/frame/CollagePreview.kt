@@ -37,6 +37,7 @@ import kotlin.math.roundToInt
 @Composable
 fun CollagePreview(
     images: List<Bitmap>,
+    cropTransforms: List<PhotoCropTransform> = emptyList(),
     frameType: FrameType,
     frameStyle: FrameStyle,
     theme: FrameTheme,
@@ -90,6 +91,7 @@ fun CollagePreview(
         }
         val input = CollageRenderer.Input(
             images = images.take(frameType.selectCount),
+            cropTransforms = cropTransforms.take(frameType.selectCount),
             frameStyle = frameStyle,
             theme = theme,
             overrideBackground = overrideBackground,
@@ -133,6 +135,7 @@ fun CollagePreview(
 @Composable
 fun CollagePreviewScaledToFit(
     images: List<Bitmap>,
+    cropTransforms: List<PhotoCropTransform> = emptyList(),
     frameType: FrameType,
     frameStyle: FrameStyle,
     theme: FrameTheme,
@@ -160,6 +163,7 @@ fun CollagePreviewScaledToFit(
         val placeable = subcompose("collagePreview") {
             CollagePreview(
                 images = images,
+                cropTransforms = cropTransforms,
                 frameType = frameType,
                 frameStyle = frameStyle,
                 theme = theme,

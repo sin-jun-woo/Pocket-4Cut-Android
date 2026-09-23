@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.pocket4cut.domain.model.InputSource
 import com.pocket4cut.frame.FrameLayouts
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.ui.designsystem.AppColors
@@ -35,6 +36,7 @@ import com.pocket4cut.ui.designsystem.components.PrimaryButton
 
 @Composable
 fun FrameTypeSelectScreen(
+    inputSource: InputSource,
     onBack: () -> Unit,
     onSelected: (FrameType) -> Unit,
     modifier: Modifier = Modifier,
@@ -99,6 +101,7 @@ fun FrameTypeSelectScreen(
                         type = type,
                         layoutCount = FrameLayouts.bySlots(type.selectCount).size,
                         selected = selectedType == type,
+                        inputSource = inputSource,
                         onClick = { selectedType = type },
                     )
                 }
@@ -114,7 +117,10 @@ fun FrameTypeSelectScreen(
                 .padding(top = AppSpacing.md, bottom = AppSpacing.Layout.ctaBottomSpace),
         ) {
             PrimaryButton(
-                text = "${selectedType.displayName}으로 촬영",
+                text = when (inputSource) {
+                    InputSource.CAMERA -> "${selectedType.displayName}으로 촬영"
+                    InputSource.ALBUM -> "앨범에서 ${selectedType.selectCount}장 선택하기"
+                },
                 onClick = { onSelected(selectedType) },
             )
         }
@@ -127,6 +133,7 @@ private fun FrameTypeRow(
     type: FrameType,
     layoutCount: Int,
     selected: Boolean,
+    inputSource: InputSource,
     onClick: () -> Unit,
 ) {
     val shape = RoundedCornerShape(AppLayout.Radius.md)
@@ -183,7 +190,10 @@ private fun FrameTypeRow(
             )
             Spacer(Modifier.height(2.dp))
             Text(
-                text = type.subtitle,
+                text = when (inputSource) {
+                    InputSource.CAMERA -> type.subtitle
+                    InputSource.ALBUM -> "앨범에서 ${type.selectCount}장 선택"
+                },
                 style = AppTypography.subheadline,
                 color = AppColors.Text.secondary,
             )

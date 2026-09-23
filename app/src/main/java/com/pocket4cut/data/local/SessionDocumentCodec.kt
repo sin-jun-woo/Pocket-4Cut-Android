@@ -2,12 +2,16 @@ package com.pocket4cut.data.local
 
 import com.pocket4cut.domain.model.ExportOperation
 import com.pocket4cut.domain.model.ExportStatus
+import com.pocket4cut.domain.model.CURRENT_SESSION_SCHEMA_VERSION
+import com.pocket4cut.domain.model.InputSource
 import com.pocket4cut.domain.model.PhotoAdjustments
+import com.pocket4cut.domain.model.PhotoCrop
 import com.pocket4cut.domain.model.PhotoRef
 import com.pocket4cut.domain.model.ResultRecord
 import com.pocket4cut.domain.model.SessionDocument
 import com.pocket4cut.domain.model.SessionDraft
 import com.pocket4cut.domain.model.SessionStage
+import com.pocket4cut.domain.model.inferFrameTypeId
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -20,6 +24,8 @@ internal object SessionDocumentCodec {
         put("updatedAt", document.updatedAt)
         put("captureCount", document.captureCount)
         put("selectedCount", document.selectedCount)
+        put("frameTypeId", document.frameTypeId)
+        put("inputSource", document.inputSource.name)
         put("stage", document.stage.name)
         put("photos", JSONArray().apply {
             document.photos.forEach { photo ->
@@ -42,6 +48,11 @@ internal object SessionDocumentCodec {
                         put("brightness", adjustment.brightness.toDouble())
                         put("contrast", adjustment.contrast.toDouble())
                         put("saturation", adjustment.saturation.toDouble())
+                        put("crop", JSONObject().apply {
+                            put("focusX", adjustment.crop.focusX.toDouble())
+                            put("focusY", adjustment.crop.focusY.toDouble())
+                            put("zoom", adjustment.crop.zoom.toDouble())
+                        })
                     })
                 }
             })
@@ -93,7 +104,9 @@ internal object SessionDocumentCodec {
     fun decode(raw: String): SessionDocument {
         val json = JSONObject(raw)
         val schemaVersion = json.getInt("schemaVersion")
-        if (schemaVersion != 1) throw UnsupportedSessionVersionException(schemaVersion)
+        if (schemaVersion !in 1..CURRENT_SESSION_SCHEMA_VERSION) {
+            throw UnsupportedSessionVersionException(schemaVersion)
+        }
         val photosJson = json.getJSONArray("photos")
         val photos = (0 until photosJson.length()).map { index ->
             photosJson.getJSONObject(index).let {
@@ -112,12 +125,20 @@ internal object SessionDocumentCodec {
             while (keys.hasNext()) {
                 val photoId = keys.next()
                 val item = adjustmentsJson.getJSONObject(photoId)
+                val crop = item.optJSONObject("crop")
                 put(photoId, PhotoAdjustments(
                     rotationDegrees = item.getInt("rotationDegrees"),
                     flipHorizontal = item.getBoolean("flipHorizontal"),
                     brightness = item.getDouble("brightness").toFloat(),
                     contrast = item.getDouble("contrast").toFloat(),
                     saturation = item.getDouble("saturation").toFloat(),
+                    crop = crop?.let {
+                        PhotoCrop(
+                            focusX = it.getDouble("focusX").toFloat(),
+                            focusY = it.getDouble("focusY").toFloat(),
+                            zoom = it.getDouble("zoom").toFloat(),
+                        )
+                    } ?: PhotoCrop(),
                 ))
             }
         }
@@ -169,15 +190,30 @@ internal object SessionDocumentCodec {
                 )
             }
         }
+        val captureCount = json.getInt("captureCount")
+        val selectedCount = json.getInt("selectedCount")
+        val migratedFrameTypeId = inferFrameTypeId(captureCount, selectedCount)
+        val frameTypeId = if (schemaVersion == 1) {
+            migratedFrameTypeId.orEmpty()
+        } else {
+            json.getString("frameTypeId")
+        }
+        val decodedStage = SessionStage.valueOf(json.getString("stage"))
         return SessionDocument(
-            schemaVersion = schemaVersion,
+            // v1 is upgraded in memory and is atomically written as v2 on its next normal update.
+            schemaVersion = CURRENT_SESSION_SCHEMA_VERSION,
             sessionId = json.getString("sessionId"),
             revision = json.getLong("revision"),
             createdAt = json.getLong("createdAt"),
             updatedAt = json.getLong("updatedAt"),
-            captureCount = json.getInt("captureCount"),
-            selectedCount = json.getInt("selectedCount"),
-            stage = SessionStage.valueOf(json.getString("stage")),
+            captureCount = captureCount,
+            selectedCount = selectedCount,
+            frameTypeId = frameTypeId,
+            inputSource = if (schemaVersion == 1) InputSource.CAMERA else
+                InputSource.valueOf(json.getString("inputSource")),
+            stage = if (schemaVersion == 1 && migratedFrameTypeId == null) {
+                SessionStage.NEEDS_RECOVERY
+            } else decodedStage,
             photos = photos,
             draft = draft,
             results = results,

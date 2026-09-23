@@ -41,6 +41,7 @@ import coil.compose.AsyncImage
 import com.pocket4cut.data.local.ResultPublicationIssue
 import com.pocket4cut.data.local.ResultPublicationIssueKind
 import com.pocket4cut.domain.model.SessionStage
+import com.pocket4cut.domain.model.InputSource
 import com.pocket4cut.ui.designsystem.*
 import com.pocket4cut.ui.designsystem.components.*
 import java.io.File
@@ -431,7 +432,7 @@ private fun GalleryHeader(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                "보관함",
+                "작업 보관함",
                 style = AppTypography.title2,
                 color = AppColors.Text.primary,
                 textAlign = TextAlign.Center,
@@ -734,8 +735,10 @@ private fun DraftContent(
                     )
                 }
                 Text(
-                    text = if (draft.totalShots > 0) {
-                        "${draft.selectedCount}컷 · 촬영 ${draft.completedShots}/${draft.totalShots}"
+                    text = if (draft.inputSource == InputSource.ALBUM) {
+                        "앨범 ${draft.selectedCount}컷 · ${draft.completedShots}/${draft.selectedCount}장"
+                    } else if (draft.totalShots > 0) {
+                        "카메라 ${draft.selectedCount}컷 · 촬영 ${draft.completedShots}/${draft.totalShots}"
                     } else "${draft.selectedCount}컷 · 복구 필요",
                     color = AppColors.Text.primary,
                     style = AppTypography.caption1,

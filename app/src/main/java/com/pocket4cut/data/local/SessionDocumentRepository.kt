@@ -5,10 +5,13 @@ import android.graphics.BitmapFactory
 import android.os.Environment
 import android.util.AtomicFile
 import com.pocket4cut.domain.model.PhotoRef
+import com.pocket4cut.domain.model.CURRENT_SESSION_SCHEMA_VERSION
+import com.pocket4cut.domain.model.InputSource
 import com.pocket4cut.domain.model.ResultRecord
 import com.pocket4cut.domain.model.SessionDocument
 import com.pocket4cut.domain.model.SessionDraft
 import com.pocket4cut.domain.model.SessionStage
+import com.pocket4cut.domain.model.inferFrameTypeId
 import com.pocket4cut.frame.FrameLayoutId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -215,8 +218,10 @@ class SessionDocumentRepository(private val context: Context) {
         if (current.stage == SessionStage.NEEDS_RECOVERY) throw SessionCorruptException(id)
         if (current.revision != expectedRevision) throw SessionConflictException(id)
         val changed = transform(current)
-        if (changed.sessionId != id || changed.schemaVersion != 1 || changed.createdAt != current.createdAt ||
-            changed.revision != expectedRevision
+        if (changed.sessionId != id || changed.schemaVersion != CURRENT_SESSION_SCHEMA_VERSION ||
+            changed.createdAt != current.createdAt || changed.revision != expectedRevision ||
+            changed.frameTypeId != current.frameTypeId || changed.inputSource != current.inputSource ||
+            changed.captureCount != current.captureCount || changed.selectedCount != current.selectedCount
         ) throw SessionStorageException("Immutable session identity or revision was changed")
         if (changed.stage == SessionStage.DELETED ||
             !changed.photos.containsAll(current.photos) || !changed.results.containsAll(current.results)
@@ -471,6 +476,9 @@ class SessionDocumentRepository(private val context: Context) {
         expectedRevision: Long,
         photo: PhotoRef,
     ): SessionDocument = update(id, expectedRevision) { current ->
+        if (current.inputSource != InputSource.CAMERA) {
+            throw SessionStorageException("Captured photos require a camera session")
+        }
         if (current.photos.any { it.captureIndex == photo.captureIndex || it.photoId == photo.photoId }) {
             throw SessionConflictException(id)
         }
@@ -480,6 +488,69 @@ class SessionDocumentRepository(private val context: Context) {
             throw SessionStorageException("Capture is outside the session directory")
         }
         current.copy(photos = current.photos + photo)
+    }
+
+    /** Publishes one already-validated app-owned import into an album draft exactly once. */
+    suspend fun appendImportedPhoto(
+        id: String,
+        expectedRevision: Long,
+        photo: PhotoRef,
+    ): SessionDocument = update(id, expectedRevision) { current ->
+        if (current.inputSource != InputSource.ALBUM || current.stage != SessionStage.IMPORT) {
+            throw SessionStorageException("Imported photos require an album import session")
+        }
+        current.photos.firstOrNull { it.photoId == photo.photoId }?.let { existing ->
+            if (existing == photo) return@update current
+            throw SessionConflictException(id)
+        }
+        if (current.photos.any { it.captureIndex == photo.captureIndex }) throw SessionConflictException(id)
+        if (current.photos.size >= current.selectedCount) {
+            throw SessionStorageException("The album draft already contains the required photos")
+        }
+        val file = resolvePhotoPath(photo)
+        val importDirectory = File(picturesRoot, "imports/$id").canonicalFile
+        if (photo.legacy || !file.isFile || file.parentFile?.canonicalFile != importDirectory) {
+            throw SessionStorageException("Imported photo is outside the session directory")
+        }
+        val nextOrder = current.draft.selectedPhotoIdsInOrder + photo.photoId
+        current.copy(
+            photos = current.photos + photo,
+            draft = current.draft.copy(selectedPhotoIdsInOrder = nextOrder),
+        )
+    }
+
+    /** Removes a photo reference before the import service erases its app-owned copy. */
+    suspend fun removeImportedPhoto(
+        id: String,
+        expectedRevision: Long,
+        photoId: String,
+    ): SessionDocument = ioLocked {
+        validateId(id)
+        validateId(photoId)
+        val current = readDocumentLocked(id) ?: throw SessionMissingException(id)
+        if (current.revision != expectedRevision) throw SessionConflictException(id)
+        if (current.inputSource != InputSource.ALBUM || current.stage != SessionStage.IMPORT ||
+            current.results.isNotEmpty()
+        ) throw SessionStorageException("Only an unfinished album import can remove a photo")
+        val removed = current.photos.firstOrNull { it.photoId == photoId }
+            ?: return@ioLocked current
+        val file = resolvePhotoPath(removed)
+        if (removed.legacy || file.parentFile?.canonicalFile !=
+            File(picturesRoot, "imports/$id").canonicalFile
+        ) throw SessionStorageException("Imported photo is outside the session directory")
+        val next = current.copy(
+            revision = current.revision + 1,
+            updatedAt = System.currentTimeMillis(),
+            photos = current.photos.filterNot { it.photoId == photoId },
+            draft = current.draft.copy(
+                selectedPhotoIdsInOrder = current.draft.selectedPhotoIdsInOrder.filterNot { it == photoId },
+                adjustmentsByPhotoId = current.draft.adjustmentsByPhotoId - photoId,
+            ),
+        )
+        validate(next)
+        writeDocumentLocked(next)
+        emit(next)
+        next
     }
 
     /** Keeps prior results and source photos when an edit draft is abandoned. */
@@ -590,6 +661,23 @@ class SessionDocumentRepository(private val context: Context) {
                 }
             }
         }
+        val importFolder = File(picturesRoot, "imports/$id").canonicalFile
+        val importRoot = File(picturesRoot, "imports").canonicalFile
+        if (importFolder.parentFile != importRoot) throw SessionStorageException("Invalid import directory")
+        if (importFolder.exists()) {
+            importFolder.walkBottomUp().forEach { entry ->
+                val canonical = entry.canonicalFile
+                if (canonical != importFolder &&
+                    !canonical.path.startsWith(importFolder.path + File.separator)
+                ) throw SessionStorageException("Unsafe file in import directory")
+                if (entry.isFile && canonical.path !in otherCanonicalPaths && !entry.delete()) {
+                    throw SessionStorageException("Could not delete an imported photo")
+                }
+                if (entry.isDirectory && entry.listFiles().isNullOrEmpty() && !entry.delete()) {
+                    throw SessionStorageException("Could not delete an empty import directory")
+                }
+            }
+        }
         val pending = listOf(
             File(context.filesDir, "pending_collage_$id.json"),
             File(context.filesDir, "frame_selection_$id.json"),
@@ -610,6 +698,8 @@ class SessionDocumentRepository(private val context: Context) {
         deleteSessionDirectoryLocked(quarantineIntentsDir, id)
         deleteSessionDirectoryLocked(quarantinedPublicationsDir, id)
         deleteSessionDirectoryLocked(File(picturesRoot, "recovery_quarantine"), id)
+        deleteSessionDirectoryLocked(File(context.filesDir, "import_journals"), id)
+        deleteSessionDirectoryLocked(File(context.filesDir, "import_removals"), id)
         val documentsCanonical = documentsDir.canonicalFile
         val corruptName = Regex("${Regex.escape(id)}\\.corrupt\\.[0-9]+")
         documentsDir.listFiles().orEmpty().filter { entry -> corruptName.matches(entry.name) }
@@ -889,6 +979,9 @@ class SessionDocumentRepository(private val context: Context) {
         val missing = photos.any { !resolvePhotoPath(it).isFile } ||
             (result != null && !resolveResultPath(result).isFile)
         val createdAt = row.getLong("createdAt")
+        val captureCount = row.getInt("captureCount")
+        val selectedCount = row.getInt("selectedCount")
+        val frameTypeId = inferFrameTypeId(captureCount, selectedCount)
         val legacyFrameId = row.getString("frameId")
         val isLayoutId = FrameLayoutId.entries.any { it.name == legacyFrameId }
         val draft = SessionDraft(
@@ -920,10 +1013,11 @@ class SessionDocumentRepository(private val context: Context) {
         return SessionDocument(
             sessionId = id,
             createdAt = createdAt,
-            captureCount = row.getInt("captureCount"),
-            selectedCount = row.getInt("selectedCount"),
+            captureCount = captureCount,
+            selectedCount = selectedCount,
+            frameTypeId = frameTypeId.orEmpty(),
             stage = when {
-                missing || !orderValid || !isLayoutId -> SessionStage.NEEDS_RECOVERY
+                frameTypeId == null || missing || !orderValid || !isLayoutId -> SessionStage.NEEDS_RECOVERY
                 result != null -> SessionStage.RESULT
                 selected.isNotEmpty() -> SessionStage.DETAIL
                 else -> SessionStage.SELECT
@@ -993,8 +1087,29 @@ class SessionDocumentRepository(private val context: Context) {
 
     private fun validate(document: SessionDocument) {
         validateId(document.sessionId)
-        if (document.schemaVersion != 1) throw UnsupportedSessionVersionException(document.schemaVersion)
+        if (document.schemaVersion != CURRENT_SESSION_SCHEMA_VERSION) {
+            throw UnsupportedSessionVersionException(document.schemaVersion)
+        }
+        val expectedSelectedCount = when (document.frameTypeId) {
+            "2" -> 2
+            "4" -> 4
+            "6" -> 6
+            else -> null
+        }
+        val expectedCaptureCount = when (document.frameTypeId) {
+            "2" -> 4
+            "4" -> 8
+            "6" -> 10
+            else -> null
+        }
+        val frameContractValid = if (document.stage == SessionStage.NEEDS_RECOVERY) true else when (document.inputSource) {
+            InputSource.CAMERA -> expectedSelectedCount == document.selectedCount &&
+                expectedCaptureCount == document.captureCount
+            InputSource.ALBUM -> expectedSelectedCount == document.selectedCount &&
+                document.captureCount == document.selectedCount && document.stage != SessionStage.CAPTURE
+        }
         if (document.revision < 0 || document.createdAt < 0 || document.updatedAt < 0 ||
+            !frameContractValid ||
             document.captureCount < 0 || document.selectedCount < 0 ||
             document.photos.map { it.photoId }.distinct().size != document.photos.size ||
             document.photos.map { it.captureIndex }.distinct().size != document.photos.size ||
@@ -1004,7 +1119,16 @@ class SessionDocumentRepository(private val context: Context) {
         document.photos.forEach { photo ->
             validateId(photo.photoId)
             if (photo.captureIndex < 0 || photo.path.isBlank()) throw SessionCorruptException(document.sessionId)
-            resolvePhotoPath(photo)
+            val file = resolvePhotoPath(photo)
+            if (!photo.legacy) {
+                val expectedParent = when (document.inputSource) {
+                    InputSource.CAMERA -> File(picturesRoot, "captures/${document.sessionId}")
+                    InputSource.ALBUM -> File(picturesRoot, "imports/${document.sessionId}")
+                }.canonicalFile
+                if (file.parentFile?.canonicalFile != expectedParent) {
+                    throw SessionCorruptException(document.sessionId)
+                }
+            }
         }
         document.results.forEach { result ->
             validateId(result.resultId)
@@ -1020,13 +1144,20 @@ class SessionDocumentRepository(private val context: Context) {
             }
         }
         val knownPhotos = document.photos.map { it.photoId }.toSet()
+        val collectionCountsValid = document.stage == SessionStage.NEEDS_RECOVERY ||
+            (document.photos.size <= document.captureCount &&
+                document.draft.selectedPhotoIdsInOrder.size <= document.selectedCount)
         if (document.draft.selectedPhotoIdsInOrder.distinct().size != document.draft.selectedPhotoIdsInOrder.size ||
+            !collectionCountsValid ||
             !knownPhotos.containsAll(document.draft.selectedPhotoIdsInOrder) ||
             !knownPhotos.containsAll(document.draft.adjustmentsByPhotoId.keys) ||
             document.draft.layoutVersion < 1 || document.draft.frameStep !in
                 setOf("choose", "color", "season", "custom") || !document.draft.textFontSize.isFinite() ||
             !document.draft.dateFontSize.isFinite() || document.draft.adjustmentsByPhotoId.values.any {
-                !it.brightness.isFinite() || !it.contrast.isFinite() || !it.saturation.isFinite()
+                !it.brightness.isFinite() || !it.contrast.isFinite() || !it.saturation.isFinite() ||
+                    !it.crop.focusX.isFinite() || it.crop.focusX !in 0f..1f ||
+                    !it.crop.focusY.isFinite() || it.crop.focusY !in 0f..1f ||
+                    !it.crop.zoom.isFinite() || it.crop.zoom !in 1f..4f
             }
         ) throw SessionCorruptException(document.sessionId)
     }

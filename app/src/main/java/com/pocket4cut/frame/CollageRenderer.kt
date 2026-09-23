@@ -28,10 +28,19 @@ object CollageRenderer {
     private const val BRAND_TITLE = "Pocket 4Cut"
     private val brandTypeface: Typeface = Typeface.create("serif", Typeface.ITALIC)
 
+    data class ProvidedSlotImage(
+        val bitmap: Bitmap,
+        val cropTransform: PhotoCropTransform = PhotoCropTransform(),
+    )
+
     data class Input(
         val images: List<Bitmap>,
         val imageProvider: ((Int) -> Bitmap?)? = null,
+        /** Export provider that can region-decode for the concrete output slot dimensions. */
+        val slotImageProvider: ((index: Int, slotWidth: Int, slotHeight: Int) -> ProvidedSlotImage?)? = null,
         val recycleProvidedImages: Boolean = false,
+        /** Slot-aligned crop data. Missing entries use the legacy centered aspect-fill. */
+        val cropTransforms: List<PhotoCropTransform> = emptyList(),
         val frameStyle: FrameStyle,
         val theme: FrameTheme,
         val overrideBackground: Color? = null,
@@ -162,11 +171,27 @@ object CollageRenderer {
                 canvas.clipPath(clipPath)
             }
             canvas.drawRect(cell, slotBg)
-            val provided = input.imageProvider?.invoke(i)
+            val slotProvided = input.slotImageProvider?.invoke(
+                i,
+                cell.width().roundToInt().coerceAtLeast(1),
+                cell.height().roundToInt().coerceAtLeast(1),
+            )
+            val legacyProvided = if (slotProvided == null) input.imageProvider?.invoke(i) else null
+            val providedBitmap = slotProvided?.bitmap ?: legacyProvided
             try {
-                (provided ?: input.images.getOrNull(i))?.let { drawAspectFill(canvas, it, cell, imgPaint) }
+                (providedBitmap ?: input.images.getOrNull(i))?.let { image ->
+                    drawAspectFill(
+                        canvas = canvas,
+                        bitmap = image,
+                        dst = cell,
+                        paint = imgPaint,
+                        cropTransform = slotProvided?.cropTransform
+                            ?: input.cropTransforms.getOrNull(i)
+                            ?: PhotoCropTransform(),
+                    )
+                }
             } finally {
-                if (input.recycleProvidedImages) provided?.recycle()
+                if (input.recycleProvidedImages) providedBitmap?.recycle()
             }
             canvas.restore()
         }
@@ -415,17 +440,27 @@ object CollageRenderer {
         }
     }
 
-    private fun drawAspectFill(canvas: Canvas, bitmap: Bitmap, dst: RectF, paint: Paint) {
+    private fun drawAspectFill(
+        canvas: Canvas,
+        bitmap: Bitmap,
+        dst: RectF,
+        paint: Paint,
+        cropTransform: PhotoCropTransform = PhotoCropTransform(),
+    ) {
         canvas.save()
         canvas.clipRect(dst)
-        val bw = bitmap.width.toFloat()
-        val bh = bitmap.height.toFloat()
-        val s = maxOf(dst.width() / bw, dst.height() / bh)
-        val sw = bw * s
-        val sh = bh * s
-        val l = dst.left + (dst.width() - sw) / 2f
-        val t = dst.top + (dst.height() - sh) / 2f
-        canvas.drawBitmap(bitmap, null, RectF(l, t, l + sw, t + sh), paint)
+        val target = CropMath.drawRect(
+            imageWidth = bitmap.width.toFloat(),
+            imageHeight = bitmap.height.toFloat(),
+            viewport = CropRect(dst.left, dst.top, dst.right, dst.bottom),
+            transform = cropTransform,
+        )
+        canvas.drawBitmap(
+            bitmap,
+            null,
+            RectF(target.left, target.top, target.right, target.bottom),
+            paint,
+        )
         canvas.restore()
     }
 

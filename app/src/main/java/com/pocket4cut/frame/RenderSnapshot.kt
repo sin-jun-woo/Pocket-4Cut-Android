@@ -13,6 +13,7 @@ data class RenderSnapshot(
     val photoIdsInOrder: List<String>,
     val imagePathsInOrder: List<String>,
     val adjustmentsByPhotoId: Map<String, PhotoAdjustments>,
+    val cropTransformsInOrder: List<PhotoCropTransform>,
     val frameStyle: FrameStyle,
     val theme: FrameTheme,
     val frameColor: FrameColor,
@@ -41,12 +42,21 @@ data class RenderSnapshot(
             }
             val layout = FrameLayoutId.valueOf(draft.layoutId)
             val theme = FrameCatalog.themes(frameType).first { it.id == draft.themeId }
+            val cropTransforms = draft.selectedPhotoIdsInOrder.map { id ->
+                val adjustment = draft.adjustmentsByPhotoId[id] ?: PhotoAdjustments()
+                PhotoCropTransform(
+                    crop = adjustment.crop,
+                    quarterTurnsClockwise = ((adjustment.rotationDegrees / 90) % 4 + 4) % 4,
+                    flipHorizontal = adjustment.flipHorizontal,
+                )
+            }
             return RenderSnapshot(
                 sessionId = document.sessionId,
                 revision = document.revision,
                 photoIdsInOrder = draft.selectedPhotoIdsInOrder.toList(),
                 imagePathsInOrder = paths,
                 adjustmentsByPhotoId = draft.adjustmentsByPhotoId.toMap(),
+                cropTransformsInOrder = cropTransforms,
                 frameStyle = FrameLayouts.byId(layout),
                 theme = theme,
                 frameColor = FrameColors.byId(draft.frameColorId),

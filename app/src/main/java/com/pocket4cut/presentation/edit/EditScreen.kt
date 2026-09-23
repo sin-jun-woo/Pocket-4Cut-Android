@@ -308,6 +308,7 @@ private fun PreviewSection(
             ) {
                 CollagePreviewScaledToFit(
                     images = uiState.orderedImages,
+                    cropTransforms = uiState.cropTransforms,
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,

@@ -54,7 +54,7 @@ fun SettingsScreen(
             affectedDraftCount = sessions.count { it.stage != SessionStage.RESULT }
         } catch (error: Exception) {
             if (error is CancellationException) throw error
-            snackbarHostState.showSnackbar(error.message ?: "보관함 정보를 읽지 못했습니다.")
+            snackbarHostState.showSnackbar(error.message ?: "작업 보관함 정보를 읽지 못했습니다.")
         }
     }
 
@@ -116,7 +116,7 @@ fun SettingsScreen(
 
         ConfirmDialog(
             visible = showDeleteConfirm,
-            title = "보관함 전체 삭제",
+            title = "작업 보관함 전체 삭제",
             message = "완성된 콜라주 ${galleryCount}개와 앱 내부 세션을 삭제해요." +
                 (if (affectedDraftCount > 0) "\n진행 중인 작업 ${affectedDraftCount}개도 삭제돼요." else "") +
                 "\n사진첩에 저장한 사본은 유지돼요.",
@@ -347,7 +347,7 @@ private fun DataSection(galleryCount: Int, onDeleteRequest: () -> Unit) {
             )
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    "보관함 전체 삭제",
+                    "작업 보관함 전체 삭제",
                     style = AppTypography.callout.copy(fontWeight = FontWeight.SemiBold),
                     color = AppColors.Semantic.error,
                 )

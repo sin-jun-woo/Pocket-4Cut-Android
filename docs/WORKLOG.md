@@ -4,6 +4,18 @@
 
 `docs/`는 GitHub Pages 배포 대상이므로 공개 가능한 요약만 기록한다. 비밀값, 사용자 사진, 기기 serial, 개인 로컬 경로, 원시 실행 로그를 넣지 않는다. 세부 실행 산출물은 로컬 build/캐시 영역에 두고 필요한 명령·결과만 남긴다.
 
+## 2026-09-24 — 앨범 가져오기·사진별 비파괴 자르기 구현 (Asia/Seoul)
+
+- 요청/기준: 홈에서 카메라 촬영과 시스템 앨범 입력을 고르고, 앨범 2·4·6컷과 촬영·앨범 공통 사진별 자르기를 추가한다. 시작 및 확인한 GitHub `origin/main`은 `ee621886f1ef283e7a555a64fd07577a469b1264`, 구현 브랜치는 `codex/album-import-crop`이다. 버전은 `1.5 (6)` 그대로 유지한다.
+- 구현: schema v2에 명시적 `frameTypeId`, `InputSource`, `IMPORT`, PhotoId별 `PhotoCrop`을 추가하고 엄격한 v1 2·4·6컷 이전을 연결했다. 시스템 Photo Picker와 지원 기기의 backport 요청, 확인·추가·제거·재정렬 화면, 홈·작업 보관함 재개 경로를 추가했다. 전체 사진 읽기 권한은 선언하지 않는다.
+- 저장/복구: 외부 URI를 장기 저장하지 않고 앱 전용 import 사본으로 스트리밍 복사하며 SHA-256, 64MiB·32,768px·250MP 제한, signature·실제 sampled pixel decode·JPEG SOS/EOI 완결성을 검사한다. 원본 바이트는 재인코딩하지 않는다. import/removal journal의 중단 재생, 첫 세션 생성 전 전역 복구, 세션·PhotoId·경로·현재 PhotoRef 일치 검증, 삭제 실패 뒤 이전 import journal이 사진을 되살리지 않는 우선순위를 적용했다. Motion Photo처럼 JPEG EOI 뒤 payload가 있는 파일은 허용한다.
+- 자르기/렌더: 실제 슬롯 비율의 전체 화면 crop 편집기에서 이동·1–4배 확대·중앙 맞춤·48dp 접근성 조작을 제공한다. EXIF 정규화 원본 공간에 값을 저장하고 회전·반전 좌표를 공통 `CropMath`로 변환한다. 미리보기와 최종 Canvas가 같은 scene/slot transform을 사용하며 JPEG·PNG·정적 WebP는 가능한 경우 슬롯별 region decode, HEIF·미지원/실패는 6MP sampled full decode로 처리한다. neutral crop은 기존 중앙 aspect-fill을 유지한다.
+- 보안/노출: FileProvider 공개 경로를 완성 결과 디렉터리로 제한해 import 원본을 공유하지 않는다. 외부 원본과 다른 세션 사본을 수정·삭제하지 않으며, 결과가 있는 앨범 세션의 사진 목록 변경을 거부한다.
+- 사전 자동 검증: `:app:assembleDebug :app:testDebugUnitTest :app:lintDebug :app:assembleDebugAndroidTest :app:assembleQaRelease :app:bundleRelease`가 성공했다. JVM 12/12, 실패·오류·건너뜀 0. Debug Lint 오류 0, 경고 57, 힌트 2이며 새 import 파일의 KTX 경고는 제거했다. 독립 코드 감사에서 P0/P1 잔여를 찾지 못했다.
+- 사전 실기기 회귀: Android 16/API 36의 격리 QA 패키지에서 import 저장·이전·형식·중단·삭제 회귀 20/20, crop/region/EXIF·렌더 관련 두 클래스 10/10을 통과했다. EXIF 8종×회전 4종×반전 2종 64조합, 잘린 JPEG 거절, Motion Photo형 trailing payload 바이트 보존을 포함한다. 이 결과는 아래 전체 최종 실기기 흐름 검사와 구분한다.
+- 88종 프레임 경계: 기준 main에는 `design/occasion-frames/everyday-editions-v1/`의 88개 디자인 마스터와 1,584개 정적 PNG가 이미 포함되어 있다. 기존 기록대로 아직 Android 런타임 선택 UI·앱 자산에는 연결되지 않았으므로 이번 기능 커밋이 앱에서 88종을 제공한다고 주장하지 않는다. 전체 최종 검사에서는 디자인 패키지 무결성과 앱에서 실제 선택 가능한 프레임 범위를 각각 확인한다.
+- 제외/다음 단계: 사용자 지시에 따라 글꼴 라이선스와 공개 개인정보 페이지는 검증하지 않는다. 화면 켜짐 유지 설정은 변경하지 않는다. 이 구현 커밋 뒤 QA 앱을 새 설치 상태로 만들고 카메라·앨범·편집·저장·공유·복원·88종 디자인 패키지를 처음부터 최종 검사하며, 결과·AAB·출시 판정은 별도 상세 보고서와 후속 작업 로그에 기록한다.
+
 ## 2026-09-23 — Everyday Editions 기념일 88종 이미지 제작 (Asia/Seoul)
 
 ### 후속 요청: GitHub main 최신화

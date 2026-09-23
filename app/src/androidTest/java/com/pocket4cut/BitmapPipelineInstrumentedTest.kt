@@ -91,6 +91,106 @@ class BitmapPipelineInstrumentedTest {
     }
 
     @Test
+    fun regionDecoderMapsTopLeftCropAcrossAllExifOrientations() {
+        val colors = listOf(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.MAGENTA, Color.CYAN)
+        val fixture = Bitmap.createBitmap(160, 240, Bitmap.Config.ARGB_8888)
+        val file = File.createTempFile("exif-region-", ".jpg", app.cacheDir)
+        try {
+            val canvas = Canvas(fixture)
+            colors.forEachIndexed { index, color ->
+                val x = (index % 2) * 80f
+                val y = (index / 2) * 80f
+                canvas.drawRect(x, y, x + 80f, y + 80f, Paint().apply { this.color = color })
+            }
+            file.outputStream().use { assertTrue(fixture.compress(Bitmap.CompressFormat.JPEG, 100, it)) }
+            val expectedTopLeft = listOf(0, 1, 5, 4, 0, 4, 5, 1)
+            for (orientation in 1..8) {
+                ExifInterface(file).apply {
+                    setAttribute(ExifInterface.TAG_ORIENTATION, orientation.toString())
+                    saveAttributes()
+                }
+                val columns = if (orientation <= 4) 2 else 3
+                val rows = if (orientation <= 4) 3 else 2
+                val decoded = requireNotNull(BitmapDecoding.decodeOrientedCropSampled(
+                    path = file.absolutePath,
+                    orientedCrop = BitmapDecoding.NormalizedImageRect(
+                        0f, 0f, 1f / columns, 1f / rows,
+                    ),
+                    maxLongEdge = 1024,
+                ))
+                try {
+                    assertEquals("EXIF $orientation region width", 80, decoded.width)
+                    assertEquals("EXIF $orientation region height", 80, decoded.height)
+                    val actual = decoded.getPixel(decoded.width / 2, decoded.height / 2)
+                    val expected = colors[expectedTopLeft[orientation - 1]]
+                    assertTrue(
+                        "EXIF $orientation region color",
+                        abs(Color.red(actual) - Color.red(expected)) <= 4 &&
+                            abs(Color.green(actual) - Color.green(expected)) <= 4 &&
+                            abs(Color.blue(actual) - Color.blue(expected)) <= 4,
+                    )
+                } finally {
+                    decoded.recycle()
+                }
+            }
+        } finally {
+            fixture.recycle()
+            file.delete()
+        }
+    }
+
+    @Test
+    fun regionDecoderSupportsPngAndStaticWebpAndRejectsUnknownBytes() {
+        val fixture = Bitmap.createBitmap(300, 100, Bitmap.Config.ARGB_8888)
+        try {
+            val canvas = Canvas(fixture)
+            canvas.drawRect(0f, 0f, 100f, 100f, Paint().apply { color = Color.RED })
+            canvas.drawRect(100f, 0f, 200f, 100f, Paint().apply { color = Color.GREEN })
+            canvas.drawRect(200f, 0f, 300f, 100f, Paint().apply { color = Color.BLUE })
+            for ((suffix, format) in listOf(
+                ".png" to Bitmap.CompressFormat.PNG,
+                ".webp" to Bitmap.CompressFormat.WEBP_LOSSLESS,
+            )) {
+                val file = File.createTempFile("region-format-", suffix, app.cacheDir)
+                try {
+                    file.outputStream().use { assertTrue(fixture.compress(format, 100, it)) }
+                    val decoded = requireNotNull(BitmapDecoding.decodeOrientedCropSampled(
+                        path = file.absolutePath,
+                        orientedCrop = BitmapDecoding.NormalizedImageRect(2f / 3f, 0f, 1f, 1f),
+                        maxLongEdge = 1024,
+                    ))
+                    try {
+                        assertEquals(100, decoded.width)
+                        assertEquals(100, decoded.height)
+                        assertEquals(Color.BLUE, decoded.getPixel(50, 50))
+                    } finally {
+                        decoded.recycle()
+                    }
+                } finally {
+                    file.delete()
+                }
+            }
+
+            val unknown = File.createTempFile("region-unknown-", ".bin", app.cacheDir)
+            try {
+                unknown.writeBytes("not-an-image".toByteArray())
+                assertEquals(
+                    null,
+                    BitmapDecoding.decodeOrientedCropSampled(
+                        unknown.absolutePath,
+                        BitmapDecoding.NormalizedImageRect(0f, 0f, 1f, 1f),
+                        1024,
+                    ),
+                )
+            } finally {
+                unknown.delete()
+            }
+        } finally {
+            fixture.recycle()
+        }
+    }
+
+    @Test
     fun decoderBoundsLargeAndPanoramicSourcesBeforeAllocating() {
         for ((width, height, edge, pixelLimit) in listOf(
             listOf(4000, 3000, 3072, 6_000_000),
@@ -112,6 +212,21 @@ class BitmapPipelineInstrumentedTest {
                     assertTrue("Pixel allocation exceeded $pixelLimit", decoded.width.toLong() * decoded.height <= pixelLimit)
                 } finally {
                     decoded.recycle()
+                }
+                val region = requireNotNull(BitmapDecoding.decodeOrientedCropSampled(
+                    file.absolutePath,
+                    BitmapDecoding.NormalizedImageRect(0.05f, 0.05f, 0.95f, 0.95f),
+                    edge,
+                    pixelLimit.toLong(),
+                ))
+                try {
+                    assertTrue("Region long edge exceeded $edge", maxOf(region.width, region.height) <= edge)
+                    assertTrue(
+                        "Region pixel allocation exceeded $pixelLimit",
+                        region.width.toLong() * region.height <= pixelLimit,
+                    )
+                } finally {
+                    region.recycle()
                 }
             } finally {
                 file.delete()

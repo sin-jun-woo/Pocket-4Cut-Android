@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Collections
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -42,7 +43,8 @@ import com.pocket4cut.ui.designsystem.components.SecondaryButton
 
 @Composable
 fun HomeScreen(
-    onStart: () -> Unit,
+    onCamera: () -> Unit,
+    onAlbum: () -> Unit,
     onGallery: () -> Unit,
     onResume: (() -> Unit)? = null,
     resumeLabel: String? = null,
@@ -55,76 +57,70 @@ fun HomeScreen(
         modifier = modifier
             .fillMaxSize()
             .background(AppColors.Background.primary)
-            .padding(horizontal = AppSpacing.Screen.horizontal),
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = AppSpacing.Screen.horizontal)
+            .padding(bottom = AppSpacing.Layout.ctaBottomSpace),
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .weight(1f)
                 .fillMaxWidth()
-                .verticalScroll(rememberScrollState()),
+                .padding(top = AppSpacing.xxxl),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = AppSpacing.xxxl),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "Pocket 4Cut",
-                        style = AppTypography.caption1.copy(
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.4.sp,
-                        ),
-                        color = AppColors.Text.primary,
-                    )
-                    Text(
-                        text = "SELF PHOTO BOOTH",
-                        style = AppTypography.caption2.copy(letterSpacing = 1.1.sp),
-                        color = AppColors.Text.tertiary,
-                    )
-                }
-                IconCircleButton(onClick = onSettings, variant = IconButtonVariant.SOLID) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = "설정",
-                        tint = AppColors.Text.primary,
-                        modifier = Modifier.size(20.dp),
-                    )
-                }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Pocket 4Cut",
+                    style = AppTypography.caption1.copy(
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.4.sp,
+                    ),
+                    color = AppColors.Text.primary,
+                )
+                Text(
+                    text = "SELF PHOTO BOOTH",
+                    style = AppTypography.caption2.copy(letterSpacing = 1.1.sp),
+                    color = AppColors.Text.tertiary,
+                )
             }
-
-            Spacer(Modifier.height(AppSpacing.xxl))
-            Text(
-                text = "오늘의 네 컷을\n만들어볼까요?",
-                style = AppTypography.largeTitle.copy(
-                    fontWeight = FontWeight.Bold,
-                    lineHeight = 42.sp,
-                    letterSpacing = (-0.8).sp,
-                ),
-                color = AppColors.Text.primary,
-            )
-            Spacer(Modifier.height(AppSpacing.xs))
-            Text(
-                text = "준비되면 바로 촬영을 시작하세요.",
-                style = AppTypography.callout,
-                color = AppColors.Text.secondary,
-            )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = AppSpacing.xl),
-                contentAlignment = Alignment.Center,
-            ) {
-                PrintStripPreview()
+            IconCircleButton(onClick = onSettings, variant = IconButtonVariant.SOLID) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "설정",
+                    tint = AppColors.Text.primary,
+                    modifier = Modifier.size(20.dp),
+                )
             }
+        }
+
+        Spacer(Modifier.height(AppSpacing.xxl))
+        Text(
+            text = "오늘의 네 컷을\n만들어볼까요?",
+            style = AppTypography.largeTitle.copy(
+                fontWeight = FontWeight.Bold,
+                lineHeight = 42.sp,
+                letterSpacing = (-0.8).sp,
+            ),
+            color = AppColors.Text.primary,
+        )
+        Spacer(Modifier.height(AppSpacing.xs))
+        Text(
+            text = "지금 촬영하거나 앨범의 사진으로 만들어 보세요.",
+            style = AppTypography.callout,
+            color = AppColors.Text.secondary,
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = AppSpacing.xl),
+            contentAlignment = Alignment.Center,
+        ) {
+            PrintStripPreview()
         }
 
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = AppSpacing.Layout.ctaBottomSpace),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
         ) {
             notice?.let { Text(it, color = AppColors.Semantic.error, style = AppTypography.footnote) }
@@ -135,8 +131,8 @@ fun HomeScreen(
                 )
             }
             PrimaryButton(
-                text = "촬영 시작",
-                onClick = onStart,
+                text = "카메라로 촬영",
+                onClick = onCamera,
                 icon = {
                     Icon(
                         imageVector = Icons.Default.CameraAlt,
@@ -146,8 +142,20 @@ fun HomeScreen(
                     )
                 },
             )
+            PrimaryButton(
+                text = "앨범에서 만들기",
+                onClick = onAlbum,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Collections,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(19.dp),
+                    )
+                },
+            )
             SecondaryButton(
-                text = if (galleryCount > 0) "보관함  ·  $galleryCount" else "보관함",
+                text = if (galleryCount > 0) "작업 보관함  ·  $galleryCount" else "작업 보관함",
                 onClick = onGallery,
                 icon = {
                     Icon(

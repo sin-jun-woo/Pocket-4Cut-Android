@@ -12,10 +12,13 @@ import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.data.local.SessionDocumentRepository
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.domain.model.PhotoAdjustments
+import com.pocket4cut.domain.model.PhotoCrop
 import com.pocket4cut.domain.model.ResultRecord
 import com.pocket4cut.domain.model.SessionDocument
 import com.pocket4cut.domain.model.SessionStage
 import com.pocket4cut.frame.CollageRenderer
+import com.pocket4cut.frame.CropMath
+import com.pocket4cut.frame.CropRect
 import com.pocket4cut.frame.CustomFrameDesign
 import com.pocket4cut.frame.FilterDefs
 import com.pocket4cut.frame.FilterId
@@ -27,6 +30,7 @@ import com.pocket4cut.frame.FrameLayouts
 import com.pocket4cut.frame.FrameStyle
 import com.pocket4cut.frame.FrameTheme
 import com.pocket4cut.frame.RenderSnapshot
+import com.pocket4cut.frame.PhotoCropTransform
 import com.pocket4cut.presentation.navigation.FrameType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -51,13 +55,15 @@ data class PhotoSlotAdjustment(
     val brightness: Float = 0f,
     val contrast: Float = 1f,
     val saturation: Float = 1f,
+    val crop: PhotoCrop = PhotoCrop(),
 ) {
     val isNeutral: Boolean
         get() = quarterTurnsClockwise == 0 &&
             !isFlippedHorizontally &&
             brightness == 0f &&
             contrast == 1f &&
-            saturation == 1f
+            saturation == 1f &&
+            crop == PhotoCrop()
 
     companion object {
         val neutral = PhotoSlotAdjustment()
@@ -166,6 +172,7 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
                     brightness = adj.brightness,
                     contrast = adj.contrast,
                     saturation = adj.saturation,
+                    crop = adj.crop,
                 )
             } ?: PhotoSlotAdjustment.neutral
         }
@@ -225,6 +232,22 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
         it.copy(saturation = modelValue.coerceIn(0f, 2f))
     }
 
+    /** Updates the crop preview without scheduling disk work for every pointer event. */
+    fun previewCurrentCrop(crop: PhotoCrop) = updateCurrentSlot(
+        transform = { it.copy(crop = crop) },
+        rebuildProcessedImage = false,
+        persist = false,
+    )
+
+    /** Commits the final value at gesture end or after an accessibility action. */
+    fun commitCurrentCrop(crop: PhotoCrop) = updateCurrentSlot(
+        transform = { it.copy(crop = crop) },
+        rebuildProcessedImage = false,
+        persist = true,
+    )
+
+    fun resetCurrentCrop() = commitCurrentCrop(PhotoCrop())
+
     /**
      * Renders the final collage at full resolution, saves to disk,
      * and returns the result file path.
@@ -245,18 +268,27 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
                 }
                 val input = CollageRenderer.Input(
                     images = emptyList(),
-                    imageProvider = { index ->
+                    slotImageProvider = { index, slotWidth, slotHeight ->
                         renderContext.ensureActive()
                         val id = snapshot.photoIdsInOrder[index]
                         val adj = snapshot.adjustmentsByPhotoId[id] ?: PhotoAdjustments()
-                        processImageFromPath(snapshot.imagePathsInOrder[index], PhotoSlotAdjustment(
-                            quarterTurnsClockwise = ((adj.rotationDegrees / 90) % 4 + 4) % 4,
-                            isFlippedHorizontally = adj.flipHorizontal,
-                            brightness = adj.brightness,
-                            contrast = adj.contrast,
-                            saturation = adj.saturation,
-                        ), snapshot.filterId, renderContext::ensureActive)
+                        processSlotImageFromPath(
+                            path = snapshot.imagePathsInOrder[index],
+                            adj = PhotoSlotAdjustment(
+                                quarterTurnsClockwise = ((adj.rotationDegrees / 90) % 4 + 4) % 4,
+                                isFlippedHorizontally = adj.flipHorizontal,
+                                brightness = adj.brightness,
+                                contrast = adj.contrast,
+                                saturation = adj.saturation,
+                                crop = adj.crop,
+                            ),
+                            filter = snapshot.filterId,
+                            slotWidth = slotWidth,
+                            slotHeight = slotHeight,
+                            checkCancelled = renderContext::ensureActive,
+                        )
                     },
+                    cropTransforms = snapshot.cropTransformsInOrder,
                     recycleProvidedImages = true,
                     frameStyle = snapshot.frameStyle,
                     theme = snapshot.theme,
@@ -304,14 +336,18 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
 
     /* ── Private helpers ────────────────────────────────────────────── */
 
-    private inline fun updateCurrentSlot(transform: (PhotoSlotAdjustment) -> PhotoSlotAdjustment) {
+    private inline fun updateCurrentSlot(
+        rebuildProcessedImage: Boolean = true,
+        persist: Boolean = true,
+        transform: (PhotoSlotAdjustment) -> PhotoSlotAdjustment,
+    ) {
         if (_uiState.value.isRendering) return
         val idx = _uiState.value.selectedSlotIndex
         if (idx !in _uiState.value.slotAdjustments.indices) return
         val next = _uiState.value.slotAdjustments.toMutableList().also { it[idx] = transform(it[idx]) }
         _uiState.update { it.copy(slotAdjustments = next, hasChanges = !next[idx].isNeutral) }
-        rebuildPreviewImage(idx)
-        schedulePersist()
+        if (rebuildProcessedImage) rebuildPreviewImage(idx)
+        if (persist) schedulePersist()
     }
 
     private fun schedulePersist() {
@@ -340,6 +376,7 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
                 brightness = adj.brightness,
                 contrast = adj.contrast,
                 saturation = adj.saturation,
+                crop = adj.crop,
             )
         }.toMap()
         val current = sessions.getById(sessionId) ?: error("편집 작업을 찾지 못했습니다.")
@@ -406,6 +443,68 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
         val decoded = BitmapDecoding.decodeSampled(path, reqSize = 3072, maxPixels = 6_000_000L)
             ?: error("Failed to decode: $path")
         return processOwnedImage(decoded, adj, filter, checkCancelled)
+    }
+
+    /**
+     * Region-decodes only the visible original area for a non-neutral crop. The exact crop is baked
+     * into this temporary render bitmap, so the renderer receives a neutral replacement transform.
+     * Unsupported formats and decoder failures retain the full-image sampled path and crop data.
+     */
+    private fun processSlotImageFromPath(
+        path: String,
+        adj: PhotoSlotAdjustment,
+        filter: FilterId,
+        slotWidth: Int,
+        slotHeight: Int,
+        checkCancelled: () -> Unit,
+    ): CollageRenderer.ProvidedSlotImage {
+        val originalTransform = PhotoCropTransform(
+            crop = adj.crop,
+            quarterTurnsClockwise = adj.quarterTurnsClockwise,
+            flipHorizontal = adj.isFlippedHorizontally,
+        )
+        if (adj.crop == PhotoCrop()) {
+            return CollageRenderer.ProvidedSlotImage(
+                bitmap = processImageFromPath(path, adj, filter, checkCancelled),
+                cropTransform = originalTransform,
+            )
+        }
+
+        checkCancelled()
+        val dimensions = BitmapDecoding.orientedDimensions(path)
+        val turns = ((adj.quarterTurnsClockwise % 4) + 4) % 4
+        val displayedWidth = if (turns % 2 == 0) dimensions?.width else dimensions?.height
+        val displayedHeight = if (turns % 2 == 0) dimensions?.height else dimensions?.width
+        val regionBitmap = if (displayedWidth != null && displayedHeight != null) {
+            val visible = CropMath.visibleSourceRect(
+                imageWidth = displayedWidth.toFloat(),
+                imageHeight = displayedHeight.toFloat(),
+                viewport = CropRect(0f, 0f, slotWidth.toFloat(), slotHeight.toFloat()),
+                transform = originalTransform,
+            )
+            BitmapDecoding.decodeOrientedCropSampled(
+                path = path,
+                orientedCrop = BitmapDecoding.NormalizedImageRect(
+                    visible.left,
+                    visible.top,
+                    visible.right,
+                    visible.bottom,
+                ),
+                maxLongEdge = maxOf(3072, slotWidth, slotHeight),
+                maxPixels = 6_000_000L,
+            )
+        } else null
+
+        if (regionBitmap == null) {
+            return CollageRenderer.ProvidedSlotImage(
+                bitmap = processImageFromPath(path, adj, filter, checkCancelled),
+                cropTransform = originalTransform,
+            )
+        }
+        return CollageRenderer.ProvidedSlotImage(
+            bitmap = processOwnedImage(regionBitmap, adj, filter, checkCancelled),
+            cropTransform = PhotoCropTransform(),
+        )
     }
 
     private fun processOwnedImage(

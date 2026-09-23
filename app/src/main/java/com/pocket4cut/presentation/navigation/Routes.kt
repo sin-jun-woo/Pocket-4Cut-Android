@@ -7,6 +7,7 @@ object Routes {
     const val HOME = "home"
     const val GALLERY = "gallery"
     const val FRAME_TYPE_SELECT = "frameTypeSelect"
+    const val PHOTO_IMPORT = "photoImport"
     const val CAPTURE = "capture"
     const val SELECTION = "selection"
     const val LAYOUT_SELECTION = "layoutSelection"
@@ -24,6 +25,7 @@ object Routes {
 
     object Args {
         const val FRAME_TYPE = "frameType"
+        const val INPUT_SOURCE = "inputSource"
         const val SESSION_ID = "sessionId"
         const val SELECTED_INDEXES = "selectedIndexes"
         const val LAYOUT_ID = "layoutId"
