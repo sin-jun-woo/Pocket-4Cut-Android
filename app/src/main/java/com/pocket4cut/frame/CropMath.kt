@@ -164,8 +164,8 @@ object CropMath {
         } else {
             viewport.centerY - focus.y * scaledHeight
         }
-        val left = desiredLeft.coerceIn(viewport.right - scaledWidth, viewport.left)
-        val top = desiredTop.coerceIn(viewport.bottom - scaledHeight, viewport.top)
+        val left = clampTranslation(desiredLeft, viewport.right - scaledWidth, viewport.left)
+        val top = clampTranslation(desiredTop, viewport.bottom - scaledHeight, viewport.top)
         return CropRect(left, top, left + scaledWidth, top + scaledHeight)
     }
 
@@ -213,6 +213,14 @@ object CropMath {
     }
 
     private fun normalizedQuarterTurns(turns: Int): Int = ((turns % 4) + 4) % 4
+
+    /**
+     * Float subtraction does not preserve `(end - (end - start)) == start` for every translated
+     * viewport. Normalize the two mathematically ordered bounds before clamping so a one-ULP
+     * round-trip gap cannot create an empty range.
+     */
+    private fun clampTranslation(value: Float, firstBound: Float, secondBound: Float): Float =
+        value.coerceIn(minOf(firstBound, secondBound), maxOf(firstBound, secondBound))
 
     private fun requirePositiveDimensions(vararg dimensions: Float) {
         require(dimensions.all { it.isFinite() && it > 0f }) {

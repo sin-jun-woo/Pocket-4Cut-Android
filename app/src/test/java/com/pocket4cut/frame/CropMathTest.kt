@@ -72,6 +72,27 @@ class CropMathTest {
     }
 
     @Test
+    fun translatedViewportWithFloatRoundTripGapStillProducesADrawRect() {
+        // For these Float values, right - (right - left) is one ULP greater than left. Passing
+        // those bounds directly to coerceIn used to throw because its minimum exceeded maximum.
+        val viewport = CropRect(53.333336f, 53.333336f, 213.33334f, 213.33334f)
+        assertTrue(viewport.right - viewport.width > viewport.left)
+        assertTrue(viewport.bottom - viewport.height > viewport.top)
+
+        val actual = CropMath.drawRect(
+            imageWidth = 48f,
+            imageHeight = 48f,
+            viewport = viewport,
+        )
+
+        // Neutral crop keeps the legacy center calculation exactly while tolerating the ULP gap.
+        assertEquals(viewport.left, actual.left, 0f)
+        assertEquals(viewport.top, actual.top, 0f)
+        assertTrue(actual.right + epsilon >= viewport.right)
+        assertTrue(actual.bottom + epsilon >= viewport.bottom)
+    }
+
+    @Test
     fun everySupportedZoomAndTransformCoversViewportWithoutBlankEdges() {
         val imageSizes = listOf(4000f to 500f, 500f to 4000f, 4032f to 3024f, 3024f to 4032f)
         val viewports = listOf(
