@@ -26,6 +26,8 @@ data class RenderSnapshot(
     val captionColorRgb: Long?,
     val customFrameDesign: CustomFrameDesign?,
     val layoutVersion: Int,
+    val occasionThemeId: String?,
+    val occasionDesignVersion: Int?,
 ) {
     companion object {
         fun from(
@@ -69,6 +71,8 @@ data class RenderSnapshot(
                 captionColorRgb = draft.captionColorRgb,
                 customFrameDesign = draft.customDesignJson?.let(PendingCollageStore::deserializeDesign),
                 layoutVersion = draft.layoutVersion,
+                occasionThemeId = draft.occasionThemeId,
+                occasionDesignVersion = draft.occasionDesignVersion,
             )
         }
     }

@@ -2,30 +2,32 @@ package com.pocket4cut.presentation.edit
 
 import android.app.Application
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.pocket4cut.core.util.BitmapAdjustments
 import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.data.local.SessionDocumentRepository
 import com.pocket4cut.domain.model.SessionStage
 import com.pocket4cut.domain.model.PhotoAdjustments
 import com.pocket4cut.frame.CustomFrameDesign
-import com.pocket4cut.frame.FilterDefs
 import com.pocket4cut.frame.FilterId
 import com.pocket4cut.frame.FrameColor
 import com.pocket4cut.frame.FrameColors
 import com.pocket4cut.frame.FrameLayoutId
 import com.pocket4cut.frame.FrameLayouts
 import com.pocket4cut.frame.PhotoCropTransform
+import com.pocket4cut.frame.PhotoEditPipeline
+import com.pocket4cut.frame.occasion.OccasionCatalogContract
+import com.pocket4cut.frame.occasion.OccasionCatalogLoader
+import com.pocket4cut.frame.occasion.OccasionTheme
 import com.pocket4cut.presentation.navigation.FrameType
 import com.pocket4cut.presentation.settings.AppSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -59,13 +61,17 @@ data class EditUiState(
     val allowsColorEditInEditor: Boolean = true,
     val layoutVersion: Int = 2,
     val cropTransforms: List<PhotoCropTransform> = emptyList(),
+    val occasionTheme: OccasionTheme? = null,
 )
 
 private data class LoadedEditData(
     val document: com.pocket4cut.domain.model.SessionDocument,
     val photoIds: List<String>,
-    val images: List<Bitmap>,
+    val sourceImages: List<Bitmap>,
+    val previewImages: List<Bitmap>,
+    val adjustments: List<PhotoAdjustments>,
     val cropTransforms: List<PhotoCropTransform>,
+    val occasionTheme: OccasionTheme?,
 )
 
 class EditViewModel(app: Application) : AndroidViewModel(app) {
@@ -75,8 +81,17 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     private var navigationInFlight = false
     private val persistMutex = Mutex()
     private var basePhotoIds: List<String> = emptyList()
+    private var baseAdjustments: List<PhotoAdjustments> = emptyList()
     private var baseCropTransforms: List<PhotoCropTransform> = emptyList()
+    private var previewImagesByBaseIndex: List<Bitmap> = emptyList()
+    private var filterPreviewJob: Job? = null
+    private var filterPreviewGeneration = 0L
+    /** Filter represented by [previewImagesByBaseIndex], and therefore safe to persist/export. */
+    private var publishedPreviewFilter: FilterId = FilterId.ORIGINAL
     private var loadGeneration = 0L
+
+    internal var beforeFilterPreviewPublishForTest: (suspend () -> Unit)? = null
+    internal var beforeFilterChipPublishForTest: (suspend () -> Unit)? = null
 
     private val _uiState = MutableStateFlow(EditUiState())
     val uiState: StateFlow<EditUiState> = _uiState
@@ -96,6 +111,8 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         frameLayoutId: FrameLayoutId,
     ) {
         val generation = ++loadGeneration
+        filterPreviewGeneration += 1
+        filterPreviewJob?.cancel()
         lastFrameType = frameType
         lastFrameLayoutId = frameLayoutId
         lastSelectedIndexes = selectedIndexes
@@ -117,18 +134,49 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
                     val photo = document.photos.firstOrNull { it.photoId == id } ?: error("선택한 사진이 없습니다.")
                     sessions.resolvePhotoPath(photo).also { check(it.isFile) { "사진 파일이 없습니다." } }.absolutePath
                 }
-                val adjustments = ids.map { id -> document.draft.adjustmentsByPhotoId[id] ?: PhotoAdjustments() }
-                val bitmaps = withContext(Dispatchers.IO) {
-                    paths.mapIndexed { index, path ->
-                        val decoded = BitmapDecoding.decodeSampled(path, reqSize = 720)
-                            ?: error("사진을 열 수 없습니다.")
-                        applyPerPhotoAdjustments(decoded, adjustments[index])
+                val occasionTheme = if (document.draft.backgroundType == "occasion") {
+                    check(document.draft.occasionDesignVersion == OccasionCatalogContract.SESSION_DESIGN_VERSION) {
+                        "지원하지 않는 기념일 프레임 버전입니다."
                     }
+                    val occasionId = document.draft.occasionThemeId
+                        ?: error("기념일 프레임 ID가 없습니다.")
+                    withContext(Dispatchers.IO) {
+                        OccasionCatalogLoader.load(getApplication()).theme(occasionId)
+                            ?: error("기념일 프레임을 찾을 수 없습니다: $occasionId")
+                    }
+                } else {
+                    null
+                }
+                val adjustments = ids.map { id -> document.draft.adjustmentsByPhotoId[id] ?: PhotoAdjustments() }
+                val selectedFilter = runCatching { FilterId.valueOf(document.draft.filterId) }
+                    .getOrDefault(FilterId.ORIGINAL)
+                val sourceImages = withContext(Dispatchers.IO) {
+                    val decoded = mutableListOf<Bitmap>()
+                    try {
+                        paths.forEach { path ->
+                            decoded += BitmapDecoding.decodeSampled(path, reqSize = 720)
+                                ?: error("사진을 열 수 없습니다.")
+                        }
+                        decoded
+                    } catch (cause: Throwable) {
+                        decoded.forEach(Bitmap::recycle)
+                        throw cause
+                    }
+                }
+                val previewImages = try {
+                    withContext(Dispatchers.Default) {
+                        renderPreviewImages(sourceImages, adjustments, selectedFilter)
+                    }
+                } catch (cause: Throwable) {
+                    sourceImages.forEach(Bitmap::recycle)
+                    throw cause
                 }
                 LoadedEditData(
                     document = document,
                     photoIds = ids,
-                    images = bitmaps,
+                    sourceImages = sourceImages,
+                    previewImages = previewImages,
+                    adjustments = adjustments,
                     cropTransforms = adjustments.map { adjustment ->
                         PhotoCropTransform(
                             crop = adjustment.crop,
@@ -136,27 +184,35 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
                             flipHorizontal = adjustment.flipHorizontal,
                         )
                     },
+                    occasionTheme = occasionTheme,
                 )
             }.onSuccess { loaded ->
                 if (generation != loadGeneration) {
-                    loaded.images.forEach(Bitmap::recycle)
+                    loaded.sourceImages.forEach(Bitmap::recycle)
+                    loaded.previewImages.forEach(Bitmap::recycle)
                     return@onSuccess
                 }
                 val document = loaded.document
                 val ids = loaded.photoIds
-                val bitmaps = loaded.images
+                val sourceImages = loaded.sourceImages
+                val previewImages = loaded.previewImages
                 basePhotoIds = ids
+                baseAdjustments = loaded.adjustments
                 baseCropTransforms = loaded.cropTransforms
-                originalImages = bitmaps
-                val order = bitmaps.indices.toList()
+                originalImages = sourceImages
+                previewImagesByBaseIndex = previewImages
+                val order = previewImages.indices.toList()
                 val draft = document.draft
+                val loadedFilter = runCatching { FilterId.valueOf(draft.filterId) }
+                    .getOrDefault(FilterId.ORIGINAL)
+                publishedPreviewFilter = loadedFilter
                 val design = draft.customDesignJson?.let { PendingCollageStore.deserializeDesign(it) }
                 _uiState.update {
                     it.copy(
                         isLoading = false,
                         order = order,
-                        orderedImages = bitmaps,
-                        selectedFilter = runCatching { FilterId.valueOf(draft.filterId) }.getOrDefault(FilterId.ORIGINAL),
+                        orderedImages = previewImages,
+                        selectedFilter = loadedFilter,
                         customText = draft.caption,
                         showDate = draft.showDate,
                         dateString = draft.dateText,
@@ -164,16 +220,18 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
                         frameBackgroundType = draft.backgroundType,
                         seasonId = draft.seasonId,
                         customFrameDesign = design,
-                        allowsColorEditInEditor = draft.backgroundType != "season" && design?.sourceSeason == null,
+                        allowsColorEditInEditor = draft.backgroundType != "season" &&
+                            draft.backgroundType != "occasion" && design?.sourceSeason == null,
                         layoutVersion = draft.layoutVersion,
                         textFontSize = draft.textFontSize,
                         dateFontSize = draft.dateFontSize,
                         captionFontName = draft.captionFontName,
                         captionColorRGB = draft.captionColorRgb,
                         cropTransforms = loaded.cropTransforms,
+                        occasionTheme = loaded.occasionTheme,
                     )
                 }
-                buildFilterChipThumbnails()
+                buildFilterChipThumbnails(generation)
             }.onFailure { t ->
                 if (generation == loadGeneration) {
                     _uiState.update { it.copy(isLoading = false, errorMessage = t.message) }
@@ -183,9 +241,9 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun setFilter(filter: FilterId) {
-        if (_uiState.value.selectedFilter == filter) return
-        _uiState.update { it.copy(selectedFilter = filter) }
-        schedulePersist()
+        if (_uiState.value.isLoading || navigationInFlight || _uiState.value.selectedFilter == filter) return
+        _uiState.update { it.copy(selectedFilter = filter, errorMessage = null) }
+        rebuildPreviewForFilter(filter)
     }
 
     fun setFrameColor(color: FrameColor) {
@@ -311,6 +369,7 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         navigationInFlight = true
         viewModelScope.launch {
             try {
+                filterPreviewJob?.join()
                 persistJob?.cancelAndJoin()
                 persistSnapshot(_uiState.value, SessionStage.EDIT)
                 onSaved()
@@ -327,11 +386,11 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
     fun persistPendingForDetailEdit(sessionId: String, onSaved: () -> Unit) {
         if (navigationInFlight) return
         navigationInFlight = true
-        val s = _uiState.value
         viewModelScope.launch {
             try {
+                filterPreviewJob?.join()
                 persistJob?.cancelAndJoin()
-                persistSnapshot(s, SessionStage.DETAIL)
+                persistSnapshot(_uiState.value, SessionStage.DETAIL)
                 onSaved()
             } catch (cause: kotlinx.coroutines.CancellationException) {
                 throw cause
@@ -343,78 +402,155 @@ class EditViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private fun buildFilterChipThumbnails() {
+    private fun buildFilterChipThumbnails(loadToken: Long) {
         val first = originalImages.firstOrNull() ?: return
+        val adjustment = baseAdjustments.firstOrNull() ?: PhotoAdjustments()
         viewModelScope.launch {
-            val thumbs = withContext(Dispatchers.Default) {
-                val smallThumb = scaleBitmap(first, 128)
-                FilterId.entries.associateWith { filterId ->
-                    applyFilterToBitmap(smallThumb, filterId)
+            val thumbs = try {
+                withContext(Dispatchers.Default) {
+                    val smallThumb = scaleBitmap(first, 128)
+                    val created = linkedMapOf<FilterId, Bitmap>()
+                    try {
+                        FilterId.entries.forEach { filterId ->
+                            currentCoroutineContext().ensureActive()
+                            created[filterId] = PhotoEditPipeline.applyOwned(
+                                source = smallThumb.copy(Bitmap.Config.ARGB_8888, false),
+                                quarterTurnsClockwise = adjustment.rotationDegrees / 90,
+                                flipHorizontal = adjustment.flipHorizontal,
+                                filterId = filterId,
+                                brightness = adjustment.brightness,
+                                contrast = adjustment.contrast,
+                                saturation = adjustment.saturation,
+                            )
+                        }
+                        created.toMap()
+                    } catch (cause: Throwable) {
+                        created.values.forEach(Bitmap::recycle)
+                        throw cause
+                    } finally {
+                        if (smallThumb !== first) smallThumb.recycle()
+                    }
                 }
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (cause: Throwable) {
+                if (loadToken == loadGeneration) {
+                    _uiState.update { it.copy(errorMessage = cause.message ?: "필터 썸네일을 만들지 못했습니다.") }
+                }
+                return@launch
             }
-            _uiState.update { it.copy(filterChipThumbnails = thumbs) }
+            var published = false
+            try {
+                beforeFilterChipPublishForTest?.invoke()
+                currentCoroutineContext().ensureActive()
+                if (loadToken != loadGeneration) return@launch
+                _uiState.update { it.copy(filterChipThumbnails = thumbs) }
+                published = true
+            } finally {
+                if (!published) thumbs.values.forEach(Bitmap::recycle)
+            }
         }
     }
 
     private fun rebuildOrderedAndFilteredImages() {
         val order = _uiState.value.order
-        val ordered = order.mapNotNull { originalImages.getOrNull(it) }
+        val ordered = order.mapNotNull { previewImagesByBaseIndex.getOrNull(it) }
         val crops = order.mapNotNull { baseCropTransforms.getOrNull(it) }
         _uiState.update { it.copy(orderedImages = ordered, cropTransforms = crops) }
     }
 
-    private fun applyPerPhotoAdjustments(source: Bitmap, adjustment: PhotoAdjustments): Bitmap {
-        var bitmap = source
-        try {
-            repeat(((adjustment.rotationDegrees / 90) % 4 + 4) % 4) {
-                val rotated = BitmapAdjustments.rotate90(bitmap)
-                if (rotated !== bitmap) bitmap.recycle()
-                bitmap = rotated
-            }
-            if (adjustment.flipHorizontal) {
-                val flipped = BitmapAdjustments.flipHorizontal(bitmap)
-                if (flipped !== bitmap) bitmap.recycle()
-                bitmap = flipped
-            }
-            if (
-                adjustment.brightness != 0f ||
-                adjustment.contrast != 1f ||
-                adjustment.saturation != 1f
-            ) {
-                val adjusted = BitmapAdjustments.applyColorAdjustments(
-                    bitmap,
-                    adjustment.brightness,
-                    adjustment.contrast,
-                    adjustment.saturation,
+    private fun rebuildPreviewForFilter(filter: FilterId) {
+        val generation = ++filterPreviewGeneration
+        filterPreviewJob?.cancel()
+        val sources = originalImages
+        val adjustments = baseAdjustments
+        if (sources.size != adjustments.size || sources.isEmpty()) {
+            _uiState.update {
+                it.copy(
+                    selectedFilter = publishedPreviewFilter,
+                    errorMessage = "필터 미리보기를 만들 사진이 없습니다.",
                 )
-                if (adjusted !== bitmap) bitmap.recycle()
-                bitmap = adjusted
             }
-            return bitmap
+            return
+        }
+        filterPreviewJob = viewModelScope.launch {
+            val previews = try {
+                withContext(Dispatchers.Default) {
+                    renderPreviewImages(sources, adjustments, filter)
+                }
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (cause: Throwable) {
+                if (generation == filterPreviewGeneration && filter == _uiState.value.selectedFilter) {
+                    _uiState.update {
+                        it.copy(
+                            selectedFilter = publishedPreviewFilter,
+                            errorMessage = cause.message ?: "필터 미리보기를 만들지 못했습니다.",
+                        )
+                    }
+                }
+                return@launch
+            }
+            var published = false
+            try {
+                beforeFilterPreviewPublishForTest?.invoke()
+                currentCoroutineContext().ensureActive()
+                if (generation != filterPreviewGeneration || filter != _uiState.value.selectedFilter) {
+                    return@launch
+                }
+                previewImagesByBaseIndex = previews
+                publishedPreviewFilter = filter
+                rebuildOrderedAndFilteredImages()
+                _uiState.update { it.copy(errorMessage = null) }
+                published = true
+                schedulePersist()
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                throw cancelled
+            } catch (cause: Throwable) {
+                if (generation == filterPreviewGeneration && filter == _uiState.value.selectedFilter) {
+                    _uiState.update {
+                        it.copy(
+                            selectedFilter = publishedPreviewFilter,
+                            errorMessage = cause.message ?: "필터 미리보기를 만들지 못했습니다.",
+                        )
+                    }
+                }
+            } finally {
+                if (!published) previews.forEach(Bitmap::recycle)
+            }
+        }
+    }
+
+    private suspend fun renderPreviewImages(
+        sources: List<Bitmap>,
+        adjustments: List<PhotoAdjustments>,
+        filter: FilterId,
+    ): List<Bitmap> {
+        val rendered = mutableListOf<Bitmap>()
+        val coroutineContext = currentCoroutineContext()
+        try {
+            sources.forEachIndexed { index, source ->
+                coroutineContext.ensureActive()
+                val adjustment = adjustments[index]
+                rendered += PhotoEditPipeline.applyOwned(
+                    source = source.copy(Bitmap.Config.ARGB_8888, false),
+                    quarterTurnsClockwise = adjustment.rotationDegrees / 90,
+                    flipHorizontal = adjustment.flipHorizontal,
+                    filterId = filter,
+                    brightness = adjustment.brightness,
+                    contrast = adjustment.contrast,
+                    saturation = adjustment.saturation,
+                    checkCancelled = { coroutineContext.ensureActive() },
+                )
+            }
+            return rendered
         } catch (cause: Throwable) {
-            bitmap.recycle()
+            rendered.forEach(Bitmap::recycle)
             throw cause
         }
     }
 
     companion object {
-        fun applyFilterToBitmap(source: Bitmap, filterId: FilterId): Bitmap {
-            if (filterId == FilterId.ORIGINAL) return source
-            val cf = FilterDefs.colorFilter(filterId) ?: return source
-            val result = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
-            try {
-                val canvas = Canvas(result)
-                val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
-                    colorFilter = cf
-                }
-                canvas.drawBitmap(source, 0f, 0f, paint)
-                return result
-            } catch (cause: Throwable) {
-                result.recycle()
-                throw cause
-            }
-        }
-
         private fun scaleBitmap(source: Bitmap, maxDim: Int): Bitmap {
             val scale = maxDim.toFloat() / maxOf(source.width, source.height)
             if (scale >= 1f) return source

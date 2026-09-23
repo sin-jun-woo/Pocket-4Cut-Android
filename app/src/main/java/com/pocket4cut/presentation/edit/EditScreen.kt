@@ -162,6 +162,15 @@ fun EditScreen(
 
             // ── 3. Filter ──
             FilterSection(uiState = uiState, onSelect = viewModel::setFilter)
+            uiState.errorMessage?.let { message ->
+                Spacer(Modifier.height(AppSpacing.xs))
+                Text(
+                    text = message,
+                    style = AppTypography.footnote,
+                    color = AppColors.Semantic.error,
+                    modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal),
+                )
+            }
 
             Spacer(Modifier.height(AppSpacing.xl))
 
@@ -182,6 +191,22 @@ fun EditScreen(
                         style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
                         color = AppColors.Text.secondary,
                     )
+                }
+            } else if (uiState.occasionTheme != null) {
+                val occasion = uiState.occasionTheme ?: error("기념일 프레임 상태가 없습니다.")
+                Column(modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal)) {
+                    Text(
+                        "기념일 프레임 · ${occasion.displayName}",
+                        style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
+                        color = AppColors.Text.secondary,
+                    )
+                    if (occasion.isManualRecord) {
+                        Text(
+                            "문구와 날짜는 아래에서 직접 입력해 주세요.",
+                            style = AppTypography.footnote,
+                            color = AppColors.Text.tertiary,
+                        )
+                    }
                 }
             }
 
@@ -312,7 +337,9 @@ private fun PreviewSection(
                     frameType = frameType,
                     frameStyle = frameStyle,
                     theme = theme,
-                    filterId = uiState.selectedFilter,
+                    // PhotoEditPipeline already applies the global filter before per-photo color
+                    // adjustments so this shared scene must not apply it a second time.
+                    filterId = FilterId.ORIGINAL,
                     overrideBackground = previewBackground,
                     backgroundGradient = uiState.selectedFrameColor.gradientStops,
                     customFrameDesign = customFrameDesign,
@@ -325,6 +352,7 @@ private fun PreviewSection(
                     captionFontName = captionFontName,
                     captionColorRGB = captionColorRGB,
                     layoutVersion = uiState.layoutVersion,
+                    occasionTheme = uiState.occasionTheme,
                     modifier = Modifier.fillMaxSize(),
                 )
             }

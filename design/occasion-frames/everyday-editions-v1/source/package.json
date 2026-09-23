@@ -1,0 +1,19 @@
+{
+  "name": "pocket-4cut-everyday-editions-tools",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "npm@11.13.0",
+  "description": "Reproducible Android runtime export and validation for Everyday Editions v1",
+  "scripts": {
+    "export:android": "node export-android-runtime.cjs",
+    "export:android:metadata": "node export-android-runtime.cjs --metadata-only",
+    "repair:android": "node export-android-runtime.cjs --repair",
+    "validate:android": "node validate-android-runtime.cjs"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "sharp": "0.35.4"
+  }
+}

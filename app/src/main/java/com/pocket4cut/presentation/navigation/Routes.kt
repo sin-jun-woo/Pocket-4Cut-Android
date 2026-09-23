@@ -18,6 +18,7 @@ object Routes {
     const val FRAME_FLOW = "frameFlow"
     const val COLOR_FRAME_PICK = "colorFramePick"
     const val SEASON_FRAME_PICK = "seasonFramePick"
+    const val OCCASION_FRAME_PICK = "occasionFramePick"
     const val CUSTOM_FRAME_EDITOR = "customFrameEditor"
     const val SETTINGS = "settings"
     const val PRIVACY_POLICY = "privacyPolicy"

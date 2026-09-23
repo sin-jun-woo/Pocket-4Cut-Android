@@ -23,7 +23,9 @@ import com.pocket4cut.frame.FrameLayouts
 import com.pocket4cut.presentation.detailEdit.DetailEditViewModel
 import com.pocket4cut.presentation.edit.EditViewModel
 import com.pocket4cut.presentation.navigation.FrameType
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -148,6 +150,26 @@ class BitmapOwnershipInstrumentedTest {
             val retainedImage = viewModel.uiState.value.orderedImages.first()
             retained += retainedImage
             instrumentation.runOnMainSync {
+                viewModel.beforeFilterPreviewPublishForTest = {
+                    throw IllegalStateException("synthetic filter preview failure")
+                }
+                viewModel.setFilter(FilterId.SOFT)
+            }
+            awaitCondition("failed filter preview rollback") {
+                val failed = viewModel.uiState.value
+                failed.selectedFilter == FilterId.ORIGINAL &&
+                    failed.errorMessage?.contains("synthetic filter preview failure") == true &&
+                    failed.orderedImages.firstOrNull() === retainedImage
+            }
+            android.os.SystemClock.sleep(250)
+            runBlocking {
+                assertTrue(
+                    "A filter whose preview failed must not be persisted for export",
+                    sessionStore.getById(sessionId)?.draft?.filterId == FilterId.ORIGINAL.name,
+                )
+            }
+            instrumentation.runOnMainSync {
+                viewModel.beforeFilterPreviewPublishForTest = null
                 viewModel.setFilter(FilterId.SOFT)
                 viewModel.setFilter(FilterId.FILM)
                 viewModel.setFilter(FilterId.BW)
@@ -184,6 +206,155 @@ class BitmapOwnershipInstrumentedTest {
         }
     }
 
+    @Test
+    fun editReinitRejectsStaleFilterAndThumbnailPublishes() {
+        val sessionId = "bitmap-reinit-${System.nanoTime()}"
+        val storage = FileImageStorage(app)
+        val sessionStore = SessionDocumentRepository(app)
+        val fixtures = fixtures(2)
+        val photoIds = listOf(java.util.UUID.randomUUID().toString(), java.util.UUID.randomUUID().toString())
+        val store = ViewModelStore()
+        lateinit var viewModel: EditViewModel
+        var viewModelInitialized = false
+        try {
+            runBlocking {
+                fixtures.forEachIndexed { index, bitmap ->
+                    val bytes = ByteArrayOutputStream().use { output ->
+                        assertTrue(bitmap.compress(Bitmap.CompressFormat.JPEG, 95, output))
+                        output.toByteArray()
+                    }
+                    storage.saveCapture(bytes, sessionId, index + 1)
+                }
+                sessionStore.create(SessionDocument(
+                    sessionId = sessionId,
+                    createdAt = System.currentTimeMillis(),
+                    captureCount = 4,
+                    selectedCount = 2,
+                    photos = photoIds.mapIndexed { index, id ->
+                        PhotoRef(id, "captures/$sessionId/cap_0${index + 1}.jpg", index)
+                    },
+                    draft = SessionDraft(selectedPhotoIdsInOrder = photoIds),
+                ))
+            }
+
+            val firstChipEntered = CompletableDeferred<Unit>()
+            val releaseFirstChip = CompletableDeferred<Unit>()
+            var chipPublishCount = 0
+            instrumentation.runOnMainSync {
+                viewModel = ViewModelProvider(
+                    store,
+                    ViewModelProvider.AndroidViewModelFactory(app),
+                )[EditViewModel::class.java]
+                viewModelInitialized = true
+                viewModel.beforeFilterChipPublishForTest = {
+                    chipPublishCount += 1
+                    if (chipPublishCount == 1) {
+                        firstChipEntered.complete(Unit)
+                        releaseFirstChip.await()
+                    }
+                }
+                viewModel.init(
+                    frameType = FrameType.TWO_CUT,
+                    sessionId = sessionId,
+                    selectedIndexes = listOf(0, 1),
+                    frameLayoutId = FrameLayoutId.TWO_HORIZONTAL,
+                )
+            }
+            runBlocking { withTimeout(5_000) { firstChipEntered.await() } }
+
+            runBlocking {
+                val current = checkNotNull(sessionStore.getById(sessionId))
+                sessionStore.update(sessionId, current.revision) { document ->
+                    document.copy(
+                        draft = document.draft.copy(
+                            selectedPhotoIdsInOrder = photoIds.reversed(),
+                        ),
+                    )
+                }
+            }
+            instrumentation.runOnMainSync {
+                viewModel.init(
+                    frameType = FrameType.TWO_CUT,
+                    sessionId = sessionId,
+                    selectedIndexes = listOf(0, 1),
+                    frameLayoutId = FrameLayoutId.TWO_HORIZONTAL,
+                )
+            }
+            awaitCondition("new load and filter thumbnails") {
+                val state = viewModel.uiState.value
+                !state.isLoading &&
+                    state.orderedImages.size == 2 &&
+                    state.filterChipThumbnails.size == FilterId.entries.size &&
+                    isBlueDominant(state.orderedImages.first())
+            }
+            val currentThumb = checkNotNull(viewModel.uiState.value.filterChipThumbnails[FilterId.ORIGINAL])
+            assertTrue("The second load must build thumbnails from its first photo", isBlueDominant(currentThumb))
+            releaseFirstChip.complete(Unit)
+            android.os.SystemClock.sleep(250)
+            assertTrue(
+                "A stale thumbnail build must not replace the current load",
+                viewModel.uiState.value.filterChipThumbnails[FilterId.ORIGINAL] === currentThumb,
+            )
+
+            instrumentation.runOnMainSync { viewModel.beforeFilterChipPublishForTest = null }
+            val oldFilterEntered = CompletableDeferred<Unit>()
+            val releaseOldFilter = CompletableDeferred<Unit>()
+            instrumentation.runOnMainSync {
+                viewModel.beforeFilterPreviewPublishForTest = {
+                    oldFilterEntered.complete(Unit)
+                    releaseOldFilter.await()
+                }
+                viewModel.setFilter(FilterId.FILM)
+            }
+            runBlocking { withTimeout(5_000) { oldFilterEntered.await() } }
+            android.os.SystemClock.sleep(250)
+
+            runBlocking {
+                val current = checkNotNull(sessionStore.getById(sessionId))
+                sessionStore.update(sessionId, current.revision) { document ->
+                    document.copy(
+                        draft = document.draft.copy(
+                            selectedPhotoIdsInOrder = photoIds,
+                            filterId = FilterId.FILM.name,
+                        ),
+                    )
+                }
+            }
+            instrumentation.runOnMainSync {
+                viewModel.init(
+                    frameType = FrameType.TWO_CUT,
+                    sessionId = sessionId,
+                    selectedIndexes = listOf(0, 1),
+                    frameLayoutId = FrameLayoutId.TWO_HORIZONTAL,
+                )
+            }
+            awaitCondition("reinitialized edit previews") {
+                val state = viewModel.uiState.value
+                !state.isLoading &&
+                    state.selectedFilter == FilterId.FILM &&
+                    state.orderedImages.size == 2 &&
+                    isRedDominant(state.orderedImages.first())
+            }
+            val currentPreview = viewModel.uiState.value.orderedImages.first()
+            releaseOldFilter.complete(Unit)
+            android.os.SystemClock.sleep(250)
+            assertTrue(
+                "A filter job from the previous load must not replace reinitialized previews",
+                viewModel.uiState.value.orderedImages.first() === currentPreview,
+            )
+        } finally {
+            if (viewModelInitialized) {
+                instrumentation.runOnMainSync {
+                    viewModel.beforeFilterChipPublishForTest = null
+                    viewModel.beforeFilterPreviewPublishForTest = null
+                }
+            }
+            instrumentation.runOnMainSync { store.clear() }
+            runBlocking { sessionStore.requestDelete(sessionId) }
+            fixtures.forEach { if (!it.isRecycled) it.recycle() }
+        }
+    }
+
     private fun fixtures(count: Int): List<Bitmap> = List(count) { index ->
         Bitmap.createBitmap(48, 64, Bitmap.Config.ARGB_8888).apply {
             eraseColor(if (index == 0) Color.RED else Color.BLUE)
@@ -198,6 +369,16 @@ class BitmapOwnershipInstrumentedTest {
         } finally {
             target.recycle()
         }
+    }
+
+    private fun isBlueDominant(bitmap: Bitmap): Boolean {
+        val pixel = bitmap.getPixel(bitmap.width / 2, bitmap.height / 2)
+        return Color.blue(pixel) > Color.red(pixel)
+    }
+
+    private fun isRedDominant(bitmap: Bitmap): Boolean {
+        val pixel = bitmap.getPixel(bitmap.width / 2, bitmap.height / 2)
+        return Color.red(pixel) > Color.blue(pixel)
     }
 
     private fun awaitCondition(label: String, predicate: () -> Boolean) {

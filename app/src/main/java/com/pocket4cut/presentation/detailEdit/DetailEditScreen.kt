@@ -79,6 +79,7 @@ import com.pocket4cut.frame.FrameColor
 import com.pocket4cut.frame.FrameStyle
 import com.pocket4cut.frame.FrameTheme
 import com.pocket4cut.frame.PhotoCropTransform
+import com.pocket4cut.frame.occasion.OccasionTheme
 import com.pocket4cut.domain.model.PhotoAdjustments
 import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.presentation.navigation.FrameType
@@ -135,6 +136,7 @@ fun DetailEditScreen(
     captionFontName: String? = null,
     captionColorRGB: Long? = null,
     customFrameDesign: com.pocket4cut.frame.CustomFrameDesign? = null,
+    occasionTheme: OccasionTheme? = null,
     onBack: () -> Unit,
     onResult: (resultPath: String) -> Unit,
     modifier: Modifier = Modifier,
@@ -299,6 +301,7 @@ fun DetailEditScreen(
                         captionFontName = captionFontName,
                         captionColorRGB = captionColorRGB,
                         layoutVersion = layoutVersion,
+                        occasionTheme = occasionTheme,
                         modifier = Modifier
                             .shadow(
                                 elevation = 8.dp,

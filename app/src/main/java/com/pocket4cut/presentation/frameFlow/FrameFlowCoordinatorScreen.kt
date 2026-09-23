@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Celebration
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Palette
@@ -33,6 +34,7 @@ import com.pocket4cut.ui.designsystem.components.IconCircleButton
 fun FrameFlowCoordinatorScreen(
     onColorPick: () -> Unit,
     onSeasonPick: () -> Unit,
+    onOccasionPick: () -> Unit,
     onCustomEditor: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
@@ -100,6 +102,14 @@ fun FrameFlowCoordinatorScreen(
             HorizontalDivider(color = AppColors.Border.subtle)
             FrameModeRow(
                 code = "C",
+                icon = Icons.Default.Celebration,
+                title = "OCCASION 88",
+                subtitle = "기념일과 일상의 순간을 위한 88가지 프레임",
+                onClick = onOccasionPick,
+            )
+            HorizontalDivider(color = AppColors.Border.subtle)
+            FrameModeRow(
+                code = "D",
                 icon = Icons.Default.Edit,
                 title = "CUSTOM",
                 subtitle = "색, 문구, 스티커를 직접 편집",

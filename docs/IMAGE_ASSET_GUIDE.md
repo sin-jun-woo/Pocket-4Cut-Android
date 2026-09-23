@@ -1,19 +1,21 @@
 # Pocket 4Cut 이미지·그래픽 자산 가이드
 
-## 2026-09-23 — Everyday Editions 기념일 디자인 납품 (앱 미적용)
+## 2026-09-24 — Everyday Editions 디자인 납품과 Android 런타임 연결
 
-- 범위: 사용자 표의 기념일 77 + 특수 11 = **88종**. 후속 지시에 따라 이번에는 프레임 이미지부터 제작했으며, 앱 자산·선택 UI·테스트·빌드는 변경하거나 실행하지 않았다. 기존 Paper Seasons는 그대로다.
+- 범위: 사용자 표의 기념일 77 + 특수 11 = **88종**. 2026-09-23의 정적 디자인 납품을 보존하면서 2026-09-24 현재 작업 트리에서 Android 카탈로그·선택 UI·공통 Canvas 렌더 경로를 연결했다. 기존 Paper Seasons는 그대로다.
 - 위치: [컬렉션 안내](../design/occasion-frames/everyday-editions-v1/README.md), [전체 모아보기](../design/occasion-frames/everyday-editions-v1/deliverables/overview-all-occasions.jpg), [다운로드 안내](../design/occasion-frames/everyday-editions-v1/deliverables/DOWNLOADS.md).
 - 생성 원본: `source/masters/<id>.png` 88장, 각각 1536×1024 RGBA. 주제별 별도 내장 이미지 생성 요청을 `source/prompts/<id>.json`에 보존했다. 모델/품질 선택자는 제공되지 않았다. 다른 프레임 회사의 캐릭터·상표·도안을 복제하지 않았으며 실제 손그림 제작이라고 주장하지 않는다.
-- 아트 디렉션: 카탈로그의 주제별 팔레트·소품과 `source/art-direction.json`의 글꼴·장식 밀도·여백을 분리했다. 단순 소품 수보다 생일/웨딩/졸업/여행/추억 각각의 분위기를 우선했다. 88종은 10개 폴더로 구분하고, 실제 앱 카테고리·특수 기록 화면은 후속 설계로 남겼다.
+- 아트 디렉션: 카탈로그의 주제별 팔레트·소품과 `source/art-direction.json`의 글꼴·장식 밀도·여백을 분리했다. 단순 소품 수보다 생일/웨딩/졸업/여행/추억 각각의 분위기를 우선했다. 88종의 10개 카테고리를 런타임 카탈로그와 선택 필터에서도 같은 ID로 사용한다.
 - 기계적 정리: 원본 알파를 보존해 독립 소품을 크롭·투명 여백·축소한 `source/atlases/` 88장(1536×1024). 긴 줄기/리본/티켓이 셀을 넘는 6종은 `roi-overrides.json`의 영역·다각형을 사용한다. 원본은 수정하지 않았다. 광복절의 정확한 태극기만 [행정안전부 공식 도안](https://www.mois.go.kr/frt/sub/a06/b08/nationalIcon_2_2/screen.do)에서 얻었으며 원본과 1200×800 배치용 PNG를 `source/references/`에 보존했다.
-- 정적 프레임: Paper Seasons 납품 manifest의 슬롯·헤더·문구 영역을 사용한 1,584장(88×18), 8bit RGBA PNG. 폭 1248–4992px / 높이 1878–4971px이며 조합별 정확한 크기·좌표·SHA-256은 `deliverables/manifest.json`에 있다. 실제 사진창은 투명하며 모아보기의 회색은 확인용 배경이다. 현재 배치 8개×문구 없음/있음 16장과 이전 SIX_COLLAGE 호환 2장을 주제별로 제공한다. **이번 Android 실행 결과가 아니며 런타임 연결을 완료한 것이 아니다.**
+- 정적 프레임: Paper Seasons 납품 manifest의 슬롯·헤더·문구 영역을 사용한 1,584장(88×18), 8bit RGBA PNG. 폭 1248–4992px / 높이 1878–4971px이며 조합별 정확한 크기·좌표·SHA-256은 `deliverables/manifest.json`에 있다. 실제 사진창은 투명하며 모아보기의 회색은 확인용 배경이다. 현재 배치 8개×문구 없음/있음 16장과 이전 SIX_COLLAGE 호환 2장을 주제별로 제공한다. 이 정적 납품은 Android가 직접 읽는 런타임 파일이 아니다.
+- Android 런타임: `app/src/main/assets/occasion/v1/`에 1536×1024 WebP 아틀라스 88개와 240×160 WebP 선택 썸네일 88개, 카탈로그와 manifest를 둔다. 아틀라스는 quality 95/alphaQuality 100, 썸네일은 quality 90/alphaQuality 100이다. 176개 이미지 합계는 **33,687,596 bytes**다. 1,584개 정적 PNG **622,173,556 bytes**는 앱에 포함하지 않는다.
+- 품질 검증: 현재 런타임 validator는 88개 모두의 WebP 형식·크기·알파 존재·SHA-256와 원본 PNG 대비 알파값 차이 0을 검사한다. 흰색·검정색 합성 채널 기준 최저 PSNR은 **42.01 dB**였다. 이 수치는 자산 변환 품질 검사이며 Android UI·최종 JPEG의 모든 조합을 시각 검증했다는 뜻은 아니다.
 - 글자: 제목·브랜드·날짜·이름·장소·온도는 생성 일러스트에 맡기지 않고 코드와 글꼴로 합성했다. 날짜/횟수 등은 예시 값이며 자동 기능은 구현하지 않았다. 기존 배민 한나/연성과 로컬 설치 Georgia·Malgun Gothic·Consolas를 래스터화했으며 글꼴 파일 자체를 새 패키지에 재배포하지 않는다.
 - 보기: 테마별 8배치 시트 88장(2400×2100 JPG), 10개 카테고리 시트, 전체 88종 시트(3560×7220 JPG), 가상 성인 사진 합성 예시 88장(폭 1175px). 실제 사용자 사진·고객 후기·해당 기념일 기록이 아니다. 특히 반려동물/아기 테마의 공통 성인 예시는 비율 확인용으로만 사용한다.
 - 홍보: 내장 이미지 도구로 생성한 종이 배경 위에 실제 완성 2/4/6컷 PNG와 기존 가상 성인 사진을 배치했다. 새 사람이미지나 프레임 재해석본이 아니다. `instagram-promo.png` 1080×1350, 마스터 2160×2700, 실제 소스/해시는 `records/instagram-promo.json`에 있다. 본문 “오늘의 분위기, 네컷에 남겨보세요.”. 게시·광고 집행은 하지 않았다.
-- 보존/재출력: 미디어 생성은 `render-collection.cjs → render-promo.cjs → package-collection.cjs`. 전체/카테고리 ZIP은 로컬 재생성 파일로 Git 중복 보관에서 제외하며, 원본 PNG·스크립트·manifest는 버전 관리한다. 한 기념일의 18장이 다른 ZIP으로 분산되지 않게 묶는다. 기록 원본과 현재 렌더를 구분하고, 앱 적용 전 미리보기/저장 일치·동적 글자·기기 메모리를 다음 단계에서 확인한다.
+- 보존/재출력: 정적 미디어 생성은 `render-collection.cjs → render-promo.cjs → package-collection.cjs`다. 전체/카테고리 ZIP은 로컬 재생성 파일로 Git 중복 보관에서 제외하며, 원본 PNG·스크립트·manifest는 버전 관리한다. 한 기념일의 18장이 다른 ZIP으로 분산되지 않게 묶는다. Android 런타임은 별도 exporter/validator로 재생성하며, 미리보기/저장 일치·동적 글자·기기 메모리의 실제 실행 결과는 검증 기록에서 확인한다.
 
-아래 기록은 기존 앱 자산의 이력이다. 위 정적 컬렉션이 이미 앱에 추가됐다고 해석하지 않는다.
+아래 기록은 기존 앱 자산의 이력이다. Everyday Editions의 현행 Android 연결 계약은 이 절과 마지막 런타임 통합 절을 함께 따른다.
 
 > **Paper Seasons 업데이트:** 아래 신뢰성 개편 기준 이후, 2026-09-22 계절 프레임 4종을 새 일러스트로 교체했다. 현행 추가 규격은 마지막 Paper Seasons 절을 참고한다.
 
@@ -55,10 +57,10 @@ HEAD `ac42903` 및 기존 미커밋 UI 변경을 포함한 작업 트리에서, 
 
 ## 1. 현행 자산과 렌더 경로
 
-프레임 기하는 [FrameLayouts](../app/src/main/java/com/pocket4cut/frame/FrameLayouts.kt), [FrameTheme](../app/src/main/java/com/pocket4cut/frame/FrameTheme.kt), [FrameColors](../app/src/main/java/com/pocket4cut/frame/FrameColors.kt)의 데이터와 Kotlin 그리기 코드로 구성된다. 2026-09-22 Paper Seasons 교체 후 계절 프레임은 `SeasonHTMLFrameStyle`의 종이색·기하 패턴과 `SeasonalStickerArt`의 새 RGBA 일러스트를 합성한다. 구형 계절 벡터 4개와 전용 anchor 코드는 제거했으며 WebView를 실행하지 않는다. 아래 역사 기록과 현행 교체 기록을 구분한다.
+프레임 기하는 [FrameLayouts](../app/src/main/java/com/pocket4cut/frame/FrameLayouts.kt), [FrameTheme](../app/src/main/java/com/pocket4cut/frame/FrameTheme.kt), [FrameColors](../app/src/main/java/com/pocket4cut/frame/FrameColors.kt)의 데이터와 Kotlin 그리기 코드로 구성된다. 2026-09-22 Paper Seasons 교체 후 계절 프레임은 `SeasonHTMLFrameStyle`의 종이색·기하 패턴과 `SeasonalStickerArt`의 RGBA 일러스트를 합성한다. 2026-09-24 Everyday Editions는 `OccasionCatalog`의 종이색·패턴·장식 배치와 `OccasionArtwork` WebP를 `OccasionFramePainter`가 합성한다. 둘 다 WebView를 실행하지 않는다. 아래 역사 기록과 현행 교체 기록을 구분한다.
 
 - 사용자 장식은 `CustomFrameDecoration`의 Text/Emoji/Sticker 모델이다. 스티커 25종은 `StickerPalette`의 Material ImageVector이며 PNG/SVG 파일 자동 검색 로더는 없다.
-- [CollagePreview](../app/src/main/java/com/pocket4cut/frame/CollagePreview.kt)와 최종 JPEG는 [CollageRenderer.drawScene](../app/src/main/java/com/pocket4cut/frame/CollageRenderer.kt)을 공유한다. 미리보기와 결과에서 스티커 이름 대신 같은 vector path를 그린다.
+- [CollagePreview](../app/src/main/java/com/pocket4cut/frame/CollagePreview.kt)와 최종 JPEG는 [CollageRenderer.drawScene](../app/src/main/java/com/pocket4cut/frame/CollageRenderer.kt)을 공유한다. 미리보기와 결과에서 스티커 이름 대신 같은 vector path를 그리고, occasion 프레임도 같은 카탈로그 항목·아틀라스·Canvas painter를 사용한다.
 - [StickerVectorPainter](../app/src/main/java/com/pocket4cut/frame/StickerVectorPainter.kt)는 현재 카탈로그 vector의 group 변환과 path를 Android Canvas로 옮긴다. 임의 SVG의 모든 stroke·clip·gradient·alpha 기능을 지원하는 범용 벡터 로더는 아니다.
 - UI 기능 아이콘은 주로 Compose Material Icons다. 장식의 저장 ID와 UI 아이콘의 컴포넌트 식별자를 혼동하지 않는다.
 - 브랜드 `app/src/main/assets/branding/pocket_4cut_app_icon.svg`는 1024×1024, `viewBox="0 0 1024 1024"`인 PNG 참조 wrapper다. 인접 `pocket_4cut_app_icon.png`가 필요하며 자체 완결 벡터나 Android 런타임 SVG 지원을 뜻하지 않는다.
@@ -92,7 +94,7 @@ HEAD `ac42903` 및 기존 미커밋 UI 변경을 포함한 작업 트리에서, 
 
 활성 출력은 `DetailEditViewModel → RenderSnapshot → CollageRenderer`다. 과거 `CollageExportMetrics`의 화면 폭 계산과 `Constants.RESULT_IMAGE_MAX_WIDTH`/이전 `CollageFinalize`를 현행 출력 규격으로 사용하지 않는다.
 
-새 계절 atlas는 1536×1024, 512px 셀 6개이며 프레임 전체를 늘리는 배경 이미지가 아니다. 장식을 실제 header·side·gutter·footer 영역에 배치하고 사진 슬롯·브랜드·문구 영역에서는 clip한다. 기본 8배치와 구형 비대칭 이전 배치, 문구 유무를 별도로 검사한다.
+Paper Seasons와 Everyday Editions atlas는 1536×1024, 512px 셀 6개이며 프레임 전체를 늘리는 배경 이미지가 아니다. 장식을 실제 header·side·gutter·footer 영역에 배치하고 현재 사진 슬롯·문구 영역 기하와 함께 그린다. 기본 8배치와 구형 비대칭 이전 배치, 문구 유무를 별도로 검사한다.
 
 ## 4. 원본·미리보기·결과 파일
 
@@ -140,15 +142,17 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 다음 사항은 여전히 확인해야 한다.
 
 1. 현재 StickerVectorPainter는 한 색으로 path를 채우는 카탈로그 대응 코드다. 다중 색·stroke·clip·trim·path별 alpha가 필요한 새 벡터는 렌더 계약을 먼저 확장해야 한다.
-2. 계절별 anchor, 긴 문구/날짜, 모든 글꼴·이모지, 장식 극단 크기/회전은 8배치에서 비교한다. 같은 painter 사용만으로 폰트 환경 차이·모든 크롭 품질까지 검증되지는 않는다.
+2. 계절/occasion별 anchor, 긴 문구/날짜, 모든 글꼴·이모지, 장식 극단 크기/회전은 8배치에서 비교한다. 같은 painter 사용만으로 폰트 환경 차이·모든 크롭 품질까지 검증되지는 않는다.
 3. Renderer/Preview API는 background Bitmap을 받을 수 있지만 사용자가 외부 PNG/SVG 배경을 고르는 흐름은 없다. 자산 파일 추가만으로 자동 연결되지 않는다.
 4. 원본 사진의 ICC/광색역/HDR을 모두 명시적으로 변환·검증하는 파이프라인은 아니다. 출력 픽셀 상한은 전체 앱 메모리 상한도 아니다.
 5. 계측 소스에 렌더 계약과 출력 정책 검사가 존재한다. 실행 횟수·통과 여부·합성 fixture/물리 카메라 범위는 해당 검증 기록에서 확인한다.
 
+Everyday Editions는 generator/validator에서 자산 무결성과 변환 품질을 검사하지만, 실제 기기에서 88개 카드 순회, 각각의 선택·저장·보관함 재열기, 빠른 전환 메모리, 가로/큰 글자/TalkBack과 1,584개 렌더 조합을 실행한 결과는 WORKLOG와 출시 검증 보고서가 기준이다.
+
 
 ## 7. 신규 자산 제작 제안 — 아직 구현된 규칙이 아님
 
-이 절은 이후 자산 작업을 맡을 때 사용할 **제안**이다. 현재 앱에 없는 로더, 파일명 규약, 자동 변환 파이프라인이 이미 있다고 해석하지 않는다. 기존 파일·ID를 이 제안에 맞춰 일괄 변환하거나 이름 변경하지 않는다.
+이 절은 이후 자산 작업을 맡을 때 사용할 **제안**이다. Everyday Editions의 `occasion/v1` 전용 로더·파일명·변환 파이프라인과, 임의의 신규 PNG/SVG/패턴을 자동 검색하는 범용 로더를 구분한다. 기존 파일·ID를 이 제안에 맞춰 일괄 변환하거나 이름 변경하지 않는다.
 
 ### 형식과 구성 제안
 
@@ -169,7 +173,7 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 - `frame_four_vertical_spring_overlay.png`: 특정 레이아웃용 overlay 후보.
 - `ic_frame_rotate.xml`: 별도 UI 아이콘 resource 후보.
 
-실제 배치 위치는 로딩 방식에 맞춰 정한다. density에 따라 크기가 바뀌어야 하는 UI 이미지와, 정확한 pixel 치수가 중요한 합성 자산을 같은 방식으로 취급하지 않는다. 예를 들어 향후 pixel 기준 raster를 도입하면 `res/drawable-nodpi/` 또는 명시적 `assets/` 경로를 검토할 수 있으나 현재 프레임용 파일 로더를 뜻하지 않는다.
+실제 배치 위치는 로딩 방식에 맞춰 정한다. density에 따라 크기가 바뀌어야 하는 UI 이미지와, 정확한 pixel 치수가 중요한 합성 자산을 같은 방식으로 취급하지 않는다. 예를 들어 새 pixel 기준 raster에는 `res/drawable-nodpi/` 또는 버전이 명시된 `assets/` 경로를 검토한다. 이것이 `occasion/v1` 계약 밖의 파일을 자동 인식한다는 뜻은 아니다.
 
 기존 `StickerPalette.assetId`, `FrameColor.id`, `FrameLayoutId`, 폰트 ID는 JSON 인계값과 연결되어 있다. 예를 들어 `balloon2`, `faceSmiling` 같은 기존 ID는 신규 파일명 제안에 맞추어 바꾸지 않는다. 식별자 변경은 읽기 호환성을 포함한 별도 코드 변경이다.
 
@@ -289,3 +293,27 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 - 검증: 첫 음성의 ASR 불일치를 감지해 렌더를 차단하고 두 표현을 간결하게 바꾼 뒤 재생성했다. 최종 실제 ASR 136자 정규화 일치·편집 거리 0, 자막 테스트 10/10, 스틸 28장·텍스트 경계 41건·프레임 배치 경계 12건을 확인했다. 최종 MP4 전체 디코딩·규격·길이 동기·음량·검은 구간 검사를 통과했고 실제 인코딩 프레임과 커버를 시각 검토했다.
 - 전달: 본편·커버·음성·SRT·대본·게시글·안내 7개 파일의 ZIP은 10,939,270 bytes이며, 재개봉 후 각 항목 해시가 원본과 일치했다. 제작 코드·WAV·검증 자료와 패키지 README는 `design/reels/seasonal-v4/`에 분리했다. 앱 코드·런타임 자산·이전 릴스·계절 이미지 ZIP은 수정하지 않았다.
 - 미검증: 자연스러움·발음·완전히 같은 음색의 직접 청취, 실제 휴대전화/Instagram 자르기·압축·게시·심사, Play 검색/배포 상태는 확인하지 않았다. 게시 전에 배포 앱에 새 프레임이 적용됐는지 확인한다. 앱 변경이 없어 이번에 Android 빌드·계측을 재실행하지 않았다.
+
+## 16. 2026-09-24 — Everyday Editions 88종 Android 런타임 통합
+
+- 소스와 버전: `design/occasion-frames/everyday-editions-v1/source/catalog.json`, `art-direction.json`, `atlases/<themeId>.png`가 생성 입력이다. 앱 출력은 `app/src/main/assets/occasion/v1/`에 고정한다. 후속 디자인은 v1을 덮어쓰지 않고 `occasion/v2`와 새 session design version을 병행해야 한다.
+- 카탈로그: 런타임 `catalog.json`은 10개 카테고리, 중복 없는 88개 ID, 기념일 77개와 `special` 11개, 종이색·잉크색·패턴·profile·정규화 배치·아틀라스 source rect를 저장한다. 제작용 자연어 motif 설명과 생성 prompt는 앱 카탈로그에 넣지 않는다.
+- 앱 이미지: `art/<themeId>.webp` 88개는 1536×1024, quality 95, alphaQuality 100, sRGB이며 각 파일은 3×2의 512px 셀 6개를 담는다. `thumbs/<themeId>.webp` 88개는 240×160, quality 90, alphaQuality 100이다. manifest의 176개 이미지 합계는 33,687,596 bytes다. `catalog.json` 515,642 bytes와 `manifest.json` 51,465 bytes를 포함한 `occasion/v1` 디렉터리 전체는 34,254,703 bytes다.
+- 제외: 정적 납품의 완성 PNG 1,584개는 합계 622,173,556 bytes이며 Android assets에 복사하지 않는다. 188MB 제작 master도 앱에 넣지 않는다. 앱은 현재 레이아웃·사진·사용자 문구와 한 테마의 6개 장식을 실행 시 조합한다.
+- 로딩과 메모리: 목록은 작은 썸네일만 요청한다. 실제 미리보기/저장은 선택한 한 테마의 아틀라스를 `inScaled=false`, ARGB_8888로 디코드하며 `OccasionArtwork` LRU가 최대 2장을 보유한다. 1536×1024 ARGB 한 장은 약 6MiB이므로 캐시 참조는 약 12MiB다. 캐시에서 밀린 Bitmap은 진행 중 Compose draw와 수명이 겹칠 수 있어 직접 recycle하지 않는다.
+- 렌더: `OccasionFramePainter`는 카탈로그의 종이색·패턴, 외곽선, 사진 테두리, header/side/gutter/footer 장식, 테마 제목과 `Pocket 4Cut / NN`을 Kotlin Canvas로 그린다. 사진 슬롯과 출력 크기는 기존 layout이 결정한다. `CollagePreview`와 최종 `DetailEditViewModel → RenderSnapshot → CollageRenderer`가 같은 occasion theme/artwork 입력과 painter를 사용한다.
+- 직접 기록: `오늘의 날씨`, `D-Day`, `N번째 네컷` 등이 속한 11종은 선택 화면에서 `직접 기록`으로 안내한다. 정적 예시의 날짜·온도·장소·횟수를 자동 삽입하지 않으며 날씨/위치 권한이나 외부 API를 추가하지 않는다. 실제 값은 기존 사용자 문구·날짜 편집으로 입력한다.
+- 저장 호환: session schema v3은 `occasionThemeId`와 `occasionDesignVersion`을 저장한다. v1/v2는 다음 정상 저장 전까지 메모리에서 v3로 올리며 occasion 필드는 null이다. ID 누락·알 수 없는 ID·지원하지 않는 디자인 버전은 기본 흰색 프레임으로 바꾸지 않고 복구 필요 상태로 표시한다. 과거 완료 JPEG는 변경하지 않는다.
+
+고정된 lockfile 의존성을 설치한 뒤 source 디렉터리에서 재생성한다. exporter는 완료 전에 전체 validator를 자동 실행한다.
+
+```powershell
+cd design/occasion-frames/everyday-editions-v1/source
+npm ci
+npm run export:android
+npm run validate:android
+```
+
+exporter는 88개 source atlas가 1536×1024 RGBA인지, art record에 6개 motif가 있는지 검사하고 WebP·썸네일·카탈로그·SHA-256 manifest를 만든다. 여러 파일을 게시하기 전에 `occasion/v1/.export-incomplete`를 만들고 전체 validator가 통과한 뒤에만 제거한다. Gradle의 모든 `merge*Assets` 작업은 이 마커가 남아 있으면 실패하므로 마커를 수동 삭제하지 말고 exporter를 다시 완료해야 한다. validator는 88개/10카테고리/77+11 수량, 176개 파일의 경로·크기·WebP 형식·치수·알파·SHA-256와 원본 대비 픽셀 알파를 검사한다. 현재 생성분은 알파값 차이 0, 흰색·검정색 합성 기준 최저 PSNR 42.01dB였다.
+
+이 자산 검증은 변환 파일의 무결성과 합성 품질 근거다. Android 빌드·Lint·R8, 1,584개 렌더 조합, 88종 실기기 선택/저장/재열기, 빠른 스크롤과 저메모리, 밝고 어두운 사진 위 halo 육안 검사는 별도 실행 증거가 있어야 완료로 표시한다.

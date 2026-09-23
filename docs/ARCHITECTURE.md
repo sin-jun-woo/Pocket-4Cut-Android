@@ -1,6 +1,6 @@
 # Pocket 4Cut 현재 구현 아키텍처
 
-> 확인일: 2026-09-24. 앨범 가져오기·사진별 비파괴 자르기 작업의 시작 기준은 `main`의 `ee621886f1ef283e7a555a64fd07577a469b1264`, 구현 브랜치는 `codex/album-import-crop`이다. 이 문서는 현재 작업 트리에서 확인한 구조를 설명한다. 실제 검사 결과와 커밋 상태는 [WORKLOG](WORKLOG.md)의 2026-09-24 항목을 따른다.
+> 확인일: 2026-09-24. 앨범 가져오기·사진별 비파괴 자르기 작업의 시작 기준은 `main`의 `ee621886f1ef283e7a555a64fd07577a469b1264`, 구현 브랜치는 `codex/album-import-crop`이다. 이 문서는 Everyday Editions 88종 런타임 통합을 포함한 현재 작업 트리의 구조를 설명한다. 실제 검사 결과와 커밋 상태는 [WORKLOG](WORKLOG.md)의 2026-09-24 항목을 따른다.
 > 2026-09-22 실기기 후속 작업은 시작 HEAD `1b705cb3cd813efc062eefeed807f595e4b7adf2` 이후의 미커밋 코드까지 반영한다. 실행 범위와 남은 관문은 [실기기 최종 출시 후보 검증](../engineering/PHYSICAL_RELEASE_VERIFICATION_2026-09-22.md)을 따른다.
 > 아래는 소스에서 확인한 구현이다. 커밋·push 및 빌드·기기 검증 결과는 [WORKLOG](WORKLOG.md)의 해당 실행 기록을 따른다. 코드의 존재를 테스트 통과나 모든 장애 복구 완료로 해석하지 않는다.
 
@@ -37,6 +37,9 @@ flowchart TD
     Snapshot --> Renderer[CollageRenderer]
     UI --> Preview[CollagePreview]
     Preview --> Renderer
+    UI --> OccasionCatalog[OccasionCatalog / 10 categories]
+    OccasionCatalog --> OccasionAssets[occasion/v1 WebP atlases]
+    OccasionAssets --> Renderer
     UI --> Exporter[GalleryExporter]
     Exporter --> Store
     Exporter --> Media[MediaStore / FileProvider]
@@ -58,7 +61,7 @@ flowchart LR
     AlbumType --> Import[시스템 Photo Picker / 확인·재정렬]
     Select --> Layout[배치 선택]
     Import --> Layout
-    Layout --> Frame[색/계절/커스텀 프레임]
+    Layout --> Frame[색/계절/OCCASION 88/커스텀 프레임]
     Frame --> Edit[일반 편집]
     Edit --> Detail[사진별 보정·자르기]
     Detail --> Result[완료본]
@@ -84,7 +87,8 @@ flowchart LR
 - Capture의 빠른 전·후면 전환은 별도 `cameraSwitchJob`과 기존 CameraX 바인딩 Mutex를 함께 사용한다. 바인딩 완료 전 전환 중복 입력과 촬영 시작/재개를 보류하고, 실패 시 원래 렌즈 재바인딩을 시도한다. 이것은 모든 제조사의 카메라 연결 실패를 자동 복구한다는 보장은 아니다.
 - Selection은 저장된 photo ID 순서를 인덱스로 변환하여 화면을 복원한다. 선택 변경과 다음 단계 이동을 저장소에 반영한다. 시스템 뒤로가기도 화면 닫기 버튼과 동일한 작업 일시정지 확인창을 사용한다. `홈으로`는 저장 성공을 확인한 뒤 NavHost가 Home route까지 pop하며, 저장 중에는 중복 이탈·선택·다음 입력을 막고 실패하면 화면에 남는다. 보관함에서 재개한 선택 화면도 이 정책을 따른다. 관련 내비게이션 계측과 보관함 재개 후 실제 수동 Home 이동을 확인했다.
 - PhotoImport는 첫 유효 사진이 게시될 때 `IMPORT` 세션을 만들고, 완료된 사진과 순서를 즉시 초안에 남긴다. 새 가져오기의 세션 ID는 화면의 `rememberSaveable`에 유지하고, 작업 보관함에서 재개할 때는 route로 기존 세션 ID를 받는다. ViewModel은 이 ID의 import journal을 재생한다. 초과 callback은 일부를 임의 채택하지 않고 전체를 거절한다.
-- 프레임 선택 단계·커스텀 디자인은 세션 초안에 기록한다. 하위 화면은 여전히 하나의 frame destination 안에서 전환한다.
+- 프레임 선택 화면은 `COLOR`, `SEASON`, `OCCASION 88`, `CUSTOM` 네 방식을 제공한다. OCCASION 화면은 10개 카테고리와 88개 썸네일을 LazyGrid로 표시하고, 적용하기 전 탐색은 세션 확정값을 바꾸지 않는다. 11개 `special` 항목은 `직접 기록`으로 표시하며 날씨·위치·D-Day·횟수를 자동 계산하지 않는다.
+- 프레임 선택 단계·커스텀 디자인과 적용한 occasion ID/디자인 버전은 세션 초안에 기록한다. 색상·계절·커스텀은 frame destination의 내부 단계이고, 88종 카탈로그는 별도 `OCCASION_FRAME_PICK` destination이다. occasion 적용 성공 시 전용 picker를 Edit로 교체하므로 Edit에서 뒤로가면 저장된 inline occasion 단계 하나만 나타난다.
 - Edit는 문구·필터·순서 등을 자동 저장하고, 상세 편집 이동과 화면 내 나가기에서 저장 완료 후 콜백을 실행한다. Detail은 회전·반전·색 보정과 crop을 photo ID별로 저장한다. Detail에서 돌아온 Edit는 세션을 다시 읽어 변환된 사진과 crop을 공통 미리보기에 반영한다.
 - 모든 route가 ID 하나만 받도록 바뀐 것은 아니다. frameType·선택 인덱스·layout/theme 인자와 Base64 결과 경로가 아직 존재한다. 실제 선택·순서·보정 복원의 기준은 세션 문서다.
 
@@ -94,17 +98,19 @@ flowchart LR
 
 ## 3. 세션 문서와 레거시 이전
 
-[SessionDocument](../app/src/main/java/com/pocket4cut/domain/model/SessionDocument.kt)의 현재 `schemaVersion`은 2다.
+[SessionDocument](../app/src/main/java/com/pocket4cut/domain/model/SessionDocument.kt)의 현재 `schemaVersion`은 3이다.
 
 - 문서: sessionId, revision, 생성/수정 시각, 촬영/선택 수, 명시적 `frameTypeId`, `inputSource`, stage, photos, draft, results, exportOperations.
 - PhotoRef: 안정적 photoId, 경로, captureIndex, legacy 여부. 신규 경로는 앱 Pictures 루트 기준 상대 경로이며 기존 자료는 검증된 절대 경로를 유지할 수 있다.
-- SessionDraft: `selectedPhotoIdsInOrder`, photo ID별 회전·반전·밝기·대비·채도·`PhotoCrop(focusX, focusY, zoom)`, layout/theme/color ID, layoutVersion, 프레임 단계, 필터·문구·날짜·글꼴·계절·커스텀 디자인.
+- SessionDraft: `selectedPhotoIdsInOrder`, photo ID별 회전·반전·밝기·대비·채도·`PhotoCrop(focusX, focusY, zoom)`, layout/theme/color ID, layoutVersion, 프레임 단계, 필터·문구·날짜·글꼴·계절·커스텀 디자인, `occasionThemeId`와 `occasionDesignVersion`.
 - ResultRecord: 결과 ID, 원본 draft revision, 고유 파일 경로, 폭/높이, 생성 시각, legacy 여부. 새 적용은 결과를 덮어쓰지 않고 추가한다.
 - ExportOperation: 작업/결과 ID, 상태, URI, 표시 파일명, 생성 시각, 새 사본 여부.
 
 [SessionDocumentRepository](../app/src/main/java/com/pocket4cut/data/local/SessionDocumentRepository.kt)는 `filesDir/session_documents/<id>.json`을 저장한다. 모든 인스턴스가 프로세스 Mutex를 공유하고 `expectedRevision`을 검사한다. `AtomicFile`로 쓰며 정상 이전 문서를 `<id>.json.lastgood`에 보관한다. 손상 시 복구 사본을 `NEEDS_RECOVERY`로 표시하고 `recover()`는 손상 원문을 별도 파일로 보존한다. 미래 스키마는 지원 오류로 반환한다. 결과 JPEG 게시 의도는 별도 `filesDir/result_publications/<id>/<resultId>.json` AtomicFile에 선기록한다. 이 장치는 다중 프로세스 잠금이나 모든 JPEG와 JSON 사이의 단일 트랜잭션을 뜻하지 않는다.
 
-schema v1은 `(captureCount, selectedCount)`가 `(4,2)`, `(8,4)`, `(10,6)`인 경우에만 각각 2·4·6컷 CAMERA 세션으로 메모리 이전한다. crop은 중립값이다. 그 외 조합은 4컷으로 추측하지 않고 `NEEDS_RECOVERY`로 남기며, 다음 정상 저장에서만 v2 JSON을 원자 게시한다. 미래 schema는 계속 거절한다.
+schema v1은 `(captureCount, selectedCount)`가 `(4,2)`, `(8,4)`, `(10,6)`인 경우에만 각각 2·4·6컷 CAMERA 세션으로 메모리 이전한다. crop은 중립값이다. schema v2는 occasion 필드를 `null`로 채워 메모리에서 v3로 읽고, 두 구버전 모두 다음 정상 저장에서만 v3 JSON을 원자 게시한다. v1의 그 밖의 조합은 4컷으로 추측하지 않고 `NEEDS_RECOVERY`로 남긴다. 미래 session schema는 지원 오류로 거절한다.
+
+occasion 선택의 지속 계약은 `backgroundType="occasion"`, 카탈로그에 있는 `occasionThemeId`, 지원하는 `occasionDesignVersion=1`의 조합이다. `frameStep`은 현재 둘러보는 하위 화면을 나타내므로 적용 이후 `edit` 등으로 바뀔 수 있다. 세 값이 불완전하거나 ID가 카탈로그에 없거나 디자인 버전이 미래 값이면 흰 프레임으로 대체하지 않고 문서를 `NEEDS_RECOVERY`로 표시한다. 기존 완료 JPEG는 다시 렌더하지 않는다.
 
 단일 구형 `sessions.json` 가져오기가 실패해도 `scanForGallery()`는 읽을 수 있는 새 세션별 문서를 반환하고, `legacyMigrationError`를 함께 올린다. Home/보관함은 구형 자료의 미표시 가능성을 사용자에게 알린다. 소유 관계를 판단할 수 없으므로 이 상태에서는 새 세션의 실제 파일 삭제를 시작하지 않으며, 삭제 저널의 마무리도 보류한다. 구형 원본 파일 자체는 보존한다. 격리된 손상 fixture의 정상 결과 표시·원문 보존·삭제 차단 계측은 통과했다. 실제 사용자 구형 파일을 손상시킨 검사는 아니다.
 
@@ -157,13 +163,15 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 
 활성 경로는 `DetailEditViewModel → RenderSnapshot → CollageRenderer → prepareResultPublication → saveImmutableResult → completeResultPublication`이다.
 
-[RenderSnapshot](../app/src/main/java/com/pocket4cut/frame/RenderSnapshot.kt)은 저장된 한 revision에서 선택 순서, 실제 파일, photo ID별 보정·crop, 프레임·문구·날짜를 고정한다. `CropMath`는 EXIF 정규화 원본 좌표의 focus를 사용자 90도 회전·좌우 반전 뒤 좌표로 변환하고, `baseScale × zoom`과 허용 focus 범위를 계산해 빈 가장자리를 막는다. 중립 crop은 기존 중앙 aspect-fill과 같은 연산 순서를 유지한다.
+[RenderSnapshot](../app/src/main/java/com/pocket4cut/frame/RenderSnapshot.kt)은 저장된 한 revision에서 선택 순서, 실제 파일, photo ID별 보정·crop, 프레임·문구·날짜와 occasion ID/디자인 버전을 고정한다. `CropMath`는 EXIF 정규화 원본 좌표의 focus를 사용자 90도 회전·좌우 반전 뒤 좌표로 변환하고, `baseScale × zoom`과 허용 focus 범위를 계산해 빈 가장자리를 막는다. 중립 crop은 기존 중앙 aspect-fill과 같은 연산 순서를 유지한다.
 
 최종 렌더에서 `CollageRenderer.slotImageProvider`는 각 출력 슬롯의 실제 크기를 받는다. 중립이 아닌 crop은 `CropMath.visibleSourceRect()`로 EXIF 정규화 원본의 표시 영역을 먼저 구하고 JPEG·PNG·정적 WebP는 그 영역만 region decode한다. 이후 사용자 회전·반전과 필터·색 보정을 적용하고, 이미 자른 Bitmap은 중립 transform으로 그린다. HEIF/HEIC처럼 region decode 대상이 아닌 형식이거나 decoder가 실패하면 원본 전체를 6MP 상한으로 sampled decode한 뒤 기존 crop transform을 적용한다. 중립 crop도 기존 픽셀 호환을 위해 이 전체 decode 경로를 사용한다. provider가 반환한 Bitmap은 해당 슬롯을 그린 뒤 회수하며 UI가 보유한 preview Bitmap과 수명을 공유하지 않는다.
 
-[CollagePreview](../app/src/main/java/com/pocket4cut/frame/CollagePreview.kt)는 Compose Canvas에서 최종 출력과 같은 [CollageRenderer.drawScene](../app/src/main/java/com/pocket4cut/frame/CollageRenderer.kt), 슬롯 기하와 `CropMath`를 호출한다. 따라서 선택 순서·슬롯·focus·zoom·회전·반전과 배경 → 사진 → 외곽·슬롯 테두리 → 계절 장식 → 브랜드·문구·날짜 → 사용자 장식 순서를 공유한다. 미리보기는 화면 크기의 축소 Bitmap, 최종 출력은 슬롯 크기를 알고 원본에서 디코드한 Bitmap을 사용한다. 공통 장면·crop 계약은 유지하지만 해상도가 다르므로 모든 픽셀이 완전히 같다는 의미는 아니다.
+[CollagePreview](../app/src/main/java/com/pocket4cut/frame/CollagePreview.kt)는 Compose Canvas에서 최종 출력과 같은 [CollageRenderer.drawScene](../app/src/main/java/com/pocket4cut/frame/CollageRenderer.kt), 슬롯 기하와 `CropMath`를 호출한다. 따라서 선택 순서·슬롯·focus·zoom·회전·반전과 배경 → 사진 → 외곽·슬롯 테두리 → 계절/occasion 장식·제목 → 브랜드·문구·날짜 → 사용자 장식 순서를 공유한다. 미리보기는 화면 크기의 축소 Bitmap, 최종 출력은 슬롯 크기를 알고 원본에서 디코드한 Bitmap을 사용한다. 공통 장면·crop 계약은 유지하지만 해상도가 다르므로 모든 픽셀이 완전히 같다는 의미는 아니다.
 
 2026-09-22 Paper Seasons 변경은 위 기준 커밋 이후의 계절 자산 교체다. `SeasonalStickerArt`가 번들 RGBA atlas(시즌당 1536×1024)를 IO에서 읽고 최대 2개를 캐시한다. 캐시 이탈 시 UI가 보유한 Bitmap을 recycle하지 않는다. 미리보기는 시즌별 비동기 로딩·오류/재시도를 사용하고, 최종 렌더는 스냅샷의 시즌을 먼저 로드하여 같은 `Input.seasonalArt`로 전달한다. 사진·브랜드·문구 영역을 제외하는 동일한 배치 함수를 사용한다. 저장된 `sourceSeason` 및 layoutVersion은 유지하고 레이아웃 선택·프레임 선택·일반 편집에서도 기존 배치 버전을 전달한다. 이번 변경의 실행 검증은 WORKLOG의 Paper Seasons 항목을 따른다.
+
+Everyday Editions는 [OccasionCatalog](../app/src/main/java/com/pocket4cut/frame/occasion/OccasionCatalog.kt)가 `assets/occasion/v1/catalog.json`을 엄격히 읽고, [OccasionArtwork](../app/src/main/java/com/pocket4cut/frame/rendering/OccasionArtwork.kt)가 선택한 1536×1024 알파 WebP만 `inScaled=false`, ARGB_8888로 디코드한다. LRU는 2장으로 제한하며 UI가 참조할 수 있어 이탈 Bitmap을 직접 recycle하지 않는다. 목록은 별도 240×160 썸네일을 사용한다. [OccasionFramePainter](../app/src/main/java/com/pocket4cut/frame/rendering/OccasionFramePainter.kt)는 종이색·패턴, 사진 테두리, header/side/gutter/footer 장식과 제목을 현재 Canvas 기하에 그린다. 미리보기와 원본 기반 최종 저장은 같은 `CollageRenderer.Input.occasionTheme/occasionArtwork`와 painter를 사용한다. 622,173,556 bytes의 완성 PNG 1,584장은 앱에 포함하지 않는다.
 
 일반 편집의 필터 전환은 전체 사진 Bitmap을 매번 복제하지 않고 `orderedImages`와 `filterId`를 공통 Canvas에 전달한다. 필터 칩의 작은 thumbnail만 별도로 생성한다. 커스텀 장식의 화면 배치는 좌상단 기준 정규화 좌표에 맞췄으나 편집기의 장식 텍스트 표시와 최종 Canvas 텍스트 줄바꿈은 아직 별도 경로다.
 
@@ -197,7 +205,7 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 
 ## 7. 테스트와 남은 경계
 
-JVM 테스트는 기존 기본 검사 외에 crop 회전/반전 좌표·역변환·clamp/no-blank·neutral 호환과 Photo Picker 초과/중복 정책을 다룬다. 계측 소스에는 패키지·Bitmap 수명, 렌더 계약, 출력 치수/버전별 6컷, revision·손상 복구·legacy 이전·삭제 소유권·export 직렬화에 더해 schema v1→v2, import 형식/해시/재생/격리, crop renderer, PhotoImport 접근성, FileProvider 노출 범위 검사가 있다. 소스의 테스트 존재와 특정 실행의 통과 결과는 구분한다.
+JVM 테스트는 기존 기본 검사 외에 crop 회전/반전 좌표·역변환·clamp/no-blank·neutral 호환, Photo Picker 초과/중복 정책과 occasion 선택 계약을 다룬다. 계측 소스에는 패키지·Bitmap 수명, 렌더 계약, 출력 치수/버전별 6컷, revision·손상 복구·legacy 이전·삭제 소유권·export 직렬화에 더해 schema v1/v2/v3, import 형식/해시/재생/격리, crop renderer, PhotoImport 접근성, FileProvider 노출 범위, occasion 카탈로그 88종·선택 UI·1,584 렌더 조합 검사가 있다. 소스의 테스트 존재와 특정 실행의 통과 결과는 구분한다.
 
 [Android CI](../.github/workflows/android-ci.yml)는 PR·main push·수동 실행에서 debug 빌드, JVM 테스트, Lint, qaRelease 빌드를 정의하고 API 28/36 emulator 계측 작업을 포함한다. workflow 추가만으로 원격 CI 실행 성공을 주장하지 않는다. [Pages workflow](../.github/workflows/github-pages.yml)는 여전히 `docs/` 전체를 공개 배포한다.
 
@@ -208,6 +216,7 @@ JVM 테스트는 기존 기본 검사 외에 crop 회전/반전 좌표·역변�
 - 복구 필요 상태의 원인별 사용자 복구 흐름과 MediaStore의 모든 장애 주입 테스트는 후속 과제다.
 - 출력 해상도 상한은 전체 앱 메모리 사용량 상한이 아니다. 최종 Bitmap, 처리 중 슬롯, 화면 Bitmap의 동시 메모리를 별도로 측정해야 한다.
 - 현재 layoutVersion은 있으나 모든 결과에 독립적인 renderer 버전·콘텐츠 해시·설치 ID가 기록되는 스키마는 아니다.
+- occasion 자산 생성기의 88개 파일/알파/해시/품질 검증과 Android 계측 소스가 있어도, 전체 88종을 실제 기기에서 선택·저장·재열기하고 저메모리·빠른 전환·TalkBack까지 확인하기 전에는 실기기 검증 완료로 표시하지 않는다.
 - `domain.repository.SessionRepository`, placeholder UseCase, 이전 `CollageFinalize`와 `FileImageStorage.saveResult`는 남아 있다. 이전 helper를 활성 저장 계약으로 오인하여 재사용하지 않는다.
 - 개인정보 문구·사용자 안내와 실제 백업/삭제 범위의 일치, release/R8, 물리 카메라와 접근성은 각 변경의 검증 기록으로 확인한다.
 

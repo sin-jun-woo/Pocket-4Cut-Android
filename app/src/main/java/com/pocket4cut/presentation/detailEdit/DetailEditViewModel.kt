@@ -2,12 +2,8 @@ package com.pocket4cut.presentation.detailEdit
 
 import android.app.Application
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.ColorMatrixColorFilter
-import android.graphics.Paint
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.pocket4cut.core.util.BitmapAdjustments
 import com.pocket4cut.core.util.BitmapDecoding
 import com.pocket4cut.data.local.SessionDocumentRepository
 import com.pocket4cut.data.storage.FileImageStorage
@@ -20,7 +16,6 @@ import com.pocket4cut.frame.CollageRenderer
 import com.pocket4cut.frame.CropMath
 import com.pocket4cut.frame.CropRect
 import com.pocket4cut.frame.CustomFrameDesign
-import com.pocket4cut.frame.FilterDefs
 import com.pocket4cut.frame.FilterId
 import com.pocket4cut.frame.FrameCatalog
 import com.pocket4cut.frame.FrameColor
@@ -31,6 +26,10 @@ import com.pocket4cut.frame.FrameStyle
 import com.pocket4cut.frame.FrameTheme
 import com.pocket4cut.frame.RenderSnapshot
 import com.pocket4cut.frame.PhotoCropTransform
+import com.pocket4cut.frame.PhotoEditPipeline
+import com.pocket4cut.frame.occasion.OccasionCatalogContract
+import com.pocket4cut.frame.occasion.OccasionCatalogLoader
+import com.pocket4cut.frame.rendering.OccasionArtwork
 import com.pocket4cut.presentation.navigation.FrameType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -266,6 +265,22 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
                 val seasonalArt = snapshot.customFrameDesign?.resolvedSeason?.let {
                     com.pocket4cut.frame.rendering.SeasonalStickerArt.load(getApplication(), it)
                 }
+                val resolvedOccasion = snapshot.occasionThemeId?.let { occasionId ->
+                    check(snapshot.occasionDesignVersion == OccasionCatalogContract.SESSION_DESIGN_VERSION) {
+                        "지원하지 않는 기념일 프레임 버전입니다."
+                    }
+                    OccasionCatalogLoader.load(getApplication()).theme(occasionId)
+                        ?: error("기념일 프레임을 찾을 수 없습니다: $occasionId")
+                }
+                val occasionArtwork = resolvedOccasion?.let { selected ->
+                    OccasionArtwork.load(
+                        context = getApplication(),
+                        themeId = selected.id,
+                        assetPath = selected.atlas.assetPath,
+                        expectedWidth = selected.atlas.width,
+                        expectedHeight = selected.atlas.height,
+                    )
+                }
                 val input = CollageRenderer.Input(
                     images = emptyList(),
                     slotImageProvider = { index, slotWidth, slotHeight ->
@@ -306,6 +321,8 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
                     context = getApplication(),
                     layoutVersion = snapshot.layoutVersion,
                     seasonalArt = seasonalArt,
+                    occasionTheme = resolvedOccasion,
+                    occasionArtwork = occasionArtwork,
                 )
                 val result = CollageRenderer.render(input)
                 try {
@@ -512,58 +529,16 @@ class DetailEditViewModel(app: Application) : AndroidViewModel(app) {
         adj: PhotoSlotAdjustment,
         filter: FilterId,
         checkCancelled: () -> Unit,
-    ): Bitmap {
-        var bmp = source
-        try {
-            checkCancelled()
-            repeat(adj.quarterTurnsClockwise) {
-                val rotated = BitmapAdjustments.rotate90(bmp)
-                if (rotated !== bmp) bmp.recycle()
-                bmp = rotated
-                checkCancelled()
-            }
-
-            if (adj.isFlippedHorizontally) {
-                val flipped = BitmapAdjustments.flipHorizontal(bmp)
-                if (flipped !== bmp) bmp.recycle()
-                bmp = flipped
-                checkCancelled()
-            }
-
-            FilterDefs.colorFilter(filter)?.let { cf ->
-                val filtered = applyColorFilter(bmp, cf)
-                bmp.recycle()
-                bmp = filtered
-                checkCancelled()
-            }
-
-            if (adj.brightness != 0f || adj.contrast != 1f || adj.saturation != 1f) {
-                val adjusted = BitmapAdjustments.applyColorAdjustments(bmp, adj.brightness, adj.contrast, adj.saturation)
-                if (adjusted !== bmp) bmp.recycle()
-                bmp = adjusted
-                checkCancelled()
-            }
-
-            return bmp
-        } catch (cause: Throwable) {
-            bmp.recycle()
-            throw cause
-        }
-    }
-
-    private fun applyColorFilter(source: Bitmap, colorFilter: ColorMatrixColorFilter): Bitmap {
-        val out = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
-        try {
-            val canvas = Canvas(out)
-            val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-            paint.colorFilter = colorFilter
-            canvas.drawBitmap(source, 0f, 0f, paint)
-            return out
-        } catch (cause: Throwable) {
-            out.recycle()
-            throw cause
-        }
-    }
+    ): Bitmap = PhotoEditPipeline.applyOwned(
+        source = source,
+        quarterTurnsClockwise = adj.quarterTurnsClockwise,
+        flipHorizontal = adj.isFlippedHorizontally,
+        filterId = filter,
+        brightness = adj.brightness,
+        contrast = adj.contrast,
+        saturation = adj.saturation,
+        checkCancelled = checkCancelled,
+    )
 
     override fun onCleared() {
         previewJob?.cancel()

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "title": "Pocket4Cut — Everyday Editions",
+  "title": "Pocket 4Cut — Everyday Editions",
   "created": "2026-09-23",
   "scope": "Static design assets only. App implementation and all tests deferred by user.",
   "categories": [
@@ -146,7 +146,7 @@
       "id": "graduation",
       "name": "졸업",
       "category": "life",
-      "title": "CLASS OF 2026",
+      "title": "GRADUATION DAY",
       "paper": "#F0ECD9",
       "ink": "#244C49",
       "motifs": [
@@ -640,7 +640,7 @@
       "id": "year-end",
       "name": "연말 / 송년",
       "category": "holiday",
-      "title": "GOODBYE 2026",
+      "title": "GOODBYE, OLD YEAR",
       "paper": "#293832",
       "ink": "#E7C78D",
       "motifs": [
@@ -1476,7 +1476,7 @@
       "id": "monthly-memory",
       "name": "월간 기록",
       "category": "memory",
-      "title": "SEPTEMBER 2026",
+      "title": "THIS MONTH",
       "paper": "#EEEBDD",
       "ink": "#6F7756",
       "motifs": [
@@ -1495,7 +1495,7 @@
       "id": "annual-memory",
       "name": "연간 기록",
       "category": "memory",
-      "title": "2026 MEMORIES",
+      "title": "THIS YEAR",
       "paper": "#EBE3D3",
       "ink": "#7B6250",
       "motifs": [
@@ -1552,7 +1552,7 @@
       "id": "this-month",
       "name": "이번 달의 네컷",
       "category": "memory",
-      "title": "SEP 2026",
+      "title": "THIS MONTH",
       "paper": "#F3E9D9",
       "ink": "#B87545",
       "motifs": [
@@ -1571,7 +1571,7 @@
       "id": "this-year",
       "name": "올해의 네컷",
       "category": "memory",
-      "title": "2026 MEMORY",
+      "title": "THIS YEAR",
       "paper": "#253D46",
       "ink": "#E3C99D",
       "motifs": [
@@ -1645,7 +1645,7 @@
     {
       "index": 85,
       "id": "dday",
-      "name": "D-Day 자동 프레임",
+      "name": "D-Day 기록 프레임",
       "category": "custom",
       "title": "COUNTING OUR DAYS",
       "paper": "#F8E5E7",
@@ -1666,7 +1666,7 @@
       "id": "nth-fourcut",
       "name": "N번째 네컷",
       "category": "memory",
-      "title": "OUR 10TH 4CUT",
+      "title": "NTH FOUR CUT",
       "paper": "#EAE7DD",
       "ink": "#476F79",
       "motifs": [

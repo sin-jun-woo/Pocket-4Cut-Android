@@ -59,6 +59,8 @@ internal object SessionDocumentCodec {
             put("layoutId", draft.layoutId)
             put("layoutVersion", draft.layoutVersion)
             put("themeId", draft.themeId)
+            put("occasionThemeId", draft.occasionThemeId ?: JSONObject.NULL)
+            put("occasionDesignVersion", draft.occasionDesignVersion ?: JSONObject.NULL)
             put("frameStep", draft.frameStep)
             put("frameColorId", draft.frameColorId)
             put("backgroundType", draft.backgroundType)
@@ -119,6 +121,11 @@ internal object SessionDocumentCodec {
             }
         }
         val draftJson = json.getJSONObject("draft")
+        if (schemaVersion >= 3 &&
+            (!draftJson.has("occasionThemeId") || !draftJson.has("occasionDesignVersion"))
+        ) {
+            throw IllegalArgumentException("Schema v3 occasion fields are missing")
+        }
         val adjustmentsJson = draftJson.getJSONObject("adjustmentsByPhotoId")
         val adjustments = buildMap {
             val keys = adjustmentsJson.keys()
@@ -148,6 +155,10 @@ internal object SessionDocumentCodec {
             layoutId = draftJson.getString("layoutId"),
             layoutVersion = draftJson.getInt("layoutVersion"),
             themeId = draftJson.optString("themeId", ""),
+            occasionThemeId = if (schemaVersion >= 3) draftJson.nullableString("occasionThemeId") else null,
+            occasionDesignVersion = if (schemaVersion >= 3 && !draftJson.isNull("occasionDesignVersion")) {
+                draftJson.getInt("occasionDesignVersion")
+            } else null,
             frameStep = draftJson.optString("frameStep", "choose"),
             frameColorId = draftJson.getString("frameColorId"),
             backgroundType = draftJson.getString("backgroundType"),
@@ -200,7 +211,7 @@ internal object SessionDocumentCodec {
         }
         val decodedStage = SessionStage.valueOf(json.getString("stage"))
         return SessionDocument(
-            // v1 is upgraded in memory and is atomically written as v2 on its next normal update.
+            // Older schemas are upgraded in memory and atomically written as v3 on the next normal update.
             schemaVersion = CURRENT_SESSION_SCHEMA_VERSION,
             sessionId = json.getString("sessionId"),
             revision = json.getLong("revision"),

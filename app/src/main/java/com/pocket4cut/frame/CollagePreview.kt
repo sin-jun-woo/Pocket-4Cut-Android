@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -27,11 +28,42 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Constraints
 import com.pocket4cut.presentation.navigation.FrameType
+import com.pocket4cut.frame.occasion.OccasionTheme
+import com.pocket4cut.frame.rendering.OccasionArtwork
 import com.pocket4cut.frame.rendering.SeasonalStickerArt
 import com.pocket4cut.ui.designsystem.theme.Season
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
+import kotlinx.coroutines.withContext
 import kotlin.math.min
 import kotlin.math.roundToInt
+
+private const val OCCASION_PREVIEW_DEBOUNCE_MS = 80L
+internal const val OCCASION_PREVIEW_MAX_CONCURRENT_DECODES = 2
+private val occasionPreviewDecodeSemaphore = Semaphore(OCCASION_PREVIEW_MAX_CONCURRENT_DECODES)
+
+internal suspend fun <T> loadOccasionArtworkForPreview(
+    debounceMillis: Long = OCCASION_PREVIEW_DEBOUNCE_MS,
+    loader: () -> Result<T>,
+): Result<T> {
+    if (debounceMillis > 0L) delay(debounceMillis)
+    currentCoroutineContext().ensureActive()
+    val result = occasionPreviewDecodeSemaphore.withPermit {
+        currentCoroutineContext().ensureActive()
+        withContext(Dispatchers.IO) {
+            currentCoroutineContext().ensureActive()
+            loader().also { currentCoroutineContext().ensureActive() }
+        }
+    }
+    currentCoroutineContext().ensureActive()
+    return result
+}
 
 /** The preview uses the same Android Canvas painter, geometry, and layer order as JPEG output. */
 @Composable
@@ -56,18 +88,22 @@ fun CollagePreview(
     captionFontName: String? = null,
     captionColorRGB: Long? = null,
     layoutVersion: Int = 2,
+    occasionTheme: OccasionTheme? = null,
+    onOccasionArtworkReadyChanged: ((themeId: String, ready: Boolean) -> Unit)? = null,
 ) {
     val density = LocalDensity.current
     val context = LocalContext.current
     val requestedSeason = customFrameDesign?.resolvedSeason
-    var artworkRetry by remember(requestedSeason) { mutableIntStateOf(0) }
+    var artworkRetry by remember(requestedSeason, occasionTheme?.id) { mutableIntStateOf(0) }
     val artworkState by produceState<Pair<Season, Result<SeasonalStickerArt.Sheet>>?>(
         initialValue = null, requestedSeason, artworkRetry,
     ) {
         value = null
         if (requestedSeason != null) {
             val result = try {
-                Result.success(SeasonalStickerArt.load(context.applicationContext, requestedSeason))
+                Result.success(withContext(Dispatchers.IO) {
+                    SeasonalStickerArt.load(context.applicationContext, requestedSeason)
+                })
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (error: Exception) {
@@ -78,6 +114,45 @@ fun CollagePreview(
     }
     val artworkResult = artworkState?.takeIf { it.first == requestedSeason }?.second
     val seasonalArt = artworkResult?.getOrNull()
+    val requestedOccasionId = occasionTheme?.id
+    val occasionArtworkState by produceState<Pair<String, Result<OccasionArtwork.Sheet>>?>(
+        initialValue = null,
+        requestedOccasionId,
+        occasionTheme?.atlas?.assetPath,
+        artworkRetry,
+    ) {
+        value = null
+        val requestedTheme = occasionTheme
+        if (requestedTheme != null) {
+            val previewJob = currentCoroutineContext()[Job]
+            val result = try {
+                loadOccasionArtworkForPreview {
+                    OccasionArtwork.loadCatching(
+                        context = context.applicationContext,
+                        themeId = requestedTheme.id,
+                        assetPath = requestedTheme.atlas.assetPath,
+                        expectedWidth = requestedTheme.atlas.width,
+                        expectedHeight = requestedTheme.atlas.height,
+                        canPublish = { previewJob?.isActive != false },
+                    )
+                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                Result.failure(error)
+            }
+            value = requestedTheme.id to result
+        }
+    }
+    val occasionArtworkResult = occasionArtworkState
+        ?.takeIf { it.first == requestedOccasionId }
+        ?.second
+    val occasionArtwork = occasionArtworkResult?.getOrNull()
+    LaunchedEffect(requestedOccasionId, occasionArtworkResult) {
+        requestedOccasionId?.let { id ->
+            onOccasionArtworkReadyChanged?.invoke(id, occasionArtworkResult?.isSuccess == true)
+        }
+    }
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val containerPx = with(density) { maxWidth.toPx() }.coerceAtLeast(1f)
         // bottomCaption reserves geometry and supports legacy callers. A date-only caption
@@ -109,15 +184,20 @@ fun CollagePreview(
             context = context,
             layoutVersion = layoutVersion,
             seasonalArt = seasonalArt,
+            occasionTheme = occasionTheme,
+            occasionArtwork = occasionArtwork,
         )
         val canvasModifier = Modifier
             .width(with(density) { dimensions.canvasWidth.toDp() })
             .height(with(density) { dimensions.canvasHeight.toDp() })
-        if (requestedSeason != null && seasonalArt == null) {
+        val seasonalPending = requestedSeason != null && seasonalArt == null
+        val occasionPending = requestedOccasionId != null && occasionArtwork == null
+        if (seasonalPending || occasionPending) {
             Box(canvasModifier, contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(if (artworkResult?.isFailure == true) "계절 프레임을 불러오지 못했습니다." else "계절 프레임을 불러오는 중입니다.")
-                    if (artworkResult?.isFailure == true) {
+                    val failed = artworkResult?.isFailure == true || occasionArtworkResult?.isFailure == true
+                    Text(if (failed) "프레임을 불러오지 못했습니다." else "프레임을 불러오는 중입니다.")
+                    if (failed) {
                         TextButton(onClick = { artworkRetry++ }) { Text("다시 시도") }
                     }
                 }
@@ -154,6 +234,8 @@ fun CollagePreviewScaledToFit(
     captionFontName: String? = null,
     captionColorRGB: Long? = null,
     layoutVersion: Int = 2,
+    occasionTheme: OccasionTheme? = null,
+    onOccasionArtworkReadyChanged: ((themeId: String, ready: Boolean) -> Unit)? = null,
 ) {
     SubcomposeLayout(modifier = modifier) { constraints ->
         val maxW = constraints.maxWidth
@@ -181,6 +263,8 @@ fun CollagePreviewScaledToFit(
                 captionFontName = captionFontName,
                 captionColorRGB = captionColorRGB,
                 layoutVersion = layoutVersion,
+                occasionTheme = occasionTheme,
+                onOccasionArtworkReadyChanged = onOccasionArtworkReadyChanged,
                 modifier = Modifier.fillMaxWidth(),
             )
         }[0].measure(innerConstraints)

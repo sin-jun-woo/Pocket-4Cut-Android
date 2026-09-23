@@ -13,6 +13,11 @@ import com.pocket4cut.domain.model.SessionDraft
 import com.pocket4cut.domain.model.SessionStage
 import com.pocket4cut.domain.model.inferFrameTypeId
 import com.pocket4cut.frame.FrameLayoutId
+import com.pocket4cut.frame.occasion.OccasionCatalogContract
+import com.pocket4cut.frame.occasion.OccasionCatalogException
+import com.pocket4cut.frame.occasion.OccasionCatalogLoader
+import com.pocket4cut.frame.occasion.OccasionSelectionContract
+import com.pocket4cut.frame.occasion.OccasionSelectionState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,7 +66,12 @@ data class SessionScan(
  * One document per session. All instances share the same process lock; AtomicFile protects an
  * interrupted write, while a validated last-good copy protects against syntactically bad data.
  */
-class SessionDocumentRepository(private val context: Context) {
+class SessionDocumentRepository(
+    private val context: Context,
+    private val occasionThemeIdsProvider: () -> Set<String> = {
+        OccasionCatalogLoader.load(context.applicationContext).themesById.keys
+    },
+) {
     private val documentsDir = File(context.filesDir, "session_documents")
     private val tombstonesDir = File(documentsDir, "tombstones")
     private val hiddenDir = File(documentsDir, "hidden")
@@ -73,6 +83,9 @@ class SessionDocumentRepository(private val context: Context) {
             ?: throw SessionStorageException("App-owned picture storage is unavailable"),
         "Pocket4Cut",
     )
+    private val knownOccasionThemeIds by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+        occasionThemeIdsProvider()
+    }
 
     suspend fun create(document: SessionDocument): SessionDocument = ioLocked {
         validate(document)
@@ -575,10 +588,19 @@ class SessionDocumentRepository(private val context: Context) {
         val latest = runCatching { decodeValidated(id, AtomicFile(main).openRead().use { it.readBytes() }) }
         if (latest.isSuccess) return@ioLocked latest.getOrThrow()
         if (latest.exceptionOrNull() is UnsupportedSessionVersionException) throw latest.exceptionOrNull()!!
+        if (latest.exceptionOrNull() is OccasionCatalogException) throw latest.exceptionOrNull()!!
         val lastGood = lastGoodFile(id)
         if (!atomicExists(lastGood)) throw SessionCorruptException(id, latest.exceptionOrNull())
-        val recovered = try { decodeValidated(id, AtomicFile(lastGood).openRead().use { it.readBytes() }) }
-        catch (cause: Throwable) { throw SessionCorruptException(id, cause) }
+        val recovered = try {
+            decodeValidated(id, AtomicFile(lastGood).openRead().use { it.readBytes() })
+        } catch (cause: UnsupportedSessionVersionException) {
+            throw cause
+        } catch (cause: OccasionCatalogException) {
+            // Leave both files untouched so a later catalog retry can recover this session.
+            throw cause
+        } catch (cause: Throwable) {
+            throw SessionCorruptException(id, cause)
+        }
         val damaged = File(documentsDir, "$id.corrupt.${System.currentTimeMillis()}")
         if (!main.renameTo(damaged)) throw SessionStorageException("Could not preserve damaged session $id")
         try {
@@ -1043,18 +1065,31 @@ class SessionDocumentRepository(private val context: Context) {
             decodeValidated(id, AtomicFile(file).openRead().use { it.readBytes() })
         } catch (cause: UnsupportedSessionVersionException) {
             throw cause
+        } catch (cause: OccasionCatalogException) {
+            // A bundled catalog load failure is retryable app state, not session corruption.
+            throw cause
         } catch (cause: Throwable) {
             val backup = lastGoodFile(id)
             if (!atomicExists(backup)) throw SessionCorruptException(id, cause)
             try {
                 decodeValidated(id, AtomicFile(backup).openRead().use { it.readBytes() })
                     .copy(stage = SessionStage.NEEDS_RECOVERY)
-            } catch (backupCause: Throwable) { throw SessionCorruptException(id, backupCause) }
+            } catch (backupCause: UnsupportedSessionVersionException) {
+                throw backupCause
+            } catch (backupCause: OccasionCatalogException) {
+                // A retryable catalog failure does not make the validated backup corrupt.
+                throw backupCause
+            } catch (backupCause: Throwable) {
+                throw SessionCorruptException(id, backupCause)
+            }
         }
     }
 
     private fun decodeValidated(id: String, bytes: ByteArray): SessionDocument {
-        val document = SessionDocumentCodec.decode(bytes.toString(StandardCharsets.UTF_8))
+        val decoded = SessionDocumentCodec.decode(bytes.toString(StandardCharsets.UTF_8))
+        val document = if (decoded.stage != SessionStage.NEEDS_RECOVERY && needsOccasionRecovery(decoded)) {
+            decoded.copy(stage = SessionStage.NEEDS_RECOVERY)
+        } else decoded
         if (document.sessionId != id) throw SessionCorruptException(id)
         validate(document)
         return document
@@ -1152,7 +1187,10 @@ class SessionDocumentRepository(private val context: Context) {
             !knownPhotos.containsAll(document.draft.selectedPhotoIdsInOrder) ||
             !knownPhotos.containsAll(document.draft.adjustmentsByPhotoId.keys) ||
             document.draft.layoutVersion < 1 || document.draft.frameStep !in
-                setOf("choose", "color", "season", "custom") || !document.draft.textFontSize.isFinite() ||
+                setOf("choose", "color", "season", "custom", "occasion") ||
+            document.draft.backgroundType !in setOf("solid", "season", "occasion") ||
+            (document.stage != SessionStage.NEEDS_RECOVERY && needsOccasionRecovery(document)) ||
+            !document.draft.textFontSize.isFinite() ||
             !document.draft.dateFontSize.isFinite() || document.draft.adjustmentsByPhotoId.values.any {
                 !it.brightness.isFinite() || !it.contrast.isFinite() || !it.saturation.isFinite() ||
                     !it.crop.focusX.isFinite() || it.crop.focusX !in 0f..1f ||
@@ -1160,6 +1198,25 @@ class SessionDocumentRepository(private val context: Context) {
                     !it.crop.zoom.isFinite() || it.crop.zoom !in 1f..4f
             }
         ) throw SessionCorruptException(document.sessionId)
+    }
+
+    /**
+     * Occasion data is never guessed or silently replaced. A document read with a missing,
+     * inconsistent, newer, or unknown occasion selection is surfaced as NEEDS_RECOVERY.
+     */
+    private fun needsOccasionRecovery(document: SessionDocument): Boolean {
+        val draft = document.draft
+        val knownIds = if (draft.backgroundType == "occasion" || draft.occasionThemeId != null ||
+            draft.occasionDesignVersion != null
+        ) knownOccasionThemeIds else emptySet()
+        return OccasionSelectionContract.evaluate(
+            backgroundType = draft.backgroundType,
+            themeId = draft.occasionThemeId,
+            designVersion = draft.occasionDesignVersion,
+            knownThemeIds = knownIds,
+            seasonId = draft.seasonId,
+            customDesignJson = draft.customDesignJson,
+        ) == OccasionSelectionState.NEEDS_RECOVERY
     }
 
     private fun documentFile(id: String): File { validateId(id); return File(documentsDir, "$id.json") }

@@ -12,12 +12,15 @@ import androidx.lifecycle.ViewModelStore
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.pocket4cut.core.util.BitmapDecoding
+import com.pocket4cut.core.util.BitmapAdjustments
 import com.pocket4cut.frame.CollageLayoutMath
 import com.pocket4cut.frame.FilterId
+import com.pocket4cut.frame.FilterDefs
 import com.pocket4cut.frame.FrameCatalog
 import com.pocket4cut.frame.FrameColors
 import com.pocket4cut.frame.FrameLayoutId
 import com.pocket4cut.frame.FrameLayouts
+import com.pocket4cut.frame.PhotoEditPipeline
 import com.pocket4cut.frame.rendering.SeasonalStickerArt
 import com.pocket4cut.presentation.detailEdit.DetailEditViewModel
 import com.pocket4cut.presentation.navigation.FrameType
@@ -37,6 +40,48 @@ import kotlin.math.roundToInt
 class BitmapPipelineInstrumentedTest {
     private val instrumentation = InstrumentationRegistry.getInstrumentation()
     private val app = instrumentation.targetContext.applicationContext as Application
+
+    @Test
+    fun sharedPhotoPipelineAppliesFilterBeforePerPhotoColorAdjustments() {
+        val source = Bitmap.createBitmap(16, 16, Bitmap.Config.ARGB_8888)
+        for (y in 0 until source.height) for (x in 0 until source.width) {
+            source.setPixel(x, y, Color.rgb(30 + x * 10, 20 + y * 9, 220 - x * 5))
+        }
+        fun applyFilter(input: Bitmap): Bitmap = Bitmap.createBitmap(
+            input.width,
+            input.height,
+            Bitmap.Config.ARGB_8888,
+        ).apply {
+            Canvas(this).drawBitmap(input, 0f, 0f, Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                colorFilter = requireNotNull(FilterDefs.colorFilter(FilterId.FILM))
+            })
+        }
+
+        val filtered = applyFilter(source)
+        val expected = BitmapAdjustments.applyColorAdjustments(filtered, 0.2f, 1.25f, 0.7f)
+        filtered.recycle()
+        val reverseAdjusted = BitmapAdjustments.applyColorAdjustments(source, 0.2f, 1.25f, 0.7f)
+        val reversed = applyFilter(reverseAdjusted)
+        reverseAdjusted.recycle()
+        val actual = PhotoEditPipeline.applyOwned(
+            source = source.copy(Bitmap.Config.ARGB_8888, false),
+            quarterTurnsClockwise = 0,
+            flipHorizontal = false,
+            filterId = FilterId.FILM,
+            brightness = 0.2f,
+            contrast = 1.25f,
+            saturation = 0.7f,
+        )
+        try {
+            assertTrue("Shared pipeline differs from filter then adjustment", expected.sameAs(actual))
+            assertTrue("Fixture does not detect reversed operation order", !reversed.sameAs(actual))
+        } finally {
+            source.recycle()
+            expected.recycle()
+            reversed.recycle()
+            actual.recycle()
+        }
+    }
 
     @Test
     fun allExifOrientationsPreserveTheExpectedPixelPositions() {

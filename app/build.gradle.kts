@@ -106,3 +106,25 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
+
+// The occasion exporter publishes many files. If it is interrupted, its durable marker must
+// block every APK/AAB asset merge until the exporter completes and validates the whole set.
+val verifyOccasionAssetExportComplete = tasks.register("verifyOccasionAssetExportComplete") {
+    val incompleteMarker = layout.projectDirectory.file(
+        "src/main/assets/occasion/v1/.export-incomplete"
+    )
+    outputs.upToDateWhen { false }
+    doLast {
+        check(!incompleteMarker.asFile.exists()) {
+            "Everyday Editions runtime export is incomplete. Re-run " +
+                "`npm run export:android` from " +
+                "design/occasion-frames/everyday-editions-v1/source before building."
+        }
+    }
+}
+
+tasks.matching { task ->
+    task.name.startsWith("merge") && task.name.endsWith("Assets")
+}.configureEach {
+    dependsOn(verifyOccasionAssetExportComplete)
+}

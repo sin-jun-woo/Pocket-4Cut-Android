@@ -18,6 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.pocket4cut.core.util.AppFontCatalog
 import com.pocket4cut.core.util.ColorRGB
+import com.pocket4cut.frame.occasion.OccasionTheme
+import com.pocket4cut.frame.rendering.OccasionArtwork
+import com.pocket4cut.frame.rendering.OccasionFramePainter
 import com.pocket4cut.frame.rendering.SeasonalStickerArt
 import com.pocket4cut.ui.designsystem.theme.Season
 import kotlin.math.min
@@ -58,6 +61,8 @@ object CollageRenderer {
         val context: Context? = null,
         val layoutVersion: Int = 2,
         val seasonalArt: SeasonalStickerArt.Sheet? = null,
+        val occasionTheme: OccasionTheme? = null,
+        val occasionArtwork: OccasionArtwork.Sheet? = null,
     )
 
     fun render(input: Input): Bitmap {
@@ -120,14 +125,24 @@ object CollageRenderer {
     /** Both Compose preview and JPEG export draw the same scene and layer order. */
     fun drawScene(canvas: Canvas, input: Input, layout: CollageLayoutDimensions) {
         val seasonHTML = input.customFrameDesign?.resolvedSeason
+        val occasionTheme = input.occasionTheme
+        require(seasonHTML == null || occasionTheme == null) {
+            "Season and occasion frames cannot be rendered together"
+        }
         val seasonalArt = seasonHTML?.let { season ->
             requireNotNull(input.seasonalArt?.takeIf { it.season == season }) {
                 "Season artwork must be loaded before drawing $season"
             }
         }
+        val occasionArtwork = occasionTheme?.let { theme ->
+            requireNotNull(input.occasionArtwork?.takeIf { it.themeId == theme.id }) {
+                "Occasion artwork must be loaded before drawing ${theme.id}"
+            }
+        }
         val useSeasonBackdrop = seasonHTML != null && input.overrideBackgroundImage == null
+        val useOccasionBackdrop = occasionTheme != null
 
-        val outerCorner = if (useSeasonBackdrop) 0f else input.theme.cornerRadius * layout.scale
+        val outerCorner = if (useSeasonBackdrop || useOccasionBackdrop) 0f else input.theme.cornerRadius * layout.scale
         val canvasRect = RectF(0f, 0f, layout.canvasWidth, layout.canvasHeight)
 
         // 1. Background
@@ -136,7 +151,9 @@ object CollageRenderer {
             val path = Path().apply { addRoundRect(canvasRect, outerCorner, outerCorner, Path.Direction.CW) }
             canvas.clipPath(path)
         }
-        if (input.overrideBackgroundImage != null) {
+        if (occasionTheme != null) {
+            OccasionFramePainter.drawBackdrop(canvas, layout, occasionTheme)
+        } else if (input.overrideBackgroundImage != null) {
             drawAspectFill(canvas, input.overrideBackgroundImage, canvasRect, Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG))
         } else if (seasonHTML != null) {
             SeasonHTMLFrameStyle.drawHTMLBackdrop(seasonHTML, canvas, layout.canvasWidth, layout.canvasHeight)
@@ -197,15 +214,15 @@ object CollageRenderer {
         }
 
         // 3. Outer border and season cell borders remain visible above photos.
-        val borderColor = if (seasonHTML != null) {
-            (0xFF000000 or SeasonHTMLFrameStyle.outerStrokeHex(seasonHTML)).toInt()
-        } else {
-            input.theme.border.toArgb()
+        val borderColor = when {
+            occasionTheme != null -> occasionTheme.inkColorArgb
+            seasonHTML != null -> (0xFF000000 or SeasonHTMLFrameStyle.outerStrokeHex(seasonHTML)).toInt()
+            else -> input.theme.border.toArgb()
         }
-        val borderW = if (seasonHTML != null) {
-            SeasonHTMLFrameStyle.outerBorderWidthPoints(seasonHTML) * layout.scale
-        } else {
-            input.theme.borderWidth * layout.scale
+        val borderW = when {
+            occasionTheme != null -> 0f
+            seasonHTML != null -> SeasonHTMLFrameStyle.outerBorderWidthPoints(seasonHTML) * layout.scale
+            else -> input.theme.borderWidth * layout.scale
         }
         if (borderW > 0f) {
             val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -224,25 +241,38 @@ object CollageRenderer {
                 strokeSeasonCellBorder(canvas, cell, seasonHTML, layout.scale)
             }
         }
+        occasionTheme?.let { OccasionFramePainter.drawPhotoBorders(canvas, layout, it) }
 
         // 4. Generated print illustrations, placed in the real layout's free margins.
         seasonalArt?.let { SeasonalStickerArt.draw(canvas, it, layout) }
+        if (occasionTheme != null && occasionArtwork != null) {
+            OccasionFramePainter.drawArtworkAndHeader(
+                canvas = canvas,
+                layout = layout,
+                theme = occasionTheme,
+                artwork = occasionArtwork,
+                context = input.context,
+            )
+        }
 
         // 5. Brand, caption and date
         val effectiveBgColor = when {
+            occasionTheme != null -> Color(occasionTheme.paperColorArgb)
             seasonHTML != null -> Color((0xFF000000 or SeasonHTMLFrameStyle.baseHex(seasonHTML)).toInt())
             input.overrideBackground != null -> input.overrideBackground
             input.customFrameDesign != null -> input.customFrameDesign.resolvedFillColor
             else -> input.theme.background
         }
-        drawBrandTitle(
-            canvas = canvas,
-            scale = layout.scale,
-            headerArea = layout.headerArea,
-            bgColor = effectiveBgColor,
-            hasBackgroundImage = input.overrideBackgroundImage != null,
-            isSeason = seasonHTML != null,
-        )
+        if (occasionTheme == null) {
+            drawBrandTitle(
+                canvas = canvas,
+                scale = layout.scale,
+                headerArea = layout.headerArea,
+                bgColor = effectiveBgColor,
+                hasBackgroundImage = input.overrideBackgroundImage != null,
+                isSeason = seasonHTML != null,
+            )
+        }
         layout.textArea?.let { textArea ->
             drawOverlayText(canvas, textArea, layout.scale, effectiveBgColor, input)
         }

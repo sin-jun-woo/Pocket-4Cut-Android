@@ -1,4 +1,4 @@
-Pocket4Cut — Everyday Editions
+Pocket 4Cut — Everyday Editions
 기념일 77종 + 특수 프레임 11종 / 88개 주제
 
 이번 전달물은 프레임 이미지 디자인입니다. 앱에 적용된 업데이트가 아닙니다.

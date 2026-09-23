@@ -2,13 +2,13 @@
 
 Android에서 직접 촬영하거나 시스템 사진 선택 도구로 고른 사진을 2·4·6컷 콜라주로 편집하고 저장·공유하는 앱입니다. Kotlin, Jetpack Compose, CameraX를 사용합니다.
 
-이 문서는 **2026-09-24 현재 작업 트리**를 기준으로 2026-09-22 신뢰성 개편·Paper Seasons·출시 준비 변경과 앨범 가져오기·사진별 비파괴 자르기 구현을 반영합니다. 구현된 경로와 검증 완료 범위는 다릅니다. 실행한 검사·남은 문제·커밋 기준은 [작업 기록](docs/WORKLOG.md)과 `engineering/`의 해당 검증 보고서를 확인하세요. 초기 기획 문서의 기술 스택이나 일정은 현재 구현의 근거가 아닙니다.
+이 문서는 **2026-09-24 현재 작업 트리**를 기준으로 2026-09-22 신뢰성 개편·Paper Seasons·출시 준비 변경, 앨범 가져오기·사진별 비파괴 자르기와 Everyday Editions 88종 런타임 통합을 반영합니다. 구현된 경로와 검증 완료 범위는 다릅니다. 실행한 검사·남은 문제·커밋 기준은 [작업 기록](docs/WORKLOG.md)과 `engineering/`의 해당 검증 보고서를 확인하세요. 초기 기획 문서의 기술 스택이나 일정은 현재 구현의 근거가 아닙니다.
 
 ## 앱 사용 흐름
 
 1. 홈에서 `카메라로 촬영` 또는 `앨범에서 만들기`를 고르고 2·4·6컷을 선택합니다.
 2. 카메라는 각각 4·8·10장을 촬영한 뒤 2·4·6장을 고릅니다. 앨범은 시스템 Photo Picker에서 완성에 필요한 2·4·6장만 가져와 앱 안에서 순서를 확인합니다.
-3. 레이아웃과 색상·계절·커스텀 프레임을 고릅니다.
+3. 레이아웃과 색상·계절·`OCCASION 88`·커스텀 프레임을 고릅니다. `OCCASION 88`은 10개 카테고리의 88종을 썸네일과 현재 사진 미리보기로 고릅니다.
 4. 필터, 문구, 날짜, 사진 순서를 편집하고 사진별 회전·반전·밝기·대비·채도와 비파괴 자르기를 조절합니다.
 5. 완성한 JPEG를 작업 보관함에서 열거나 사진첩에 내보내고 Android 공유 시트로 공유합니다.
 
@@ -17,6 +17,8 @@ Android에서 직접 촬영하거나 시스템 사진 선택 도구로 고른 �
 사진별 자르기는 파일을 새로 만들지 않습니다. 실제 프레임 슬롯 안에서 초점을 이동하고 1–4배 확대하는 값을 PhotoId별 편집 데이터로 저장하며, 미리보기와 고해상도 JPEG가 같은 슬롯 기하·crop 계산을 사용합니다. 최종 저장은 각 출력 슬롯 크기에 맞춰 지원 형식의 필요 원본 영역을 우선 decode하고, region decode를 사용할 수 없으면 원본 전체의 안전한 sampled decode로 돌아갑니다.
 
 계절 프레임 4종은 **Paper Seasons** 일러스트 컬렉션으로 새로 구성했습니다. 봄의 벚꽃·튤립, 여름의 바다 소품, 가을의 낙엽·커피, 겨울의 니트·눈꽃을 2·4·6컷 전체 8배치의 실제 여백에 맞춰 그립니다. 기존 계절 ID와 구형 6컷 배치는 유지하며 이미 저장한 사진은 변경하지 않습니다. [프레임 이미지·홍보 자료](design/seasonal-frames/paper-seasons-v1/README.md)와 [자산 제작 기록](docs/IMAGE_ASSET_GUIDE.md)을 참고하세요.
+
+Everyday Editions는 기념일 77종과 `직접 기록` 11종, 총 88종입니다. 직접 기록 프레임은 날씨·위치·D-Day·촬영 횟수를 자동으로 가져오지 않으며 사용자가 기존 문구·날짜 편집에서 직접 기록합니다. 앱은 완성 프레임 PNG 1,584장을 포함하지 않고 `occasion/v1`의 1536×1024 알파 WebP 아틀라스 88개와 240×160 썸네일 88개를 카탈로그와 함께 사용합니다. 미리보기와 최종 JPEG는 같은 Kotlin Canvas painter와 현재 레이아웃 기하를 공유합니다. [정적 디자인 납품](design/occasion-frames/everyday-editions-v1/README.md)과 [런타임 자산 계약](docs/IMAGE_ASSET_GUIDE.md)은 목적이 다릅니다.
 
 카운트다운은 **매 컷마다** 적용하며 기본 3초, 설정 범위는 1–10초입니다. 촬영 처리 뒤 300ms와 다음 컷 전 2초 대기도 있어 실제 셔터 간격은 촬영·파일 처리 시간에 따라 달라집니다. 최초 한 번만 10초를 기다리는 방식은 현재 동작이 아닙니다.
 
@@ -46,11 +48,11 @@ Gradle 모듈은 `:app` 하나이며 `MainActivity`와 Compose Navigation으로 
 
 - [presentation](app/src/main/java/com/pocket4cut/presentation): 화면·ViewModel·내비게이션·화면 사이 작업 인계.
 - [camera](app/src/main/java/com/pocket4cut/camera): CameraX 바인딩과 촬영 콜백.
-- [SessionDocument](app/src/main/java/com/pocket4cut/domain/model/SessionDocument.kt): 입력 방식, 명시적 컷 종류, 사진 ID, 선택 순서, 사진별 보정·crop, 초안·결과·내보내기 모델.
+- [SessionDocument](app/src/main/java/com/pocket4cut/domain/model/SessionDocument.kt): schema v3의 입력 방식, 명시적 컷 종류, 사진 ID, 선택 순서, 사진별 보정·crop, occasion ID/디자인 버전, 초안·결과·내보내기 모델.
 - [SessionDocumentRepository](app/src/main/java/com/pocket4cut/data/local/SessionDocumentRepository.kt): 세션 JSON, revision 검사, 원자적 쓰기·복구, 이전 데이터 가져오기와 삭제.
 - [PhotoImportRepository](app/src/main/java/com/pocket4cut/data/importing/PhotoImportRepository.kt): 선택 URI의 스트리밍 복사·형식/크기/실제 픽셀 decode 검증, import journal의 전역 재생과 PhotoId·경로를 확인하는 제거.
 - [GalleryExporter](app/src/main/java/com/pocket4cut/data/export/GalleryExporter.kt): MediaStore 내보내기와 공유 URI 검증.
-- [frame](app/src/main/java/com/pocket4cut/frame): 배치·필터·스티커, 공통 crop 계산, 미리보기, 렌더 입력 스냅샷, 슬롯별 원본 decode와 최종 Canvas 합성.
+- [frame](app/src/main/java/com/pocket4cut/frame): 배치·필터·스티커, 공통 crop 계산, occasion 카탈로그·아틀라스 painter, 미리보기, 렌더 입력 스냅샷, 슬롯별 원본 decode와 최종 Canvas 합성.
 - [ui/designsystem](app/src/main/java/com/pocket4cut/ui/designsystem), [ui/theme](app/src/main/java/com/pocket4cut/ui/theme): 공통 UI와 실제 MaterialTheme 연결.
 - [core](app/src/main/java/com/pocket4cut/core): Bitmap 처리, 폰트, 파일 URI 등 공통 코드.
 
@@ -93,7 +95,7 @@ java -version
 
 배포 서명은 로컬 `keystore.properties`가 있을 때 구성합니다. 서명 파일·암호·키는 저장소에 추가하지 않습니다. 서명 정보 없이 생성한 결과를 바로 배포 가능한 AAB로 취급하지 마세요.
 
-[계측 테스트](app/src/androidTest/java/com/pocket4cut)는 Bitmap 수명, 렌더 순서·캡션·색상·스티커 계약, 출력 크기·6컷 기하, 세션 revision·복구·이전 데이터·삭제, import 바이트 보존·형식 검증·FileProvider 노출 경계를 다룹니다. [JVM 테스트](app/src/test/java/com/pocket4cut)는 crop 좌표·clamp·neutral 호환과 Photo Picker 선택 정책을 포함합니다. 파일의 존재가 실행·통과를 뜻하지 않으며 계측 통과도 실제 카메라와 전체 UI 검증을 대신하지 않습니다.
+[계측 테스트](app/src/androidTest/java/com/pocket4cut)는 Bitmap 수명, 렌더 순서·캡션·색상·스티커 계약, 출력 크기·6컷 기하, 세션 revision·복구·이전 데이터·삭제, import 바이트 보존·형식 검증·FileProvider 노출 경계와 occasion 카탈로그·선택 UI·렌더 조합을 다룹니다. [JVM 테스트](app/src/test/java/com/pocket4cut)는 crop 좌표·clamp·neutral 호환, Photo Picker 선택 정책과 occasion 세션 계약을 포함합니다. 파일의 존재가 실행·통과를 뜻하지 않으며 계측 통과도 실제 카메라와 전체 UI 검증을 대신하지 않습니다.
 
 `RenderContractDiagnosticTest`는 기본 androidTest에 포함되어 있습니다. 과거 `scripts/device-diagnostics.init.gradle`로 별도 진단 소스를 추가하는 명령과 혼용하지 않습니다.
 

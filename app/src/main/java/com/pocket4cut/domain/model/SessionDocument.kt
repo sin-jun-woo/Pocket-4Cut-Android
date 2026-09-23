@@ -19,7 +19,7 @@ data class SessionDocument(
     val exportOperations: List<ExportOperation> = emptyList(),
 )
 
-const val CURRENT_SESSION_SCHEMA_VERSION = 2
+const val CURRENT_SESSION_SCHEMA_VERSION = 3
 
 enum class InputSource { CAMERA, ALBUM }
 
@@ -63,6 +63,10 @@ data class SessionDraft(
     val layoutId: String = "",
     val layoutVersion: Int = 2,
     val themeId: String = "",
+    /** Stable ID from the bundled occasion catalog. Null for the legacy/basic frame flows. */
+    val occasionThemeId: String? = null,
+    /** Catalog design version used to resolve [occasionThemeId]. */
+    val occasionDesignVersion: Int? = null,
     val frameStep: String = "choose",
     val frameColorId: String = "white",
     val backgroundType: String = "solid",

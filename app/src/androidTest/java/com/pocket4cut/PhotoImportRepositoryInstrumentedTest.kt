@@ -60,7 +60,7 @@ class PhotoImportRepositoryInstrumentedTest {
         testRoot.deleteRecursively()
     }
 
-    @Test fun schemaV1IsStrictlyUpgradedAndWrittenAsV2OnNextUpdate() = runBlocking {
+    @Test fun schemaV1IsStrictlyUpgradedAndWrittenAsCurrentSchemaOnNextUpdate() = runBlocking {
         val id = UUID.randomUUID().toString()
         val photoId = UUID.randomUUID().toString()
         val document = SessionDocument(
@@ -90,9 +90,9 @@ class PhotoImportRepositoryInstrumentedTest {
         assertEquals("2", migrated.frameTypeId)
         assertEquals(InputSource.CAMERA, migrated.inputSource)
         assertEquals(PhotoCrop(), migrated.draft.adjustmentsByPhotoId.getValue(photoId).crop)
-        sessions.update(id, migrated.revision) { it.copy(draft = it.draft.copy(caption = "v2")) }
+        sessions.update(id, migrated.revision) { it.copy(draft = it.draft.copy(caption = "migrated")) }
         val persisted = JSONObject(file.readText())
-        assertEquals(2, persisted.getInt("schemaVersion"))
+        assertEquals(CURRENT_SESSION_SCHEMA_VERSION, persisted.getInt("schemaVersion"))
         assertEquals("2", persisted.getString("frameTypeId"))
     }
 
