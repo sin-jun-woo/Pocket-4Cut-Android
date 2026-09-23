@@ -1,0 +1,918 @@
+{
+  "id": "vacance",
+  "index": 54,
+  "name": "바캉스",
+  "category": "travel",
+  "group": "occasion",
+  "masterSha256": "3ef186211e3538fb0c75e9435229d58765cd050c6aa0513445bfaef2cd5641df",
+  "rendererSha256": "a87e39e77137bff50234a85ad75eae98afd621c57f3a350675c274cdfb13cab0",
+  "geometrySha256": "8766e01f0b4f8ea5694437f3b0d20dd80c1b72cf5173fd3d407df7a5675993c5",
+  "method": "Static composition from generated art and saved Android slot coordinates; not Android execution.",
+  "count": 18,
+  "overview": "overviews/vacance.jpg",
+  "files": [
+    {
+      "path": "frames/travel/54-vacance/two_vertical.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 1248,
+      "height": 3179,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null,
+      "bytes": 181094,
+      "sha256": "2f5232d43399fded38f3ec48b63db77523117a59d415999e05a09b60c0912b15"
+    },
+    {
+      "path": "frames/travel/54-vacance/two_vertical_caption.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 1248,
+      "height": 3307,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": [
+        0,
+        3066.6667,
+        1248,
+        3306.6667
+      ],
+      "bytes": 237881,
+      "sha256": "e460c76da6683fb235d0b0324229b572372afeb91b58f56c178a80786888fdc2"
+    },
+    {
+      "path": "frames/travel/54-vacance/two_horizontal.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 1878,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 326299,
+      "sha256": "d2628ce2c3096d29f407f9176acfea8d1002b9156731250319c49095381c1fdc"
+    },
+    {
+      "path": "frames/travel/54-vacance/two_horizontal_caption.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 2119,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        1757.4786,
+        2350,
+        2119.017
+      ],
+      "bytes": 470201,
+      "sha256": "b15482f376fdc8cfab86caf15e762a51ace256cbb57e0b971fbee37ff67901c6"
+    },
+    {
+      "path": "frames/travel/54-vacance/four_vertical.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 1650,
+      "height": 4920,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null,
+      "bytes": 219698,
+      "sha256": "e2e382a41b119e5a3ded3f125776c79e9746c3b4284b4fbf492babe1968da5aa"
+    },
+    {
+      "path": "frames/travel/54-vacance/four_vertical_caption.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 1650,
+      "height": 4920,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1341.0576
+        ],
+        [
+          84.61539,
+          1383.3654,
+          1565.3846,
+          2449.4229
+        ],
+        [
+          84.61539,
+          2491.7307,
+          1565.3846,
+          3557.7883
+        ],
+        [
+          84.61539,
+          3600.0962,
+          1565.3846,
+          4666.154
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": [
+        0,
+        4666.154,
+        1650,
+        4920
+      ],
+      "bytes": 297131,
+      "sha256": "e3e1cd6b2b464b9fce3a1c3ce13cf897e8dbb27cb655ba1b487d0595fd5c8b93"
+    },
+    {
+      "path": "frames/travel/54-vacance/four_grid.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 3304,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 344980,
+      "sha256": "95abcfc12411a5a51eb4ed9b9adcb79a9b1a05053299e621c1cc6f4fc816658a"
+    },
+    {
+      "path": "frames/travel/54-vacance/four_grid_caption.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 3545,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        3183.5469,
+        2350,
+        3545.0854
+      ],
+      "bytes": 488726,
+      "sha256": "ea6fa2628128e4c55802888967d8df2e6a994dcbd97dd479bac33142f00b0939"
+    },
+    {
+      "path": "frames/travel/54-vacance/four_horizontal.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 4992,
+      "height": 2453,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null,
+      "bytes": 1060218,
+      "sha256": "fd4dda2afcda066e6c83a3c8d9114a1dcdb8be2551771e074a5017187403d8ce"
+    },
+    {
+      "path": "frames/travel/54-vacance/four_horizontal_caption.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 4992,
+      "height": 2965,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": [
+        0,
+        2197.3335,
+        4992,
+        2965.3335
+      ],
+      "bytes": 1556266,
+      "sha256": "5993465a0d6ab46a848d5a48fff04b4c55609a866d340cc0ef5ef9054b8ef304"
+    },
+    {
+      "path": "frames/travel/54-vacance/six_grid_2x3.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 4730,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 363079,
+      "sha256": "70d11ae3b790b5f07fc1f7673658c65523cdb92dad01b18de49188ab85714c28"
+    },
+    {
+      "path": "frames/travel/54-vacance/six_grid_2x3_caption.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 4971,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        4609.615,
+        2350,
+        4971.1533
+      ],
+      "bytes": 506762,
+      "sha256": "99b75644fd5b69eddc94d9c4691d0cc1b358bb23167bc2e27dfecf1d3f6b7e15"
+    },
+    {
+      "path": "frames/travel/54-vacance/six_grid_3x2.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 3631,
+      "height": 3615,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null,
+      "bytes": 677390,
+      "sha256": "9a58cd3a50a5f0471e5b6e254ebc38a0b7d21df38ed7db09dc9f2178414326b5"
+    },
+    {
+      "path": "frames/travel/54-vacance/six_grid_3x2_caption.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 3631,
+      "height": 3988,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ],
+      "bytes": 971314,
+      "sha256": "1bed53094df0eaf12e8072a125cad7f788d0912d77b7159d39bb2b4101afd3d9"
+    },
+    {
+      "path": "frames/travel/54-vacance/six_collage.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 3383,
+      "height": 4728,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null,
+      "bytes": 364487,
+      "sha256": "b21788b86772f62085d665abfd72ba88fd0fad3a7e594e31d32eb3286d391ba9"
+    },
+    {
+      "path": "frames/travel/54-vacance/six_collage_caption.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 3265,
+      "height": 4898,
+      "photoSlots": [
+        [
+          167.4359,
+          334.8718,
+          2092.9485,
+          2874.3164
+        ],
+        [
+          2176.6665,
+          334.8718,
+          3097.564,
+          1562.7351
+        ],
+        [
+          2176.6665,
+          1646.453,
+          3097.564,
+          2874.3164
+        ],
+        [
+          167.4359,
+          2958.0344,
+          1088.3333,
+          4185.8975
+        ],
+        [
+          1172.0511,
+          2958.0344,
+          2092.9485,
+          4185.8975
+        ],
+        [
+          2176.6665,
+          2958.0344,
+          3097.564,
+          4185.8975
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3265,
+        334.8718
+      ],
+      "captionArea": [
+        0,
+        4395.1924,
+        3265,
+        4897.5
+      ],
+      "bytes": 590085,
+      "sha256": "9328407cb30b22242a978f882e3855edd4762b3bb5cc5c57f438cf1553fe80b7"
+    },
+    {
+      "path": "frames/travel/54-vacance/six_collage_legacy.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "captionBand": false,
+      "width": 3631,
+      "height": 3615,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null,
+      "bytes": 677390,
+      "sha256": "9a58cd3a50a5f0471e5b6e254ebc38a0b7d21df38ed7db09dc9f2178414326b5"
+    },
+    {
+      "path": "frames/travel/54-vacance/six_collage_legacy_caption.png",
+      "themeId": "vacance",
+      "category": "travel",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "captionBand": true,
+      "width": 3631,
+      "height": 3988,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ],
+      "bytes": 971314,
+      "sha256": "1bed53094df0eaf12e8072a125cad7f788d0912d77b7159d39bb2b4101afd3d9"
+    }
+  ]
+}

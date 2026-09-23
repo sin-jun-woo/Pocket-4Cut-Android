@@ -1,0 +1,11 @@
+{
+  "themeIndex": 86,
+  "themeId": "nth-fourcut",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 86: N번째 네컷 (nth-fourcut). Palette: faded paper #EAE7DD, teal #476F79, cream, warm gold and rust. EXACT six motifs in reading order: 1. stack of three blank instant photographs; 2. teal retro camera; 3. cream numbered-ticket shape without numerals; 4. golden laurel twig; 5. rust ribbon; 6. blue ink stamp without letters. Photo collection counter stationery, quiet analog numbering concept with ALL textareas left blank. No numerals/letters anywhere; ticketandstampblank. Sixseparatecomplete3x2motifswith70pxtransparentgutters.",
+  "sourceGeneratedFilename": "exec-5d280514-1b24-4127-968e-b09b11cf6762.png",
+  "master": "source/masters/nth-fourcut.png",
+  "visualReview": "Six clear photo-collection motifs, three blank prints and blank ticket/stamp. Cohesive teal/rust/gold; no generated digits/text."
+}

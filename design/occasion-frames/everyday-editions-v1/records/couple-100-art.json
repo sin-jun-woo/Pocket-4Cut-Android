@@ -1,0 +1,127 @@
+{
+  "id": "couple-100",
+  "source": "source/masters/couple-100.png",
+  "masterSha256": "ffffaeb5e8d77b87611b922b1e34b6951325d35b8277f6d7b0dff894e8f3fc32",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "ee891bc67481a411406e0eb1f9a8cb5511be26d96cb3169c092d963e0e8f460e",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "two overlapping red paper hearts",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 75,
+        "top": 113,
+        "width": 412,
+        "height": 339
+      },
+      "width": 412,
+      "height": 339
+    },
+    {
+      "index": 1,
+      "name": "pink ribbon tied in a knot",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 560,
+        "top": 81,
+        "width": 454,
+        "height": 406
+      },
+      "width": 454,
+      "height": 406
+    },
+    {
+      "index": 2,
+      "name": "small pink rose bouquet",
+      "roi": [
+        1024,
+        0,
+        1536,
+        524
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1077,
+        "top": 57,
+        "width": 384,
+        "height": 467
+      },
+      "width": 382,
+      "height": 464
+    },
+    {
+      "index": 3,
+      "name": "pair of cherries joined at stems",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 87,
+        "top": 541,
+        "width": 390,
+        "height": 406
+      },
+      "width": 390,
+      "height": 406
+    },
+    {
+      "index": 4,
+      "name": "two lovebirds facing each other",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 522,
+        "top": 591,
+        "width": 502,
+        "height": 330
+      },
+      "width": 464,
+      "height": 305
+    },
+    {
+      "index": 5,
+      "name": "sealed cream love letter",
+      "roi": [
+        1024,
+        524,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1068,
+        "top": 618,
+        "width": 410,
+        "height": 316
+      },
+      "width": 410,
+      "height": 316
+    }
+  ]
+}

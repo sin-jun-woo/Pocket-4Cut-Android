@@ -1,0 +1,127 @@
+{
+  "id": "bridal-shower",
+  "source": "source/masters/bridal-shower.png",
+  "masterSha256": "a6135f13c491a47a0f29afee0029ed96cad245347c27c98f5ff5ee4457abae87",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "b5a076f566a2477297fd6a1bac96b6ddefd50ff5f1d283b35ce19a5b7a4b01f7",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "oversized blush silk ribbon",
+      "roi": [
+        0,
+        0,
+        547,
+        537
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 61,
+        "top": 56,
+        "width": 486,
+        "height": 481
+      },
+      "width": 464,
+      "height": 459
+    },
+    {
+      "index": 1,
+      "name": "two slim champagne flutes",
+      "roi": [
+        547,
+        0,
+        1024,
+        515
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 631,
+        "top": 60,
+        "width": 349,
+        "height": 455
+      },
+      "width": 349,
+      "height": 455
+    },
+    {
+      "index": 2,
+      "name": "small pink peony bouquet",
+      "roi": [
+        1024,
+        0,
+        1536,
+        531
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1038,
+        "top": 53,
+        "width": 452,
+        "height": 478
+      },
+      "width": 439,
+      "height": 464
+    },
+    {
+      "index": 3,
+      "name": "pearl necklace loop",
+      "roi": [
+        0,
+        537,
+        547,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 85,
+        "top": 573,
+        "width": 379,
+        "height": 377
+      },
+      "width": 379,
+      "height": 377
+    },
+    {
+      "index": 4,
+      "name": "ivory high heel shoe",
+      "roi": [
+        547,
+        515,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 572,
+        "top": 550,
+        "width": 452,
+        "height": 408
+      },
+      "width": 452,
+      "height": 408
+    },
+    {
+      "index": 5,
+      "name": "floral teacup without pattern text",
+      "roi": [
+        1024,
+        531,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1067,
+        "top": 660,
+        "width": 418,
+        "height": 275
+      },
+      "width": 418,
+      "height": 275
+    }
+  ]
+}

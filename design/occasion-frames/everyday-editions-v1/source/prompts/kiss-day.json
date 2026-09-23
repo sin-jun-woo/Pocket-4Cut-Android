@@ -1,0 +1,13 @@
+{
+  "index": 30,
+  "id": "kiss-day",
+  "tool": "built-in image_gen",
+  "mode": "generate",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 60px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection: Everyday Editions, Pocket 4Cut. Theme: 키스데이 (kiss-day). Palette coordinated with #F8DADC paper and #A82649 ink, with harmonious motif colors. EXACT six motifs in reading order:\n1. red lipstick kiss print illustrated in matte ink\n2. two blush paper hearts\n3. cherry-red lipstick tube\n4. deep rose silk ribbon\n5. pair of red cherries\n6. pink love letter with heart seal\nProduction layout: 3 columns x 2 rows, full silhouettes within separate cells, at least 70px clear transparent gutters. Genuinely transparent alpha background; no lettering, 3D, shadows or white sticker halo.",
+  "sourceFile": "exec-1de8a3e6-83fd-4175-bed4-fecb12c146a3.png",
+  "masterFile": "masters/kiss-day.png",
+  "visualReview": "Six kiss-day motifs present and unlettered: lipstick print, hearts, lipstick tube, bow, cherries and envelope. No anatomical defects in lip mark; separate silhouettes. Lipstick tube and cherries have painted highlights.",
+  "generatedOn": "2026-09-23"
+}

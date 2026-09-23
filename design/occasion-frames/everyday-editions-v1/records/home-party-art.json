@@ -1,0 +1,127 @@
+{
+  "id": "home-party",
+  "source": "source/masters/home-party.png",
+  "masterSha256": "442f617e3f26bc996e035d848f9303ff70a53161efce325ec48fe3dc26a57957",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "8c7aaecfb98e37b7c87580e07dd1c38a3a6fc6c327b773f53615f5871ad39e91",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "peach balloon bunch",
+      "roi": [
+        0,
+        0,
+        512,
+        596
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 79,
+        "top": 48,
+        "width": 359,
+        "height": 548
+      },
+      "width": 304,
+      "height": 464
+    },
+    {
+      "index": 1,
+      "name": "small cherry cream cake",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 539,
+        "top": 77,
+        "width": 421,
+        "height": 435
+      },
+      "width": 421,
+      "height": 435
+    },
+    {
+      "index": 2,
+      "name": "two illustrated rose drinks in short glasses",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1066,
+        "top": 103,
+        "width": 404,
+        "height": 391
+      },
+      "width": 404,
+      "height": 391
+    },
+    {
+      "index": 3,
+      "name": "golden paper confetti curl",
+      "roi": [
+        0,
+        596,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 114,
+        "top": 598,
+        "width": 338,
+        "height": 355
+      },
+      "width": 338,
+      "height": 355
+    },
+    {
+      "index": 4,
+      "name": "terracotta ribbon",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 514,
+        "top": 588,
+        "width": 510,
+        "height": 378
+      },
+      "width": 464,
+      "height": 344
+    },
+    {
+      "index": 5,
+      "name": "plate of heart shaped cookies",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1067,
+        "top": 578,
+        "width": 404,
+        "height": 381
+      },
+      "width": 404,
+      "height": 381
+    }
+  ]
+}

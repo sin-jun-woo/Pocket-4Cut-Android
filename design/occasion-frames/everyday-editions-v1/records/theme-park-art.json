@@ -1,0 +1,127 @@
+{
+  "id": "theme-park",
+  "source": "source/masters/theme-park.png",
+  "masterSha256": "62d1bc845ce348a9a7df34cdd705209b1b6d2e2817358c641852473a779be89b",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "0b3b7e82a7ffe6ff2714ecd55518c2aaabe310953495d60eba38fe82896980f8",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "miniature pastel ferris wheel",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 105,
+        "top": 44,
+        "width": 377,
+        "height": 444
+      },
+      "width": 377,
+      "height": 444
+    },
+    {
+      "index": 1,
+      "name": "two lavender park tickets without text",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 555,
+        "top": 89,
+        "width": 429,
+        "height": 388
+      },
+      "width": 429,
+      "height": 388
+    },
+    {
+      "index": 2,
+      "name": "peach carousel horse",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1055,
+        "top": 54,
+        "width": 398,
+        "height": 431
+      },
+      "width": 398,
+      "height": 431
+    },
+    {
+      "index": 3,
+      "name": "butter-yellow star",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 105,
+        "top": 558,
+        "width": 396,
+        "height": 389
+      },
+      "width": 396,
+      "height": 389
+    },
+    {
+      "index": 4,
+      "name": "bunch of lilac and apricot balloons",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 630,
+        "top": 526,
+        "width": 293,
+        "height": 451
+      },
+      "width": 293,
+      "height": 451
+    },
+    {
+      "index": 5,
+      "name": "pink cotton candy",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1130,
+        "top": 548,
+        "width": 275,
+        "height": 430
+      },
+      "width": 275,
+      "height": 430
+    }
+  ]
+}

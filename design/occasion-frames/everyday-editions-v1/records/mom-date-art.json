@@ -1,0 +1,127 @@
+{
+  "id": "mom-date",
+  "source": "source/masters/mom-date.png",
+  "masterSha256": "2779cae28d8b32a865e6258506a1510e6cc9124c20df0f747dc9819d8d1a4113",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "f53e628d13be3a1312581d3981206cd836f202165f71fa9b8892595f39e5945f",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "blush peony bouquet",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 50,
+        "top": 51,
+        "width": 441,
+        "height": 447
+      },
+      "width": 441,
+      "height": 447
+    },
+    {
+      "index": 1,
+      "name": "two rose paper hearts",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 597,
+        "top": 99,
+        "width": 375,
+        "height": 354
+      },
+      "width": 375,
+      "height": 354
+    },
+    {
+      "index": 2,
+      "name": "ivory pearl necklace loop",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1096,
+        "top": 89,
+        "width": 390,
+        "height": 358
+      },
+      "width": 390,
+      "height": 358
+    },
+    {
+      "index": 3,
+      "name": "pink teacup",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 53,
+        "top": 606,
+        "width": 410,
+        "height": 304
+      },
+      "width": 410,
+      "height": 304
+    },
+    {
+      "index": 4,
+      "name": "coral silk bow",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 560,
+        "top": 576,
+        "width": 423,
+        "height": 370
+      },
+      "width": 423,
+      "height": 370
+    },
+    {
+      "index": 5,
+      "name": "delicate olive sprig",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1094,
+        "top": 550,
+        "width": 390,
+        "height": 426
+      },
+      "width": 390,
+      "height": 426
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "id": "halloween",
+  "source": "source/masters/halloween.png",
+  "masterSha256": "6ea46badf14992148bcb18dcdc77fb22b030a75b69cd488b8b56e7b1b11425da",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "16025dd3c4fe216983a8e57c19923b9f4f7362e4c7aa864ff56eae017dad9b20",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "friendly ivory sheet ghost",
+      "roi": [
+        0,
+        0,
+        527,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 48,
+        "top": 95,
+        "width": 419,
+        "height": 391
+      },
+      "width": 419,
+      "height": 391
+    },
+    {
+      "index": 1,
+      "name": "carved orange pumpkin lantern",
+      "roi": [
+        527,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 556,
+        "top": 49,
+        "width": 434,
+        "height": 448
+      },
+      "width": 434,
+      "height": 448
+    },
+    {
+      "index": 2,
+      "name": "small charcoal bat",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1036,
+        "top": 153,
+        "width": 476,
+        "height": 279
+      },
+      "width": 464,
+      "height": 272
+    },
+    {
+      "index": 3,
+      "name": "crooked plum witch hat",
+      "roi": [
+        0,
+        512,
+        527,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 30,
+        "top": 544,
+        "width": 497,
+        "height": 422
+      },
+      "width": 464,
+      "height": 394
+    },
+    {
+      "index": 4,
+      "name": "copper spider with a short cobweb",
+      "roi": [
+        527,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 639,
+        "top": 533,
+        "width": 328,
+        "height": 440
+      },
+      "width": 328,
+      "height": 440
+    },
+    {
+      "index": 5,
+      "name": "striped wrapped Halloween sweet",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1046,
+        "top": 592,
+        "width": 462,
+        "height": 342
+      },
+      "width": 462,
+      "height": 342
+    }
+  ]
+}

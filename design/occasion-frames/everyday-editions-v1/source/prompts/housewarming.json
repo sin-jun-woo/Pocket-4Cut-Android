@@ -1,0 +1,11 @@
+{
+  "themeIndex": 65,
+  "themeId": "housewarming",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 65: 집들이 (housewarming). Palette: paper #EEE8D9, olive #6F7A54, cream, terracotta, warm brass. EXACT six motifs in reading order: 1. cream cottage with olive roof; 2. two brass keys on rust ribbon; 3. terracotta plant pot with leaves; 4. woven welcome basket; 5. ivory candle in green jar; 6. cream coffee mug. Welcoming home stationery with restrained ceramic and woven details. LAYOUT: EACH motif occupies max360x340px centered exactly within its512x512cell. Nothing beyondrowmidpointy512. Uniform broad70pxtransparentgutters, fully visible, no words.",
+  "sourceGeneratedFilename": "exec-ab1fe250-a81b-4abe-9a86-9200e7f9b176.png",
+  "master": "source/masters/housewarming.png",
+  "visualReview": "Six complete distinct motifs, cohesive olive/terracotta print texture. Clean separations, no lettering."
+}

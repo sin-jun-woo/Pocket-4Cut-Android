@@ -1,0 +1,13 @@
+{
+  "index": 11,
+  "id": "white-day",
+  "tool": "built-in image_gen",
+  "mode": "generate",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 60px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection: Everyday Editions, Pocket 4Cut. Theme: 화이트데이 (white-day). Palette coordinated with #F0EAF7 paper and #746095 ink, with harmonious motif colors. EXACT six motifs in reading order:\n1. pastel lavender wrapped candy\n2. twisted pink and mint lollipop\n3. large ivory satin bow\n4. two translucent pastel heart candies drawn matte\n5. tiny lilac gift box\n6. cream daisy with mint leaves\nProduction layout: 3 columns x 2 rows, full silhouettes within separate cells, at least 70px clear transparent gutters. Genuinely transparent alpha background; no lettering, 3D, shadows or white sticker halo.",
+  "sourceFile": "exec-5211cf4e-a8ba-4d79-8913-c5ba8991f40e.png",
+  "masterFile": "masters/white-day.png",
+  "visualReview": "Six white-day motifs present and unlettered. Very pale ivory bow needs medium/dark paper for best contrast; full silhouettes visible, separated. Candy highlights are illustrated rather than fully matte.",
+  "generatedOn": "2026-09-23"
+}

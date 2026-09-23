@@ -1,0 +1,127 @@
+{
+  "id": "children-day",
+  "source": "source/masters/children-day.png",
+  "masterSha256": "028c0fef2ce16c7e5ff5744a35ff74db4b4829723d9c276b5e7a7b4399feb7ac",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "0722f3a959f81f1ce4647feaca71e200dba19fbf7e6967c8adfdac4f7de4caed",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "wooden toy rocking horse",
+      "roi": [
+        0,
+        0,
+        516,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 63,
+        "top": 74,
+        "width": 453,
+        "height": 421
+      },
+      "width": 453,
+      "height": 421
+    },
+    {
+      "index": 1,
+      "name": "scarlet toy car",
+      "roi": [
+        516,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 563,
+        "top": 155,
+        "width": 461,
+        "height": 308
+      },
+      "width": 461,
+      "height": 308
+    },
+    {
+      "index": 2,
+      "name": "striped hot-air balloon toy",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1138,
+        "top": 37,
+        "width": 313,
+        "height": 452
+      },
+      "width": 313,
+      "height": 452
+    },
+    {
+      "index": 3,
+      "name": "butter-yellow five-point star",
+      "roi": [
+        0,
+        512,
+        516,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 94,
+        "top": 564,
+        "width": 373,
+        "height": 366
+      },
+      "width": 373,
+      "height": 366
+    },
+    {
+      "index": 4,
+      "name": "primary-color toy blocks without letters",
+      "roi": [
+        516,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 571,
+        "top": 560,
+        "width": 423,
+        "height": 396
+      },
+      "width": 423,
+      "height": 396
+    },
+    {
+      "index": 5,
+      "name": "small rainbow spinning pinwheel",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1135,
+        "top": 538,
+        "width": 319,
+        "height": 443
+      },
+      "width": 319,
+      "height": 443
+    }
+  ]
+}

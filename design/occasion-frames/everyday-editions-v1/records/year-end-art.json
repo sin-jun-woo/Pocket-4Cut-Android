@@ -1,0 +1,127 @@
+{
+  "id": "year-end",
+  "source": "source/masters/year-end.png",
+  "masterSha256": "59ca03d84c33fe14980216983bbae6b4533fd1f549d1802daf40810d1e3cb950",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "7db854e58c64d113813bb4e7218cd68d0e206f45341dac530bff45e01dada00a",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "two champagne coupes",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 62,
+        "top": 101,
+        "width": 433,
+        "height": 366
+      },
+      "width": 433,
+      "height": 366
+    },
+    {
+      "index": 1,
+      "name": "gold paper ribbon curl",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 571,
+        "top": 78,
+        "width": 424,
+        "height": 370
+      },
+      "width": 424,
+      "height": 370
+    },
+    {
+      "index": 2,
+      "name": "small faceted disco ball in cream and sage",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1101,
+        "top": 48,
+        "width": 350,
+        "height": 404
+      },
+      "width": 350,
+      "height": 404
+    },
+    {
+      "index": 3,
+      "name": "cream clock without numerals",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 44,
+        "top": 562,
+        "width": 446,
+        "height": 400
+      },
+      "width": 446,
+      "height": 400
+    },
+    {
+      "index": 4,
+      "name": "dark red silk bow",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 572,
+        "top": 567,
+        "width": 404,
+        "height": 394
+      },
+      "width": 404,
+      "height": 394
+    },
+    {
+      "index": 5,
+      "name": "fan of golden confetti",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1087,
+        "top": 568,
+        "width": 399,
+        "height": 375
+      },
+      "width": 399,
+      "height": 375
+    }
+  ]
+}

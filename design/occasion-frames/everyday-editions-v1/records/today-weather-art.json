@@ -1,0 +1,127 @@
+{
+  "id": "today-weather",
+  "source": "source/masters/today-weather.png",
+  "masterSha256": "098ef271462f037f2fa0b234d1a0a0eba9917727491bb54aacb20329ed7bd62f",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "2907c1268d13b4000576a1d88d7efad6f18372eb61abc3667ab46daac3b46ca4",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "warm golden sun",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 77,
+        "top": 80,
+        "width": 402,
+        "height": 413
+      },
+      "width": 402,
+      "height": 413
+    },
+    {
+      "index": 1,
+      "name": "soft ivory cloud",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 559,
+        "top": 164,
+        "width": 447,
+        "height": 282
+      },
+      "width": 447,
+      "height": 282
+    },
+    {
+      "index": 2,
+      "name": "pale blue raindrop cluster",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1136,
+        "top": 124,
+        "width": 283,
+        "height": 349
+      },
+      "width": 283,
+      "height": 349
+    },
+    {
+      "index": 3,
+      "name": "little navy umbrella",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 58,
+        "top": 551,
+        "width": 390,
+        "height": 376
+      },
+      "width": 390,
+      "height": 376
+    },
+    {
+      "index": 4,
+      "name": "small aqua wave",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 526,
+        "top": 653,
+        "width": 478,
+        "height": 261
+      },
+      "width": 464,
+      "height": 253
+    },
+    {
+      "index": 5,
+      "name": "pastel rainbow arch",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1054,
+        "top": 597,
+        "width": 440,
+        "height": 315
+      },
+      "width": 440,
+      "height": 315
+    }
+  ]
+}

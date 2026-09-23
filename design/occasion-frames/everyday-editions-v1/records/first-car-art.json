@@ -1,0 +1,127 @@
+{
+  "id": "first-car",
+  "source": "source/masters/first-car.png",
+  "masterSha256": "fd6bae2fe13629b0c444e0b09152b5f470600ccf8eb355e97b4b4fb6c6e12a33",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "6ea5e69c424a17b7f4b49ba45b385dad728548d5cf513558218bcdc1cccfa4d6",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "small retro cobalt hatchback car without logo",
+      "roi": [
+        0,
+        0,
+        558,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 51,
+        "top": 142,
+        "width": 507,
+        "height": 297
+      },
+      "width": 464,
+      "height": 272
+    },
+    {
+      "index": 1,
+      "name": "silver car key with orange tag",
+      "roi": [
+        558,
+        0,
+        1031,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 633,
+        "top": 74,
+        "width": 398,
+        "height": 364
+      },
+      "width": 398,
+      "height": 364
+    },
+    {
+      "index": 2,
+      "name": "cream speedometer without numerals",
+      "roi": [
+        1031,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1095,
+        "top": 79,
+        "width": 381,
+        "height": 373
+      },
+      "width": 381,
+      "height": 373
+    },
+    {
+      "index": 3,
+      "name": "terracotta road cone",
+      "roi": [
+        0,
+        512,
+        558,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 101,
+        "top": 514,
+        "width": 361,
+        "height": 434
+      },
+      "width": 361,
+      "height": 434
+    },
+    {
+      "index": 4,
+      "name": "pair of dark driving gloves",
+      "roi": [
+        558,
+        512,
+        1031,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 593,
+        "top": 532,
+        "width": 415,
+        "height": 421
+      },
+      "width": 415,
+      "height": 421
+    },
+    {
+      "index": 5,
+      "name": "small yellow spark star",
+      "roi": [
+        1031,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1145,
+        "top": 563,
+        "width": 289,
+        "height": 336
+      },
+      "width": 289,
+      "height": 336
+    }
+  ]
+}

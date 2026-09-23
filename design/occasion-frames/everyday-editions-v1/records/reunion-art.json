@@ -1,0 +1,127 @@
+{
+  "id": "reunion",
+  "source": "source/masters/reunion.png",
+  "masterSha256": "d1640c86c9540bcfb0b89179d8fb8a432f4767ad7497c22a3b3e2161e3fd42d4",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "a872c94c39ef768e95848c9a3d9772d17629822a38aec1f02ef48da12843c8bc",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "two retro graduation caps",
+      "roi": [
+        0,
+        0,
+        516,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 50,
+        "top": 104,
+        "width": 466,
+        "height": 391
+      },
+      "width": 464,
+      "height": 389
+    },
+    {
+      "index": 1,
+      "name": "cream school yearbook without title",
+      "roi": [
+        516,
+        0,
+        989,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 582,
+        "top": 93,
+        "width": 368,
+        "height": 398
+      },
+      "width": 368,
+      "height": 398
+    },
+    {
+      "index": 2,
+      "name": "sage school building without signs",
+      "roi": [
+        989,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1004,
+        "top": 141,
+        "width": 484,
+        "height": 312
+      },
+      "width": 464,
+      "height": 299
+    },
+    {
+      "index": 3,
+      "name": "brass school bell",
+      "roi": [
+        0,
+        512,
+        516,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 107,
+        "top": 534,
+        "width": 377,
+        "height": 401
+      },
+      "width": 377,
+      "height": 401
+    },
+    {
+      "index": 4,
+      "name": "bunch of small daisies",
+      "roi": [
+        516,
+        512,
+        989,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 585,
+        "top": 531,
+        "width": 345,
+        "height": 432
+      },
+      "width": 345,
+      "height": 432
+    },
+    {
+      "index": 5,
+      "name": "burgundy ribbon",
+      "roi": [
+        989,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 989,
+        "top": 564,
+        "width": 495,
+        "height": 366
+      },
+      "width": 464,
+      "height": 343
+    }
+  ]
+}

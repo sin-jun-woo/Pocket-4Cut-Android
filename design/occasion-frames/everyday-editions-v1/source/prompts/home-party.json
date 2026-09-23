@@ -1,0 +1,11 @@
+{
+  "themeIndex": 64,
+  "themeId": "home-party",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 64: 홈파티 (home-party). Palette: paper #F9E8D9, terracotta #B16A57, peach, cream and gold. EXACT six motifs in reading order: 1. peach balloon bunch; 2. small cherry cream cake; 3. two illustrated rose drinks in short glasses; 4. golden paper confetti curl; 5. terracotta ribbon; 6. plate of heart shaped cookies. Relaxed chic home celebration, independent Korean stationery gouache. Strict empty70px gutters around allsixmotifs;no text.",
+  "sourceGeneratedFilename": "exec-6d4b5987-26c0-4eeb-8b8f-224f39e55bcc.png",
+  "master": "source/masters/home-party.png",
+  "visualReview": "All six theme motifs visible, no text, warm coherent palette. Balloon strings extend beneath row midpoint to around y590; use alpha-aware crop/trim rather than hard equal grid to avoid trimming."
+}

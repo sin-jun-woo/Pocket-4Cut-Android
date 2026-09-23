@@ -1,0 +1,11 @@
+{
+  "themeIndex": 67,
+  "themeId": "mom-date",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 67: 엄마와 데이트 (mom-date). Palette: blush #F9E6E1, old rose #A35F6D, ivory pearl, coral, olive. EXACT six motifs in reading order: 1. blush peony bouquet; 2. two rose paper hearts; 3. ivory pearl necklace loop; 4. pink teacup; 5. coral silk bow; 6. delicate olive sprig. Refined intimate mother-and-child keepsake stationery, delicate but clear details. Each motif no larger than340px within512pxcell;70px empty transparent gutters. Absolutely no lettering.",
+  "sourceGeneratedFilename": "exec-8bad447a-601d-4901-b711-f0f929261ac4.png",
+  "master": "source/masters/mom-date.png",
+  "visualReview": "All six requested motifs separately visible. Peony and tea detail attractive, aligned rose/coral/olive palette, no text."
+}

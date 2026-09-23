@@ -1,0 +1,918 @@
+{
+  "id": "here-a-cut",
+  "index": 82,
+  "name": "여기서 한 컷",
+  "category": "custom",
+  "group": "special",
+  "masterSha256": "b96e18af9ba323c974ff64d62b50746a72e5a25452276b73ead6d19256207150",
+  "rendererSha256": "a87e39e77137bff50234a85ad75eae98afd621c57f3a350675c274cdfb13cab0",
+  "geometrySha256": "8766e01f0b4f8ea5694437f3b0d20dd80c1b72cf5173fd3d407df7a5675993c5",
+  "method": "Static composition from generated art and saved Android slot coordinates; not Android execution.",
+  "count": 18,
+  "overview": "overviews/here-a-cut.jpg",
+  "files": [
+    {
+      "path": "frames/custom/82-here-a-cut/two_vertical.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 1248,
+      "height": 3179,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null,
+      "bytes": 131076,
+      "sha256": "1ce9d20838d7894ac8740d5b6c4ea72204bc5534279e12e8d44c70a2d3b9fdaa"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/two_vertical_caption.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 1248,
+      "height": 3307,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": [
+        0,
+        3066.6667,
+        1248,
+        3306.6667
+      ],
+      "bytes": 140727,
+      "sha256": "dad94c5e5e6bdeb4e29ac5f013711772eadfd66d448351b3164d9613d21e9aca"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/two_horizontal.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 1878,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 189804,
+      "sha256": "65e416b6b4ee09f81bd8342d837428429fb7fb40a91c3a72ee86bfea502b4cd6"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/two_horizontal_caption.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 2119,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        1757.4786,
+        2350,
+        2119.017
+      ],
+      "bytes": 211941,
+      "sha256": "938d468005227d68d71ec43cc5422b1aa706223036203bd47ffd1f01bd796e01"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/four_vertical.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 1650,
+      "height": 4920,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null,
+      "bytes": 152720,
+      "sha256": "850cdc5e8b3b0f845dbe5f1ef62760fbf46e7503a71c243e8ab100076029a2de"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/four_vertical_caption.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 1650,
+      "height": 4920,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1341.0576
+        ],
+        [
+          84.61539,
+          1383.3654,
+          1565.3846,
+          2449.4229
+        ],
+        [
+          84.61539,
+          2491.7307,
+          1565.3846,
+          3557.7883
+        ],
+        [
+          84.61539,
+          3600.0962,
+          1565.3846,
+          4666.154
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": [
+        0,
+        4666.154,
+        1650,
+        4920
+      ],
+      "bytes": 166213,
+      "sha256": "ad96b1a401e1b0ec6375061d77d504ca9482adc70f3b6cfbdb0d10dedf496050"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/four_grid.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 3304,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 210593,
+      "sha256": "f8eee16f25cabccfcf5169c3ea3a9cb88913fb1dbf3deefcf0b56f2460ff4b0d"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/four_grid_caption.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 3545,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        3183.5469,
+        2350,
+        3545.0854
+      ],
+      "bytes": 234518,
+      "sha256": "e3edc3474f3fa630bb68ab17e3ea519e84a0b464c954d1d2fa562c91952beee0"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/four_horizontal.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 4992,
+      "height": 2453,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null,
+      "bytes": 571586,
+      "sha256": "9a566dd11621b313753e3e6c84330f26659fbd10e6b9639b112a2b800f2839e4"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/four_horizontal_caption.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 4992,
+      "height": 2965,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": [
+        0,
+        2197.3335,
+        4992,
+        2965.3335
+      ],
+      "bytes": 621239,
+      "sha256": "026bffccfcdd6d29b7aec913a6e7b5dacd58f55d0a608ed47b7a2144f57d9896"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/six_grid_2x3.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 4730,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 233572,
+      "sha256": "9b549ca0c4227e42465b52c5bf87ba989259bd7ab13cddf8c8e6b4ace405cecd"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/six_grid_2x3_caption.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 4971,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        4609.615,
+        2350,
+        4971.1533
+      ],
+      "bytes": 255526,
+      "sha256": "9d01baa0716b495d3e8511f3afaf4341a6d668012b3c4fb34bce13e1df79f851"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/six_grid_3x2.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 3631,
+      "height": 3615,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null,
+      "bytes": 393570,
+      "sha256": "c7819ce989c5ffcba329a51561b15d37860cbebae1b21857a212e1ea9bb08116"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/six_grid_3x2_caption.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 3631,
+      "height": 3988,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ],
+      "bytes": 431621,
+      "sha256": "86fbd17f37f44f521b2c42b7bea8f75e445f5d08b7f6d129c72b54d114d0fcf6"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/six_collage.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 3383,
+      "height": 4728,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null,
+      "bytes": 262136,
+      "sha256": "eb850d139150b8ed2d77ed1c00ba2d327b70b7d009745370f6f948fe1b1f1977"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/six_collage_caption.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 3265,
+      "height": 4898,
+      "photoSlots": [
+        [
+          167.4359,
+          334.8718,
+          2092.9485,
+          2874.3164
+        ],
+        [
+          2176.6665,
+          334.8718,
+          3097.564,
+          1562.7351
+        ],
+        [
+          2176.6665,
+          1646.453,
+          3097.564,
+          2874.3164
+        ],
+        [
+          167.4359,
+          2958.0344,
+          1088.3333,
+          4185.8975
+        ],
+        [
+          1172.0511,
+          2958.0344,
+          2092.9485,
+          4185.8975
+        ],
+        [
+          2176.6665,
+          2958.0344,
+          3097.564,
+          4185.8975
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3265,
+        334.8718
+      ],
+      "captionArea": [
+        0,
+        4395.1924,
+        3265,
+        4897.5
+      ],
+      "bytes": 280689,
+      "sha256": "6ea9fac5d97a62875f524cddba1b6ac056a63dc45cd0cf21d3b1e53ddbfde1e4"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/six_collage_legacy.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "captionBand": false,
+      "width": 3631,
+      "height": 3615,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null,
+      "bytes": 393570,
+      "sha256": "c7819ce989c5ffcba329a51561b15d37860cbebae1b21857a212e1ea9bb08116"
+    },
+    {
+      "path": "frames/custom/82-here-a-cut/six_collage_legacy_caption.png",
+      "themeId": "here-a-cut",
+      "category": "custom",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "captionBand": true,
+      "width": 3631,
+      "height": 3988,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ],
+      "bytes": 431621,
+      "sha256": "86fbd17f37f44f521b2c42b7bea8f75e445f5d08b7f6d129c72b54d114d0fcf6"
+    }
+  ]
+}

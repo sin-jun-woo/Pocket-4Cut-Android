@@ -1,0 +1,127 @@
+{
+  "id": "welcome-back",
+  "source": "source/masters/welcome-back.png",
+  "masterSha256": "7cd012d4eaf45d0906ed19ef5fd4b002bdff126f48020dd2f7538588cba5b403",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "28efa7088060334632265860f6cbfb6c776cf8f138099b058dd37ba9117c0754",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "cream house with green roof",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 49,
+        "top": 90,
+        "width": 456,
+        "height": 383
+      },
+      "width": 456,
+      "height": 383
+    },
+    {
+      "index": 1,
+      "name": "small white passenger airplane",
+      "roi": [
+        512,
+        0,
+        1029,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 542,
+        "top": 184,
+        "width": 487,
+        "height": 258
+      },
+      "width": 464,
+      "height": 246
+    },
+    {
+      "index": 2,
+      "name": "terracotta suitcase",
+      "roi": [
+        1029,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1143,
+        "top": 52,
+        "width": 281,
+        "height": 456
+      },
+      "width": 281,
+      "height": 456
+    },
+    {
+      "index": 3,
+      "name": "golden house key",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 110,
+        "top": 563,
+        "width": 401,
+        "height": 366
+      },
+      "width": 401,
+      "height": 366
+    },
+    {
+      "index": 4,
+      "name": "small wildflower bunch",
+      "roi": [
+        512,
+        512,
+        1029,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 613,
+        "top": 541,
+        "width": 317,
+        "height": 423
+      },
+      "width": 317,
+      "height": 423
+    },
+    {
+      "index": 5,
+      "name": "olive leaf sprig",
+      "roi": [
+        1029,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1108,
+        "top": 547,
+        "width": 348,
+        "height": 394
+      },
+      "width": 348,
+      "height": 394
+    }
+  ]
+}

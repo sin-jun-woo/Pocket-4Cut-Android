@@ -1,0 +1,918 @@
+{
+  "id": "camping",
+  "index": 53,
+  "name": "캠핑 / 글램핑",
+  "category": "travel",
+  "group": "occasion",
+  "masterSha256": "775d316bbaa377b94ce628de8b3dc39eba42813e35dc351003b9317399a74cdf",
+  "rendererSha256": "a87e39e77137bff50234a85ad75eae98afd621c57f3a350675c274cdfb13cab0",
+  "geometrySha256": "8766e01f0b4f8ea5694437f3b0d20dd80c1b72cf5173fd3d407df7a5675993c5",
+  "method": "Static composition from generated art and saved Android slot coordinates; not Android execution.",
+  "count": 18,
+  "overview": "overviews/camping.jpg",
+  "files": [
+    {
+      "path": "frames/travel/53-camping/two_vertical.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 1248,
+      "height": 3179,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null,
+      "bytes": 117428,
+      "sha256": "51e09e76eb07174fd1fef6c2b9adb337b55c649cc1a6453e32ebb0cbd136da42"
+    },
+    {
+      "path": "frames/travel/53-camping/two_vertical_caption.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 1248,
+      "height": 3307,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": [
+        0,
+        3066.6667,
+        1248,
+        3306.6667
+      ],
+      "bytes": 134104,
+      "sha256": "c2978164e8cdab38e6642dc3351029b06545ddcf2be24a4afbb61a224a2b0b10"
+    },
+    {
+      "path": "frames/travel/53-camping/two_horizontal.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 1878,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 159728,
+      "sha256": "18dcf28f24a215da9d1dc5bd4727927cb737a4b1bf7a9f706e31e58d147f056e"
+    },
+    {
+      "path": "frames/travel/53-camping/two_horizontal_caption.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 2119,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        1757.4786,
+        2350,
+        2119.017
+      ],
+      "bytes": 197951,
+      "sha256": "473545df1217c5ae499a0921e5bb4a8250e8275698f6d94405209c98a13adef2"
+    },
+    {
+      "path": "frames/travel/53-camping/four_vertical.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 1650,
+      "height": 4920,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null,
+      "bytes": 137205,
+      "sha256": "8f6b184b824e81e14858d0767ea8f24f17ef534637c69800987a4b96048ad14c"
+    },
+    {
+      "path": "frames/travel/53-camping/four_vertical_caption.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 1650,
+      "height": 4920,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1341.0576
+        ],
+        [
+          84.61539,
+          1383.3654,
+          1565.3846,
+          2449.4229
+        ],
+        [
+          84.61539,
+          2491.7307,
+          1565.3846,
+          3557.7883
+        ],
+        [
+          84.61539,
+          3600.0962,
+          1565.3846,
+          4666.154
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": [
+        0,
+        4666.154,
+        1650,
+        4920
+      ],
+      "bytes": 159093,
+      "sha256": "a02e8aa074cbd64b78cdde936a93ea921f983a19eeeeb37580741e25f6b49aee"
+    },
+    {
+      "path": "frames/travel/53-camping/four_grid.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 3304,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 180984,
+      "sha256": "224291214cf15a52b1163493afb0984479d285a7ff5f37c0cc42d015143ab0b7"
+    },
+    {
+      "path": "frames/travel/53-camping/four_grid_caption.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 3545,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        3183.5469,
+        2350,
+        3545.0854
+      ],
+      "bytes": 219348,
+      "sha256": "49a3ffe9cd103d33b7438a43d60631948bf61c72bfd44fdcab6f294a4bf3e150"
+    },
+    {
+      "path": "frames/travel/53-camping/four_horizontal.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 4992,
+      "height": 2453,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null,
+      "bytes": 480203,
+      "sha256": "6f127e8a43c018008b3aaa7437e6c2923ab73f79ba83db0d33dbebabd5c34b33"
+    },
+    {
+      "path": "frames/travel/53-camping/four_horizontal_caption.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 4992,
+      "height": 2965,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": [
+        0,
+        2197.3335,
+        4992,
+        2965.3335
+      ],
+      "bytes": 558019,
+      "sha256": "518aa91dcf610f468ec7d18f38759db268add6012aca9a7c50b41bf37e1d0f87"
+    },
+    {
+      "path": "frames/travel/53-camping/six_grid_2x3.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 4730,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 203570,
+      "sha256": "c28d3176add065da95f407ee437cc479ef89f081c1bceb0b4d0197061eef8fee"
+    },
+    {
+      "path": "frames/travel/53-camping/six_grid_2x3_caption.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 4971,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        4609.615,
+        2350,
+        4971.1533
+      ],
+      "bytes": 241417,
+      "sha256": "43a1f8ea90461b4448d935135088ba7d6a96f92ad370cdcfa76aa9d8cf56f3ea"
+    },
+    {
+      "path": "frames/travel/53-camping/six_grid_3x2.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 3631,
+      "height": 3615,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null,
+      "bytes": 335890,
+      "sha256": "28be072e86bf882f705499af6cc20ba38d33697789778c0e413c68e54ebca3c5"
+    },
+    {
+      "path": "frames/travel/53-camping/six_grid_3x2_caption.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 3631,
+      "height": 3988,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ],
+      "bytes": 393391,
+      "sha256": "2ee1905b58559d8779656aa36946d060a18811fb0e7eb33f54b9e0e3e319a8b2"
+    },
+    {
+      "path": "frames/travel/53-camping/six_collage.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 3383,
+      "height": 4728,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null,
+      "bytes": 241127,
+      "sha256": "c5b57da89e3cdf43322a9b8376dccad491e713947533dd14ed8874d36c5f0902"
+    },
+    {
+      "path": "frames/travel/53-camping/six_collage_caption.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 3265,
+      "height": 4898,
+      "photoSlots": [
+        [
+          167.4359,
+          334.8718,
+          2092.9485,
+          2874.3164
+        ],
+        [
+          2176.6665,
+          334.8718,
+          3097.564,
+          1562.7351
+        ],
+        [
+          2176.6665,
+          1646.453,
+          3097.564,
+          2874.3164
+        ],
+        [
+          167.4359,
+          2958.0344,
+          1088.3333,
+          4185.8975
+        ],
+        [
+          1172.0511,
+          2958.0344,
+          2092.9485,
+          4185.8975
+        ],
+        [
+          2176.6665,
+          2958.0344,
+          3097.564,
+          4185.8975
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3265,
+        334.8718
+      ],
+      "captionArea": [
+        0,
+        4395.1924,
+        3265,
+        4897.5
+      ],
+      "bytes": 272858,
+      "sha256": "03232a24df9463b8c19eb652c7b1c58d6a63bfaae94a97138d9fbb531ec07d03"
+    },
+    {
+      "path": "frames/travel/53-camping/six_collage_legacy.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "captionBand": false,
+      "width": 3631,
+      "height": 3615,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null,
+      "bytes": 335890,
+      "sha256": "28be072e86bf882f705499af6cc20ba38d33697789778c0e413c68e54ebca3c5"
+    },
+    {
+      "path": "frames/travel/53-camping/six_collage_legacy_caption.png",
+      "themeId": "camping",
+      "category": "travel",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "captionBand": true,
+      "width": 3631,
+      "height": 3988,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ],
+      "bytes": 393391,
+      "sha256": "2ee1905b58559d8779656aa36946d060a18811fb0e7eb33f54b9e0e3e319a8b2"
+    }
+  ]
+}

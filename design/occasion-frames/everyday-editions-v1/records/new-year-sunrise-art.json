@@ -1,0 +1,127 @@
+{
+  "id": "new-year-sunrise",
+  "source": "source/masters/new-year-sunrise.png",
+  "masterSha256": "78f15ee320021c109a9185a70f797814e4cc134858c53d21c611a4d682c9612d",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "86d20e683bc7d3ad57ec3a377f39d298058145be06c19c5777226281426dc3a3",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "warm coral rising sun above two teal waves",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 44,
+        "top": 70,
+        "width": 427,
+        "height": 378
+      },
+      "width": 427,
+      "height": 378
+    },
+    {
+      "index": 1,
+      "name": "folded cream wish letter without writing",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 571,
+        "top": 111,
+        "width": 408,
+        "height": 341
+      },
+      "width": 408,
+      "height": 341
+    },
+    {
+      "index": 2,
+      "name": "pale gold small cloud",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1083,
+        "top": 174,
+        "width": 425,
+        "height": 200
+      },
+      "width": 425,
+      "height": 200
+    },
+    {
+      "index": 3,
+      "name": "coral and gold ribbon knot",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 59,
+        "top": 576,
+        "width": 420,
+        "height": 370
+      },
+      "width": 420,
+      "height": 370
+    },
+    {
+      "index": 4,
+      "name": "tiny white seabird",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 606,
+        "top": 606,
+        "width": 384,
+        "height": 324
+      },
+      "width": 384,
+      "height": 324
+    },
+    {
+      "index": 5,
+      "name": "brass compass",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1142,
+        "top": 555,
+        "width": 282,
+        "height": 370
+      },
+      "width": 282,
+      "height": 370
+    }
+  ]
+}

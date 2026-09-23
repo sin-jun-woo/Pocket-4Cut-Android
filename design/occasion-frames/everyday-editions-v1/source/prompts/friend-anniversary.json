@@ -1,0 +1,13 @@
+{
+  "index": 20,
+  "id": "friend-anniversary",
+  "tool": "built-in image_gen",
+  "mode": "generate",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 60px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection: Everyday Editions, Pocket 4Cut. Theme: 우정 N주년 (friend-anniversary). Palette coordinated with #EAECE3 paper and #48706C ink, with harmonious motif colors. EXACT six motifs in reading order:\n1. woven teal friendship knot\n2. two little wildflower stems\n3. stacked film snapshots with blank centers\n4. pair of antique brass key charms\n5. orange sun medallion\n6. two clay mugs side by side\nProduction layout: 3 columns x 2 rows, full silhouettes within separate cells, at least 70px clear transparent gutters. Genuinely transparent alpha background; no lettering, 3D, shadows or white sticker halo.",
+  "sourceFile": "exec-1fc63150-3e88-4239-92fd-e1a0de535d97.png",
+  "masterFile": "masters/friend-anniversary.png",
+  "visualReview": "Six friendship-anniversary motifs present and unlettered. Empty snapshot center is transparent-looking by design. Two mugs extend left of nominal cell boundary; adaptive grouping needed. Sun medallion includes a small face.",
+  "generatedOn": "2026-09-23"
+}

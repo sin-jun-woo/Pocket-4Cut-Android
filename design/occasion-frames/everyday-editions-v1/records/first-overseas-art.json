@@ -1,0 +1,127 @@
+{
+  "id": "first-overseas",
+  "source": "source/masters/first-overseas.png",
+  "masterSha256": "3165cd62c8d6ea4dee16f1c5f57a9716d9b1d76b7c906758e176cc8716e12392",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "cda1332036f386502d87d6a8af3e5d4c4c1a74005d79ef1b0f3facd3f04f8dbb",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "blank navy passport without national logo",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 100,
+        "top": 79,
+        "width": 366,
+        "height": 416
+      },
+      "width": 366,
+      "height": 416
+    },
+    {
+      "index": 1,
+      "name": "ivory passenger airplane",
+      "roi": [
+        512,
+        0,
+        1076,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 531,
+        "top": 144,
+        "width": 545,
+        "height": 254
+      },
+      "width": 464,
+      "height": 216
+    },
+    {
+      "index": 2,
+      "name": "coral luggage tag without lettering",
+      "roi": [
+        1076,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1139,
+        "top": 39,
+        "width": 295,
+        "height": 461
+      },
+      "width": 295,
+      "height": 461
+    },
+    {
+      "index": 3,
+      "name": "vintage round date stamp without text",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 77,
+        "top": 573,
+        "width": 374,
+        "height": 372
+      },
+      "width": 374,
+      "height": 372
+    },
+    {
+      "index": 4,
+      "name": "mustard travel suitcase",
+      "roi": [
+        512,
+        512,
+        1076,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 557,
+        "top": 561,
+        "width": 438,
+        "height": 369
+      },
+      "width": 438,
+      "height": 369
+    },
+    {
+      "index": 5,
+      "name": "pale green globe",
+      "roi": [
+        1076,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1114,
+        "top": 526,
+        "width": 337,
+        "height": 442
+      },
+      "width": 337,
+      "height": 442
+    }
+  ]
+}

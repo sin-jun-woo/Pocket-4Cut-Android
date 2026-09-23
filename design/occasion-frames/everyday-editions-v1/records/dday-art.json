@@ -1,0 +1,127 @@
+{
+  "id": "dday",
+  "source": "source/masters/dday.png",
+  "masterSha256": "88d5a2aca2580006b200419fb7509c1e549e588f2c2a95567916d2da0b798517",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "39f4613a14a58ed0ae24433c04c1ec10e93f0c1b76490b19e949a71b797a76ec",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "two red paper hearts",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 88,
+        "top": 136,
+        "width": 399,
+        "height": 320
+      },
+      "width": 399,
+      "height": 320
+    },
+    {
+      "index": 1,
+      "name": "blank cream calendar page",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 564,
+        "top": 72,
+        "width": 402,
+        "height": 400
+      },
+      "width": 402,
+      "height": 400
+    },
+    {
+      "index": 2,
+      "name": "pink silk bow",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1032,
+        "top": 85,
+        "width": 459,
+        "height": 416
+      },
+      "width": 459,
+      "height": 416
+    },
+    {
+      "index": 3,
+      "name": "tiny brass clock without numbers",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 41,
+        "top": 532,
+        "width": 407,
+        "height": 414
+      },
+      "width": 407,
+      "height": 414
+    },
+    {
+      "index": 4,
+      "name": "burgundy wax seal with heart",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 599,
+        "top": 598,
+        "width": 346,
+        "height": 307
+      },
+      "width": 346,
+      "height": 307
+    },
+    {
+      "index": 5,
+      "name": "blush flower sprig",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1094,
+        "top": 537,
+        "width": 366,
+        "height": 408
+      },
+      "width": 366,
+      "height": 408
+    }
+  ]
+}

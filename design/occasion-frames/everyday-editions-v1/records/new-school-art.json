@@ -1,0 +1,127 @@
+{
+  "id": "new-school",
+  "source": "source/masters/new-school.png",
+  "masterSha256": "2c4a15859edf748f7abc38e36ca464416140aaaa443ce9fa7356e5c72fadb80b",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "566f13c6c12f06a077579405e93756771b8bfba0702910509890f5a821687bf3",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "school building without writing",
+      "roi": [
+        0,
+        0,
+        543,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 26,
+        "top": 65,
+        "width": 517,
+        "height": 374
+      },
+      "width": 464,
+      "height": 336
+    },
+    {
+      "index": 1,
+      "name": "powder-blue school satchel",
+      "roi": [
+        543,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 621,
+        "top": 82,
+        "width": 373,
+        "height": 396
+      },
+      "width": 373,
+      "height": 396
+    },
+    {
+      "index": 2,
+      "name": "cherry blossom twig",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1065,
+        "top": 75,
+        "width": 426,
+        "height": 391
+      },
+      "width": 426,
+      "height": 391
+    },
+    {
+      "index": 3,
+      "name": "simple blank navy name badge",
+      "roi": [
+        0,
+        512,
+        543,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 84,
+        "top": 541,
+        "width": 399,
+        "height": 375
+      },
+      "width": 399,
+      "height": 375
+    },
+    {
+      "index": 4,
+      "name": "sharpened yellow pencil",
+      "roi": [
+        543,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 593,
+        "top": 544,
+        "width": 354,
+        "height": 404
+      },
+      "width": 354,
+      "height": 404
+    },
+    {
+      "index": 5,
+      "name": "neat plaid school uniform bow",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1056,
+        "top": 549,
+        "width": 429,
+        "height": 406
+      },
+      "width": 429,
+      "height": 406
+    }
+  ]
+}

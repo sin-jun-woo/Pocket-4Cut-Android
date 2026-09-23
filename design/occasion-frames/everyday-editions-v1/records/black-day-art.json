@@ -1,0 +1,127 @@
+{
+  "id": "black-day",
+  "source": "source/masters/black-day.png",
+  "masterSha256": "2cb39dcdf041d1a1a0ba26df01fb994f3e852d15e764ab9d021963727d07a9cc",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "dd515a409c674809ff4924a4017838b45782f7d4c1341909a0e94a3ab37a1abf",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "ivory bowl of Korean jjajangmyeon noodles with dark sauce",
+      "roi": [
+        0,
+        0,
+        635,
+        600
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 48,
+        "top": 79,
+        "width": 566,
+        "height": 448
+      },
+      "width": 464,
+      "height": 367
+    },
+    {
+      "index": 1,
+      "name": "wooden chopsticks",
+      "roi": [
+        635,
+        0,
+        1070,
+        600
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 653,
+        "top": 77,
+        "width": 384,
+        "height": 489
+      },
+      "width": 364,
+      "height": 464
+    },
+    {
+      "index": 2,
+      "name": "little yellow pickled radish dish",
+      "roi": [
+        1070,
+        0,
+        1536,
+        468
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1104,
+        "top": 165,
+        "width": 385,
+        "height": 292
+      },
+      "width": 385,
+      "height": 292
+    },
+    {
+      "index": 3,
+      "name": "black sunglasses",
+      "roi": [
+        0,
+        600,
+        730,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 65,
+        "top": 673,
+        "width": 616,
+        "height": 223
+      },
+      "width": 464,
+      "height": 168
+    },
+    {
+      "index": 4,
+      "name": "small cream heart with charcoal ink detail",
+      "roi": [
+        730,
+        600,
+        1090,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 786,
+        "top": 658,
+        "width": 228,
+        "height": 225
+      },
+      "width": 228,
+      "height": 225
+    },
+    {
+      "index": 5,
+      "name": "clear amber iced coffee cup illustrated matte",
+      "roi": [
+        1090,
+        468,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1145,
+        "top": 477,
+        "width": 319,
+        "height": 499
+      },
+      "width": 297,
+      "height": 464
+    }
+  ]
+}

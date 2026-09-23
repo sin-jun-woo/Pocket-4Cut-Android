@@ -1,0 +1,918 @@
+{
+  "id": "rose-day",
+  "index": 29,
+  "name": "로즈데이",
+  "category": "love",
+  "group": "occasion",
+  "masterSha256": "1f8448ec0c00cefbdee1ca978f700327f7f90a8f59032a56860cdd4ee87752a5",
+  "rendererSha256": "a87e39e77137bff50234a85ad75eae98afd621c57f3a350675c274cdfb13cab0",
+  "geometrySha256": "8766e01f0b4f8ea5694437f3b0d20dd80c1b72cf5173fd3d407df7a5675993c5",
+  "method": "Static composition from generated art and saved Android slot coordinates; not Android execution.",
+  "count": 18,
+  "overview": "overviews/rose-day.jpg",
+  "files": [
+    {
+      "path": "frames/love/29-rose-day/two_vertical.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 1248,
+      "height": 3179,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null,
+      "bytes": 145742,
+      "sha256": "4236796317ef7bdb1c1dea3a377fe47830cdac14aaf032612aff6dc166900997"
+    },
+    {
+      "path": "frames/love/29-rose-day/two_vertical_caption.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 1248,
+      "height": 3307,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": [
+        0,
+        3066.6667,
+        1248,
+        3306.6667
+      ],
+      "bytes": 209989,
+      "sha256": "586575d7f3377d4bea77a465c57a33fef5f62469192d1842d4b1b058d6f82713"
+    },
+    {
+      "path": "frames/love/29-rose-day/two_horizontal.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 1878,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 250430,
+      "sha256": "d8e99b81c04e85e3b9f62a4fd02809cb62bbbc30afaaec46ba96f0637dba4f2f"
+    },
+    {
+      "path": "frames/love/29-rose-day/two_horizontal_caption.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 2119,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        1757.4786,
+        2350,
+        2119.017
+      ],
+      "bytes": 410838,
+      "sha256": "cca83f39f09961915d020f775a363b3ee26b0892b77f7ebcaf1adb9e0eedc435"
+    },
+    {
+      "path": "frames/love/29-rose-day/four_vertical.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 1650,
+      "height": 4920,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null,
+      "bytes": 175934,
+      "sha256": "606e8161459722da9f12addee5295bb8696dbe95062a64b12e4e6fae9d2349e5"
+    },
+    {
+      "path": "frames/love/29-rose-day/four_vertical_caption.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 1650,
+      "height": 4920,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1341.0576
+        ],
+        [
+          84.61539,
+          1383.3654,
+          1565.3846,
+          2449.4229
+        ],
+        [
+          84.61539,
+          2491.7307,
+          1565.3846,
+          3557.7883
+        ],
+        [
+          84.61539,
+          3600.0962,
+          1565.3846,
+          4666.154
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": [
+        0,
+        4666.154,
+        1650,
+        4920
+      ],
+      "bytes": 261589,
+      "sha256": "4f28e0685eddff4d4a48230da61e047a466b1e009631a00c2071016f55eb8731"
+    },
+    {
+      "path": "frames/love/29-rose-day/four_grid.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 3304,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 267332,
+      "sha256": "fcf8443b21f658ffc74ffa74abcab7ff84e615978687762458b7bb9cb44a5998"
+    },
+    {
+      "path": "frames/love/29-rose-day/four_grid_caption.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 3545,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        3183.5469,
+        2350,
+        3545.0854
+      ],
+      "bytes": 428516,
+      "sha256": "5a593f072bae31fe13ab134f951a102011cee3b0c2f55cc0fec8e24038565662"
+    },
+    {
+      "path": "frames/love/29-rose-day/four_horizontal.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 4992,
+      "height": 2453,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null,
+      "bytes": 842121,
+      "sha256": "1e05f2c8c8ebb0bd1b242fd16d019b29afb745eab874959ae31eb6594a770633"
+    },
+    {
+      "path": "frames/love/29-rose-day/four_horizontal_caption.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 4992,
+      "height": 2965,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": [
+        0,
+        2197.3335,
+        4992,
+        2965.3335
+      ],
+      "bytes": 1373751,
+      "sha256": "a63e9f11f6b1699c625796835e84f2fd3ff362b423100688b1bfeabf7acf8218"
+    },
+    {
+      "path": "frames/love/29-rose-day/six_grid_2x3.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 4730,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 284122,
+      "sha256": "3f734e1b63b86e1c2076cde02bd256ead104608787c8f40e9a9df5cd680b9bd1"
+    },
+    {
+      "path": "frames/love/29-rose-day/six_grid_2x3_caption.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 4971,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        4609.615,
+        2350,
+        4971.1533
+      ],
+      "bytes": 444605,
+      "sha256": "d2df2504045176720b04ec1af2e4bc66c55fb9e483cda9ca0a343563dad26706"
+    },
+    {
+      "path": "frames/love/29-rose-day/six_grid_3x2.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 3631,
+      "height": 3615,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null,
+      "bytes": 528995,
+      "sha256": "2cbe74a98491c83a89242c0a58b44e17fb20ca0a038abaf96500c9d71f615556"
+    },
+    {
+      "path": "frames/love/29-rose-day/six_grid_3x2_caption.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 3631,
+      "height": 3988,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ],
+      "bytes": 850594,
+      "sha256": "3f8facb361728186bf5296f113bf62f10acaf4a69a498e74e8ae8f64a0e70863"
+    },
+    {
+      "path": "frames/love/29-rose-day/six_collage.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 3383,
+      "height": 4728,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null,
+      "bytes": 293840,
+      "sha256": "7b7d0b1a58283732d2a8e436cb7906cf3822b691cf273272d1d4600aaf78ded3"
+    },
+    {
+      "path": "frames/love/29-rose-day/six_collage_caption.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 3265,
+      "height": 4898,
+      "photoSlots": [
+        [
+          167.4359,
+          334.8718,
+          2092.9485,
+          2874.3164
+        ],
+        [
+          2176.6665,
+          334.8718,
+          3097.564,
+          1562.7351
+        ],
+        [
+          2176.6665,
+          1646.453,
+          3097.564,
+          2874.3164
+        ],
+        [
+          167.4359,
+          2958.0344,
+          1088.3333,
+          4185.8975
+        ],
+        [
+          1172.0511,
+          2958.0344,
+          2092.9485,
+          4185.8975
+        ],
+        [
+          2176.6665,
+          2958.0344,
+          3097.564,
+          4185.8975
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3265,
+        334.8718
+      ],
+      "captionArea": [
+        0,
+        4395.1924,
+        3265,
+        4897.5
+      ],
+      "bytes": 550085,
+      "sha256": "662972b7c1c09cf033a28a11224d0c8ac7f99669a900357c66bbdde2d610ff4b"
+    },
+    {
+      "path": "frames/love/29-rose-day/six_collage_legacy.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "captionBand": false,
+      "width": 3631,
+      "height": 3615,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null,
+      "bytes": 528995,
+      "sha256": "2cbe74a98491c83a89242c0a58b44e17fb20ca0a038abaf96500c9d71f615556"
+    },
+    {
+      "path": "frames/love/29-rose-day/six_collage_legacy_caption.png",
+      "themeId": "rose-day",
+      "category": "love",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "captionBand": true,
+      "width": 3631,
+      "height": 3988,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ],
+      "bytes": 850594,
+      "sha256": "3f8facb361728186bf5296f113bf62f10acaf4a69a498e74e8ae8f64a0e70863"
+    }
+  ]
+}

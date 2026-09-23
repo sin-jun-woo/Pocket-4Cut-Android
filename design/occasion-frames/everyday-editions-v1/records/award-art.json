@@ -1,0 +1,127 @@
+{
+  "id": "award",
+  "source": "source/masters/award.png",
+  "masterSha256": "45fb09c50af02a736cf8ee7f331a4aa65be538d389910d0cc4ee0bcfba7f6cb5",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "c1a307fba66703cc584d3176b285b655b429adc8b31e6c96a6b09b7f3ae5a579",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "gold champion medal on navy ribbon",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 56,
+        "top": 48,
+        "width": 456,
+        "height": 416
+      },
+      "width": 456,
+      "height": 416
+    },
+    {
+      "index": 1,
+      "name": "small polished illustrated gold trophy",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 591,
+        "top": 80,
+        "width": 353,
+        "height": 384
+      },
+      "width": 353,
+      "height": 384
+    },
+    {
+      "index": 2,
+      "name": "laurel wreath",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1032,
+        "top": 80,
+        "width": 427,
+        "height": 405
+      },
+      "width": 427,
+      "height": 405
+    },
+    {
+      "index": 3,
+      "name": "cream star medal",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 118,
+        "top": 528,
+        "width": 331,
+        "height": 425
+      },
+      "width": 331,
+      "height": 425
+    },
+    {
+      "index": 4,
+      "name": "deep red award rosette",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 597,
+        "top": 524,
+        "width": 343,
+        "height": 441
+      },
+      "width": 343,
+      "height": 441
+    },
+    {
+      "index": 5,
+      "name": "rolled cream certificate",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1045,
+        "top": 563,
+        "width": 437,
+        "height": 391
+      },
+      "width": 437,
+      "height": 391
+    }
+  ]
+}

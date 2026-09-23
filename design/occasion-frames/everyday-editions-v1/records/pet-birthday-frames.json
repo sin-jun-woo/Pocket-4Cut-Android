@@ -1,0 +1,918 @@
+{
+  "id": "pet-birthday",
+  "index": 58,
+  "name": "반려동물 생일",
+  "category": "family",
+  "group": "occasion",
+  "masterSha256": "e0ff1714f58af31758e3f7e662b86079739580b172eb67ba9c2d4e6a741cea36",
+  "rendererSha256": "a87e39e77137bff50234a85ad75eae98afd621c57f3a350675c274cdfb13cab0",
+  "geometrySha256": "8766e01f0b4f8ea5694437f3b0d20dd80c1b72cf5173fd3d407df7a5675993c5",
+  "method": "Static composition from generated art and saved Android slot coordinates; not Android execution.",
+  "count": 18,
+  "overview": "overviews/pet-birthday.jpg",
+  "files": [
+    {
+      "path": "frames/family/58-pet-birthday/two_vertical.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 1248,
+      "height": 3179,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": null,
+      "bytes": 215509,
+      "sha256": "13a7ef3a393cbadc1a44ba5a571eb5392ee20f3babac0f49b273d7c795b6caad"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/two_vertical_caption.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "TWO_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 1248,
+      "height": 3307,
+      "photoSlots": [
+        [
+          112,
+          256,
+          1136,
+          1621.3334
+        ],
+        [
+          112,
+          1701.3334,
+          1136,
+          3066.6667
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1248,
+        256
+      ],
+      "captionArea": [
+        0,
+        3066.6667,
+        1248,
+        3306.6667
+      ],
+      "bytes": 278474,
+      "sha256": "75be0d28f1be0d261c82a7709ac6fe5dcb0fccb8d277b3420d8138651752e073"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/two_horizontal.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 1878,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 357859,
+      "sha256": "f2a486d8e3d5c1c6a51f29a49346a93897f8edc6555ec8dd00f11bb58a6866e1"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/two_horizontal_caption.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "TWO_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 2119,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        1757.4786,
+        2350,
+        2119.017
+      ],
+      "bytes": 518489,
+      "sha256": "5493703d0f2d814d117e3432ad3fd05e6ac3f631d906bd6b5be40c9464ff15c6"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/four_vertical.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 1650,
+      "height": 4920,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1383.3654
+        ],
+        [
+          84.61539,
+          1425.6731,
+          1565.3846,
+          2534.0386
+        ],
+        [
+          84.61539,
+          2576.3462,
+          1565.3846,
+          3684.7114
+        ],
+        [
+          84.61539,
+          3727.0193,
+          1565.3846,
+          4835.385
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": null,
+      "bytes": 249067,
+      "sha256": "89d4937419f7311a30e190e91c8b34780845e1f5ec0e586aa4525ffd09d794bd"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/four_vertical_caption.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "FOUR_VERTICAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 1650,
+      "height": 4920,
+      "photoSlots": [
+        [
+          84.61539,
+          275,
+          1565.3846,
+          1341.0576
+        ],
+        [
+          84.61539,
+          1383.3654,
+          1565.3846,
+          2449.4229
+        ],
+        [
+          84.61539,
+          2491.7307,
+          1565.3846,
+          3557.7883
+        ],
+        [
+          84.61539,
+          3600.0962,
+          1565.3846,
+          4666.154
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        1650,
+        275
+      ],
+      "captionArea": [
+        0,
+        4666.154,
+        1650,
+        4920
+      ],
+      "bytes": 334605,
+      "sha256": "538bff09369dc6e6e2df00c6c444584c0e4de91e9a44869715fc934f8d9c3d16"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/four_grid.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 3304,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 384522,
+      "sha256": "ae20ca5fc4ba8f17eefba857ff17997d962d5e29bf136565e5d8da7b5525a55e"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/four_grid_caption.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "FOUR_GRID",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 3545,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        3183.5469,
+        2350,
+        3545.0854
+      ],
+      "bytes": 544089,
+      "sha256": "118daac1ee12caa90665bc693f02c39bb2c35d77035ee70e15f09fb17ee10660"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/four_horizontal.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 4992,
+      "height": 2453,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": null,
+      "bytes": 1191246,
+      "sha256": "7c48ae10da22f5347f6e02d577a610dd253d050f547e5ccfb3d907e634a02b6c"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/four_horizontal_caption.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "FOUR_HORIZONTAL",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 4992,
+      "height": 2965,
+      "photoSlots": [
+        [
+          256,
+          832,
+          1280,
+          2197.3335
+        ],
+        [
+          1408,
+          832,
+          2432,
+          2197.3335
+        ],
+        [
+          2560,
+          832,
+          3584,
+          2197.3335
+        ],
+        [
+          3712,
+          832,
+          4736,
+          2197.3335
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        4992,
+        832
+      ],
+      "captionArea": [
+        0,
+        2197.3335,
+        4992,
+        2965.3335
+      ],
+      "bytes": 1730645,
+      "sha256": "512911b1b8166890d1653e43a3d824de31a5af18c91ccb5d962e9805388c0688"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/six_grid_2x3.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 2350,
+      "height": 4730,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": null,
+      "bytes": 408765,
+      "sha256": "66981ffcb93fc841a318012aa0008d8c68c8edc30f131ae6e50ae28db5698a7a"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/six_grid_2x3_caption.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "SIX_GRID_2X3",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 2350,
+      "height": 4971,
+      "photoSlots": [
+        [
+          120.51282,
+          391.66666,
+          1144.8718,
+          1757.4786
+        ],
+        [
+          1205.1283,
+          391.66666,
+          2229.4873,
+          1757.4786
+        ],
+        [
+          120.51282,
+          1817.735,
+          1144.8718,
+          3183.5469
+        ],
+        [
+          1205.1283,
+          1817.735,
+          2229.4873,
+          3183.5469
+        ],
+        [
+          120.51282,
+          3243.8035,
+          1144.8718,
+          4609.615
+        ],
+        [
+          1205.1283,
+          3243.8035,
+          2229.4873,
+          4609.615
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        2350,
+        391.66666
+      ],
+      "captionArea": [
+        0,
+        4609.615,
+        2350,
+        4971.1533
+      ],
+      "bytes": 568824,
+      "sha256": "39a265e85d377874e08b4483bb912fe18583216eedcb10e9bf4d27d1bd4b5384"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/six_grid_3x2.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 3631,
+      "height": 3615,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null,
+      "bytes": 757496,
+      "sha256": "dd469e15b2aa5a9e9d98d5b6577e7276eae85b4c96ba4691b194a3154c367b25"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/six_grid_3x2_caption.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "SIX_GRID_3X2",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 3631,
+      "height": 3988,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ],
+      "bytes": 1080734,
+      "sha256": "c3e2ce68e3cd8fe147eac2a58fa0df534b5a6655652f203b2db593ce9478fea4"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/six_collage.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "captionBand": false,
+      "width": 3383,
+      "height": 4728,
+      "photoSlots": [
+        [
+          173.48718,
+          346.97437,
+          2168.5898,
+          2978.1968
+        ],
+        [
+          2255.3335,
+          346.97437,
+          3209.513,
+          1619.2137
+        ],
+        [
+          2255.3335,
+          1705.9573,
+          3209.513,
+          2978.1968
+        ],
+        [
+          173.48718,
+          3064.9404,
+          1127.6667,
+          4337.1797
+        ],
+        [
+          1214.4104,
+          3064.9404,
+          2168.5898,
+          4337.1797
+        ],
+        [
+          2255.3335,
+          3064.9404,
+          3209.513,
+          4337.1797
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3383.0002,
+        346.97437
+      ],
+      "captionArea": null,
+      "bytes": 422600,
+      "sha256": "b9f20c0b32a74e440c60e4104451542a4ad317d9153b117c8430d79bdbc4c63b"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/six_collage_caption.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 2,
+      "captionBand": true,
+      "width": 3265,
+      "height": 4898,
+      "photoSlots": [
+        [
+          167.4359,
+          334.8718,
+          2092.9485,
+          2874.3164
+        ],
+        [
+          2176.6665,
+          334.8718,
+          3097.564,
+          1562.7351
+        ],
+        [
+          2176.6665,
+          1646.453,
+          3097.564,
+          2874.3164
+        ],
+        [
+          167.4359,
+          2958.0344,
+          1088.3333,
+          4185.8975
+        ],
+        [
+          1172.0511,
+          2958.0344,
+          2092.9485,
+          4185.8975
+        ],
+        [
+          2176.6665,
+          2958.0344,
+          3097.564,
+          4185.8975
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3265,
+        334.8718
+      ],
+      "captionArea": [
+        0,
+        4395.1924,
+        3265,
+        4897.5
+      ],
+      "bytes": 669734,
+      "sha256": "9ce6620e059cde5253e6f58e100067d8725e11035f10d13ee5dacb9c4e610793"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/six_collage_legacy.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "captionBand": false,
+      "width": 3631,
+      "height": 3615,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": null,
+      "bytes": 757496,
+      "sha256": "dd469e15b2aa5a9e9d98d5b6577e7276eae85b4c96ba4691b194a3154c367b25"
+    },
+    {
+      "path": "frames/family/58-pet-birthday/six_collage_legacy_caption.png",
+      "themeId": "pet-birthday",
+      "category": "family",
+      "layoutId": "SIX_COLLAGE",
+      "layoutVersion": 1,
+      "captionBand": true,
+      "width": 3631,
+      "height": 3988,
+      "photoSlots": [
+        [
+          186.20512,
+          605.1666,
+          1210.3334,
+          1970.671
+        ],
+        [
+          1303.4359,
+          605.1666,
+          2327.5642,
+          1970.671
+        ],
+        [
+          2420.6667,
+          605.1666,
+          3444.795,
+          1970.671
+        ],
+        [
+          186.20512,
+          2063.7734,
+          1210.3334,
+          3429.2778
+        ],
+        [
+          1303.4359,
+          2063.7734,
+          2327.5642,
+          3429.2778
+        ],
+        [
+          2420.6667,
+          2063.7734,
+          3444.795,
+          3429.2778
+        ]
+      ],
+      "header": [
+        0,
+        0,
+        3631,
+        605.1666
+      ],
+      "captionArea": [
+        0,
+        3429.2778,
+        3631,
+        3987.893
+      ],
+      "bytes": 1080734,
+      "sha256": "c3e2ce68e3cd8fe147eac2a58fa0df534b5a6655652f203b2db593ce9478fea4"
+    }
+  ]
+}

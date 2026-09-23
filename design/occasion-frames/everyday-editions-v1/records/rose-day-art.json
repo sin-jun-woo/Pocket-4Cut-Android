@@ -1,0 +1,127 @@
+{
+  "id": "rose-day",
+  "source": "source/masters/rose-day.png",
+  "masterSha256": "1f8448ec0c00cefbdee1ca978f700327f7f90a8f59032a56860cdd4ee87752a5",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "8598789f9f5d86a689e6736ef6491eb161a41a6d385cb09b16cc5c14db4fa73c",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "three red garden roses loosely bundled",
+      "roi": [
+        0,
+        0,
+        513,
+        518
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 79,
+        "top": 50,
+        "width": 434,
+        "height": 468
+      },
+      "width": 430,
+      "height": 464
+    },
+    {
+      "index": 1,
+      "name": "single rose bud",
+      "roi": [
+        513,
+        0,
+        1024,
+        518
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 701,
+        "top": 81,
+        "width": 249,
+        "height": 437
+      },
+      "width": 249,
+      "height": 437
+    },
+    {
+      "index": 2,
+      "name": "long green rose leaves",
+      "roi": [
+        1024,
+        0,
+        1536,
+        519
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1089,
+        "top": 72,
+        "width": 374,
+        "height": 447
+      },
+      "width": 374,
+      "height": 447
+    },
+    {
+      "index": 3,
+      "name": "deep red silk bow",
+      "roi": [
+        0,
+        518,
+        513,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 54,
+        "top": 555,
+        "width": 446,
+        "height": 414
+      },
+      "width": 446,
+      "height": 414
+    },
+    {
+      "index": 4,
+      "name": "cream envelope sealed with dried rose",
+      "roi": [
+        513,
+        518,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 604,
+        "top": 613,
+        "width": 397,
+        "height": 295
+      },
+      "width": 397,
+      "height": 295
+    },
+    {
+      "index": 5,
+      "name": "small pink paper heart",
+      "roi": [
+        1024,
+        519,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1191,
+        "top": 666,
+        "width": 225,
+        "height": 204
+      },
+      "width": 225,
+      "height": 204
+    }
+  ]
+}

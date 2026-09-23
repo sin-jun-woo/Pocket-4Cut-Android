@@ -1,0 +1,127 @@
+{
+  "id": "custom-anniversary",
+  "source": "source/masters/custom-anniversary.png",
+  "masterSha256": "35dce82533d12ad80c4146afbab131d58d8734b1695d252e2ce9e56d792d57b0",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "ad9570abb1c94a2e303836123c81da6b42c5ed5b76942bccea3f4c3118df61ac",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "plum ink fountain pen",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 87,
+        "top": 47,
+        "width": 412,
+        "height": 444
+      },
+      "width": 412,
+      "height": 444
+    },
+    {
+      "index": 1,
+      "name": "blank cream date card",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 550,
+        "top": 97,
+        "width": 463,
+        "height": 371
+      },
+      "width": 463,
+      "height": 371
+    },
+    {
+      "index": 2,
+      "name": "mauve silk bow",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1051,
+        "top": 79,
+        "width": 437,
+        "height": 421
+      },
+      "width": 437,
+      "height": 421
+    },
+    {
+      "index": 3,
+      "name": "loose cream and pink flowers",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 57,
+        "top": 528,
+        "width": 434,
+        "height": 438
+      },
+      "width": 434,
+      "height": 438
+    },
+    {
+      "index": 4,
+      "name": "ivory heart",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 578,
+        "top": 566,
+        "width": 391,
+        "height": 369
+      },
+      "width": 391,
+      "height": 369
+    },
+    {
+      "index": 5,
+      "name": "vintage brass sealing stamp",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1087,
+        "top": 542,
+        "width": 363,
+        "height": 386
+      },
+      "width": 363,
+      "height": 386
+    }
+  ]
+}

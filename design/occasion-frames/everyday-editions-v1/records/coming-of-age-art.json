@@ -1,0 +1,177 @@
+{
+  "id": "coming-of-age",
+  "source": "source/masters/coming-of-age.png",
+  "masterSha256": "115358f825264abdc4ee0f7b8e23ec458bd3016f0269a16b5d5247d23fa72895",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "22b1961f1868917eba0a9b1716ee0acacb6c82a075dd30f6a8b5dba11a377b02",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "single wine red rose",
+      "roi": [
+        0,
+        0,
+        520,
+        590
+      ],
+      "polygon": [
+        [
+          0,
+          0
+        ],
+        [
+          520,
+          0
+        ],
+        [
+          520,
+          540
+        ],
+        [
+          220,
+          540
+        ],
+        [
+          220,
+          590
+        ],
+        [
+          0,
+          590
+        ]
+      ],
+      "bounds": {
+        "left": 83,
+        "top": 45,
+        "width": 395,
+        "height": 545
+      },
+      "width": 336,
+      "height": 464
+    },
+    {
+      "index": 1,
+      "name": "small vintage perfume bottle with cream atomizer",
+      "roi": [
+        520,
+        0,
+        1030,
+        540
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 548,
+        "top": 95,
+        "width": 461,
+        "height": 395
+      },
+      "width": 461,
+      "height": 395
+    },
+    {
+      "index": 2,
+      "name": "red velvet ribbon",
+      "roi": [
+        1030,
+        0,
+        1536,
+        540
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1051,
+        "top": 85,
+        "width": 445,
+        "height": 424
+      },
+      "width": 445,
+      "height": 424
+    },
+    {
+      "index": 3,
+      "name": "an elegant tiny gold key",
+      "roi": [
+        0,
+        540,
+        520,
+        1024
+      ],
+      "polygon": [
+        [
+          0,
+          590
+        ],
+        [
+          220,
+          590
+        ],
+        [
+          220,
+          540
+        ],
+        [
+          520,
+          540
+        ],
+        [
+          520,
+          1024
+        ],
+        [
+          0,
+          1024
+        ]
+      ],
+      "bounds": {
+        "left": 121,
+        "top": 540,
+        "width": 265,
+        "height": 428
+      },
+      "width": 265,
+      "height": 428
+    },
+    {
+      "index": 4,
+      "name": "folded cream letter",
+      "roi": [
+        520,
+        540,
+        1030,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 531,
+        "top": 585,
+        "width": 458,
+        "height": 379
+      },
+      "width": 458,
+      "height": 379
+    },
+    {
+      "index": 5,
+      "name": "three ivory pearl beads",
+      "roi": [
+        1030,
+        540,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1148,
+        "top": 629,
+        "width": 279,
+        "height": 290
+      },
+      "width": 279,
+      "height": 290
+    }
+  ]
+}

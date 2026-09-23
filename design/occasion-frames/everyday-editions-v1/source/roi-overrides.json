@@ -1,0 +1,35 @@
+{
+  "black-day": [[0,0,635,600],[635,0,1070,600],[1070,0,1536,468],[0,600,730,1024],[730,600,1090,1024],[1090,468,1536,1024]],
+  "here-a-cut": {
+    "rois": [[0,0,480,512],[480,0,1040,512],[1040,0,1536,512],[0,512,590,1024],[590,512,1024,1024],[1024,512,1536,1024]],
+    "note": "The upper map and lower ticket overlap the nominal column boundary in different rows. Independent top/bottom cuts preserve both whole silhouettes."
+  },
+  "seollal": {
+    "rois": [[0,0,480,550],[480,0,1100,550],[1100,0,1536,550],[0,550,520,1024],[520,500,1035,1024],[1035,550,1536,1024]],
+    "polygons": {
+      "1": [[480,0],[1100,0],[1100,500],[820,500],[820,550],[480,550]],
+      "4": [[520,550],[820,550],[820,500],[1035,500],[1035,1024],[520,1024]]
+    },
+    "note": "Complementary stepped masks separate the long jeogori ribbon and plum twig without cutting either silhouette. Top and bottom column cuts differ."
+  },
+  "coming-of-age": {
+    "rois": [[0,0,520,590],[520,0,1030,540],[1030,0,1536,540],[0,540,520,1024],[520,540,1030,1024],[1030,540,1536,1024]],
+    "polygons": {
+      "0": [[0,0],[520,0],[520,540],[220,540],[220,590],[0,590]],
+      "3": [[0,590],[220,590],[220,540],[520,540],[520,1024],[0,1024]]
+    },
+    "note": "The long rose stem and ornate key cross the nominal row boundary in different columns. Complementary masks preserve both."
+  },
+  "teachers-day": {
+    "rois": [[0,0,520,550],[520,0,1100,550],[1100,0,1536,550],[0,550,510,1024],[510,550,1010,1024],[1010,550,1536,1024]],
+    "note": "Different upper/lower column cuts preserve the wide chalkboard, carnation stem and complete pencil."
+  },
+  "new-year": {
+    "rois": [[0,0,539,510],[539,0,1024,510],[1024,0,1536,510],[0,510,536,1024],[536,464,1024,1024],[1024,510,1536,1024]],
+    "polygons": {
+      "1": [[539,0],[1024,0],[1024,510],[804,510],[804,464],[736,464],[736,510],[539,510]],
+      "4": [[536,510],[736,510],[736,464],[804,464],[804,510],[1024,510],[1024,1024],[536,1024]]
+    },
+    "note": "Cuts follow genuinely empty space between the bow tails and the adjacent star hanger. No motif is redrawn or recoloured."
+  }
+}

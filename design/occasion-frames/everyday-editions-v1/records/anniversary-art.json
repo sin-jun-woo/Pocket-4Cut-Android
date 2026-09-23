@@ -1,0 +1,127 @@
+{
+  "id": "anniversary",
+  "source": "source/masters/anniversary.png",
+  "masterSha256": "edc2e93ad4b26be3390589f1a91ef54f1ee7e0ea3e8b45b1686c599aa2e4aedd",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "3135db7ba32d477f2ff81103abc5cb740b7c7cf1cccc94957c01bf546327baa8",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "loose garden rose bouquet",
+      "roi": [
+        0,
+        0,
+        523,
+        559
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 40,
+        "top": 40,
+        "width": 483,
+        "height": 519
+      },
+      "width": 432,
+      "height": 464
+    },
+    {
+      "index": 1,
+      "name": "deep wine silk bow",
+      "roi": [
+        523,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 557,
+        "top": 80,
+        "width": 453,
+        "height": 432
+      },
+      "width": 453,
+      "height": 432
+    },
+    {
+      "index": 2,
+      "name": "two slender dinner candles",
+      "roi": [
+        1024,
+        0,
+        1536,
+        533
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1118,
+        "top": 37,
+        "width": 300,
+        "height": 496
+      },
+      "width": 281,
+      "height": 464
+    },
+    {
+      "index": 3,
+      "name": "pair of gold interlocking rings",
+      "roi": [
+        0,
+        559,
+        523,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 78,
+        "top": 632,
+        "width": 388,
+        "height": 262
+      },
+      "width": 388,
+      "height": 262
+    },
+    {
+      "index": 4,
+      "name": "ivory envelope with wax heart seal",
+      "roi": [
+        523,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 572,
+        "top": 586,
+        "width": 427,
+        "height": 346
+      },
+      "width": 427,
+      "height": 346
+    },
+    {
+      "index": 5,
+      "name": "delicate olive leaf sprig",
+      "roi": [
+        1024,
+        533,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1063,
+        "top": 555,
+        "width": 416,
+        "height": 388
+      },
+      "width": 416,
+      "height": 388
+    }
+  ]
+}

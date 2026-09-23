@@ -1,0 +1,3 @@
+# Reproducible local download bundles. Full-resolution PNGs and originals are
+# versioned; committing another copy inside large ZIPs would duplicate them.
+/deliverables/downloads/*.zip

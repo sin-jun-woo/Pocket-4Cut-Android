@@ -1,0 +1,127 @@
+{
+  "id": "first-fourcut",
+  "source": "source/masters/first-fourcut.png",
+  "masterSha256": "595fbc892a09afc6a75b69a3dfa0b55e1be46098524c89285124a01b22df4afd",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "b188430d0eb6b02e7476895020e2ea74c3dfa4da475dcae48fe8f9f158306350",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "retro cream instant camera",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 58,
+        "top": 127,
+        "width": 445,
+        "height": 347
+      },
+      "width": 445,
+      "height": 347
+    },
+    {
+      "index": 1,
+      "name": "two blank instant photo prints",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 561,
+        "top": 98,
+        "width": 416,
+        "height": 397
+      },
+      "width": 416,
+      "height": 397
+    },
+    {
+      "index": 2,
+      "name": "coral silk bow",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1056,
+        "top": 127,
+        "width": 408,
+        "height": 366
+      },
+      "width": 408,
+      "height": 366
+    },
+    {
+      "index": 3,
+      "name": "tiny butter-yellow star",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 152,
+        "top": 638,
+        "width": 236,
+        "height": 231
+      },
+      "width": 236,
+      "height": 231
+    },
+    {
+      "index": 4,
+      "name": "pair of pink paper hearts",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 576,
+        "top": 602,
+        "width": 383,
+        "height": 302
+      },
+      "width": 383,
+      "height": 302
+    },
+    {
+      "index": 5,
+      "name": "terracotta film roll",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1087,
+        "top": 574,
+        "width": 376,
+        "height": 348
+      },
+      "width": 376,
+      "height": 348
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "themeIndex": 68,
+  "themeId": "dad-date",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 68: 아빠와 데이트 (dad-date). Palette: soft sage #E8EEEA, deep muted teal #52756D, cream and warm golden details. EXACT six motifs in reading order: 1. two sage paper hearts; 2. golden star; 3. olive baseball cap without logo; 4. two ceramic coffee cups cream and blue; 5. blue necktie; 6. small brass key. Warm understated father-and-child keepsake stationery, flat painted print quality. Size each motif max340px with broad70px empty transparent gutters in itscell. No text or logos.",
+  "sourceGeneratedFilename": "exec-21a0f2cc-8963-40d1-8df6-93ca20d0d054.png",
+  "master": "source/masters/dad-date.png",
+  "visualReview": "Six readable sage/navy/gold motifs with complete separate silhouettes, no text/brands."
+}

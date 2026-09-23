@@ -1,0 +1,127 @@
+{
+  "id": "teachers-day",
+  "source": "source/masters/teachers-day.png",
+  "masterSha256": "ce8320798abe98dc1efcf7f71c4924b527a8cc9c19da3b041dcbf6b0a7388a65",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "7b183a991201e75133f0dd589cde243f1233fb0c55071ae9d0751739297a59f8",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "red carnation with long green stem",
+      "roi": [
+        0,
+        0,
+        520,
+        550
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 114,
+        "top": 32,
+        "width": 366,
+        "height": 508
+      },
+      "width": 334,
+      "height": 464
+    },
+    {
+      "index": 1,
+      "name": "small dark green chalkboard without letters",
+      "roi": [
+        520,
+        0,
+        1100,
+        550
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 556,
+        "top": 111,
+        "width": 480,
+        "height": 324
+      },
+      "width": 464,
+      "height": 313
+    },
+    {
+      "index": 2,
+      "name": "piece of cream chalk",
+      "roi": [
+        1100,
+        0,
+        1536,
+        550
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1170,
+        "top": 131,
+        "width": 276,
+        "height": 298
+      },
+      "width": 276,
+      "height": 298
+    },
+    {
+      "index": 3,
+      "name": "yellow wooden pencil",
+      "roi": [
+        0,
+        550,
+        510,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 84,
+        "top": 566,
+        "width": 388,
+        "height": 381
+      },
+      "width": 388,
+      "height": 381
+    },
+    {
+      "index": 4,
+      "name": "blank cream thank-you letter",
+      "roi": [
+        510,
+        550,
+        1010,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 530,
+        "top": 563,
+        "width": 450,
+        "height": 414
+      },
+      "width": 450,
+      "height": 414
+    },
+    {
+      "index": 5,
+      "name": "stack of green and rust school books",
+      "roi": [
+        1010,
+        550,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1031,
+        "top": 589,
+        "width": 471,
+        "height": 374
+      },
+      "width": 464,
+      "height": 368
+    }
+  ]
+}

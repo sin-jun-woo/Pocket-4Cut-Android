@@ -1,0 +1,127 @@
+{
+  "id": "this-year",
+  "source": "source/masters/this-year.png",
+  "masterSha256": "27042811b0a77f7e9056c6b3c50bc9e8e9676211f0413f8440ab6f003ee8190f",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "435acecc277281b5c7b9f14d846425d4bd17c44a95e20907790208d15cefc794",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "golden film camera",
+      "roi": [
+        0,
+        0,
+        512,
+        509
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 64,
+        "top": 135,
+        "width": 433,
+        "height": 272
+      },
+      "width": 433,
+      "height": 272
+    },
+    {
+      "index": 1,
+      "name": "navy and cream film roll",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 631,
+        "top": 109,
+        "width": 346,
+        "height": 309
+      },
+      "width": 346,
+      "height": 309
+    },
+    {
+      "index": 2,
+      "name": "ivory album without title",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1071,
+        "top": 85,
+        "width": 428,
+        "height": 363
+      },
+      "width": 428,
+      "height": 363
+    },
+    {
+      "index": 3,
+      "name": "gold laurel leaf",
+      "roi": [
+        0,
+        509,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 116,
+        "top": 509,
+        "width": 305,
+        "height": 439
+      },
+      "width": 305,
+      "height": 439
+    },
+    {
+      "index": 4,
+      "name": "small brass clock without numbers",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 584,
+        "top": 549,
+        "width": 323,
+        "height": 360
+      },
+      "width": 323,
+      "height": 360
+    },
+    {
+      "index": 5,
+      "name": "rust silk ribbon",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1044,
+        "top": 556,
+        "width": 454,
+        "height": 408
+      },
+      "width": 454,
+      "height": 408
+    }
+  ]
+}

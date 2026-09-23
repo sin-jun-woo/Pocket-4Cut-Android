@@ -1,5 +1,20 @@
 # Pocket 4Cut 이미지·그래픽 자산 가이드
 
+## 2026-09-23 — Everyday Editions 기념일 디자인 납품 (앱 미적용)
+
+- 범위: 사용자 표의 기념일 77 + 특수 11 = **88종**. 후속 지시에 따라 이번에는 프레임 이미지부터 제작했으며, 앱 자산·선택 UI·테스트·빌드는 변경하거나 실행하지 않았다. 기존 Paper Seasons는 그대로다.
+- 위치: [컬렉션 안내](../design/occasion-frames/everyday-editions-v1/README.md), [전체 모아보기](../design/occasion-frames/everyday-editions-v1/deliverables/overview-all-occasions.jpg), [다운로드 안내](../design/occasion-frames/everyday-editions-v1/deliverables/DOWNLOADS.md).
+- 생성 원본: `source/masters/<id>.png` 88장, 각각 1536×1024 RGBA. 주제별 별도 내장 이미지 생성 요청을 `source/prompts/<id>.json`에 보존했다. 모델/품질 선택자는 제공되지 않았다. 다른 프레임 회사의 캐릭터·상표·도안을 복제하지 않았으며 실제 손그림 제작이라고 주장하지 않는다.
+- 아트 디렉션: 카탈로그의 주제별 팔레트·소품과 `source/art-direction.json`의 글꼴·장식 밀도·여백을 분리했다. 단순 소품 수보다 생일/웨딩/졸업/여행/추억 각각의 분위기를 우선했다. 88종은 10개 폴더로 구분하고, 실제 앱 카테고리·특수 기록 화면은 후속 설계로 남겼다.
+- 기계적 정리: 원본 알파를 보존해 독립 소품을 크롭·투명 여백·축소한 `source/atlases/` 88장(1536×1024). 긴 줄기/리본/티켓이 셀을 넘는 6종은 `roi-overrides.json`의 영역·다각형을 사용한다. 원본은 수정하지 않았다. 광복절의 정확한 태극기만 [행정안전부 공식 도안](https://www.mois.go.kr/frt/sub/a06/b08/nationalIcon_2_2/screen.do)에서 얻었으며 원본과 1200×800 배치용 PNG를 `source/references/`에 보존했다.
+- 정적 프레임: Paper Seasons 납품 manifest의 슬롯·헤더·문구 영역을 사용한 1,584장(88×18), 8bit RGBA PNG. 폭 1248–4992px / 높이 1878–4971px이며 조합별 정확한 크기·좌표·SHA-256은 `deliverables/manifest.json`에 있다. 실제 사진창은 투명하며 모아보기의 회색은 확인용 배경이다. 현재 배치 8개×문구 없음/있음 16장과 이전 SIX_COLLAGE 호환 2장을 주제별로 제공한다. **이번 Android 실행 결과가 아니며 런타임 연결을 완료한 것이 아니다.**
+- 글자: 제목·브랜드·날짜·이름·장소·온도는 생성 일러스트에 맡기지 않고 코드와 글꼴로 합성했다. 날짜/횟수 등은 예시 값이며 자동 기능은 구현하지 않았다. 기존 배민 한나/연성과 로컬 설치 Georgia·Malgun Gothic·Consolas를 래스터화했으며 글꼴 파일 자체를 새 패키지에 재배포하지 않는다.
+- 보기: 테마별 8배치 시트 88장(2400×2100 JPG), 10개 카테고리 시트, 전체 88종 시트(3560×7220 JPG), 가상 성인 사진 합성 예시 88장(폭 1175px). 실제 사용자 사진·고객 후기·해당 기념일 기록이 아니다. 특히 반려동물/아기 테마의 공통 성인 예시는 비율 확인용으로만 사용한다.
+- 홍보: 내장 이미지 도구로 생성한 종이 배경 위에 실제 완성 2/4/6컷 PNG와 기존 가상 성인 사진을 배치했다. 새 사람이미지나 프레임 재해석본이 아니다. `instagram-promo.png` 1080×1350, 마스터 2160×2700, 실제 소스/해시는 `records/instagram-promo.json`에 있다. 본문 “오늘의 분위기, 네컷에 남겨보세요.”. 게시·광고 집행은 하지 않았다.
+- 보존/재출력: 미디어 생성은 `render-collection.cjs → render-promo.cjs → package-collection.cjs`. 전체/카테고리 ZIP은 로컬 재생성 파일로 Git 중복 보관에서 제외하며, 원본 PNG·스크립트·manifest는 버전 관리한다. 한 기념일의 18장이 다른 ZIP으로 분산되지 않게 묶는다. 기록 원본과 현재 렌더를 구분하고, 앱 적용 전 미리보기/저장 일치·동적 글자·기기 메모리를 다음 단계에서 확인한다.
+
+아래 기록은 기존 앱 자산의 이력이다. 위 정적 컬렉션이 이미 앱에 추가됐다고 해석하지 않는다.
+
 > **Paper Seasons 업데이트:** 아래 신뢰성 개편 기준 이후, 2026-09-22 계절 프레임 4종을 새 일러스트로 교체했다. 현행 추가 규격은 마지막 Paper Seasons 절을 참고한다.
 
 > 현행 코드 확인일: 2026-09-22 · 기준: `codex/refactor-reliability`의 앱 소스 커밋 `155ced0b44b381bb8d274d2652d6d2fd421b2973`(시작 기준 `a0eff04`).

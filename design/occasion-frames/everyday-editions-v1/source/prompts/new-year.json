@@ -1,0 +1,13 @@
+{
+  "index": 13,
+  "id": "new-year",
+  "tool": "built-in image_gen",
+  "mode": "generate",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 60px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection: Everyday Editions, Pocket 4Cut. Theme: 새해 / 신년 (new-year). Palette coordinated with #152E40 paper and #F4D29B ink, with harmonious motif colors. EXACT six motifs in reading order:\n1. golden paper firework burst\n2. deep red tied ribbon\n3. two elegant champagne coupes\n4. fan of gold paper streamers\n5. ivory star ornament\n6. a small clock face without numbers\nProduction layout: 3 columns x 2 rows, full silhouettes within separate cells, at least 70px clear transparent gutters. Genuinely transparent alpha background; no lettering, 3D, shadows or white sticker halo.",
+  "sourceFile": "exec-85e15500-1011-4018-8418-aac744ab7709.png",
+  "masterFile": "masters/new-year.png",
+  "visualReview": "Six New Year motifs visible, clock has ticks without numerals. Fireworks and streamer group include small intended companion dots/stars; retain those components with their groups. Star hanging loop reaches above nominal lower cell.",
+  "generatedOn": "2026-09-23"
+}

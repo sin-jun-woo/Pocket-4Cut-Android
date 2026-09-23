@@ -1,0 +1,11 @@
+{
+  "themeIndex": 70,
+  "themeId": "reunion",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 70: 동창회 (reunion). Palette: warm parchment #EFE6D5, sage green #5D6F62, brass and burgundy. EXACT six motifs in reading order: 1. two retro graduation caps; 2. cream school yearbook without title; 3. sage school building without signs; 4. brass school bell; 5. bunch of small daisies; 6. burgundy ribbon. Nostalgic school reunion print ephemera, adult keepsake aesthetic. Six independent full silhouettes in3x2 layout,70pxcleartransparentgutters. Absolutely no letters, numbers or signs on school and yearbook.",
+  "sourceGeneratedFilename": "exec-8e78200e-cf7c-4c2c-8d8a-86cf829b5738.png",
+  "master": "source/masters/reunion.png",
+  "visualReview": "All six reunion motifs distinct and complete. School illustration finely detailed, readable larger; cap reaches column boundary slightly. No labels or logos."
+}

@@ -1,0 +1,127 @@
+{
+  "id": "best-friends",
+  "source": "source/masters/best-friends.png",
+  "masterSha256": "447c883958cd8c2ff0bbace225d7c32c4194cc5b8e6800794e0d4680d2a62073",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "28d172d2edeed7159252760be7eee16a92dc344771ece240680009cd88968ffb",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "two linked friendship bracelets",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 51,
+        "top": 52,
+        "width": 440,
+        "height": 412
+      },
+      "width": 440,
+      "height": 412
+    },
+    {
+      "index": 1,
+      "name": "butter-yellow star with ink accents",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 590,
+        "top": 95,
+        "width": 372,
+        "height": 376
+      },
+      "width": 372,
+      "height": 376
+    },
+    {
+      "index": 2,
+      "name": "two red paper hearts",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1089,
+        "top": 121,
+        "width": 404,
+        "height": 356
+      },
+      "width": 404,
+      "height": 356
+    },
+    {
+      "index": 3,
+      "name": "cherries with cobalt leaves",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 86,
+        "top": 551,
+        "width": 365,
+        "height": 393
+      },
+      "width": 365,
+      "height": 393
+    },
+    {
+      "index": 4,
+      "name": "a retro disposable camera",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 556,
+        "top": 609,
+        "width": 432,
+        "height": 285
+      },
+      "width": 432,
+      "height": 285
+    },
+    {
+      "index": 5,
+      "name": "a woven orange friendship bow",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1065,
+        "top": 576,
+        "width": 422,
+        "height": 367
+      },
+      "width": 422,
+      "height": 367
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "id": "graduation",
+  "source": "source/masters/graduation.png",
+  "masterSha256": "f707733e415fe56b1d3ef4a9e70983d4a866895225294caf9eb369fe970af335",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "8216f9fecaaef02e53aab8eb3670df5475e9a71eeba7578f590fb49ad32c34fd",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "dark green graduation cap with golden tassel",
+      "roi": [
+        0,
+        0,
+        532,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 38,
+        "top": 101,
+        "width": 494,
+        "height": 358
+      },
+      "width": 464,
+      "height": 336
+    },
+    {
+      "index": 1,
+      "name": "rolled diploma with red ribbon",
+      "roi": [
+        532,
+        0,
+        1061,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 591,
+        "top": 106,
+        "width": 469,
+        "height": 343
+      },
+      "width": 464,
+      "height": 339
+    },
+    {
+      "index": 2,
+      "name": "golden laurel sprig",
+      "roi": [
+        1061,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1127,
+        "top": 63,
+        "width": 339,
+        "height": 408
+      },
+      "width": 339,
+      "height": 408
+    },
+    {
+      "index": 3,
+      "name": "bouquet wrapped in kraft paper",
+      "roi": [
+        0,
+        512,
+        532,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 58,
+        "top": 512,
+        "width": 425,
+        "height": 466
+      },
+      "width": 423,
+      "height": 464
+    },
+    {
+      "index": 4,
+      "name": "two vintage hardback books",
+      "roi": [
+        532,
+        512,
+        1061,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 555,
+        "top": 591,
+        "width": 506,
+        "height": 346
+      },
+      "width": 464,
+      "height": 317
+    },
+    {
+      "index": 5,
+      "name": "a small five point gold award star",
+      "roi": [
+        1061,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1151,
+        "top": 592,
+        "width": 314,
+        "height": 301
+      },
+      "width": 314,
+      "height": 301
+    }
+  ]
+}

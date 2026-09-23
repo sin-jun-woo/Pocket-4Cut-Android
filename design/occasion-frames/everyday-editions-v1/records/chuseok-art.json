@@ -1,0 +1,127 @@
+{
+  "id": "chuseok",
+  "source": "source/masters/chuseok.png",
+  "masterSha256": "2d11399700a62cb6c95ca8338e87047acabaafab14fbc4e38737d7d38675ce78",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "53748089caf4c5077395e3a7b0caa1520f73a97eb92041db1880f0ad44f136a5",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "ivory full moon with subtle lunar markings",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 75,
+        "top": 73,
+        "width": 404,
+        "height": 396
+      },
+      "width": 404,
+      "height": 396
+    },
+    {
+      "index": 1,
+      "name": "gentle white rabbit sitting",
+      "roi": [
+        512,
+        0,
+        1021,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 583,
+        "top": 30,
+        "width": 369,
+        "height": 458
+      },
+      "width": 369,
+      "height": 458
+    },
+    {
+      "index": 2,
+      "name": "three pastel songpyeon rice cakes on small dish",
+      "roi": [
+        1021,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1021,
+        "top": 128,
+        "width": 459,
+        "height": 327
+      },
+      "width": 459,
+      "height": 327
+    },
+    {
+      "index": 3,
+      "name": "persimmon with green leaf",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 53,
+        "top": 566,
+        "width": 458,
+        "height": 367
+      },
+      "width": 458,
+      "height": 367
+    },
+    {
+      "index": 4,
+      "name": "Korean multicolor saekdong ribbon knot",
+      "roi": [
+        512,
+        512,
+        1021,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 606,
+        "top": 520,
+        "width": 328,
+        "height": 447
+      },
+      "width": 328,
+      "height": 447
+    },
+    {
+      "index": 5,
+      "name": "golden rice sprig",
+      "roi": [
+        1021,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1040,
+        "top": 520,
+        "width": 455,
+        "height": 438
+      },
+      "width": 455,
+      "height": 438
+    }
+  ]
+}

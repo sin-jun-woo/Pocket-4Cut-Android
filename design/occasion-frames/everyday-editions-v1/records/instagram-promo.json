@@ -1,0 +1,23 @@
+{
+  "width": 1080,
+  "height": 1350,
+  "masterWidth": 2160,
+  "masterHeight": 2700,
+  "sha256": "2e70f49835eb9aaaa92e0f488886891e194f34718b821c3eedb193e3673f1753",
+  "sourceFrames": [
+    {
+      "source": "frames/love/02-couple-100/two_vertical.png",
+      "sourceSha256": "501d0b3ed532320b9f206cbc13944ce9dd9b8771783dcb60ae46ed2caacbe2da"
+    },
+    {
+      "source": "frames/celebration/01-birthday/four_grid.png",
+      "sourceSha256": "7df778777daa7024a63bbebe027bf92810961d54f6e9f897d1e27ed2b9506a12"
+    },
+    {
+      "source": "frames/event/47-concert/six_grid_2x3.png",
+      "sourceSha256": "be4a027b48ea4865cf74c74eb07e3d845b6b1bcb3f9836ccec3a6d4d382d99ac"
+    }
+  ],
+  "method": "Actual exported frames and existing fictional adult demo photos, placed over image-generated paper; exact Korean typography rendered separately.",
+  "published": false
+}

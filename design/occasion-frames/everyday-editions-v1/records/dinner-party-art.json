@@ -1,0 +1,127 @@
+{
+  "id": "dinner-party",
+  "source": "source/masters/dinner-party.png",
+  "masterSha256": "17dd0d203c0b47befebf0c9f67de7f9804e6c20e277dd35f894fbef339a1e04a",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "cfc5f99f0f44708a0d905c7d4b430f14dfb29c681c2c4d69573910b345823ca1",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "two golden beer mugs with ivory foam",
+      "roi": [
+        0,
+        0,
+        578,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 57,
+        "top": 75,
+        "width": 521,
+        "height": 434
+      },
+      "width": 464,
+      "height": 387
+    },
+    {
+      "index": 1,
+      "name": "small clear soju glasses",
+      "roi": [
+        578,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 621,
+        "top": 188,
+        "width": 371,
+        "height": 321
+      },
+      "width": 371,
+      "height": 321
+    },
+    {
+      "index": 2,
+      "name": "green bottle without branding or text",
+      "roi": [
+        1024,
+        0,
+        1536,
+        530
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1183,
+        "top": 71,
+        "width": 188,
+        "height": 459
+      },
+      "width": 188,
+      "height": 459
+    },
+    {
+      "index": 3,
+      "name": "cream snack dish",
+      "roi": [
+        0,
+        512,
+        578,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 84,
+        "top": 606,
+        "width": 406,
+        "height": 325
+      },
+      "width": 406,
+      "height": 325
+    },
+    {
+      "index": 4,
+      "name": "orange citrus slice",
+      "roi": [
+        578,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 600,
+        "top": 624,
+        "width": 384,
+        "height": 318
+      },
+      "width": 384,
+      "height": 318
+    },
+    {
+      "index": 5,
+      "name": "terracotta toast ribbon",
+      "roi": [
+        1024,
+        530,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1029,
+        "top": 587,
+        "width": 467,
+        "height": 351
+      },
+      "width": 464,
+      "height": 349
+    }
+  ]
+}

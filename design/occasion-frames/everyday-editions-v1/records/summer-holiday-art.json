@@ -1,0 +1,127 @@
+{
+  "id": "summer-holiday",
+  "source": "source/masters/summer-holiday.png",
+  "masterSha256": "fe4039270096011c50b5da1294d291b3853a760d64343022974f962e15d79873",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "dcf12bbd1867ff8952f0bf2f8a30086dda53c52008862b7d19af212eb6fd930d",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "striped blue beach umbrella",
+      "roi": [
+        0,
+        0,
+        513,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 47,
+        "top": 86,
+        "width": 449,
+        "height": 425
+      },
+      "width": 449,
+      "height": 425
+    },
+    {
+      "index": 1,
+      "name": "green palm branch",
+      "roi": [
+        513,
+        0,
+        1018,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 568,
+        "top": 76,
+        "width": 414,
+        "height": 420
+      },
+      "width": 414,
+      "height": 420
+    },
+    {
+      "index": 2,
+      "name": "coral sunglasses",
+      "roi": [
+        1018,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1018,
+        "top": 187,
+        "width": 489,
+        "height": 260
+      },
+      "width": 464,
+      "height": 247
+    },
+    {
+      "index": 3,
+      "name": "small turquoise ocean wave",
+      "roi": [
+        0,
+        512,
+        513,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 57,
+        "top": 589,
+        "width": 456,
+        "height": 338
+      },
+      "width": 456,
+      "height": 338
+    },
+    {
+      "index": 4,
+      "name": "golden sun disk",
+      "roi": [
+        513,
+        512,
+        1018,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 560,
+        "top": 536,
+        "width": 424,
+        "height": 422
+      },
+      "width": 424,
+      "height": 422
+    },
+    {
+      "index": 5,
+      "name": "cream seashell with terracotta stripe",
+      "roi": [
+        1018,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1077,
+        "top": 574,
+        "width": 394,
+        "height": 371
+      },
+      "width": 394,
+      "height": 371
+    }
+  ]
+}

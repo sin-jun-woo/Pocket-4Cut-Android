@@ -1,0 +1,127 @@
+{
+  "id": "dad-date",
+  "source": "source/masters/dad-date.png",
+  "masterSha256": "5e653aeac133d5fb713363e4546e6e0bab02c5e525dee218120f133486fdaf76",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "ce68c9b985e38443bd164f2286c02a63570e7820bf60aa0dd97f5c2d62a5cf85",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "two sage paper hearts",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 87,
+        "top": 99,
+        "width": 398,
+        "height": 330
+      },
+      "width": 398,
+      "height": 330
+    },
+    {
+      "index": 1,
+      "name": "golden star",
+      "roi": [
+        512,
+        0,
+        1024,
+        510
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 601,
+        "top": 75,
+        "width": 335,
+        "height": 354
+      },
+      "width": 335,
+      "height": 354
+    },
+    {
+      "index": 2,
+      "name": "olive baseball cap without logo",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1028,
+        "top": 105,
+        "width": 436,
+        "height": 329
+      },
+      "width": 436,
+      "height": 329
+    },
+    {
+      "index": 3,
+      "name": "two ceramic coffee cups cream and blue",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 65,
+        "top": 571,
+        "width": 445,
+        "height": 336
+      },
+      "width": 445,
+      "height": 336
+    },
+    {
+      "index": 4,
+      "name": "blue necktie",
+      "roi": [
+        512,
+        510,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 661,
+        "top": 510,
+        "width": 223,
+        "height": 440
+      },
+      "width": 223,
+      "height": 440
+    },
+    {
+      "index": 5,
+      "name": "small brass key",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1141,
+        "top": 573,
+        "width": 253,
+        "height": 327
+      },
+      "width": 253,
+      "height": 327
+    }
+  ]
+}

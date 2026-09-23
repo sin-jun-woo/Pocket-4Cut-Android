@@ -1,0 +1,127 @@
+{
+  "id": "new-home",
+  "source": "source/masters/new-home.png",
+  "masterSha256": "33e1e43daa11ba41a04b923eef189654405eca3ef722a8a2222a1969bcca4377",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "7ae021b6bd202fea2d166133f2bb828e2c3b5dddad2a342d804aedea3a4b0e7e",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "small cream house with terracotta roof",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 61,
+        "top": 85,
+        "width": 435,
+        "height": 366
+      },
+      "width": 435,
+      "height": 366
+    },
+    {
+      "index": 1,
+      "name": "brass house key with green ribbon",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 564,
+        "top": 78,
+        "width": 429,
+        "height": 399
+      },
+      "width": 429,
+      "height": 399
+    },
+    {
+      "index": 2,
+      "name": "kraft moving box",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1053,
+        "top": 105,
+        "width": 433,
+        "height": 357
+      },
+      "width": 433,
+      "height": 357
+    },
+    {
+      "index": 3,
+      "name": "terracotta potted plant",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 64,
+        "top": 540,
+        "width": 417,
+        "height": 406
+      },
+      "width": 417,
+      "height": 406
+    },
+    {
+      "index": 4,
+      "name": "pair of cream slippers",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 587,
+        "top": 574,
+        "width": 373,
+        "height": 370
+      },
+      "width": 373,
+      "height": 370
+    },
+    {
+      "index": 5,
+      "name": "pale green table lamp",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1131,
+        "top": 549,
+        "width": 287,
+        "height": 401
+      },
+      "width": 287,
+      "height": 401
+    }
+  ]
+}

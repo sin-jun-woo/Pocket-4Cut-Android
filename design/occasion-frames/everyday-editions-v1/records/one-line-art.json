@@ -1,0 +1,127 @@
+{
+  "id": "one-line",
+  "source": "source/masters/one-line.png",
+  "masterSha256": "cb6dd9ab2a4231c6b15dbe49f636691e0e82006b941925028ec737b6d1539f70",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "d2d1a228c252dae2082e92e17b8f9be1c69f3d43a202877f48e913892b200245",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "olive fountain pen",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 115,
+        "top": 69,
+        "width": 396,
+        "height": 437
+      },
+      "width": 396,
+      "height": 437
+    },
+    {
+      "index": 1,
+      "name": "blank cream note paper",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 614,
+        "top": 75,
+        "width": 357,
+        "height": 428
+      },
+      "width": 357,
+      "height": 428
+    },
+    {
+      "index": 2,
+      "name": "brass paper clip",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1119,
+        "top": 140,
+        "width": 274,
+        "height": 349
+      },
+      "width": 274,
+      "height": 349
+    },
+    {
+      "index": 3,
+      "name": "terracotta wax seal without letters",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 103,
+        "top": 580,
+        "width": 377,
+        "height": 357
+      },
+      "width": 377,
+      "height": 357
+    },
+    {
+      "index": 4,
+      "name": "dried daisy",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 632,
+        "top": 549,
+        "width": 275,
+        "height": 438
+      },
+      "width": 275,
+      "height": 438
+    },
+    {
+      "index": 5,
+      "name": "small ivory envelope",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1036,
+        "top": 608,
+        "width": 423,
+        "height": 312
+      },
+      "width": 423,
+      "height": 312
+    }
+  ]
+}

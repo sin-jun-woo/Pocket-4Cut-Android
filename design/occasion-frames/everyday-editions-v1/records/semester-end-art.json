@@ -1,0 +1,127 @@
+{
+  "id": "semester-end",
+  "source": "source/masters/semester-end.png",
+  "masterSha256": "1a99b7c1e953b6e30efb9587e6cace65d75fa61b849fbb76fd7acb5ec6f84f94",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "ea6679cf3db9f6ddcc68d69bf69240fe1999f64c05dfef81ea4f27bdb4816041",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "closed blue course notebook",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 111,
+        "top": 73,
+        "width": 352,
+        "height": 437
+      },
+      "width": 352,
+      "height": 437
+    },
+    {
+      "index": 1,
+      "name": "golden beer mug with ivory foam",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 601,
+        "top": 64,
+        "width": 373,
+        "height": 417
+      },
+      "width": 373,
+      "height": 417
+    },
+    {
+      "index": 2,
+      "name": "yellow celebration star",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1090,
+        "top": 100,
+        "width": 370,
+        "height": 370
+      },
+      "width": 370,
+      "height": 370
+    },
+    {
+      "index": 3,
+      "name": "orange striped party trumpet",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 98,
+        "top": 543,
+        "width": 392,
+        "height": 398
+      },
+      "width": 392,
+      "height": 398
+    },
+    {
+      "index": 4,
+      "name": "two cream paper tickets without text",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 562,
+        "top": 564,
+        "width": 420,
+        "height": 364
+      },
+      "width": 420,
+      "height": 364
+    },
+    {
+      "index": 5,
+      "name": "cobalt fabric bow",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1058,
+        "top": 565,
+        "width": 403,
+        "height": 370
+      },
+      "width": 403,
+      "height": 370
+    }
+  ]
+}

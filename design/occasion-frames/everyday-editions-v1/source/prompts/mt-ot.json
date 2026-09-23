@@ -1,0 +1,11 @@
+{
+  "themeIndex": 72,
+  "themeId": "mt-ot",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 72: MT / OT (mt-ot). Palette: sage paper #E9EEE0, olive #567842, cream and warm mustard, restrained orange. EXACT six motifs in reading order: 1. olive college pennant without text; 2. cream blank name tag with orange lanyard; 3. guitar with warm wooden body; 4. two golden drink cups; 5. yellow camp lantern; 6. green ribbon knot. Nostalgic Korean college retreat stationery, premium matte paper and gentle painted texture. Max motif340x340px ineach512x512cell, nevercrossgridline, 70pxrealalphagutters. No lettersorlogosanywhere.",
+  "sourceGeneratedFilename": "exec-0f3a7ac8-9ea6-431f-a091-9bee37a19b21.png",
+  "master": "source/masters/mt-ot.png",
+  "visualReview": "Six distinct campus retreat motifs, complete silhouettes, no lettering. Crisp full guitar, blank namebadge and pennant suitable for coded text if needed."
+}

@@ -1,0 +1,13 @@
+{
+  "index": 23,
+  "id": "chuseok",
+  "tool": "built-in image_gen",
+  "mode": "generate",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 60px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection: Everyday Editions, Pocket 4Cut. Theme: 추석 (chuseok). Palette coordinated with #F6EACF paper and #58634A ink, with harmonious motif colors. EXACT six motifs in reading order:\n1. ivory full moon with subtle lunar markings\n2. gentle white rabbit sitting\n3. three pastel songpyeon rice cakes on small dish\n4. persimmon with green leaf\n5. Korean multicolor saekdong ribbon knot\n6. golden rice sprig\nProduction layout: 3 columns x 2 rows, full silhouettes within separate cells, at least 70px clear transparent gutters. Genuinely transparent alpha background; no lettering, 3D, shadows or white sticker halo.",
+  "sourceFile": "exec-847653fc-642b-4c7c-bebc-b88b2310a7a7.png",
+  "masterFile": "masters/chuseok.png",
+  "visualReview": "Six Chuseok motifs present: moon, rabbit, three pastel songpyeon, persimmon, multicolor knot and rice sprig. All unlettered and separated. Rabbit ears and rice tips intact near outer edges.",
+  "generatedOn": "2026-09-23"
+}

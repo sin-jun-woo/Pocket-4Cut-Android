@@ -1,0 +1,127 @@
+{
+  "id": "here-a-cut",
+  "source": "source/masters/here-a-cut.png",
+  "masterSha256": "b96e18af9ba323c974ff64d62b50746a72e5a25452276b73ead6d19256207150",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "93d19c862bb48c0169768fae96ab49668bf79a6770d744001e07173f6504c75c",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "coral map pin made of paper",
+      "roi": [
+        0,
+        0,
+        480,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 111,
+        "top": 107,
+        "width": 288,
+        "height": 363
+      },
+      "width": 288,
+      "height": 363
+    },
+    {
+      "index": 1,
+      "name": "folded cream city map without names",
+      "roi": [
+        480,
+        0,
+        1040,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 543,
+        "top": 106,
+        "width": 474,
+        "height": 364
+      },
+      "width": 464,
+      "height": 356
+    },
+    {
+      "index": 2,
+      "name": "small mustard compass",
+      "roi": [
+        1040,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1104,
+        "top": 77,
+        "width": 373,
+        "height": 391
+      },
+      "width": 373,
+      "height": 391
+    },
+    {
+      "index": 3,
+      "name": "blank vintage ticket",
+      "roi": [
+        0,
+        512,
+        590,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 56,
+        "top": 582,
+        "width": 497,
+        "height": 306
+      },
+      "width": 464,
+      "height": 286
+    },
+    {
+      "index": 4,
+      "name": "sage leaf sprig",
+      "roi": [
+        590,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 630,
+        "top": 556,
+        "width": 348,
+        "height": 387
+      },
+      "width": 348,
+      "height": 387
+    },
+    {
+      "index": 5,
+      "name": "little cream house",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1059,
+        "top": 576,
+        "width": 425,
+        "height": 354
+      },
+      "width": 425,
+      "height": 354
+    }
+  ]
+}

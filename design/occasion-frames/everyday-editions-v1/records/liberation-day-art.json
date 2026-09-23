@@ -1,0 +1,127 @@
+{
+  "id": "liberation-day",
+  "source": "source/masters/liberation-day.png",
+  "masterSha256": "f9230c4ee67f7210c7e26d493fdd90a8b4dad65f8b023b0e6c68bb4a4824cf3e",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "4cd2e992ca63a127d1c80056c10121b632e1d8f42054ee21c5c01877efa5658e",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "pale pink mugunghwa hibiscus flower with red center",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 37,
+        "top": 84,
+        "width": 468,
+        "height": 418
+      },
+      "width": 464,
+      "height": 414
+    },
+    {
+      "index": 1,
+      "name": "white dove with olive leaf",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 580,
+        "top": 52,
+        "width": 434,
+        "height": 447
+      },
+      "width": 434,
+      "height": 447
+    },
+    {
+      "index": 2,
+      "name": "thin red and blue silk ribbons intertwined",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1072,
+        "top": 101,
+        "width": 437,
+        "height": 381
+      },
+      "width": 437,
+      "height": 381
+    },
+    {
+      "index": 3,
+      "name": "small pale green laurel sprig",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 70,
+        "top": 533,
+        "width": 381,
+        "height": 447
+      },
+      "width": 381,
+      "height": 447
+    },
+    {
+      "index": 4,
+      "name": "cream folded Korean paper fan without writing",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 524,
+        "top": 566,
+        "width": 490,
+        "height": 401
+      },
+      "width": 464,
+      "height": 380
+    },
+    {
+      "index": 5,
+      "name": "three pink hibiscus buds",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1084,
+        "top": 547,
+        "width": 411,
+        "height": 414
+      },
+      "width": 411,
+      "height": 414
+    }
+  ]
+}

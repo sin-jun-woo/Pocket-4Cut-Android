@@ -1,0 +1,127 @@
+{
+  "id": "discharge",
+  "source": "source/masters/discharge.png",
+  "masterSha256": "6b4ea00d5c5034095477a2759282022110fea971ab05e8eb594b83aab5c4a3e3",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "f64db7f27f0ed7712639ee5ad97a00524338ed667f1b561eed10545766e322a0",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "plain silver dog tags without personal data",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 128,
+        "top": 62,
+        "width": 310,
+        "height": 422
+      },
+      "width": 310,
+      "height": 422
+    },
+    {
+      "index": 1,
+      "name": "yellow sunflower bouquet",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 574,
+        "top": 68,
+        "width": 409,
+        "height": 429
+      },
+      "width": 409,
+      "height": 429
+    },
+    {
+      "index": 2,
+      "name": "olive folded cap without insignia",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1041,
+        "top": 156,
+        "width": 429,
+        "height": 307
+      },
+      "width": 429,
+      "height": 307
+    },
+    {
+      "index": 3,
+      "name": "cream sneaker",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 67,
+        "top": 616,
+        "width": 429,
+        "height": 286
+      },
+      "width": 429,
+      "height": 286
+    },
+    {
+      "index": 4,
+      "name": "golden laurel sprig",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 575,
+        "top": 543,
+        "width": 393,
+        "height": 402
+      },
+      "width": 393,
+      "height": 402
+    },
+    {
+      "index": 5,
+      "name": "green celebration ribbon",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1069,
+        "top": 547,
+        "width": 417,
+        "height": 394
+      },
+      "width": 417,
+      "height": 394
+    }
+  ]
+}

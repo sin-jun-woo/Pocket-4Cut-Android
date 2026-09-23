@@ -1,0 +1,11 @@
+{
+  "themeIndex": 79,
+  "themeId": "today-fourcut",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 79: 오늘의 네컷 (today-fourcut). Palette: warm ivory #ECEBDD, sage #658074, navy, pale coral and mutedyellow. EXACT six motifs in reading order: 1. cream desk calendar without letters; 2. small sage clock without numbers; 3. yellow sun disk; 4. navy ballpoint pen; 5. cream washi tape; 6. pale coral paper heart. Calm everyday photo diary stationery. Calendarcompletelyblank, clockonlyhandsandtickmarkswithoutdigits. Eachmotifmax340pxwithwide70pxfullytransparentgutters. No lettering.",
+  "sourceGeneratedFilename": "exec-2c2b091f-047d-4f58-8717-5d4a545d8038.png",
+  "master": "source/masters/today-fourcut.png",
+  "visualReview": "Six clean everyday diary motifs. Calendar blank, clock has only ticks and hands, no text/digits. Full silhouettes."
+}

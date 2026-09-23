@@ -1,0 +1,127 @@
+{
+  "id": "pet-memory",
+  "source": "source/masters/pet-memory.png",
+  "masterSha256": "056476bee667d73200519d1f897349726b70142fa21d7c609fe8ce3e73da7b6f",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "f749622f05dcaba2ec7219beb5ad052d2c72c497f5855d2569294acbcc3b2d10",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "quiet pastel rainbow arch",
+      "roi": [
+        0,
+        0,
+        529,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 60,
+        "top": 131,
+        "width": 469,
+        "height": 308
+      },
+      "width": 464,
+      "height": 305
+    },
+    {
+      "index": 1,
+      "name": "tiny ivory star",
+      "roi": [
+        529,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 656,
+        "top": 169,
+        "width": 227,
+        "height": 235
+      },
+      "width": 227,
+      "height": 235
+    },
+    {
+      "index": 2,
+      "name": "gentle pale blue cloud",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1041,
+        "top": 155,
+        "width": 436,
+        "height": 279
+      },
+      "width": 436,
+      "height": 279
+    },
+    {
+      "index": 3,
+      "name": "small lavender paw print",
+      "roi": [
+        0,
+        512,
+        529,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 126,
+        "top": 589,
+        "width": 327,
+        "height": 282
+      },
+      "width": 327,
+      "height": 282
+    },
+    {
+      "index": 4,
+      "name": "cream crescent moon",
+      "roi": [
+        529,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 637,
+        "top": 545,
+        "width": 280,
+        "height": 334
+      },
+      "width": 280,
+      "height": 334
+    },
+    {
+      "index": 5,
+      "name": "delicate forget-me-not flower sprig",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1127,
+        "top": 538,
+        "width": 317,
+        "height": 393
+      },
+      "width": 317,
+      "height": 393
+    }
+  ]
+}

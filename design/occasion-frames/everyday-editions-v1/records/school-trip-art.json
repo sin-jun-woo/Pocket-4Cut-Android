@@ -1,0 +1,127 @@
+{
+  "id": "school-trip",
+  "source": "source/masters/school-trip.png",
+  "masterSha256": "5a210e0bcf4d20e45af970fb4484aaa2768adb6d707185ede5b82103f038ee0f",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "db60f86d70ff4bd89ac989150876d5498befb85306e8d29c5e1457aad8653c4f",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "small yellow school bus without text",
+      "roi": [
+        0,
+        0,
+        545,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 51,
+        "top": 136,
+        "width": 494,
+        "height": 350
+      },
+      "width": 464,
+      "height": 329
+    },
+    {
+      "index": 1,
+      "name": "coral travel camera",
+      "roi": [
+        545,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 605,
+        "top": 201,
+        "width": 407,
+        "height": 272
+      },
+      "width": 407,
+      "height": 272
+    },
+    {
+      "index": 2,
+      "name": "green school backpack",
+      "roi": [
+        1024,
+        0,
+        1536,
+        515
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1115,
+        "top": 82,
+        "width": 369,
+        "height": 433
+      },
+      "width": 369,
+      "height": 433
+    },
+    {
+      "index": 3,
+      "name": "cream road map without letters",
+      "roi": [
+        0,
+        512,
+        545,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 80,
+        "top": 570,
+        "width": 458,
+        "height": 360
+      },
+      "width": 458,
+      "height": 360
+    },
+    {
+      "index": 4,
+      "name": "red luggage tag",
+      "roi": [
+        545,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 619,
+        "top": 555,
+        "width": 386,
+        "height": 372
+      },
+      "width": 386,
+      "height": 372
+    },
+    {
+      "index": 5,
+      "name": "pale blue little cloud",
+      "roi": [
+        1024,
+        515,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1085,
+        "top": 630,
+        "width": 386,
+        "height": 249
+      },
+      "width": 386,
+      "height": 249
+    }
+  ]
+}

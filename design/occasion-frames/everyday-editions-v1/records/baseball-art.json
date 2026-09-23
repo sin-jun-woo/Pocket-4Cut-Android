@@ -1,0 +1,127 @@
+{
+  "id": "baseball",
+  "source": "source/masters/baseball.png",
+  "masterSha256": "7d83c35d432191c822b69e0ff1914ef0894afde91df60b3eecc5647006241710",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "4dca8ea8874bb48b1a5a198ce3e70519e2b6a277206e2afc709166872cd06907",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "ivory baseball with red stitches",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 96,
+        "top": 89,
+        "width": 354,
+        "height": 355
+      },
+      "width": 354,
+      "height": 355
+    },
+    {
+      "index": 1,
+      "name": "wooden baseball bat",
+      "roi": [
+        512,
+        0,
+        1016,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 559,
+        "top": 52,
+        "width": 448,
+        "height": 413
+      },
+      "width": 448,
+      "height": 413
+    },
+    {
+      "index": 2,
+      "name": "navy baseball cap without logo",
+      "roi": [
+        1016,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1016,
+        "top": 97,
+        "width": 471,
+        "height": 354
+      },
+      "width": 464,
+      "height": 349
+    },
+    {
+      "index": 3,
+      "name": "tan leather baseball glove",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 44,
+        "top": 539,
+        "width": 458,
+        "height": 421
+      },
+      "width": 458,
+      "height": 421
+    },
+    {
+      "index": 4,
+      "name": "blank red scoreboard panel",
+      "roi": [
+        512,
+        512,
+        1016,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 542,
+        "top": 537,
+        "width": 474,
+        "height": 409
+      },
+      "width": 464,
+      "height": 400
+    },
+    {
+      "index": 5,
+      "name": "striped red cheering megaphone",
+      "roi": [
+        1016,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1060,
+        "top": 526,
+        "width": 443,
+        "height": 404
+      },
+      "width": 443,
+      "height": 404
+    }
+  ]
+}

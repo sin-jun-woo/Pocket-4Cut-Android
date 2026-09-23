@@ -1,0 +1,1722 @@
+{
+  "schemaVersion": 1,
+  "title": "Pocket4Cut — Everyday Editions",
+  "created": "2026-09-23",
+  "scope": "Static design assets only. App implementation and all tests deferred by user.",
+  "categories": [
+    {
+      "id": "celebration",
+      "label": "기념일"
+    },
+    {
+      "id": "love",
+      "label": "러브"
+    },
+    {
+      "id": "friends",
+      "label": "프렌즈"
+    },
+    {
+      "id": "holiday",
+      "label": "홀리데이"
+    },
+    {
+      "id": "travel",
+      "label": "트래블"
+    },
+    {
+      "id": "life",
+      "label": "라이프"
+    },
+    {
+      "id": "event",
+      "label": "이벤트"
+    },
+    {
+      "id": "family",
+      "label": "패밀리"
+    },
+    {
+      "id": "memory",
+      "label": "메모리"
+    },
+    {
+      "id": "custom",
+      "label": "커스텀"
+    }
+  ],
+  "themes": [
+    {
+      "index": 1,
+      "id": "birthday",
+      "name": "생일",
+      "category": "celebration",
+      "title": "HAPPY BIRTHDAY",
+      "paper": "#FFF4E6",
+      "ink": "#AE3D34",
+      "motifs": [
+        "strawberry cream birthday cake",
+        "three twisted birthday candles",
+        "bunch of coral and cornflower balloons",
+        "tied cherry-red ribbon",
+        "wrapped butter-yellow birthday gift",
+        "small party trumpet"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 2,
+      "id": "couple-100",
+      "name": "커플 100일",
+      "category": "love",
+      "title": "OUR 100 DAYS",
+      "paper": "#FCE8E7",
+      "ink": "#B83542",
+      "motifs": [
+        "two overlapping red paper hearts",
+        "pink ribbon tied in a knot",
+        "small pink rose bouquet",
+        "pair of cherries joined at stems",
+        "two lovebirds facing each other",
+        "sealed cream love letter"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 3,
+      "id": "anniversary",
+      "name": "1주년 / N주년",
+      "category": "celebration",
+      "title": "OUR ANNIVERSARY",
+      "paper": "#F6EDE1",
+      "ink": "#69523F",
+      "motifs": [
+        "loose garden rose bouquet",
+        "deep wine silk bow",
+        "two slender dinner candles",
+        "pair of gold interlocking rings",
+        "ivory envelope with wax heart seal",
+        "delicate olive leaf sprig"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 4,
+      "id": "christmas",
+      "name": "크리스마스",
+      "category": "holiday",
+      "title": "MERRY CHRISTMAS",
+      "paper": "#F4F0DF",
+      "ink": "#24513E",
+      "motifs": [
+        "decorated pine Christmas tree",
+        "small Santa hat",
+        "red gift box with ivory bow",
+        "gingerbread person",
+        "gold brass jingle bells with holly",
+        "red Christmas stocking"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 5,
+      "id": "halloween",
+      "name": "할로윈",
+      "category": "holiday",
+      "title": "TRICK OR TREAT",
+      "paper": "#302B42",
+      "ink": "#F4C678",
+      "motifs": [
+        "friendly ivory sheet ghost",
+        "carved orange pumpkin lantern",
+        "small charcoal bat",
+        "crooked plum witch hat",
+        "copper spider with a short cobweb",
+        "striped wrapped Halloween sweet"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 6,
+      "id": "graduation",
+      "name": "졸업",
+      "category": "life",
+      "title": "CLASS OF 2026",
+      "paper": "#F0ECD9",
+      "ink": "#244C49",
+      "motifs": [
+        "dark green graduation cap with golden tassel",
+        "rolled diploma with red ribbon",
+        "golden laurel sprig",
+        "bouquet wrapped in kraft paper",
+        "two vintage hardback books",
+        "a small five point gold award star"
+      ],
+      "group": "occasion",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 7,
+      "id": "new-school",
+      "name": "입학 / 새학기",
+      "category": "life",
+      "title": "HELLO NEW CHAPTER",
+      "paper": "#F3ECDC",
+      "ink": "#3C5A65",
+      "motifs": [
+        "school building without writing",
+        "powder-blue school satchel",
+        "cherry blossom twig",
+        "simple blank navy name badge",
+        "sharpened yellow pencil",
+        "neat plaid school uniform bow"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 8,
+      "id": "parents-day",
+      "name": "어버이날",
+      "category": "family",
+      "title": "THANK YOU, ALWAYS",
+      "paper": "#FBF1E8",
+      "ink": "#9A3D43",
+      "motifs": [
+        "three red carnations",
+        "folded cream thank-you letter without writing",
+        "sage-green ribbon",
+        "small antique vase with a carnation",
+        "a closed kraft envelope with heart seal",
+        "coral fabric heart"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 9,
+      "id": "children-day",
+      "name": "어린이날",
+      "category": "family",
+      "title": "LITTLE HAPPY DAY",
+      "paper": "#FFF4D2",
+      "ink": "#3267A2",
+      "motifs": [
+        "wooden toy rocking horse",
+        "scarlet toy car",
+        "striped hot-air balloon toy",
+        "butter-yellow five-point star",
+        "primary-color toy blocks without letters",
+        "small rainbow spinning pinwheel"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 10,
+      "id": "valentine",
+      "name": "밸런타인데이",
+      "category": "love",
+      "title": "BE MY VALENTINE",
+      "paper": "#FADDE2",
+      "ink": "#8C283A",
+      "motifs": [
+        "heart shaped chocolate box open with chocolates",
+        "one red rose",
+        "tied crimson ribbon",
+        "two pink heart candies",
+        "cream love envelope",
+        "a small strawberry dipped in dark chocolate"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 11,
+      "id": "white-day",
+      "name": "화이트데이",
+      "category": "love",
+      "title": "SWEET ON YOU",
+      "paper": "#F0EAF7",
+      "ink": "#746095",
+      "motifs": [
+        "pastel lavender wrapped candy",
+        "twisted pink and mint lollipop",
+        "large ivory satin bow",
+        "two translucent pastel heart candies drawn matte",
+        "tiny lilac gift box",
+        "cream daisy with mint leaves"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 12,
+      "id": "pepero-day",
+      "name": "빼빼로데이",
+      "category": "love",
+      "title": "11:11 MAKE A WISH",
+      "paper": "#F7E9D8",
+      "ink": "#663C35",
+      "motifs": [
+        "four unbranded chocolate dipped biscuit sticks",
+        "cocoa-brown fabric bow",
+        "strawberry pink chocolate square",
+        "tiny kraft treat bag tied with twine",
+        "pair of ivory heart biscuits",
+        "small gold wish star"
+      ],
+      "group": "occasion",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 13,
+      "id": "new-year",
+      "name": "새해 / 신년",
+      "category": "holiday",
+      "title": "HAPPY NEW YEAR",
+      "paper": "#152E40",
+      "ink": "#F4D29B",
+      "motifs": [
+        "golden paper firework burst",
+        "deep red tied ribbon",
+        "two elegant champagne coupes",
+        "fan of gold paper streamers",
+        "ivory star ornament",
+        "a small clock face without numbers"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 14,
+      "id": "wedding",
+      "name": "결혼 / 웨딩",
+      "category": "celebration",
+      "title": "JUST MARRIED",
+      "paper": "#F8F5EA",
+      "ink": "#46604C",
+      "motifs": [
+        "two antique gold wedding rings",
+        "loose ivory rose bridal bouquet",
+        "long sage silk bow",
+        "three tier ivory wedding cake",
+        "pair of white doves",
+        "delicate olive branch"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 15,
+      "id": "proposal",
+      "name": "프로포즈 / 약혼",
+      "category": "love",
+      "title": "SHE SAID YES",
+      "paper": "#F4E7E7",
+      "ink": "#8E3F53",
+      "motifs": [
+        "open velvet burgundy ring box with solitaire ring",
+        "one garden rose with leaves",
+        "ivory silk bow",
+        "sealed cream envelope",
+        "two slender gold champagne glasses",
+        "blush pink paper heart"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 16,
+      "id": "bridal-shower",
+      "name": "브라이덜 샤워",
+      "category": "love",
+      "title": "BRIDE TO BE",
+      "paper": "#FCE7EB",
+      "ink": "#A6526A",
+      "motifs": [
+        "oversized blush silk ribbon",
+        "two slim champagne flutes",
+        "small pink peony bouquet",
+        "pearl necklace loop",
+        "ivory high heel shoe",
+        "floral teacup without pattern text"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 17,
+      "id": "baby-arrival",
+      "name": "임신 / 출산",
+      "category": "family",
+      "title": "COMING SOON",
+      "paper": "#F3EBD9",
+      "ink": "#7B7154",
+      "motifs": [
+        "tiny knitted cream baby booties",
+        "sage baby romper on hanger",
+        "wooden crescent teether",
+        "honey teddy bear",
+        "soft olive fabric heart",
+        "folded pale yellow muslin blanket"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 18,
+      "id": "first-birthday",
+      "name": "돌잔치 / 첫돌",
+      "category": "family",
+      "title": "ONE WONDERFUL YEAR",
+      "paper": "#F9EFDC",
+      "ink": "#9E6842",
+      "motifs": [
+        "small cream first birthday cake without numeral",
+        "pale gold paper crown",
+        "beige teddy bear",
+        "peach balloon with ribbon",
+        "pair of tiny leather baby shoes",
+        "five-point butter-yellow star"
+      ],
+      "group": "occasion",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 19,
+      "id": "best-friends",
+      "name": "우정 기념",
+      "category": "friends",
+      "title": "BEST FRIENDS",
+      "paper": "#F5EBD7",
+      "ink": "#CA5940",
+      "motifs": [
+        "two linked friendship bracelets",
+        "butter-yellow star with ink accents",
+        "two red paper hearts",
+        "cherries with cobalt leaves",
+        "a retro disposable camera",
+        "a woven orange friendship bow"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 20,
+      "id": "friend-anniversary",
+      "name": "우정 N주년",
+      "category": "friends",
+      "title": "YEARS TOGETHER",
+      "paper": "#EAECE3",
+      "ink": "#48706C",
+      "motifs": [
+        "woven teal friendship knot",
+        "two little wildflower stems",
+        "stacked film snapshots with blank centers",
+        "pair of antique brass key charms",
+        "orange sun medallion",
+        "two clay mugs side by side"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 21,
+      "id": "travel-memory",
+      "name": "여행 기념",
+      "category": "travel",
+      "title": "TAKE ME WITH YOU",
+      "paper": "#F1E9D8",
+      "ink": "#406375",
+      "motifs": [
+        "small cream propeller airplane",
+        "mustard rolling suitcase",
+        "two blank vintage travel tickets",
+        "pale blue compass",
+        "folded road map without text",
+        "retro travel camera"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 22,
+      "id": "summer-holiday",
+      "name": "여름휴가",
+      "category": "travel",
+      "title": "SUMMER DAYS",
+      "paper": "#E8F4F1",
+      "ink": "#237486",
+      "motifs": [
+        "striped blue beach umbrella",
+        "green palm branch",
+        "coral sunglasses",
+        "small turquoise ocean wave",
+        "golden sun disk",
+        "cream seashell with terracotta stripe"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 23,
+      "id": "chuseok",
+      "name": "추석",
+      "category": "holiday",
+      "title": "한가위, 함께",
+      "paper": "#F6EACF",
+      "ink": "#58634A",
+      "motifs": [
+        "ivory full moon with subtle lunar markings",
+        "gentle white rabbit sitting",
+        "three pastel songpyeon rice cakes on small dish",
+        "persimmon with green leaf",
+        "Korean multicolor saekdong ribbon knot",
+        "golden rice sprig"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 24,
+      "id": "seollal",
+      "name": "설날",
+      "category": "holiday",
+      "title": "새해 복 많이 받으세요",
+      "paper": "#F8F0DC",
+      "ink": "#A34142",
+      "motifs": [
+        "traditional red Korean bokjumeoni lucky pouch",
+        "pastel Korean hanbok jeogori garment",
+        "jade and coral norigae tassel",
+        "ivory bowl of sliced rice-cake soup",
+        "delicate plum blossom twig",
+        "pair of traditional embroidered Korean shoes"
+      ],
+      "group": "occasion",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 25,
+      "id": "hangeul-day",
+      "name": "한글날",
+      "category": "holiday",
+      "title": "우리의 글, 우리의 날",
+      "paper": "#EEE5D4",
+      "ink": "#363E3C",
+      "motifs": [
+        "traditional ink brush",
+        "black ink stone",
+        "folded cream paper fan",
+        "small Korean traditional book without writing",
+        "muted red wax seal without characters",
+        "soft green bamboo leaf sprig"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 26,
+      "id": "liberation-day",
+      "name": "광복절",
+      "category": "holiday",
+      "title": "기억하는 오늘, 8·15",
+      "paper": "#F6F3E7",
+      "ink": "#264F72",
+      "motifs": [
+        "pale pink mugunghwa hibiscus flower with red center",
+        "white dove with olive leaf",
+        "thin red and blue silk ribbons intertwined",
+        "small pale green laurel sprig",
+        "cream folded Korean paper fan without writing",
+        "three pink hibiscus buds"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 27,
+      "id": "coming-of-age",
+      "name": "성년의 날",
+      "category": "life",
+      "title": "HELLO, TWENTY",
+      "paper": "#F2E4DC",
+      "ink": "#9B374D",
+      "motifs": [
+        "single wine red rose",
+        "small vintage perfume bottle with cream atomizer",
+        "red velvet ribbon",
+        "an elegant tiny gold key",
+        "folded cream letter",
+        "three ivory pearl beads"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 28,
+      "id": "teachers-day",
+      "name": "스승의 날",
+      "category": "life",
+      "title": "THANK YOU, TEACHER",
+      "paper": "#EEEAD5",
+      "ink": "#37615C",
+      "motifs": [
+        "red carnation with long green stem",
+        "small dark green chalkboard without letters",
+        "piece of cream chalk",
+        "yellow wooden pencil",
+        "blank cream thank-you letter",
+        "stack of green and rust school books"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 29,
+      "id": "rose-day",
+      "name": "로즈데이",
+      "category": "love",
+      "title": "A ROSE FOR YOU",
+      "paper": "#F8E4DE",
+      "ink": "#A52E3B",
+      "motifs": [
+        "three red garden roses loosely bundled",
+        "single rose bud",
+        "long green rose leaves",
+        "deep red silk bow",
+        "cream envelope sealed with dried rose",
+        "small pink paper heart"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 30,
+      "id": "kiss-day",
+      "name": "키스데이",
+      "category": "love",
+      "title": "KISS ME, DEAR",
+      "paper": "#F8DADC",
+      "ink": "#A82649",
+      "motifs": [
+        "red lipstick kiss print illustrated in matte ink",
+        "two blush paper hearts",
+        "cherry-red lipstick tube",
+        "deep rose silk ribbon",
+        "pair of red cherries",
+        "pink love letter with heart seal"
+      ],
+      "group": "occasion",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 31,
+      "id": "black-day",
+      "name": "블랙데이",
+      "category": "friends",
+      "title": "SOLO, SO GOOD",
+      "paper": "#292C32",
+      "ink": "#F0D8AD",
+      "motifs": [
+        "ivory bowl of Korean jjajangmyeon noodles with dark sauce",
+        "wooden chopsticks",
+        "little yellow pickled radish dish",
+        "black sunglasses",
+        "small cream heart with charcoal ink detail",
+        "clear amber iced coffee cup illustrated matte"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 32,
+      "id": "year-end",
+      "name": "연말 / 송년",
+      "category": "holiday",
+      "title": "GOODBYE 2026",
+      "paper": "#293832",
+      "ink": "#E7C78D",
+      "motifs": [
+        "two champagne coupes",
+        "gold paper ribbon curl",
+        "small faceted disco ball in cream and sage",
+        "cream clock without numerals",
+        "dark red silk bow",
+        "fan of golden confetti"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 33,
+      "id": "new-year-sunrise",
+      "name": "새해 첫날",
+      "category": "holiday",
+      "title": "A BRAND NEW DAY",
+      "paper": "#FBEBD9",
+      "ink": "#B76545",
+      "motifs": [
+        "warm coral rising sun above two teal waves",
+        "folded cream wish letter without writing",
+        "pale gold small cloud",
+        "coral and gold ribbon knot",
+        "tiny white seabird",
+        "brass compass"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 34,
+      "id": "exam-finished",
+      "name": "수능 / 시험 끝",
+      "category": "life",
+      "title": "FINALLY FREE",
+      "paper": "#EEF0DB",
+      "ink": "#366E5C",
+      "motifs": [
+        "yellow pencil snapped neatly in two",
+        "paper exam sheet without writing",
+        "opened green notebook",
+        "cream paper airplane",
+        "celebratory gold laurel",
+        "sky blue ribbon"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 35,
+      "id": "semester-start",
+      "name": "개강",
+      "category": "life",
+      "title": "NEW SEMESTER",
+      "paper": "#F0ECD9",
+      "ink": "#546541",
+      "motifs": [
+        "stack of olive books",
+        "open silver laptop with blank screen",
+        "blank cream campus ID card",
+        "terracotta takeaway coffee cup",
+        "sharpened yellow pencil",
+        "vintage green university building without signs"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 36,
+      "id": "semester-end",
+      "name": "종강",
+      "category": "life",
+      "title": "종강이다!",
+      "paper": "#F6EBD7",
+      "ink": "#C16838",
+      "motifs": [
+        "closed blue course notebook",
+        "golden beer mug with ivory foam",
+        "yellow celebration star",
+        "orange striped party trumpet",
+        "two cream paper tickets without text",
+        "cobalt fabric bow"
+      ],
+      "group": "occasion",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 37,
+      "id": "accepted",
+      "name": "합격",
+      "category": "celebration",
+      "title": "CONGRATS!",
+      "paper": "#F2EBDD",
+      "ink": "#386F59",
+      "motifs": [
+        "small gold trophy",
+        "wildflower bouquet wrapped in kraft",
+        "crimson ribbon rosette",
+        "cream acceptance envelope without writing",
+        "golden laurel branch",
+        "ivory star with green accents"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 38,
+      "id": "first-job",
+      "name": "취업 / 첫 출근",
+      "category": "life",
+      "title": "NEW START",
+      "paper": "#E9EDE9",
+      "ink": "#3F6673",
+      "motifs": [
+        "navy business briefcase",
+        "cream employee ID badge without face or letters",
+        "blue fountain pen",
+        "pale green necktie",
+        "takeaway coffee in cream cup",
+        "small brass key"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 39,
+      "id": "resignation",
+      "name": "퇴사",
+      "category": "life",
+      "title": "GOODBYE, HELLO!",
+      "paper": "#F8E8D5",
+      "ink": "#B64F39",
+      "motifs": [
+        "empty employee lanyard curling loosely",
+        "bright orange flower bouquet",
+        "cream paper airplane",
+        "open small wooden door",
+        "mustard smile sun",
+        "a loosened blue necktie"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 40,
+      "id": "enlistment",
+      "name": "입대",
+      "category": "life",
+      "title": "몸 건강히 다녀와",
+      "paper": "#E5E8DA",
+      "ink": "#536249",
+      "motifs": [
+        "olive military cap without insignia",
+        "khaki canvas duffel bag",
+        "tied green boot laces",
+        "cream letter envelope",
+        "simple green oak leaf",
+        "small brass compass"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 41,
+      "id": "discharge",
+      "name": "전역",
+      "category": "life",
+      "title": "다시, 민간인",
+      "paper": "#EFE7D6",
+      "ink": "#66723E",
+      "motifs": [
+        "plain silver dog tags without personal data",
+        "yellow sunflower bouquet",
+        "olive folded cap without insignia",
+        "cream sneaker",
+        "golden laurel sprig",
+        "green celebration ribbon"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 42,
+      "id": "new-home",
+      "name": "이사 / 독립",
+      "category": "life",
+      "title": "NEW HOME",
+      "paper": "#F3E8D8",
+      "ink": "#6B795A",
+      "motifs": [
+        "small cream house with terracotta roof",
+        "brass house key with green ribbon",
+        "kraft moving box",
+        "terracotta potted plant",
+        "pair of cream slippers",
+        "pale green table lamp"
+      ],
+      "group": "occasion",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 43,
+      "id": "first-car",
+      "name": "첫 차 / 출고",
+      "category": "life",
+      "title": "LET'S GO!",
+      "paper": "#E6EEF0",
+      "ink": "#3D6883",
+      "motifs": [
+        "small retro cobalt hatchback car without logo",
+        "silver car key with orange tag",
+        "cream speedometer without numerals",
+        "terracotta road cone",
+        "pair of dark driving gloves",
+        "small yellow spark star"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 44,
+      "id": "driving-license",
+      "name": "운전면허 취득",
+      "category": "life",
+      "title": "PASS!",
+      "paper": "#EAF0EC",
+      "ink": "#387566",
+      "motifs": [
+        "blank cream driving permit card without personal data",
+        "small green car without brand",
+        "blue steering wheel",
+        "traffic signal with red amber green lights",
+        "silver key",
+        "golden award ribbon"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 45,
+      "id": "first-payday",
+      "name": "첫 월급",
+      "category": "life",
+      "title": "MY FIRST PAYDAY",
+      "paper": "#F1E8D7",
+      "ink": "#8E7247",
+      "motifs": [
+        "cream pay envelope with golden seal",
+        "stack of generic olive bills without currency detail",
+        "small copper coin pile without text",
+        "terracotta piggy bank",
+        "ivory receipt without writing",
+        "celebratory rust ribbon"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 46,
+      "id": "award",
+      "name": "대회 / 수상",
+      "category": "celebration",
+      "title": "WINNER",
+      "paper": "#F7EED9",
+      "ink": "#967235",
+      "motifs": [
+        "gold champion medal on navy ribbon",
+        "small polished illustrated gold trophy",
+        "laurel wreath",
+        "cream star medal",
+        "deep red award rosette",
+        "rolled cream certificate"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 47,
+      "id": "concert",
+      "name": "공연 / 콘서트",
+      "category": "event",
+      "title": "LIVE THIS MOMENT",
+      "paper": "#272738",
+      "ink": "#D9B0C7",
+      "motifs": [
+        "vintage silver handheld microphone",
+        "two burgundy admission tickets without lettering",
+        "cream stage spotlight",
+        "blue earbud headphones",
+        "pink music note",
+        "plum electric cable loop"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 48,
+      "id": "festival",
+      "name": "페스티벌",
+      "category": "event",
+      "title": "FESTIVAL",
+      "paper": "#F4E5C8",
+      "ink": "#BB4D34",
+      "motifs": [
+        "woven orange festival wristband",
+        "cream and red ticket without lettering",
+        "retro teal loudspeaker",
+        "mustard electric guitar",
+        "golden star with red ink accents",
+        "terracotta festival pennant"
+      ],
+      "group": "occasion",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 49,
+      "id": "baseball",
+      "name": "야구 직관",
+      "category": "event",
+      "title": "PLAY BALL!",
+      "paper": "#EEEBDD",
+      "ink": "#B94739",
+      "motifs": [
+        "ivory baseball with red stitches",
+        "wooden baseball bat",
+        "navy baseball cap without logo",
+        "tan leather baseball glove",
+        "blank red scoreboard panel",
+        "striped red cheering megaphone"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 50,
+      "id": "football",
+      "name": "축구 직관",
+      "category": "event",
+      "title": "MATCH DAY",
+      "paper": "#E5ECE0",
+      "ink": "#35634E",
+      "motifs": [
+        "classic black and ivory soccer ball",
+        "forest green supporter scarf without letters",
+        "simple white goal net",
+        "red referee whistle",
+        "green football boot without logo",
+        "blank ivory match ticket"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 51,
+      "id": "basketball",
+      "name": "농구 직관",
+      "category": "event",
+      "title": "COURTSIDE",
+      "paper": "#EFE3D3",
+      "ink": "#B05D32",
+      "motifs": [
+        "burnt orange basketball",
+        "simple cream basketball hoop with red rim",
+        "navy high top sneaker without logo",
+        "blank orange scoreboard",
+        "ivory striped sport towel",
+        "golden whistle"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 52,
+      "id": "theme-park",
+      "name": "놀이공원",
+      "category": "event",
+      "title": "A LITTLE WONDER",
+      "paper": "#EDEBF4",
+      "ink": "#745D92",
+      "motifs": [
+        "miniature pastel ferris wheel",
+        "two lavender park tickets without text",
+        "peach carousel horse",
+        "butter-yellow star",
+        "bunch of lilac and apricot balloons",
+        "pink cotton candy"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 53,
+      "id": "camping",
+      "name": "캠핑 / 글램핑",
+      "category": "travel",
+      "title": "UNDER THE STARS",
+      "paper": "#ECE5D3",
+      "ink": "#4F674F",
+      "motifs": [
+        "olive canvas tent",
+        "small warm campfire with two logs",
+        "copper camping kettle",
+        "cream enamel mug with green rim",
+        "brass lantern",
+        "ivory crescent moon with two tiny stars"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 54,
+      "id": "vacance",
+      "name": "바캉스",
+      "category": "travel",
+      "title": "SLOW SUMMER",
+      "paper": "#F8E8D0",
+      "ink": "#397779",
+      "motifs": [
+        "coral life ring",
+        "emerald palm frond",
+        "pastel peach cocktail glass with lemon",
+        "aqua wave curl",
+        "cream striped beach towel",
+        "warm golden sun"
+      ],
+      "group": "occasion",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 55,
+      "id": "first-overseas",
+      "name": "첫 해외여행",
+      "category": "travel",
+      "title": "HELLO, WORLD",
+      "paper": "#ECE5D6",
+      "ink": "#345D71",
+      "motifs": [
+        "blank navy passport without national logo",
+        "ivory passenger airplane",
+        "coral luggage tag without lettering",
+        "vintage round date stamp without text",
+        "mustard travel suitcase",
+        "pale green globe"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 56,
+      "id": "study-abroad",
+      "name": "출국 / 유학",
+      "category": "travel",
+      "title": "GOOD LUCK, DEAR",
+      "paper": "#E9EEF2",
+      "ink": "#577185",
+      "motifs": [
+        "two cream airline boarding passes without words",
+        "olive passport cover without insignia",
+        "small silver airplane",
+        "blue canvas backpack",
+        "folded cream road map",
+        "red goodbye ribbon"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 57,
+      "id": "welcome-back",
+      "name": "귀국",
+      "category": "travel",
+      "title": "WELCOME BACK",
+      "paper": "#F3EADB",
+      "ink": "#6D7954",
+      "motifs": [
+        "cream house with green roof",
+        "small white passenger airplane",
+        "terracotta suitcase",
+        "golden house key",
+        "small wildflower bunch",
+        "olive leaf sprig"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 58,
+      "id": "pet-birthday",
+      "name": "반려동물 생일",
+      "category": "family",
+      "title": "HAPPY PAW DAY",
+      "paper": "#F6ECD6",
+      "ink": "#AD7945",
+      "motifs": [
+        "small unbranded pet-safe birthday cake",
+        "tan paw print",
+        "cream dog biscuit bone",
+        "sage green pet collar without name",
+        "golden rubber ball",
+        "little birthday hat"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 59,
+      "id": "gotcha-day",
+      "name": "반려동물 입양기념일",
+      "category": "family",
+      "title": "GOTCHA DAY",
+      "paper": "#EEEBDD",
+      "ink": "#6D7958",
+      "motifs": [
+        "two tan paw prints",
+        "soft coral paper heart",
+        "cozy wicker pet basket",
+        "cream pet food bowl without text",
+        "olive collar with heart tag",
+        "little green leaf sprig"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 60,
+      "id": "pet-memory",
+      "name": "반려동물 추억",
+      "category": "family",
+      "title": "ALWAYS WITH ME",
+      "paper": "#E9E9F0",
+      "ink": "#75758C",
+      "motifs": [
+        "quiet pastel rainbow arch",
+        "tiny ivory star",
+        "gentle pale blue cloud",
+        "small lavender paw print",
+        "cream crescent moon",
+        "delicate forget-me-not flower sprig"
+      ],
+      "group": "occasion",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 61,
+      "id": "dinner-party",
+      "name": "회식 / 술자리",
+      "category": "friends",
+      "title": "CHEERS TO US",
+      "paper": "#F5E5CE",
+      "ink": "#A85E3A",
+      "motifs": [
+        "two golden beer mugs with ivory foam",
+        "small clear soju glasses",
+        "green bottle without branding or text",
+        "cream snack dish",
+        "orange citrus slice",
+        "terracotta toast ribbon"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 62,
+      "id": "party",
+      "name": "파티",
+      "category": "friends",
+      "title": "LET'S CELEBRATE",
+      "paper": "#272A3B",
+      "ink": "#E3BC85",
+      "motifs": [
+        "faceted cream and blue disco ball",
+        "two golden champagne coupes",
+        "magenta party hat",
+        "ivory streamer curl",
+        "gold celebration star",
+        "deep red silk bow"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 63,
+      "id": "pajama-party",
+      "name": "파자마 파티",
+      "category": "friends",
+      "title": "STAY UP WITH US",
+      "paper": "#ECE7F3",
+      "ink": "#7F6998",
+      "motifs": [
+        "lavender striped pajamas folded",
+        "soft ivory cloud",
+        "butter-yellow crescent moon",
+        "violet ribbon bow",
+        "cozy pink sleeping mask",
+        "tiny golden star"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 64,
+      "id": "home-party",
+      "name": "홈파티",
+      "category": "friends",
+      "title": "A NIGHT IN",
+      "paper": "#F9E8D9",
+      "ink": "#B16A57",
+      "motifs": [
+        "peach balloon bunch",
+        "small cherry cream cake",
+        "two illustrated rose drinks in short glasses",
+        "golden paper confetti curl",
+        "terracotta ribbon",
+        "plate of heart shaped cookies"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 65,
+      "id": "housewarming",
+      "name": "집들이",
+      "category": "friends",
+      "title": "WELCOME HOME",
+      "paper": "#EEE8D9",
+      "ink": "#6F7A54",
+      "motifs": [
+        "cream cottage with olive roof",
+        "two brass keys on rust ribbon",
+        "terracotta plant pot with leaves",
+        "woven welcome basket",
+        "ivory candle in green jar",
+        "cream coffee mug"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 66,
+      "id": "family-photo",
+      "name": "가족사진",
+      "category": "family",
+      "title": "OUR FAMILY",
+      "paper": "#F3EADC",
+      "ink": "#82664D",
+      "motifs": [
+        "three warm colored paper hearts",
+        "loose olive family-tree branch",
+        "cream house with rose roof",
+        "bunch of yellow daisies",
+        "terracotta woven bow",
+        "two cream photo corners"
+      ],
+      "group": "occasion",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 67,
+      "id": "mom-date",
+      "name": "엄마와 데이트",
+      "category": "family",
+      "title": "MOM & ME",
+      "paper": "#F9E6E1",
+      "ink": "#A35F6D",
+      "motifs": [
+        "blush peony bouquet",
+        "two rose paper hearts",
+        "ivory pearl necklace loop",
+        "pink teacup",
+        "coral silk bow",
+        "delicate olive sprig"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 68,
+      "id": "dad-date",
+      "name": "아빠와 데이트",
+      "category": "family",
+      "title": "DAD & ME",
+      "paper": "#E8EEEA",
+      "ink": "#52756D",
+      "motifs": [
+        "two sage paper hearts",
+        "golden star",
+        "olive baseball cap without logo",
+        "two ceramic coffee cups cream and blue",
+        "blue necktie",
+        "small brass key"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 69,
+      "id": "siblings",
+      "name": "형제 / 자매",
+      "category": "family",
+      "title": "BETTER TOGETHER",
+      "paper": "#F4EED3",
+      "ink": "#6283A3",
+      "motifs": [
+        "two mismatched striped socks",
+        "blue and coral paper hearts",
+        "golden lightning shape",
+        "cherries joined at stems",
+        "two funny rounded stars",
+        "yellow ribbon knot"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 70,
+      "id": "reunion",
+      "name": "동창회",
+      "category": "friends",
+      "title": "REUNION",
+      "paper": "#EFE6D5",
+      "ink": "#5D6F62",
+      "motifs": [
+        "two retro graduation caps",
+        "cream school yearbook without title",
+        "sage school building without signs",
+        "brass school bell",
+        "bunch of small daisies",
+        "burgundy ribbon"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 71,
+      "id": "school-trip",
+      "name": "수학여행",
+      "category": "friends",
+      "title": "A TRIP TO REMEMBER",
+      "paper": "#F6EDCE",
+      "ink": "#487C86",
+      "motifs": [
+        "small yellow school bus without text",
+        "coral travel camera",
+        "green school backpack",
+        "cream road map without letters",
+        "red luggage tag",
+        "pale blue little cloud"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 72,
+      "id": "mt-ot",
+      "name": "MT / OT",
+      "category": "friends",
+      "title": "OUR CAMPUS DAYS",
+      "paper": "#E9EEE0",
+      "ink": "#567842",
+      "motifs": [
+        "olive college pennant without text",
+        "cream blank name tag with orange lanyard",
+        "guitar with warm wooden body",
+        "two golden drink cups",
+        "yellow camp lantern",
+        "green ribbon knot"
+      ],
+      "group": "occasion",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 73,
+      "id": "workshop",
+      "name": "워크숍",
+      "category": "event",
+      "title": "BETTER AS A TEAM",
+      "paper": "#E7ECE9",
+      "ink": "#56747B",
+      "motifs": [
+        "three blank cream name badges with different color lanyards",
+        "navy clipboard without text",
+        "teal pencil",
+        "orange team flag without logo",
+        "cream coffee mug",
+        "woven blue teamwork knot"
+      ],
+      "group": "occasion",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 74,
+      "id": "sixty-seventy",
+      "name": "환갑 / 칠순",
+      "category": "family",
+      "title": "오래도록, 함께",
+      "paper": "#F2E6CF",
+      "ink": "#926441",
+      "motifs": [
+        "red and ivory peony bouquet",
+        "sage traditional Korean silk pouch",
+        "cream folding fan with subtle flower pattern",
+        "golden crane bird",
+        "burgundy norigae tassel",
+        "two pastel rice cakes"
+      ],
+      "group": "occasion",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 75,
+      "id": "our-day",
+      "name": "추억 / 오늘 기록",
+      "category": "memory",
+      "title": "OUR DAY",
+      "paper": "#EEE7D9",
+      "ink": "#6B6357",
+      "motifs": [
+        "retro brown film camera",
+        "curled strip of empty film",
+        "cream envelope",
+        "muted ochre crescent moon",
+        "olive leaf sprig",
+        "brass tiny star"
+      ],
+      "group": "occasion",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 76,
+      "id": "monthly-memory",
+      "name": "월간 기록",
+      "category": "memory",
+      "title": "SEPTEMBER 2026",
+      "paper": "#EEEBDD",
+      "ink": "#6F7756",
+      "motifs": [
+        "blank cream desk calendar page",
+        "sharpened olive pencil",
+        "kraft paper clip",
+        "small ginkgo leaf",
+        "cream washi tape roll",
+        "terracotta tiny star"
+      ],
+      "group": "occasion",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 77,
+      "id": "annual-memory",
+      "name": "연간 기록",
+      "category": "memory",
+      "title": "2026 MEMORIES",
+      "paper": "#EBE3D3",
+      "ink": "#7B6250",
+      "motifs": [
+        "retro film strip with blank cells",
+        "cream photo album without words",
+        "ochre date stamp without text",
+        "burgundy ribbon",
+        "olive laurel sprig",
+        "antique brass star"
+      ],
+      "group": "occasion",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 78,
+      "id": "first-fourcut",
+      "name": "우리의 첫 네컷",
+      "category": "memory",
+      "title": "OUR FIRST 4CUT",
+      "paper": "#F5E5D9",
+      "ink": "#A56B58",
+      "motifs": [
+        "retro cream instant camera",
+        "two blank instant photo prints",
+        "coral silk bow",
+        "tiny butter-yellow star",
+        "pair of pink paper hearts",
+        "terracotta film roll"
+      ],
+      "group": "special",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 79,
+      "id": "today-fourcut",
+      "name": "오늘의 네컷",
+      "category": "memory",
+      "title": "TODAY, WITH YOU",
+      "paper": "#ECEBDD",
+      "ink": "#658074",
+      "motifs": [
+        "cream desk calendar without letters",
+        "small sage clock without numbers",
+        "yellow sun disk",
+        "navy ballpoint pen",
+        "cream washi tape",
+        "pale coral paper heart"
+      ],
+      "group": "special",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 80,
+      "id": "this-month",
+      "name": "이번 달의 네컷",
+      "category": "memory",
+      "title": "SEP 2026",
+      "paper": "#F3E9D9",
+      "ink": "#B87545",
+      "motifs": [
+        "small blank cream calendar card",
+        "dried mustard maple leaf",
+        "brass paper clip",
+        "ivory envelope",
+        "terracotta pencil",
+        "tiny russet pear"
+      ],
+      "group": "special",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 81,
+      "id": "this-year",
+      "name": "올해의 네컷",
+      "category": "memory",
+      "title": "2026 MEMORY",
+      "paper": "#253D46",
+      "ink": "#E3C99D",
+      "motifs": [
+        "golden film camera",
+        "navy and cream film roll",
+        "ivory album without title",
+        "gold laurel leaf",
+        "small brass clock without numbers",
+        "rust silk ribbon"
+      ],
+      "group": "special",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 82,
+      "id": "here-a-cut",
+      "name": "여기서 한 컷",
+      "category": "custom",
+      "title": "WISH YOU WERE HERE",
+      "paper": "#E8EFE9",
+      "ink": "#4C7A6A",
+      "motifs": [
+        "coral map pin made of paper",
+        "folded cream city map without names",
+        "small mustard compass",
+        "blank vintage ticket",
+        "sage leaf sprig",
+        "little cream house"
+      ],
+      "group": "special",
+      "pattern": "corner-ticks"
+    },
+    {
+      "index": 83,
+      "id": "today-weather",
+      "name": "오늘의 날씨",
+      "category": "custom",
+      "title": "TODAY'S WEATHER",
+      "paper": "#E6EFF5",
+      "ink": "#63819D",
+      "motifs": [
+        "warm golden sun",
+        "soft ivory cloud",
+        "pale blue raindrop cluster",
+        "little navy umbrella",
+        "small aqua wave",
+        "pastel rainbow arch"
+      ],
+      "group": "special",
+      "pattern": "pinstripe"
+    },
+    {
+      "index": 84,
+      "id": "right-now",
+      "name": "지금 이 순간",
+      "category": "custom",
+      "title": "RIGHT HERE, RIGHT NOW",
+      "paper": "#F1E8D9",
+      "ink": "#8A7259",
+      "motifs": [
+        "vintage brass pocket watch without numbers",
+        "cream camera",
+        "tiny golden spark star",
+        "blank kraft date label",
+        "plum pen",
+        "olive leaf sprig"
+      ],
+      "group": "special",
+      "pattern": "dotted-paper"
+    },
+    {
+      "index": 85,
+      "id": "dday",
+      "name": "D-Day 자동 프레임",
+      "category": "custom",
+      "title": "COUNTING OUR DAYS",
+      "paper": "#F8E5E7",
+      "ink": "#AD5970",
+      "motifs": [
+        "two red paper hearts",
+        "blank cream calendar page",
+        "pink silk bow",
+        "tiny brass clock without numbers",
+        "burgundy wax seal with heart",
+        "blush flower sprig"
+      ],
+      "group": "special",
+      "pattern": "fine-rules"
+    },
+    {
+      "index": 86,
+      "id": "nth-fourcut",
+      "name": "N번째 네컷",
+      "category": "memory",
+      "title": "OUR 10TH 4CUT",
+      "paper": "#EAE7DD",
+      "ink": "#476F79",
+      "motifs": [
+        "stack of three blank instant photographs",
+        "teal retro camera",
+        "cream numbered-ticket shape without numerals",
+        "golden laurel twig",
+        "rust ribbon",
+        "blue ink stamp without letters"
+      ],
+      "group": "special",
+      "pattern": "double-edge"
+    },
+    {
+      "index": 87,
+      "id": "one-line",
+      "name": "한 줄 기록",
+      "category": "custom",
+      "title": "A NOTE TO REMEMBER",
+      "paper": "#F2EBDC",
+      "ink": "#7B765E",
+      "motifs": [
+        "olive fountain pen",
+        "blank cream note paper",
+        "brass paper clip",
+        "terracotta wax seal without letters",
+        "dried daisy",
+        "small ivory envelope"
+      ],
+      "group": "special",
+      "pattern": "micro-check"
+    },
+    {
+      "index": 88,
+      "id": "custom-anniversary",
+      "name": "커스텀 기념일",
+      "category": "custom",
+      "title": "YOUR DAY, YOUR WAY",
+      "paper": "#EFE5E6",
+      "ink": "#92717C",
+      "motifs": [
+        "plum ink fountain pen",
+        "blank cream date card",
+        "mauve silk bow",
+        "loose cream and pink flowers",
+        "ivory heart",
+        "vintage brass sealing stamp"
+      ],
+      "group": "special",
+      "pattern": "corner-ticks"
+    }
+  ]
+}

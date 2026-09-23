@@ -1,0 +1,127 @@
+{
+  "id": "vacance",
+  "source": "source/masters/vacance.png",
+  "masterSha256": "3ef186211e3538fb0c75e9435229d58765cd050c6aa0513445bfaef2cd5641df",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "cbc49a8972d15abdf972630d5f033eec0374063f3a9de8f3de2205dd789a9dc1",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "coral life ring",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 55,
+        "top": 58,
+        "width": 418,
+        "height": 418
+      },
+      "width": 418,
+      "height": 418
+    },
+    {
+      "index": 1,
+      "name": "emerald palm frond",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 571,
+        "top": 74,
+        "width": 422,
+        "height": 390
+      },
+      "width": 422,
+      "height": 390
+    },
+    {
+      "index": 2,
+      "name": "pastel peach cocktail glass with lemon",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1119,
+        "top": 43,
+        "width": 303,
+        "height": 437
+      },
+      "width": 303,
+      "height": 437
+    },
+    {
+      "index": 3,
+      "name": "aqua wave curl",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 39,
+        "top": 592,
+        "width": 444,
+        "height": 368
+      },
+      "width": 444,
+      "height": 368
+    },
+    {
+      "index": 4,
+      "name": "cream striped beach towel",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 550,
+        "top": 560,
+        "width": 443,
+        "height": 406
+      },
+      "width": 443,
+      "height": 406
+    },
+    {
+      "index": 5,
+      "name": "warm golden sun",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1062,
+        "top": 539,
+        "width": 445,
+        "height": 428
+      },
+      "width": 445,
+      "height": 428
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "id": "mt-ot",
+  "source": "source/masters/mt-ot.png",
+  "masterSha256": "9a46df761afa5695eb49d7b225a9491293d0eade53f0ace38db0f067bfb8ac70",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "8ef6b16f2979f80cc68a404194cafe2104bc7de32d892347becfb5ea2a4e143a",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "olive college pennant without text",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 37,
+        "top": 105,
+        "width": 475,
+        "height": 352
+      },
+      "width": 464,
+      "height": 344
+    },
+    {
+      "index": 1,
+      "name": "cream blank name tag with orange lanyard",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 615,
+        "top": 44,
+        "width": 388,
+        "height": 393
+      },
+      "width": 388,
+      "height": 393
+    },
+    {
+      "index": 2,
+      "name": "guitar with warm wooden body",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1122,
+        "top": 41,
+        "width": 343,
+        "height": 446
+      },
+      "width": 343,
+      "height": 446
+    },
+    {
+      "index": 3,
+      "name": "two golden drink cups",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 63,
+        "top": 580,
+        "width": 427,
+        "height": 318
+      },
+      "width": 427,
+      "height": 318
+    },
+    {
+      "index": 4,
+      "name": "yellow camp lantern",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 593,
+        "top": 527,
+        "width": 375,
+        "height": 441
+      },
+      "width": 375,
+      "height": 441
+    },
+    {
+      "index": 5,
+      "name": "green ribbon knot",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1099,
+        "top": 578,
+        "width": 388,
+        "height": 367
+      },
+      "width": 388,
+      "height": 367
+    }
+  ]
+}

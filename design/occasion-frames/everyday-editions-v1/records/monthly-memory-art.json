@@ -1,0 +1,127 @@
+{
+  "id": "monthly-memory",
+  "source": "source/masters/monthly-memory.png",
+  "masterSha256": "f552ebf20c3472acb21852c7524c81b7bd92751f783318f1356f05a3415a50ca",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "96e194d251b1a1384125557f61ebc74479b45b4662182d084aa63c6d670b3081",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "blank cream desk calendar page",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 83,
+        "top": 78,
+        "width": 425,
+        "height": 409
+      },
+      "width": 425,
+      "height": 409
+    },
+    {
+      "index": 1,
+      "name": "sharpened olive pencil",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 650,
+        "top": 72,
+        "width": 312,
+        "height": 415
+      },
+      "width": 312,
+      "height": 415
+    },
+    {
+      "index": 2,
+      "name": "kraft paper clip",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1095,
+        "top": 109,
+        "width": 337,
+        "height": 378
+      },
+      "width": 337,
+      "height": 378
+    },
+    {
+      "index": 3,
+      "name": "small ginkgo leaf",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 140,
+        "top": 555,
+        "width": 356,
+        "height": 382
+      },
+      "width": 356,
+      "height": 382
+    },
+    {
+      "index": 4,
+      "name": "cream washi tape roll",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 589,
+        "top": 594,
+        "width": 425,
+        "height": 330
+      },
+      "width": 425,
+      "height": 330
+    },
+    {
+      "index": 5,
+      "name": "terracotta tiny star",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1151,
+        "top": 608,
+        "width": 255,
+        "height": 252
+      },
+      "width": 255,
+      "height": 252
+    }
+  ]
+}

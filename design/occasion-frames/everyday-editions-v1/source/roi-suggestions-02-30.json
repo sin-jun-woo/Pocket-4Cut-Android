@@ -1,0 +1,22 @@
+{
+  "seollal": {
+    "rois": [[0,0,480,550],[480,0,1100,550],[1100,0,1536,550],[0,550,520,1024],[520,500,1035,1024],[1035,550,1536,1024]],
+    "polygons": {
+      "1": [[480,0],[1100,0],[1100,500],[820,500],[820,550],[480,550]],
+      "4": [[520,550],[820,550],[820,500],[1035,500],[1035,1024],[520,1024]]
+    },
+    "note": "Neutral compositing shows the long jeogori ribbon at x660-700 below y500 and the plum twig tip near x970 above y550. Complementary stepped masks follow empty space between these separate silhouettes. Top and bottom column boundaries differ to preserve sleeve width and the full soup bowl. Original pixels are not repainted."
+  },
+  "coming-of-age": {
+    "rois": [[0,0,520,590],[520,0,1030,540],[1030,0,1536,540],[0,540,520,1024],[520,540,1030,1024],[1030,540,1536,1024]],
+    "polygons": {
+      "0": [[0,0],[520,0],[520,540],[220,540],[220,590],[0,590]],
+      "3": [[0,590],[220,590],[220,540],[520,540],[520,1024],[0,1024]]
+    },
+    "note": "The rose stem descends at the left while the ornate key reaches upward on the right. Complementary stepped masks keep the entire stem and key flourish without transferring neighboring fragments. Other motifs have clear independent rectangular corridors."
+  },
+  "teachers-day": {
+    "rois": [[0,0,520,550],[520,0,1100,550],[1100,0,1536,550],[0,550,510,1024],[510,550,1010,1024],[1010,550,1536,1024]],
+    "note": "The upper chalkboard is wider than the nominal middle cell, while the lower stack of books begins just to the right of the letter. Separate top and bottom column cuts follow empty margins; no polygon is required. The carnation stem and complete pencil are retained."
+  }
+}

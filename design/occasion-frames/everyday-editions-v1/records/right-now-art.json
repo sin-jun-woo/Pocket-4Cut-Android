@@ -1,0 +1,127 @@
+{
+  "id": "right-now",
+  "source": "source/masters/right-now.png",
+  "masterSha256": "2fa35ac5593275a2f9830e7ed1fc3109e1b1a853b690514a5b9513eb35e5fb21",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "7caf5aa0e92c0fca44f1d9db577511711e08459f41bf0f9978b4ed2cc9ed98a4",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "vintage brass pocket watch without numbers",
+      "roi": [
+        0,
+        0,
+        535,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 68,
+        "top": 64,
+        "width": 384,
+        "height": 404
+      },
+      "width": 384,
+      "height": 404
+    },
+    {
+      "index": 1,
+      "name": "cream camera",
+      "roi": [
+        535,
+        0,
+        1044,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 545,
+        "top": 140,
+        "width": 499,
+        "height": 345
+      },
+      "width": 464,
+      "height": 321
+    },
+    {
+      "index": 2,
+      "name": "tiny golden spark star",
+      "roi": [
+        1044,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1137,
+        "top": 98,
+        "width": 286,
+        "height": 353
+      },
+      "width": 286,
+      "height": 353
+    },
+    {
+      "index": 3,
+      "name": "blank kraft date label",
+      "roi": [
+        0,
+        512,
+        535,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 54,
+        "top": 642,
+        "width": 481,
+        "height": 282
+      },
+      "width": 464,
+      "height": 272
+    },
+    {
+      "index": 4,
+      "name": "plum pen",
+      "roi": [
+        535,
+        512,
+        1044,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 646,
+        "top": 537,
+        "width": 326,
+        "height": 407
+      },
+      "width": 326,
+      "height": 407
+    },
+    {
+      "index": 5,
+      "name": "olive leaf sprig",
+      "roi": [
+        1044,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1089,
+        "top": 532,
+        "width": 387,
+        "height": 415
+      },
+      "width": 387,
+      "height": 415
+    }
+  ]
+}

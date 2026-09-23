@@ -1,0 +1,127 @@
+{
+  "id": "parents-day",
+  "source": "source/masters/parents-day.png",
+  "masterSha256": "b81a080b658aba7cf0dd3216378e10bb3c468783f043a165428e8ea02a49811d",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "f7d3959d90be0a4c8282e033bc84185514cdda1d8c5a5004bc7d5afd80935bcb",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "three red carnations",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 61,
+        "top": 57,
+        "width": 420,
+        "height": 444
+      },
+      "width": 420,
+      "height": 444
+    },
+    {
+      "index": 1,
+      "name": "folded cream thank-you letter without writing",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 541,
+        "top": 124,
+        "width": 473,
+        "height": 340
+      },
+      "width": 464,
+      "height": 334
+    },
+    {
+      "index": 2,
+      "name": "sage-green ribbon",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1051,
+        "top": 124,
+        "width": 424,
+        "height": 375
+      },
+      "width": 424,
+      "height": 375
+    },
+    {
+      "index": 3,
+      "name": "small antique vase with a carnation",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 110,
+        "top": 524,
+        "width": 341,
+        "height": 450
+      },
+      "width": 341,
+      "height": 450
+    },
+    {
+      "index": 4,
+      "name": "a closed kraft envelope with heart seal",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 551,
+        "top": 583,
+        "width": 438,
+        "height": 316
+      },
+      "width": 438,
+      "height": 316
+    },
+    {
+      "index": 5,
+      "name": "coral fabric heart",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1074,
+        "top": 582,
+        "width": 394,
+        "height": 348
+      },
+      "width": 394,
+      "height": 348
+    }
+  ]
+}

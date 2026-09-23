@@ -1,0 +1,11 @@
+{
+  "themeIndex": 80,
+  "themeId": "this-month",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 80: 이번 달의 네컷 (this-month). Palette: cream #F3E9D9, russet #B87545, muted mustard, brass and terracotta. EXACT six motifs in reading order: 1. small blank cream calendar card; 2. dried mustard maple leaf; 3. brass paper clip; 4. ivory envelope; 5. terracotta pencil; 6. tiny russet pear. Earlyautumn monthlymemory stationery, quiet printstudio collage. Calendarcardcompletelyblank, nolettering. Six independentmotifscenteredinside3x2cellswith70pxrealtransparentgutters.",
+  "sourceGeneratedFilename": "exec-976d7ef0-5b95-44d2-91a3-221bebba9812.png",
+  "master": "source/masters/this-month.png",
+  "visualReview": "Six subdued autumn-month stationery motifs, blank calendar and no lettering, cohesive ochre/russet/cream palette."
+}

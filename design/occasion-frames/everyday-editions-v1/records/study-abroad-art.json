@@ -1,0 +1,127 @@
+{
+  "id": "study-abroad",
+  "source": "source/masters/study-abroad.png",
+  "masterSha256": "946f25430cdc114cdf21094d00edb82a892d3816dd7db1e1b18534e8c4c60da9",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "6aeecc2acb58e4abcf97d355ef8444234ee1cc29c6494481936d5bd77f2e189f",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "two cream airline boarding passes without words",
+      "roi": [
+        0,
+        0,
+        513,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 63,
+        "top": 117,
+        "width": 450,
+        "height": 293
+      },
+      "width": 450,
+      "height": 293
+    },
+    {
+      "index": 1,
+      "name": "olive passport cover without insignia",
+      "roi": [
+        513,
+        0,
+        1019,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 616,
+        "top": 84,
+        "width": 310,
+        "height": 381
+      },
+      "width": 310,
+      "height": 381
+    },
+    {
+      "index": 2,
+      "name": "small silver airplane",
+      "roi": [
+        1019,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1019,
+        "top": 161,
+        "width": 447,
+        "height": 226
+      },
+      "width": 447,
+      "height": 226
+    },
+    {
+      "index": 3,
+      "name": "blue canvas backpack",
+      "roi": [
+        0,
+        512,
+        513,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 87,
+        "top": 540,
+        "width": 399,
+        "height": 400
+      },
+      "width": 399,
+      "height": 400
+    },
+    {
+      "index": 4,
+      "name": "folded cream road map",
+      "roi": [
+        513,
+        512,
+        1019,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 548,
+        "top": 577,
+        "width": 428,
+        "height": 352
+      },
+      "width": 428,
+      "height": 352
+    },
+    {
+      "index": 5,
+      "name": "red goodbye ribbon",
+      "roi": [
+        1019,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1032,
+        "top": 565,
+        "width": 430,
+        "height": 362
+      },
+      "width": 430,
+      "height": 362
+    }
+  ]
+}

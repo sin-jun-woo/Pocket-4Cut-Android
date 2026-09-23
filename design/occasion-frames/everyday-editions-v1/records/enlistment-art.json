@@ -1,0 +1,127 @@
+{
+  "id": "enlistment",
+  "source": "source/masters/enlistment.png",
+  "masterSha256": "020e2c41844e136bdf3a876c7f06088dc64e4f5d525437280d763268f360c31f",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "86ce01a00f40f7968b90671c6463e0a328edafb476910149cab27ed78741cc9e",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "olive military cap without insignia",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 37,
+        "top": 132,
+        "width": 443,
+        "height": 276
+      },
+      "width": 443,
+      "height": 276
+    },
+    {
+      "index": 1,
+      "name": "khaki canvas duffel bag",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 539,
+        "top": 90,
+        "width": 466,
+        "height": 348
+      },
+      "width": 464,
+      "height": 347
+    },
+    {
+      "index": 2,
+      "name": "tied green boot laces",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1066,
+        "top": 119,
+        "width": 433,
+        "height": 316
+      },
+      "width": 433,
+      "height": 316
+    },
+    {
+      "index": 3,
+      "name": "cream letter envelope",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 57,
+        "top": 574,
+        "width": 442,
+        "height": 347
+      },
+      "width": 442,
+      "height": 347
+    },
+    {
+      "index": 4,
+      "name": "simple green oak leaf",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 568,
+        "top": 551,
+        "width": 408,
+        "height": 382
+      },
+      "width": 408,
+      "height": 382
+    },
+    {
+      "index": 5,
+      "name": "small brass compass",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1133,
+        "top": 534,
+        "width": 298,
+        "height": 400
+      },
+      "width": 298,
+      "height": 400
+    }
+  ]
+}

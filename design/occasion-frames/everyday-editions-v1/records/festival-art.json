@@ -1,0 +1,127 @@
+{
+  "id": "festival",
+  "source": "source/masters/festival.png",
+  "masterSha256": "500853d592b239da3ba9bd1ba30330c62dede6931dca0ade7e300c572f5c9026",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "d0ff12366aabf9f28f18a7ae1bd4e97583b3f529e20406f1e9589a070fb83838",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "woven orange festival wristband",
+      "roi": [
+        0,
+        0,
+        512,
+        508
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 91,
+        "top": 83,
+        "width": 376,
+        "height": 368
+      },
+      "width": 376,
+      "height": 368
+    },
+    {
+      "index": 1,
+      "name": "cream and red ticket without lettering",
+      "roi": [
+        512,
+        0,
+        1008,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 547,
+        "top": 103,
+        "width": 444,
+        "height": 309
+      },
+      "width": 444,
+      "height": 309
+    },
+    {
+      "index": 2,
+      "name": "retro teal loudspeaker",
+      "roi": [
+        1008,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1051,
+        "top": 75,
+        "width": 437,
+        "height": 380
+      },
+      "width": 437,
+      "height": 380
+    },
+    {
+      "index": 3,
+      "name": "mustard electric guitar",
+      "roi": [
+        0,
+        508,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 51,
+        "top": 508,
+        "width": 459,
+        "height": 421
+      },
+      "width": 459,
+      "height": 421
+    },
+    {
+      "index": 4,
+      "name": "golden star with red ink accents",
+      "roi": [
+        512,
+        512,
+        1008,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 578,
+        "top": 559,
+        "width": 369,
+        "height": 363
+      },
+      "width": 369,
+      "height": 363
+    },
+    {
+      "index": 5,
+      "name": "terracotta festival pennant",
+      "roi": [
+        1008,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1008,
+        "top": 579,
+        "width": 494,
+        "height": 296
+      },
+      "width": 464,
+      "height": 278
+    }
+  ]
+}

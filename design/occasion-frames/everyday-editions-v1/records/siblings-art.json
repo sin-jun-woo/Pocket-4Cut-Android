@@ -1,0 +1,127 @@
+{
+  "id": "siblings",
+  "source": "source/masters/siblings.png",
+  "masterSha256": "98fa5a2090b8db4b5e7410a7a015437f0acd27423067cbe054359f7a995d4c47",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "6d5f08d33124c9ba03b41d8d156cc24985dc394cb95a496e5af38d3ea87adf94",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "two mismatched striped socks",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 76,
+        "top": 107,
+        "width": 407,
+        "height": 354
+      },
+      "width": 407,
+      "height": 354
+    },
+    {
+      "index": 1,
+      "name": "blue and coral paper hearts",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 575,
+        "top": 121,
+        "width": 391,
+        "height": 346
+      },
+      "width": 391,
+      "height": 346
+    },
+    {
+      "index": 2,
+      "name": "golden lightning shape",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1131,
+        "top": 83,
+        "width": 290,
+        "height": 405
+      },
+      "width": 290,
+      "height": 405
+    },
+    {
+      "index": 3,
+      "name": "cherries joined at stems",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 81,
+        "top": 561,
+        "width": 393,
+        "height": 357
+      },
+      "width": 393,
+      "height": 357
+    },
+    {
+      "index": 4,
+      "name": "two funny rounded stars",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 563,
+        "top": 581,
+        "width": 414,
+        "height": 321
+      },
+      "width": 414,
+      "height": 321
+    },
+    {
+      "index": 5,
+      "name": "yellow ribbon knot",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1073,
+        "top": 552,
+        "width": 387,
+        "height": 387
+      },
+      "width": 387,
+      "height": 387
+    }
+  ]
+}

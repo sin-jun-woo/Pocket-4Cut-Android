@@ -1,0 +1,11 @@
+{
+  "themeIndex": 73,
+  "themeId": "workshop",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 73: 워크숍 (workshop). Palette: gray-sage #E7ECE9, blue-gray #56747B, muted orange, cream and teal. EXACT six motifs in reading order: 1. three blank cream name badges with different color lanyards; 2. navy clipboard without text; 3. teal pencil; 4. orange team flag without logo; 5. cream coffee mug; 6. woven blue teamwork knot. Tasteful teamwork workshop print stationery, graphic matte illustrated silhouettes with minimal fine details. Six distinct motifs atmax340px in each512cell,70pxtransparentgutters. No writing, no logos, no whiteoutline.",
+  "sourceGeneratedFilename": "exec-c25caa07-0e51-4f13-ac0c-65e40c0d7a5c.png",
+  "master": "source/masters/workshop.png",
+  "visualReview": "Six clear workshop motifs with blank badges/clipboard, no text. First nametag group extends slightly right of512px; crop fullalpha bounding box rather than hardgrid."
+}

@@ -1,0 +1,127 @@
+{
+  "id": "concert",
+  "source": "source/masters/concert.png",
+  "masterSha256": "1ea6ec67df3b5a5bd84c74bedc2b8602323af3880c5fcab4113950b9f40a02ee",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "7954255cea90065b6b354482f92de4c944d55d2aae0a0bb9122129f380145a3f",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "vintage silver handheld microphone",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 154,
+        "top": 59,
+        "width": 269,
+        "height": 446
+      },
+      "width": 269,
+      "height": 446
+    },
+    {
+      "index": 1,
+      "name": "two burgundy admission tickets without lettering",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 530,
+        "top": 92,
+        "width": 481,
+        "height": 383
+      },
+      "width": 464,
+      "height": 369
+    },
+    {
+      "index": 2,
+      "name": "cream stage spotlight",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1063,
+        "top": 41,
+        "width": 382,
+        "height": 461
+      },
+      "width": 382,
+      "height": 461
+    },
+    {
+      "index": 3,
+      "name": "blue earbud headphones",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 108,
+        "top": 553,
+        "width": 390,
+        "height": 408
+      },
+      "width": 390,
+      "height": 408
+    },
+    {
+      "index": 4,
+      "name": "pink music note",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 615,
+        "top": 560,
+        "width": 308,
+        "height": 382
+      },
+      "width": 308,
+      "height": 382
+    },
+    {
+      "index": 5,
+      "name": "plum electric cable loop",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1058,
+        "top": 560,
+        "width": 412,
+        "height": 405
+      },
+      "width": 412,
+      "height": 405
+    }
+  ]
+}

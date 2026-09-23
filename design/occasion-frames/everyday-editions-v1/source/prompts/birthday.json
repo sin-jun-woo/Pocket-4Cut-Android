@@ -1,0 +1,11 @@
+{
+  "index": 1,
+  "id": "birthday",
+  "name": "생일",
+  "tool": "built-in image_gen",
+  "modelSelection": "not exposed",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 60px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection: 생일. Palette inspired by background #FFF4E6 and ink #AE3D34, with muted complementary accent colors; do NOT paint background. Motifs in order: 1. strawberry cream birthday cake; 2. three twisted birthday candles; 3. bunch of coral and cornflower balloons; 4. tied cherry-red ribbon; 5. wrapped butter-yellow birthday gift; 6. small party trumpet.",
+  "generatedAt": "2026-09-23",
+  "master": "masters/birthday.png",
+  "notes": "Original RGBA master preserved unchanged. Actual alpha 0–254. Six motifs reviewed on neutral paper; adaptive ROI required because top-right balloon tails cross the nominal row boundary."
+}

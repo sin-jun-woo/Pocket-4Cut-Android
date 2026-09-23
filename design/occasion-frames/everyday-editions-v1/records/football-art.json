@@ -1,0 +1,127 @@
+{
+  "id": "football",
+  "source": "source/masters/football.png",
+  "masterSha256": "02fa4c9eab9df10033925c44ee4d0d505f0a7d2be8fcbbc6ce694c6419d1e295",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "d07e870a27bd87c21c033eb7da1bf0e7d80646baf10c65ffa567b891aa16fdc1",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "classic black and ivory soccer ball",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 70,
+        "top": 105,
+        "width": 366,
+        "height": 367
+      },
+      "width": 366,
+      "height": 367
+    },
+    {
+      "index": 1,
+      "name": "forest green supporter scarf without letters",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 554,
+        "top": 97,
+        "width": 427,
+        "height": 415
+      },
+      "width": 427,
+      "height": 415
+    },
+    {
+      "index": 2,
+      "name": "simple white goal net",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1050,
+        "top": 128,
+        "width": 440,
+        "height": 310
+      },
+      "width": 440,
+      "height": 310
+    },
+    {
+      "index": 3,
+      "name": "red referee whistle",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 67,
+        "top": 591,
+        "width": 405,
+        "height": 302
+      },
+      "width": 405,
+      "height": 302
+    },
+    {
+      "index": 4,
+      "name": "green football boot without logo",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 548,
+        "top": 615,
+        "width": 433,
+        "height": 282
+      },
+      "width": 433,
+      "height": 282
+    },
+    {
+      "index": 5,
+      "name": "blank ivory match ticket",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1041,
+        "top": 600,
+        "width": 448,
+        "height": 275
+      },
+      "width": 448,
+      "height": 275
+    }
+  ]
+}

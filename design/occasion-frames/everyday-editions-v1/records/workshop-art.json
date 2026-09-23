@@ -1,0 +1,127 @@
+{
+  "id": "workshop",
+  "source": "source/masters/workshop.png",
+  "masterSha256": "bc1a51c6bf3f0b7c3977f2b6e2a40436a678cb0353d6e8c8b3acdb26ee8ad547",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "0074fbca0ae1b02ba90196a02ee99c536cb0209a03ace1033ff985044a804ce3",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "three blank cream name badges with different color lanyards",
+      "roi": [
+        0,
+        0,
+        550,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 59,
+        "top": 54,
+        "width": 491,
+        "height": 422
+      },
+      "width": 464,
+      "height": 399
+    },
+    {
+      "index": 1,
+      "name": "navy clipboard without text",
+      "roi": [
+        550,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 636,
+        "top": 47,
+        "width": 303,
+        "height": 425
+      },
+      "width": 303,
+      "height": 425
+    },
+    {
+      "index": 2,
+      "name": "teal pencil",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1109,
+        "top": 91,
+        "width": 323,
+        "height": 361
+      },
+      "width": 323,
+      "height": 361
+    },
+    {
+      "index": 3,
+      "name": "orange team flag without logo",
+      "roi": [
+        0,
+        512,
+        550,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 98,
+        "top": 541,
+        "width": 411,
+        "height": 406
+      },
+      "width": 411,
+      "height": 406
+    },
+    {
+      "index": 4,
+      "name": "cream coffee mug",
+      "roi": [
+        550,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 648,
+        "top": 598,
+        "width": 344,
+        "height": 327
+      },
+      "width": 344,
+      "height": 327
+    },
+    {
+      "index": 5,
+      "name": "woven blue teamwork knot",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1091,
+        "top": 575,
+        "width": 372,
+        "height": 356
+      },
+      "width": 372,
+      "height": 356
+    }
+  ]
+}

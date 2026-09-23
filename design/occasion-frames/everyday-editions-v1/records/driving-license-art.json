@@ -1,0 +1,127 @@
+{
+  "id": "driving-license",
+  "source": "source/masters/driving-license.png",
+  "masterSha256": "672677e761f9938fffc97a33f06a318dc89be1d0c8ee7fce21a60d3b01fc0c27",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "4b967d3691cc3479d636631b3a342c19fbb4273bb19d2c9b6fd2be4bbef42ff3",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "blank cream driving permit card without personal data",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 54,
+        "top": 107,
+        "width": 432,
+        "height": 325
+      },
+      "width": 432,
+      "height": 325
+    },
+    {
+      "index": 1,
+      "name": "small green car without brand",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 525,
+        "top": 126,
+        "width": 499,
+        "height": 307
+      },
+      "width": 464,
+      "height": 285
+    },
+    {
+      "index": 2,
+      "name": "blue steering wheel",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1089,
+        "top": 64,
+        "width": 395,
+        "height": 396
+      },
+      "width": 395,
+      "height": 396
+    },
+    {
+      "index": 3,
+      "name": "traffic signal with red amber green lights",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 150,
+        "top": 512,
+        "width": 254,
+        "height": 464
+      },
+      "width": 254,
+      "height": 464
+    },
+    {
+      "index": 4,
+      "name": "silver key",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 607,
+        "top": 556,
+        "width": 360,
+        "height": 370
+      },
+      "width": 360,
+      "height": 370
+    },
+    {
+      "index": 5,
+      "name": "golden award ribbon",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1113,
+        "top": 528,
+        "width": 321,
+        "height": 432
+      },
+      "width": 321,
+      "height": 432
+    }
+  ]
+}

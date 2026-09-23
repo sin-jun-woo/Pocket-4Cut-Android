@@ -1,0 +1,11 @@
+{
+  "themeIndex": 66,
+  "themeId": "family-photo",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 66: 가족사진 (family-photo). Palette: warm cream #F3EADC, chestnut #82664D, terracotta, olive, golden yellow. EXACT six motifs in reading order: 1. three warm colored paper hearts; 2. loose olive family-tree branch; 3. cream house with rose roof; 4. bunch of yellow daisies; 5. terracotta woven bow; 6. two cream photo corners. Tender family album stationery, refined flat matte gouache. Limit each motif to max340px extent centered in its512px cell. Separated 3x2 atlas, no extra faces, no text or shadow.",
+  "sourceGeneratedFilename": "exec-0b850840-829e-485f-8020-4200232c78f0.png",
+  "master": "source/masters/family-photo.png",
+  "visualReview": "Six correctly placed family motifs; quiet muted palette, full separate silhouettes and no lettering."
+}

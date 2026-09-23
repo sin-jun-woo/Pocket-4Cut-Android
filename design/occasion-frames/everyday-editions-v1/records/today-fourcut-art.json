@@ -1,0 +1,127 @@
+{
+  "id": "today-fourcut",
+  "source": "source/masters/today-fourcut.png",
+  "masterSha256": "077a6b27c8eeec6f11c953dd536e269f098140860eecb62966f741d697ef5155",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "eaee108d2ec02a81755c1080c35dd7b453e8b91607feffdf247573703ebcd31c",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "cream desk calendar without letters",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 85,
+        "top": 98,
+        "width": 394,
+        "height": 383
+      },
+      "width": 394,
+      "height": 383
+    },
+    {
+      "index": 1,
+      "name": "small sage clock without numbers",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 605,
+        "top": 88,
+        "width": 356,
+        "height": 388
+      },
+      "width": 356,
+      "height": 388
+    },
+    {
+      "index": 2,
+      "name": "yellow sun disk",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1065,
+        "top": 92,
+        "width": 385,
+        "height": 387
+      },
+      "width": 385,
+      "height": 387
+    },
+    {
+      "index": 3,
+      "name": "navy ballpoint pen",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 137,
+        "top": 549,
+        "width": 333,
+        "height": 382
+      },
+      "width": 333,
+      "height": 382
+    },
+    {
+      "index": 4,
+      "name": "cream washi tape",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 564,
+        "top": 644,
+        "width": 427,
+        "height": 236
+      },
+      "width": 427,
+      "height": 236
+    },
+    {
+      "index": 5,
+      "name": "pale coral paper heart",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1102,
+        "top": 575,
+        "width": 356,
+        "height": 331
+      },
+      "width": 356,
+      "height": 331
+    }
+  ]
+}

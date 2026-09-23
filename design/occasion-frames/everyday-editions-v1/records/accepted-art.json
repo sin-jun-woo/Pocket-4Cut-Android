@@ -1,0 +1,127 @@
+{
+  "id": "accepted",
+  "source": "source/masters/accepted.png",
+  "masterSha256": "babd19980115a45af79047f9df67024cf9aac1da82a5ac453a9f40f2d7e5bb2d",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "30001120fbed2f2c4aa2ec1f7e58108a7a44574700d4973802d3d21ada70b72e",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "small gold trophy",
+      "roi": [
+        0,
+        0,
+        528,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 113,
+        "top": 114,
+        "width": 349,
+        "height": 391
+      },
+      "width": 349,
+      "height": 391
+    },
+    {
+      "index": 1,
+      "name": "wildflower bouquet wrapped in kraft",
+      "roi": [
+        528,
+        0,
+        1024,
+        558
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 602,
+        "top": 29,
+        "width": 395,
+        "height": 529
+      },
+      "width": 346,
+      "height": 464
+    },
+    {
+      "index": 2,
+      "name": "crimson ribbon rosette",
+      "roi": [
+        1024,
+        0,
+        1536,
+        529
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1104,
+        "top": 83,
+        "width": 314,
+        "height": 446
+      },
+      "width": 314,
+      "height": 446
+    },
+    {
+      "index": 3,
+      "name": "cream acceptance envelope without writing",
+      "roi": [
+        0,
+        512,
+        528,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 54,
+        "top": 576,
+        "width": 474,
+        "height": 374
+      },
+      "width": 464,
+      "height": 366
+    },
+    {
+      "index": 4,
+      "name": "golden laurel branch",
+      "roi": [
+        528,
+        558,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 592,
+        "top": 560,
+        "width": 384,
+        "height": 422
+      },
+      "width": 384,
+      "height": 422
+    },
+    {
+      "index": 5,
+      "name": "ivory star with green accents",
+      "roi": [
+        1024,
+        529,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1077,
+        "top": 583,
+        "width": 375,
+        "height": 370
+      },
+      "width": 375,
+      "height": 370
+    }
+  ]
+}

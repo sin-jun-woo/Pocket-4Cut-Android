@@ -1,0 +1,127 @@
+{
+  "id": "friend-anniversary",
+  "source": "source/masters/friend-anniversary.png",
+  "masterSha256": "e3ed8a3709103c9367e1ed814b4096badf9248129791e6623bbee391301117e3",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "4e470820fff4ecad107573396a992b961da404b7e5d8cf606ec6b96bc6951318",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "woven teal friendship knot",
+      "roi": [
+        0,
+        0,
+        526,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 68,
+        "top": 77,
+        "width": 447,
+        "height": 410
+      },
+      "width": 447,
+      "height": 410
+    },
+    {
+      "index": 1,
+      "name": "two little wildflower stems",
+      "roi": [
+        526,
+        0,
+        995,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 597,
+        "top": 47,
+        "width": 371,
+        "height": 453
+      },
+      "width": 371,
+      "height": 453
+    },
+    {
+      "index": 2,
+      "name": "stacked film snapshots with blank centers",
+      "roi": [
+        995,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1075,
+        "top": 72,
+        "width": 400,
+        "height": 428
+      },
+      "width": 400,
+      "height": 428
+    },
+    {
+      "index": 3,
+      "name": "pair of antique brass key charms",
+      "roi": [
+        0,
+        512,
+        526,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 70,
+        "top": 542,
+        "width": 456,
+        "height": 423
+      },
+      "width": 456,
+      "height": 423
+    },
+    {
+      "index": 4,
+      "name": "orange sun medallion",
+      "roi": [
+        526,
+        512,
+        995,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 569,
+        "top": 550,
+        "width": 396,
+        "height": 414
+      },
+      "width": 396,
+      "height": 414
+    },
+    {
+      "index": 5,
+      "name": "two clay mugs side by side",
+      "roi": [
+        995,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 995,
+        "top": 634,
+        "width": 523,
+        "height": 287
+      },
+      "width": 464,
+      "height": 255
+    }
+  ]
+}

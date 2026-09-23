@@ -1,0 +1,127 @@
+{
+  "id": "baby-arrival",
+  "source": "source/masters/baby-arrival.png",
+  "masterSha256": "2499b287a008110cb426f8a415099dfaf44d9e441d929be066c4c42bacff0bb6",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "bbb75ec5c7f34eb043f1e45e7d54714430d27a09bb59677be8574c87424f2760",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "tiny knitted cream baby booties",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 65,
+        "top": 112,
+        "width": 439,
+        "height": 371
+      },
+      "width": 439,
+      "height": 371
+    },
+    {
+      "index": 1,
+      "name": "sage baby romper on hanger",
+      "roi": [
+        512,
+        0,
+        1024,
+        529
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 592,
+        "top": 19,
+        "width": 350,
+        "height": 510
+      },
+      "width": 318,
+      "height": 464
+    },
+    {
+      "index": 2,
+      "name": "wooden crescent teether",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1088,
+        "top": 117,
+        "width": 384,
+        "height": 366
+      },
+      "width": 384,
+      "height": 366
+    },
+    {
+      "index": 3,
+      "name": "honey teddy bear",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 83,
+        "top": 528,
+        "width": 394,
+        "height": 453
+      },
+      "width": 394,
+      "height": 453
+    },
+    {
+      "index": 4,
+      "name": "soft olive fabric heart",
+      "roi": [
+        512,
+        529,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 580,
+        "top": 591,
+        "width": 379,
+        "height": 367
+      },
+      "width": 379,
+      "height": 367
+    },
+    {
+      "index": 5,
+      "name": "folded pale yellow muslin blanket",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1042,
+        "top": 581,
+        "width": 438,
+        "height": 386
+      },
+      "width": 438,
+      "height": 386
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "id": "camping",
+  "source": "source/masters/camping.png",
+  "masterSha256": "775d316bbaa377b94ce628de8b3dc39eba42813e35dc351003b9317399a74cdf",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "8de127047b29da85065c763fbae955fc4b4c0ecb1f1cd79e4a5bbd225265572a",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "olive canvas tent",
+      "roi": [
+        0,
+        0,
+        590,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 24,
+        "top": 78,
+        "width": 566,
+        "height": 401
+      },
+      "width": 464,
+      "height": 329
+    },
+    {
+      "index": 1,
+      "name": "small warm campfire with two logs",
+      "roi": [
+        590,
+        0,
+        1024,
+        510
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 682,
+        "top": 72,
+        "width": 303,
+        "height": 423
+      },
+      "width": 303,
+      "height": 423
+    },
+    {
+      "index": 2,
+      "name": "copper camping kettle",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1134,
+        "top": 53,
+        "width": 282,
+        "height": 445
+      },
+      "width": 282,
+      "height": 445
+    },
+    {
+      "index": 3,
+      "name": "cream enamel mug with green rim",
+      "roi": [
+        0,
+        512,
+        590,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 100,
+        "top": 613,
+        "width": 399,
+        "height": 321
+      },
+      "width": 399,
+      "height": 321
+    },
+    {
+      "index": 4,
+      "name": "brass lantern",
+      "roi": [
+        590,
+        510,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 680,
+        "top": 510,
+        "width": 225,
+        "height": 471
+      },
+      "width": 222,
+      "height": 464
+    },
+    {
+      "index": 5,
+      "name": "ivory crescent moon with two tiny stars",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1135,
+        "top": 599,
+        "width": 317,
+        "height": 336
+      },
+      "width": 317,
+      "height": 336
+    }
+  ]
+}

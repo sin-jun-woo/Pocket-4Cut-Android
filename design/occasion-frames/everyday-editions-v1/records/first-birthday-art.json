@@ -1,0 +1,127 @@
+{
+  "id": "first-birthday",
+  "source": "source/masters/first-birthday.png",
+  "masterSha256": "41449cabc57694056a45b8ea1fc433e3b418ea932229b7a74b2ff58955071a0c",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "6e875bd796b8b5413d2a1b2c9c6979b5e0b453fd592fdf6f8d74ac6ad54ea267",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "small cream first birthday cake without numeral",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 71,
+        "top": 95,
+        "width": 393,
+        "height": 372
+      },
+      "width": 393,
+      "height": 372
+    },
+    {
+      "index": 1,
+      "name": "pale gold paper crown",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 581,
+        "top": 110,
+        "width": 425,
+        "height": 371
+      },
+      "width": 425,
+      "height": 371
+    },
+    {
+      "index": 2,
+      "name": "beige teddy bear",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1116,
+        "top": 64,
+        "width": 333,
+        "height": 425
+      },
+      "width": 333,
+      "height": 425
+    },
+    {
+      "index": 3,
+      "name": "peach balloon with ribbon",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 134,
+        "top": 524,
+        "width": 281,
+        "height": 448
+      },
+      "width": 281,
+      "height": 448
+    },
+    {
+      "index": 4,
+      "name": "pair of tiny leather baby shoes",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 561,
+        "top": 585,
+        "width": 399,
+        "height": 343
+      },
+      "width": 399,
+      "height": 343
+    },
+    {
+      "index": 5,
+      "name": "five-point butter-yellow star",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1125,
+        "top": 592,
+        "width": 327,
+        "height": 322
+      },
+      "width": 327,
+      "height": 322
+    }
+  ]
+}

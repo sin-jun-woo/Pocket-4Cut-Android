@@ -1,0 +1,127 @@
+{
+  "id": "resignation",
+  "source": "source/masters/resignation.png",
+  "masterSha256": "00b1c28d45f93c0afbaab0eafefc7c0d41cf4e497d0c7a7cb772797b782af0a2",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "802fd3212f0e60b6e40a0d54a70107ebdf03158499e0343510ff3f9dced09393",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "empty employee lanyard curling loosely",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 93,
+        "top": 51,
+        "width": 391,
+        "height": 427
+      },
+      "width": 391,
+      "height": 427
+    },
+    {
+      "index": 1,
+      "name": "bright orange flower bouquet",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 580,
+        "top": 50,
+        "width": 410,
+        "height": 455
+      },
+      "width": 410,
+      "height": 455
+    },
+    {
+      "index": 2,
+      "name": "cream paper airplane",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1076,
+        "top": 115,
+        "width": 383,
+        "height": 286
+      },
+      "width": 383,
+      "height": 286
+    },
+    {
+      "index": 3,
+      "name": "open small wooden door",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 69,
+        "top": 544,
+        "width": 416,
+        "height": 409
+      },
+      "width": 416,
+      "height": 409
+    },
+    {
+      "index": 4,
+      "name": "mustard smile sun",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 559,
+        "top": 542,
+        "width": 425,
+        "height": 406
+      },
+      "width": 425,
+      "height": 406
+    },
+    {
+      "index": 5,
+      "name": "a loosened blue necktie",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1057,
+        "top": 547,
+        "width": 415,
+        "height": 395
+      },
+      "width": 415,
+      "height": 395
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "id": "kiss-day",
+  "source": "source/masters/kiss-day.png",
+  "masterSha256": "26c10637e9449c873cdf183a4ec835328cb3f9006f441da7e5d192d67a07c60f",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "27e04cd5ba16ca07846080ada27a36b0f891723e7185cc8e710e62925209bb2b",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "red lipstick kiss print illustrated in matte ink",
+      "roi": [
+        0,
+        0,
+        562,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 87,
+        "top": 106,
+        "width": 425,
+        "height": 334
+      },
+      "width": 425,
+      "height": 334
+    },
+    {
+      "index": 1,
+      "name": "two blush paper hearts",
+      "roi": [
+        562,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 601,
+        "top": 107,
+        "width": 393,
+        "height": 346
+      },
+      "width": 393,
+      "height": 346
+    },
+    {
+      "index": 2,
+      "name": "cherry-red lipstick tube",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1124,
+        "top": 60,
+        "width": 275,
+        "height": 450
+      },
+      "width": 275,
+      "height": 450
+    },
+    {
+      "index": 3,
+      "name": "deep rose silk ribbon",
+      "roi": [
+        0,
+        512,
+        562,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 59,
+        "top": 549,
+        "width": 503,
+        "height": 398
+      },
+      "width": 464,
+      "height": 367
+    },
+    {
+      "index": 4,
+      "name": "pair of red cherries",
+      "roi": [
+        562,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 608,
+        "top": 535,
+        "width": 351,
+        "height": 391
+      },
+      "width": 351,
+      "height": 391
+    },
+    {
+      "index": 5,
+      "name": "pink love letter with heart seal",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1047,
+        "top": 584,
+        "width": 429,
+        "height": 339
+      },
+      "width": 429,
+      "height": 339
+    }
+  ]
+}

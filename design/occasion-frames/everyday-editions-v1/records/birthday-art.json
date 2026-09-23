@@ -1,0 +1,127 @@
+{
+  "id": "birthday",
+  "source": "source/masters/birthday.png",
+  "masterSha256": "e5140130e6619b419dd0aae50415e8746f478a3bd5a41263eab47343925b2b16",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "6791b04fd0628eb6fc05566890b5adb6dfc8ae950489db463e31b7a24852226c",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "strawberry cream birthday cake",
+      "roi": [
+        0,
+        0,
+        533,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 44,
+        "top": 63,
+        "width": 489,
+        "height": 449
+      },
+      "width": 464,
+      "height": 426
+    },
+    {
+      "index": 1,
+      "name": "three twisted birthday candles",
+      "roi": [
+        533,
+        0,
+        1024,
+        530
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 572,
+        "top": 62,
+        "width": 420,
+        "height": 468
+      },
+      "width": 416,
+      "height": 464
+    },
+    {
+      "index": 2,
+      "name": "bunch of coral and cornflower balloons",
+      "roi": [
+        1024,
+        0,
+        1536,
+        604
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1046,
+        "top": 35,
+        "width": 456,
+        "height": 569
+      },
+      "width": 372,
+      "height": 464
+    },
+    {
+      "index": 3,
+      "name": "tied cherry-red ribbon",
+      "roi": [
+        0,
+        512,
+        533,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 51,
+        "top": 562,
+        "width": 442,
+        "height": 410
+      },
+      "width": 442,
+      "height": 410
+    },
+    {
+      "index": 4,
+      "name": "wrapped butter-yellow birthday gift",
+      "roi": [
+        533,
+        530,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 561,
+        "top": 561,
+        "width": 448,
+        "height": 422
+      },
+      "width": 448,
+      "height": 422
+    },
+    {
+      "index": 5,
+      "name": "small party trumpet",
+      "roi": [
+        1024,
+        604,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1093,
+        "top": 613,
+        "width": 389,
+        "height": 328
+      },
+      "width": 389,
+      "height": 328
+    }
+  ]
+}

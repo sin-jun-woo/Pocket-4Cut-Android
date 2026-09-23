@@ -1,0 +1,127 @@
+{
+  "id": "first-job",
+  "source": "source/masters/first-job.png",
+  "masterSha256": "4df681f7104d9f8cdab5ea00c5c4dc82ae6af035e1b00d79a14a624311717769",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "60c3f1493e2d55738961c2b6a978b4d8cabb5d5ae514b98c50e608c9d8c42ba0",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "navy business briefcase",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 65,
+        "top": 63,
+        "width": 423,
+        "height": 390
+      },
+      "width": 423,
+      "height": 390
+    },
+    {
+      "index": 1,
+      "name": "cream employee ID badge without face or letters",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 662,
+        "top": 43,
+        "width": 340,
+        "height": 412
+      },
+      "width": 340,
+      "height": 412
+    },
+    {
+      "index": 2,
+      "name": "blue fountain pen",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1130,
+        "top": 66,
+        "width": 317,
+        "height": 393
+      },
+      "width": 317,
+      "height": 393
+    },
+    {
+      "index": 3,
+      "name": "pale green necktie",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 202,
+        "top": 523,
+        "width": 162,
+        "height": 451
+      },
+      "width": 162,
+      "height": 451
+    },
+    {
+      "index": 4,
+      "name": "takeaway coffee in cream cup",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 642,
+        "top": 559,
+        "width": 273,
+        "height": 394
+      },
+      "width": 273,
+      "height": 394
+    },
+    {
+      "index": 5,
+      "name": "small brass key",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1150,
+        "top": 579,
+        "width": 246,
+        "height": 354
+      },
+      "width": 246,
+      "height": 354
+    }
+  ]
+}

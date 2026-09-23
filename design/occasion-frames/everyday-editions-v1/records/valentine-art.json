@@ -1,0 +1,127 @@
+{
+  "id": "valentine",
+  "source": "source/masters/valentine.png",
+  "masterSha256": "68fab6dc201b3c422da09e41d3925f5161b76b2a8f3aedb20b93d20ee0613e99",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "8b51475db5ebde95931ea64330aade28fbb9e378aad75ab40d018264dc37514f",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "heart shaped chocolate box open with chocolates",
+      "roi": [
+        0,
+        0,
+        578,
+        526
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 60,
+        "top": 86,
+        "width": 518,
+        "height": 440
+      },
+      "width": 464,
+      "height": 394
+    },
+    {
+      "index": 1,
+      "name": "one red rose",
+      "roi": [
+        578,
+        0,
+        1024,
+        583
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 623,
+        "top": 80,
+        "width": 356,
+        "height": 503
+      },
+      "width": 328,
+      "height": 464
+    },
+    {
+      "index": 2,
+      "name": "tied crimson ribbon",
+      "roi": [
+        1024,
+        0,
+        1536,
+        522
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1024,
+        "top": 152,
+        "width": 472,
+        "height": 370
+      },
+      "width": 464,
+      "height": 364
+    },
+    {
+      "index": 3,
+      "name": "two pink heart candies",
+      "roi": [
+        0,
+        526,
+        578,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 109,
+        "top": 639,
+        "width": 394,
+        "height": 299
+      },
+      "width": 394,
+      "height": 299
+    },
+    {
+      "index": 4,
+      "name": "cream love envelope",
+      "roi": [
+        578,
+        583,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 604,
+        "top": 629,
+        "width": 384,
+        "height": 304
+      },
+      "width": 384,
+      "height": 304
+    },
+    {
+      "index": 5,
+      "name": "a small strawberry dipped in dark chocolate",
+      "roi": [
+        1024,
+        522,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1156,
+        "top": 571,
+        "width": 283,
+        "height": 370
+      },
+      "width": 283,
+      "height": 370
+    }
+  ]
+}

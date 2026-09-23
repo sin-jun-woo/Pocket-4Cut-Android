@@ -1,0 +1,193 @@
+{
+  "id": "new-year",
+  "source": "source/masters/new-year.png",
+  "masterSha256": "a0230146def16c56e6cda74339a3cde6a1196d5154e0dc3240e299b568958712",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "2ead47e281781fd29fe1e072628300c855d0624cea2ca746c4c3c516d6648a36",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "golden paper firework burst",
+      "roi": [
+        0,
+        0,
+        539,
+        510
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 52,
+        "top": 49,
+        "width": 460,
+        "height": 440
+      },
+      "width": 460,
+      "height": 440
+    },
+    {
+      "index": 1,
+      "name": "deep red tied ribbon",
+      "roi": [
+        539,
+        0,
+        1024,
+        510
+      ],
+      "polygon": [
+        [
+          539,
+          0
+        ],
+        [
+          1024,
+          0
+        ],
+        [
+          1024,
+          510
+        ],
+        [
+          804,
+          510
+        ],
+        [
+          804,
+          464
+        ],
+        [
+          736,
+          464
+        ],
+        [
+          736,
+          510
+        ],
+        [
+          539,
+          510
+        ]
+      ],
+      "bounds": {
+        "left": 580,
+        "top": 73,
+        "width": 419,
+        "height": 437
+      },
+      "width": 419,
+      "height": 437
+    },
+    {
+      "index": 2,
+      "name": "two elegant champagne coupes",
+      "roi": [
+        1024,
+        0,
+        1536,
+        510
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1050,
+        "top": 60,
+        "width": 447,
+        "height": 406
+      },
+      "width": 447,
+      "height": 406
+    },
+    {
+      "index": 3,
+      "name": "fan of gold paper streamers",
+      "roi": [
+        0,
+        510,
+        536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 52,
+        "top": 520,
+        "width": 478,
+        "height": 471
+      },
+      "width": 464,
+      "height": 457
+    },
+    {
+      "index": 4,
+      "name": "ivory star ornament",
+      "roi": [
+        536,
+        464,
+        1024,
+        1024
+      ],
+      "polygon": [
+        [
+          536,
+          510
+        ],
+        [
+          736,
+          510
+        ],
+        [
+          736,
+          464
+        ],
+        [
+          804,
+          464
+        ],
+        [
+          804,
+          510
+        ],
+        [
+          1024,
+          510
+        ],
+        [
+          1024,
+          1024
+        ],
+        [
+          536,
+          1024
+        ]
+      ],
+      "bounds": {
+        "left": 599,
+        "top": 464,
+        "width": 351,
+        "height": 503
+      },
+      "width": 324,
+      "height": 464
+    },
+    {
+      "index": 5,
+      "name": "a small clock face without numbers",
+      "roi": [
+        1024,
+        510,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1030,
+        "top": 538,
+        "width": 469,
+        "height": 455
+      },
+      "width": 464,
+      "height": 450
+    }
+  ]
+}

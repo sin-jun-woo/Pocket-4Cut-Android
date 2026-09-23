@@ -1,0 +1,127 @@
+{
+  "id": "pet-birthday",
+  "source": "source/masters/pet-birthday.png",
+  "masterSha256": "e0ff1714f58af31758e3f7e662b86079739580b172eb67ba9c2d4e6a741cea36",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "41d7eff3abcb3811e40fa10159151b4e9fe9db0230e64697bd5e91c73aa72c82",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "small unbranded pet-safe birthday cake",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 99,
+        "top": 44,
+        "width": 365,
+        "height": 440
+      },
+      "width": 365,
+      "height": 440
+    },
+    {
+      "index": 1,
+      "name": "tan paw print",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 586,
+        "top": 102,
+        "width": 378,
+        "height": 352
+      },
+      "width": 378,
+      "height": 352
+    },
+    {
+      "index": 2,
+      "name": "cream dog biscuit bone",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1089,
+        "top": 132,
+        "width": 365,
+        "height": 306
+      },
+      "width": 365,
+      "height": 306
+    },
+    {
+      "index": 3,
+      "name": "sage green pet collar without name",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 85,
+        "top": 614,
+        "width": 392,
+        "height": 308
+      },
+      "width": 392,
+      "height": 308
+    },
+    {
+      "index": 4,
+      "name": "golden rubber ball",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 622,
+        "top": 595,
+        "width": 314,
+        "height": 313
+      },
+      "width": 314,
+      "height": 313
+    },
+    {
+      "index": 5,
+      "name": "little birthday hat",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1122,
+        "top": 533,
+        "width": 317,
+        "height": 399
+      },
+      "width": 317,
+      "height": 399
+    }
+  ]
+}

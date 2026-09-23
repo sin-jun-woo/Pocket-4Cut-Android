@@ -1,0 +1,11 @@
+{
+  "themeIndex": 62,
+  "themeId": "party",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 62: 파티 (party). Palette: deep navy #272A3B, antique gold #E3BC85, ivory, burgundy and restrained magenta; background genuine transparent alpha. EXACT six separate motifs in reading order: 1. faceted cream and blue disco ball; 2. two golden champagne coupes; 3. magenta party hat; 4. ivory streamer curl; 5. gold celebration star; 6. deep red silk bow. Sophisticated evening celebration paper ephemera. Keep shapes within their own 512x512 cells with at least70px blank gutters. No text, no drop shadow.",
+  "sourceGeneratedFilename": "exec-53272a21-5cfe-4630-9a07-c858c765592b.png",
+  "master": "source/masters/party.png",
+  "visualReview": "Six separate illustrations, correct motifs, rich navy/gold/burgundy cohesion; no lettering or clipping."
+}

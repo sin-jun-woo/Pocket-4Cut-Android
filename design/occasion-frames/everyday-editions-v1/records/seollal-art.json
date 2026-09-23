@@ -1,0 +1,177 @@
+{
+  "id": "seollal",
+  "source": "source/masters/seollal.png",
+  "masterSha256": "f5344ad6da978ffa893fb7929f33aa152b8603de92ac31bfcd9c5fa638ade5e5",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "6f96f89016314908d04d69ff178501d268322b324e411a7a51d34546db4ba148",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "traditional red Korean bokjumeoni lucky pouch",
+      "roi": [
+        0,
+        0,
+        480,
+        550
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 68,
+        "top": 61,
+        "width": 387,
+        "height": 433
+      },
+      "width": 387,
+      "height": 433
+    },
+    {
+      "index": 1,
+      "name": "pastel Korean hanbok jeogori garment",
+      "roi": [
+        480,
+        0,
+        1100,
+        550
+      ],
+      "polygon": [
+        [
+          480,
+          0
+        ],
+        [
+          1100,
+          0
+        ],
+        [
+          1100,
+          500
+        ],
+        [
+          820,
+          500
+        ],
+        [
+          820,
+          550
+        ],
+        [
+          480,
+          550
+        ]
+      ],
+      "bounds": {
+        "left": 495,
+        "top": 83,
+        "width": 559,
+        "height": 467
+      },
+      "width": 464,
+      "height": 388
+    },
+    {
+      "index": 2,
+      "name": "jade and coral norigae tassel",
+      "roi": [
+        1100,
+        0,
+        1536,
+        550
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1183,
+        "top": 27,
+        "width": 204,
+        "height": 506
+      },
+      "width": 187,
+      "height": 464
+    },
+    {
+      "index": 3,
+      "name": "ivory bowl of sliced rice-cake soup",
+      "roi": [
+        0,
+        550,
+        520,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 44,
+        "top": 563,
+        "width": 455,
+        "height": 373
+      },
+      "width": 455,
+      "height": 373
+    },
+    {
+      "index": 4,
+      "name": "delicate plum blossom twig",
+      "roi": [
+        520,
+        500,
+        1035,
+        1024
+      ],
+      "polygon": [
+        [
+          520,
+          550
+        ],
+        [
+          820,
+          550
+        ],
+        [
+          820,
+          500
+        ],
+        [
+          1035,
+          500
+        ],
+        [
+          1035,
+          1024
+        ],
+        [
+          520,
+          1024
+        ]
+      ],
+      "bounds": {
+        "left": 558,
+        "top": 500,
+        "width": 427,
+        "height": 470
+      },
+      "width": 422,
+      "height": 464
+    },
+    {
+      "index": 5,
+      "name": "pair of traditional embroidered Korean shoes",
+      "roi": [
+        1035,
+        550,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1046,
+        "top": 587,
+        "width": 457,
+        "height": 347
+      },
+      "width": 457,
+      "height": 347
+    }
+  ]
+}

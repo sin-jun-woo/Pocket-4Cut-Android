@@ -1,0 +1,127 @@
+{
+  "id": "party",
+  "source": "source/masters/party.png",
+  "masterSha256": "55c9c850ba163c628bf6936b6cf92e0c533315566a083adcfd2df10cf69b2712",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "d92fd033dd06608af354062a81196124b9d6561356c066e6533a3e8d50047d4e",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "faceted cream and blue disco ball",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 94,
+        "top": 47,
+        "width": 368,
+        "height": 454
+      },
+      "width": 368,
+      "height": 454
+    },
+    {
+      "index": 1,
+      "name": "two golden champagne coupes",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 577,
+        "top": 93,
+        "width": 427,
+        "height": 400
+      },
+      "width": 427,
+      "height": 400
+    },
+    {
+      "index": 2,
+      "name": "magenta party hat",
+      "roi": [
+        1024,
+        0,
+        1536,
+        515
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1117,
+        "top": 43,
+        "width": 373,
+        "height": 472
+      },
+      "width": 367,
+      "height": 464
+    },
+    {
+      "index": 3,
+      "name": "ivory streamer curl",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 80,
+        "top": 545,
+        "width": 338,
+        "height": 418
+      },
+      "width": 338,
+      "height": 418
+    },
+    {
+      "index": 4,
+      "name": "gold celebration star",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 573,
+        "top": 530,
+        "width": 392,
+        "height": 441
+      },
+      "width": 392,
+      "height": 441
+    },
+    {
+      "index": 5,
+      "name": "deep red silk bow",
+      "roi": [
+        1024,
+        515,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1043,
+        "top": 546,
+        "width": 441,
+        "height": 418
+      },
+      "width": 441,
+      "height": 418
+    }
+  ]
+}

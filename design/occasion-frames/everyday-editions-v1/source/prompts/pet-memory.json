@@ -1,0 +1,11 @@
+{
+  "themeIndex": 60,
+  "themeId": "pet-memory",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 60: 반려동물 추억 (pet-memory). Palette: warm paper #E9E9F0 and ink #75758C, balanced with motif colors; background stays fully transparent. Exact six motifs in reading order: 1. quiet pastel rainbow arch; 2. tiny ivory star; 3. gentle pale blue cloud; 4. small lavender paw print; 5. cream crescent moon; 6. delicate forget-me-not flower sprig. Quiet tender remembrance, dignified and comforting rather than festive. Render all six separately, no lettering, 70px clear gutters.",
+  "sourceGeneratedFilename": "exec-3a3bd730-1a7a-4827-8b80-2f88a5c4b89e.png",
+  "master": "source/masters/pet-memory.png",
+  "visualReview": "Six motifs correctly separated and legible; apparent glow in transparent display requires alpha inspection before final layout."
+}

@@ -1,0 +1,127 @@
+{
+  "id": "basketball",
+  "source": "source/masters/basketball.png",
+  "masterSha256": "10e5ca65d40b3162682d1aa5a790b9215d182dcb16da810d4de8dabc2031c718",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "9bafb36b03ee3db32347753f1630223763a1223f113f6eb0615e480c6444a305",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "burnt orange basketball",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 81,
+        "top": 98,
+        "width": 357,
+        "height": 355
+      },
+      "width": 357,
+      "height": 355
+    },
+    {
+      "index": 1,
+      "name": "simple cream basketball hoop with red rim",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 571,
+        "top": 77,
+        "width": 396,
+        "height": 402
+      },
+      "width": 396,
+      "height": 402
+    },
+    {
+      "index": 2,
+      "name": "navy high top sneaker without logo",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1076,
+        "top": 93,
+        "width": 415,
+        "height": 378
+      },
+      "width": 415,
+      "height": 378
+    },
+    {
+      "index": 3,
+      "name": "blank orange scoreboard",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 63,
+        "top": 611,
+        "width": 414,
+        "height": 306
+      },
+      "width": 414,
+      "height": 306
+    },
+    {
+      "index": 4,
+      "name": "ivory striped sport towel",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 572,
+        "top": 547,
+        "width": 394,
+        "height": 413
+      },
+      "width": 394,
+      "height": 413
+    },
+    {
+      "index": 5,
+      "name": "golden whistle",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1092,
+        "top": 605,
+        "width": 379,
+        "height": 318
+      },
+      "width": 379,
+      "height": 318
+    }
+  ]
+}

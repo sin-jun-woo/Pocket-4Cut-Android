@@ -1,0 +1,6 @@
+{
+  "here-a-cut": {
+    "rois": [[0,0,480,512],[480,0,1040,512],[1040,0,1536,512],[0,512,590,1024],[590,512,1024,1024],[1024,512,1536,1024]],
+    "note": "Full-size neutral-alpha visual inspection: the top map starts around x546, while the bottom-left ticket extends around x549, so no shared vertical corridor separates both rows. Different top and bottom column cuts preserve every silhouette. All top motifs end before y470; all bottom motifs begin after y550, so y512 is clear. The pin, map, compass, ticket, sprig and house remain distinct. No polygon or repainting is required."
+  }
+}

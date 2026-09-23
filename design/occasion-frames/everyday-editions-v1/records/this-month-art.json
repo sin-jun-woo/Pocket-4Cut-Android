@@ -1,0 +1,127 @@
+{
+  "id": "this-month",
+  "source": "source/masters/this-month.png",
+  "masterSha256": "ab69de5b572d51c00c05800ca8047d25fb5ccea6e3b8609d18047b97944f6caa",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "41826299ec5c5111ab6d1654ea1761e06aa20eaf100498484def1830fb07d77a",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "small blank cream calendar card",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 104,
+        "top": 78,
+        "width": 390,
+        "height": 390
+      },
+      "width": 390,
+      "height": 390
+    },
+    {
+      "index": 1,
+      "name": "dried mustard maple leaf",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 607,
+        "top": 82,
+        "width": 358,
+        "height": 401
+      },
+      "width": 358,
+      "height": 401
+    },
+    {
+      "index": 2,
+      "name": "brass paper clip",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1114,
+        "top": 121,
+        "width": 324,
+        "height": 317
+      },
+      "width": 324,
+      "height": 317
+    },
+    {
+      "index": 3,
+      "name": "ivory envelope",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 74,
+        "top": 581,
+        "width": 434,
+        "height": 341
+      },
+      "width": 434,
+      "height": 341
+    },
+    {
+      "index": 4,
+      "name": "terracotta pencil",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 613,
+        "top": 570,
+        "width": 377,
+        "height": 337
+      },
+      "width": 377,
+      "height": 337
+    },
+    {
+      "index": 5,
+      "name": "tiny russet pear",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1151,
+        "top": 565,
+        "width": 313,
+        "height": 366
+      },
+      "width": 313,
+      "height": 366
+    }
+  ]
+}

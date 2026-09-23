@@ -1,0 +1,127 @@
+{
+  "id": "proposal",
+  "source": "source/masters/proposal.png",
+  "masterSha256": "69726d944e3f0d371c4383c2dd6729d9e2a56d949cb9ab4a3bc0d3ef40e89ede",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "3bc712bbdd72f849d0ac013383fc456b5e2ecb203bb11df427f992105f01c64c",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "open velvet burgundy ring box with solitaire ring",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 104,
+        "top": 53,
+        "width": 332,
+        "height": 429
+      },
+      "width": 332,
+      "height": 429
+    },
+    {
+      "index": 1,
+      "name": "one garden rose with leaves",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 568,
+        "top": 58,
+        "width": 404,
+        "height": 428
+      },
+      "width": 404,
+      "height": 428
+    },
+    {
+      "index": 2,
+      "name": "ivory silk bow",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1091,
+        "top": 67,
+        "width": 375,
+        "height": 434
+      },
+      "width": 375,
+      "height": 434
+    },
+    {
+      "index": 3,
+      "name": "sealed cream envelope",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 67,
+        "top": 600,
+        "width": 415,
+        "height": 329
+      },
+      "width": 415,
+      "height": 329
+    },
+    {
+      "index": 4,
+      "name": "two slender gold champagne glasses",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 617,
+        "top": 543,
+        "width": 323,
+        "height": 411
+      },
+      "width": 323,
+      "height": 411
+    },
+    {
+      "index": 5,
+      "name": "blush pink paper heart",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1091,
+        "top": 600,
+        "width": 376,
+        "height": 338
+      },
+      "width": 376,
+      "height": 338
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "id": "nth-fourcut",
+  "source": "source/masters/nth-fourcut.png",
+  "masterSha256": "76cbf3e1641f065501ae82bd7582589aa0cfe468d78d654f2a909e9f39de6067",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "107aaa33697493731cd6040488b57a9b5c9eaf0d14d2fa32ba7ab9c6823ddbca",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "stack of three blank instant photographs",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 39,
+        "top": 78,
+        "width": 434,
+        "height": 406
+      },
+      "width": 434,
+      "height": 406
+    },
+    {
+      "index": 1,
+      "name": "teal retro camera",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 517,
+        "top": 146,
+        "width": 473,
+        "height": 326
+      },
+      "width": 464,
+      "height": 320
+    },
+    {
+      "index": 2,
+      "name": "cream numbered-ticket shape without numerals",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1041,
+        "top": 197,
+        "width": 449,
+        "height": 225
+      },
+      "width": 449,
+      "height": 225
+    },
+    {
+      "index": 3,
+      "name": "golden laurel twig",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 73,
+        "top": 528,
+        "width": 373,
+        "height": 411
+      },
+      "width": 373,
+      "height": 411
+    },
+    {
+      "index": 4,
+      "name": "rust ribbon",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 542,
+        "top": 565,
+        "width": 451,
+        "height": 369
+      },
+      "width": 451,
+      "height": 369
+    },
+    {
+      "index": 5,
+      "name": "blue ink stamp without letters",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1094,
+        "top": 581,
+        "width": 351,
+        "height": 339
+      },
+      "width": 351,
+      "height": 339
+    }
+  ]
+}

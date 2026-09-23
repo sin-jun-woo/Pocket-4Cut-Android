@@ -1,0 +1,127 @@
+{
+  "id": "white-day",
+  "source": "source/masters/white-day.png",
+  "masterSha256": "fc17ece5d877c98b361a6303baa4f50af3ef2339b079394a6f63eb5226a6f912",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "39c310c398ad0c4c593a6620f932f67229514722a257af02906602fbfb602d8f",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "pastel lavender wrapped candy",
+      "roi": [
+        0,
+        0,
+        526,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 50,
+        "top": 87,
+        "width": 476,
+        "height": 346
+      },
+      "width": 464,
+      "height": 337
+    },
+    {
+      "index": 1,
+      "name": "twisted pink and mint lollipop",
+      "roi": [
+        526,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 628,
+        "top": 37,
+        "width": 287,
+        "height": 464
+      },
+      "width": 287,
+      "height": 464
+    },
+    {
+      "index": 2,
+      "name": "large ivory satin bow",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1038,
+        "top": 69,
+        "width": 450,
+        "height": 425
+      },
+      "width": 450,
+      "height": 425
+    },
+    {
+      "index": 3,
+      "name": "two translucent pastel heart candies drawn matte",
+      "roi": [
+        0,
+        512,
+        526,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 60,
+        "top": 561,
+        "width": 427,
+        "height": 383
+      },
+      "width": 427,
+      "height": 383
+    },
+    {
+      "index": 4,
+      "name": "tiny lilac gift box",
+      "roi": [
+        526,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 583,
+        "top": 554,
+        "width": 373,
+        "height": 410
+      },
+      "width": 373,
+      "height": 410
+    },
+    {
+      "index": 5,
+      "name": "cream daisy with mint leaves",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1035,
+        "top": 543,
+        "width": 451,
+        "height": 440
+      },
+      "width": 451,
+      "height": 440
+    }
+  ]
+}

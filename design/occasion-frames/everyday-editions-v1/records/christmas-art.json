@@ -1,0 +1,127 @@
+{
+  "id": "christmas",
+  "source": "source/masters/christmas.png",
+  "masterSha256": "4aaa9ac5166b5defa4c533f8770bde064720be9c328e2f65777b774c739de3c3",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "7c3d54c7c231ee0142e4a9f04a86f9a682e434c984930930bd8c240b40ca81da",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "decorated pine Christmas tree",
+      "roi": [
+        0,
+        0,
+        512,
+        531
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 75,
+        "top": 21,
+        "width": 419,
+        "height": 510
+      },
+      "width": 381,
+      "height": 464
+    },
+    {
+      "index": 1,
+      "name": "small Santa hat",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 545,
+        "top": 119,
+        "width": 460,
+        "height": 340
+      },
+      "width": 460,
+      "height": 340
+    },
+    {
+      "index": 2,
+      "name": "red gift box with ivory bow",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1090,
+        "top": 91,
+        "width": 367,
+        "height": 409
+      },
+      "width": 367,
+      "height": 409
+    },
+    {
+      "index": 3,
+      "name": "gingerbread person",
+      "roi": [
+        0,
+        531,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 124,
+        "top": 563,
+        "width": 326,
+        "height": 409
+      },
+      "width": 326,
+      "height": 409
+    },
+    {
+      "index": 4,
+      "name": "gold brass jingle bells with holly",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 558,
+        "top": 547,
+        "width": 435,
+        "height": 405
+      },
+      "width": 435,
+      "height": 405
+    },
+    {
+      "index": 5,
+      "name": "red Christmas stocking",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1072,
+        "top": 543,
+        "width": 378,
+        "height": 416
+      },
+      "width": 378,
+      "height": 416
+    }
+  ]
+}

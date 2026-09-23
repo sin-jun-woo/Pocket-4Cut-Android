@@ -1,0 +1,11 @@
+{
+  "themeIndex": 75,
+  "themeId": "our-day",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 75: 추억 / 오늘 기록 (our-day). Palette: faded warm paper #EEE7D9, brown-charcoal #6B6357, muted ochre, cream and olive. EXACT six motifs in reading order: 1. retro brown film camera; 2. curled strip of empty film; 3. cream envelope; 4. muted ochre crescent moon; 5. olive leaf sprig; 6. brass tiny star. Nostalgic analog photo diary, collectible independent printshop ephemera. Textures inside shapes only. All sixcentered in3x2cells,70pxtransparentgutters. Absolutely no numbersorlettering on camera/film/envelope.",
+  "sourceGeneratedFilename": "exec-71129c4a-5e29-4619-900b-9a336349b414.png",
+  "master": "source/masters/our-day.png",
+  "visualReview": "Six complete analog-memory motifs, elegant brown/cream/olive/gold cohesion; no text. Camera right strap approaches nominal column border."
+}

@@ -1,0 +1,13 @@
+{
+  "index": 26,
+  "id": "liberation-day",
+  "tool": "built-in image_gen",
+  "mode": "generate",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 60px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection: Everyday Editions, Pocket 4Cut. Theme: 광복절 (liberation-day). Palette coordinated with #F6F3E7 paper and #264F72 ink, with harmonious motif colors. EXACT six motifs in reading order:\n1. pale pink mugunghwa hibiscus flower with red center\n2. white dove with olive leaf\n3. thin red and blue silk ribbons intertwined\n4. small pale green laurel sprig\n5. cream folded Korean paper fan without writing\n6. three pink hibiscus buds\nProduction layout: 3 columns x 2 rows, full silhouettes within separate cells, at least 70px clear transparent gutters. Genuinely transparent alpha background; no lettering, 3D, shadows or white sticker halo.",
+  "sourceFile": "exec-b22439f8-70c2-46cc-bec5-753e87475838.png",
+  "masterFile": "masters/liberation-day.png",
+  "visualReview": "Six Liberation-day motifs match catalog: hibiscus, dove, red-blue ribbons, laurel, blank fan and three hibiscus buds. No generated flag or Hangul text; flag geometry if desired is deferred to parent. All silhouettes complete and separated.",
+  "generatedOn": "2026-09-23"
+}

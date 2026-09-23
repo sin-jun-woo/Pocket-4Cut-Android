@@ -1,0 +1,127 @@
+{
+  "id": "gotcha-day",
+  "source": "source/masters/gotcha-day.png",
+  "masterSha256": "af9d14228c13f4587097d772afb4669f5a5d5d469581000701d767d5cff8b5f0",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "77a28f59b92edd83f3b31bb1fe9d125f16d2f2f577569bc5cd4e68cd14d12b28",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "two tan paw prints",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 86,
+        "top": 115,
+        "width": 392,
+        "height": 322
+      },
+      "width": 392,
+      "height": 322
+    },
+    {
+      "index": 1,
+      "name": "soft coral paper heart",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 604,
+        "top": 133,
+        "width": 318,
+        "height": 299
+      },
+      "width": 318,
+      "height": 299
+    },
+    {
+      "index": 2,
+      "name": "cozy wicker pet basket",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1056,
+        "top": 130,
+        "width": 416,
+        "height": 307
+      },
+      "width": 416,
+      "height": 307
+    },
+    {
+      "index": 3,
+      "name": "cream pet food bowl without text",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 63,
+        "top": 619,
+        "width": 409,
+        "height": 258
+      },
+      "width": 409,
+      "height": 258
+    },
+    {
+      "index": 4,
+      "name": "olive collar with heart tag",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 574,
+        "top": 616,
+        "width": 391,
+        "height": 293
+      },
+      "width": 391,
+      "height": 293
+    },
+    {
+      "index": 5,
+      "name": "little green leaf sprig",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1118,
+        "top": 547,
+        "width": 340,
+        "height": 397
+      },
+      "width": 340,
+      "height": 397
+    }
+  ]
+}

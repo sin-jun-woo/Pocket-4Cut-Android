@@ -1,0 +1,127 @@
+{
+  "id": "pajama-party",
+  "source": "source/masters/pajama-party.png",
+  "masterSha256": "79fa9219ae51ea378fa7d89ca0a33c5e3dd406aba970290dde6a8db13b9cd28c",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "9b127f60f5585ffd930c9ef2b49a1ea0e8fd82f3486098be2788f4263a6dbd65",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "lavender striped pajamas folded",
+      "roi": [
+        0,
+        0,
+        505,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 55,
+        "top": 65,
+        "width": 434,
+        "height": 419
+      },
+      "width": 434,
+      "height": 419
+    },
+    {
+      "index": 1,
+      "name": "soft ivory cloud",
+      "roi": [
+        505,
+        0,
+        1056,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 528,
+        "top": 123,
+        "width": 513,
+        "height": 341
+      },
+      "width": 464,
+      "height": 308
+    },
+    {
+      "index": 2,
+      "name": "butter-yellow crescent moon",
+      "roi": [
+        1056,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1086,
+        "top": 58,
+        "width": 411,
+        "height": 437
+      },
+      "width": 411,
+      "height": 437
+    },
+    {
+      "index": 3,
+      "name": "violet ribbon bow",
+      "roi": [
+        0,
+        512,
+        505,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 55,
+        "top": 558,
+        "width": 409,
+        "height": 410
+      },
+      "width": 409,
+      "height": 410
+    },
+    {
+      "index": 4,
+      "name": "cozy pink sleeping mask",
+      "roi": [
+        505,
+        512,
+        1056,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 505,
+        "top": 605,
+        "width": 551,
+        "height": 337
+      },
+      "width": 464,
+      "height": 284
+    },
+    {
+      "index": 5,
+      "name": "tiny golden star",
+      "roi": [
+        1056,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1154,
+        "top": 608,
+        "width": 327,
+        "height": 287
+      },
+      "width": 327,
+      "height": 287
+    }
+  ]
+}

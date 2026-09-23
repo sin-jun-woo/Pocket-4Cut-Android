@@ -1,0 +1,11 @@
+{
+  "themeIndex": 83,
+  "themeId": "today-weather",
+  "tool": "builtin image_gen",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 70px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection 83: 오늘의 날씨 (today-weather). Palette: sky paper #E6EFF5, dusty blue #63819D, cream, warm golden yellow and muted rainbow colors. EXACT six motifs in reading order: 1. warm golden sun; 2. soft ivory cloud; 3. pale blue raindrop cluster; 4. little navy umbrella; 5. small aqua wave; 6. pastel rainbow arch. Weather diary stationery, airy matte gouache with intentional simple shapes and generous negative space. No cute faces,noemojistyle,nogloss. Sixindependentmotifs3x2grid,70pxgenuinelytransparentgutters.",
+  "sourceGeneratedFilename": "exec-15f7b90a-a8ab-4815-a44e-fe9f8d8217fb.png",
+  "master": "source/masters/today-weather.png",
+  "visualReview": "Six cohesive flat weather motifs, no faces/letters. Clear soft sky and navy contrast; choose limited motifs in frame to avoid showing contradictory weather as real data."
+}

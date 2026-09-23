@@ -1,0 +1,127 @@
+{
+  "id": "semester-start",
+  "source": "source/masters/semester-start.png",
+  "masterSha256": "0d7073f26d15495307214c68b8f67feaa320cbc1947973c36cd5697d575c0ce0",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "5b16b79c4735f2159f975f5ce30b9ff66d1c498094adb05a80b29dc88232c887",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "stack of olive books",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 39,
+        "top": 74,
+        "width": 466,
+        "height": 419
+      },
+      "width": 464,
+      "height": 417
+    },
+    {
+      "index": 1,
+      "name": "open silver laptop with blank screen",
+      "roi": [
+        512,
+        0,
+        999,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 530,
+        "top": 87,
+        "width": 466,
+        "height": 403
+      },
+      "width": 464,
+      "height": 401
+    },
+    {
+      "index": 2,
+      "name": "blank cream campus ID card",
+      "roi": [
+        999,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1067,
+        "top": 61,
+        "width": 430,
+        "height": 424
+      },
+      "width": 430,
+      "height": 424
+    },
+    {
+      "index": 3,
+      "name": "terracotta takeaway coffee cup",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 143,
+        "top": 560,
+        "width": 262,
+        "height": 398
+      },
+      "width": 262,
+      "height": 398
+    },
+    {
+      "index": 4,
+      "name": "sharpened yellow pencil",
+      "roi": [
+        512,
+        512,
+        999,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 572,
+        "top": 569,
+        "width": 371,
+        "height": 376
+      },
+      "width": 371,
+      "height": 376
+    },
+    {
+      "index": 5,
+      "name": "vintage green university building without signs",
+      "roi": [
+        999,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 999,
+        "top": 576,
+        "width": 512,
+        "height": 371
+      },
+      "width": 464,
+      "height": 336
+    }
+  ]
+}

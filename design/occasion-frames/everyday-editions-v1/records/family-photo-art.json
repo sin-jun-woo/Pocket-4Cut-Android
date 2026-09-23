@@ -1,0 +1,127 @@
+{
+  "id": "family-photo",
+  "source": "source/masters/family-photo.png",
+  "masterSha256": "b4f4a0dcad5fc9e96d16b9047310c4b253bcd03c84edb5dafe1b52d45ea3884c",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "cffc1e705770d4e855bba98cb5644197a11d1f90f47303a5f382ea314de8767f",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "three warm colored paper hearts",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 80,
+        "top": 48,
+        "width": 406,
+        "height": 426
+      },
+      "width": 406,
+      "height": 426
+    },
+    {
+      "index": 1,
+      "name": "loose olive family-tree branch",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 571,
+        "top": 54,
+        "width": 418,
+        "height": 421
+      },
+      "width": 418,
+      "height": 421
+    },
+    {
+      "index": 2,
+      "name": "cream house with rose roof",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1054,
+        "top": 68,
+        "width": 430,
+        "height": 408
+      },
+      "width": 430,
+      "height": 408
+    },
+    {
+      "index": 3,
+      "name": "bunch of yellow daisies",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 68,
+        "top": 524,
+        "width": 392,
+        "height": 451
+      },
+      "width": 392,
+      "height": 451
+    },
+    {
+      "index": 4,
+      "name": "terracotta woven bow",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 557,
+        "top": 573,
+        "width": 418,
+        "height": 370
+      },
+      "width": 418,
+      "height": 370
+    },
+    {
+      "index": 5,
+      "name": "two cream photo corners",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1088,
+        "top": 577,
+        "width": 385,
+        "height": 314
+      },
+      "width": 385,
+      "height": 314
+    }
+  ]
+}

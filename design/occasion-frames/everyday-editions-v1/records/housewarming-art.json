@@ -1,0 +1,127 @@
+{
+  "id": "housewarming",
+  "source": "source/masters/housewarming.png",
+  "masterSha256": "0217d3d8113d8aae32ca9bff0408485133fa516f5382a0d29b5674ac8cb5fba2",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "72c9820fab59e116dc3ec8a594df678499de50b92535fb37f06f16bea59b76b8",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "cream cottage with olive roof",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 64,
+        "top": 77,
+        "width": 441,
+        "height": 407
+      },
+      "width": 441,
+      "height": 407
+    },
+    {
+      "index": 1,
+      "name": "two brass keys on rust ribbon",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 597,
+        "top": 118,
+        "width": 364,
+        "height": 380
+      },
+      "width": 364,
+      "height": 380
+    },
+    {
+      "index": 2,
+      "name": "terracotta plant pot with leaves",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1037,
+        "top": 60,
+        "width": 436,
+        "height": 441
+      },
+      "width": 436,
+      "height": 441
+    },
+    {
+      "index": 3,
+      "name": "woven welcome basket",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 51,
+        "top": 543,
+        "width": 443,
+        "height": 401
+      },
+      "width": 443,
+      "height": 401
+    },
+    {
+      "index": 4,
+      "name": "ivory candle in green jar",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 653,
+        "top": 599,
+        "width": 256,
+        "height": 325
+      },
+      "width": 256,
+      "height": 325
+    },
+    {
+      "index": 5,
+      "name": "cream coffee mug",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1126,
+        "top": 609,
+        "width": 343,
+        "height": 320
+      },
+      "width": 343,
+      "height": 320
+    }
+  ]
+}

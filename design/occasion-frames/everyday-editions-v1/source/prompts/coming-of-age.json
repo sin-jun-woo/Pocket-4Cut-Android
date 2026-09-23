@@ -1,0 +1,13 @@
+{
+  "index": 27,
+  "id": "coming-of-age",
+  "tool": "built-in image_gen",
+  "mode": "generate",
+  "modelSelector": "unavailable",
+  "qualitySelector": "unavailable",
+  "prompt": "Use case: illustration-story. Asset type: production illustration atlas for original Korean photo booth stationery. Create ONE landscape 1536x1024 transparent PNG image (highest supported resolution). Exactly SIX independent multicolor illustrations in a 3-column by 2-row grid, in reading order; one illustration per cell, large but with 60px clear transparent space to every edge of its 512px cell. Absolutely no grid lines. Real alpha transparent background, no white sheet and no checkerboard.\nArt direction: carefully art-directed independent Seoul stationery studio, charming grown-up illustration, flat matte gouache and cut-paper screenprint with sparse colored pencil details. Intentional asymmetric silhouette, quiet rich colors, elegant understated commercial print design. Fine colored contours, very subtle irregular ink texture INSIDE shapes only, no shading glow or cast shadows. Sharp clean usable silhouettes. Not glossy 3D, not emoji, not generic vector clipart, not children's preschool graphics. Each motif should feel intentionally drawn as part of one cohesive print collection. NO text, letters, numerals, logos, watermark, brand names, frame, photo slots, white sticker outlines, paper background, stray unrelated confetti. All objects fully visible, separate and uncropped.\nCollection: Everyday Editions, Pocket 4Cut. Theme: 성년의 날 (coming-of-age). Palette coordinated with #F2E4DC paper and #9B374D ink, with harmonious motif colors. EXACT six motifs in reading order:\n1. single wine red rose\n2. small vintage perfume bottle with cream atomizer\n3. red velvet ribbon\n4. an elegant tiny gold key\n5. folded cream letter\n6. three ivory pearl beads\nProduction layout: 3 columns x 2 rows, full silhouettes within separate cells, at least 70px clear transparent gutters. Genuinely transparent alpha background; no lettering, 3D, shadows or white sticker halo.",
+  "sourceFile": "exec-d87ef434-99cc-4e93-ae80-83ebd5a5d8df.png",
+  "masterFile": "masters/coming-of-age.png",
+  "visualReview": "Six coming-of-age motifs visible, no lettering. Rose stem extends below nominal row edge; perfume atomizer and pearls have painted highlights stronger than flat brief but complete silhouettes. No branded bottle label.",
+  "generatedOn": "2026-09-23"
+}

@@ -1,0 +1,127 @@
+{
+  "id": "exam-finished",
+  "source": "source/masters/exam-finished.png",
+  "masterSha256": "07b51168ef643e34530cb0bd6c9f7d8af97ad74a0f859b65793560737e4a8d11",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "b3b97913792c33409688e9361f74af249bc579af5d63af06229a4b1ef37de4f0",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "yellow pencil snapped neatly in two",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 54,
+        "top": 142,
+        "width": 456,
+        "height": 283
+      },
+      "width": 456,
+      "height": 283
+    },
+    {
+      "index": 1,
+      "name": "paper exam sheet without writing",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 576,
+        "top": 71,
+        "width": 388,
+        "height": 404
+      },
+      "width": 388,
+      "height": 404
+    },
+    {
+      "index": 2,
+      "name": "opened green notebook",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1031,
+        "top": 98,
+        "width": 461,
+        "height": 377
+      },
+      "width": 461,
+      "height": 377
+    },
+    {
+      "index": 3,
+      "name": "cream paper airplane",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 67,
+        "top": 582,
+        "width": 430,
+        "height": 328
+      },
+      "width": 430,
+      "height": 328
+    },
+    {
+      "index": 4,
+      "name": "celebratory gold laurel",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 549,
+        "top": 559,
+        "width": 437,
+        "height": 388
+      },
+      "width": 437,
+      "height": 388
+    },
+    {
+      "index": 5,
+      "name": "sky blue ribbon",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1059,
+        "top": 603,
+        "width": 426,
+        "height": 309
+      },
+      "width": 426,
+      "height": 309
+    }
+  ]
+}

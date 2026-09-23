@@ -1,0 +1,127 @@
+{
+  "id": "annual-memory",
+  "source": "source/masters/annual-memory.png",
+  "masterSha256": "5c552947163e745bd461d16692d4e81f7f6bb78e922a9f77d427a05b95a02419",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "1239a9b58e689dd09effc76d2e0b981ef4e21d22ebb693192c43ccc40f44850a",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "retro film strip with blank cells",
+      "roi": [
+        0,
+        0,
+        550,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 65,
+        "top": 157,
+        "width": 479,
+        "height": 263
+      },
+      "width": 464,
+      "height": 255
+    },
+    {
+      "index": 1,
+      "name": "cream photo album without words",
+      "roi": [
+        550,
+        0,
+        1070,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 603,
+        "top": 97,
+        "width": 467,
+        "height": 359
+      },
+      "width": 464,
+      "height": 357
+    },
+    {
+      "index": 2,
+      "name": "ochre date stamp without text",
+      "roi": [
+        1070,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1169,
+        "top": 66,
+        "width": 285,
+        "height": 404
+      },
+      "width": 285,
+      "height": 404
+    },
+    {
+      "index": 3,
+      "name": "burgundy ribbon",
+      "roi": [
+        0,
+        512,
+        550,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 82,
+        "top": 544,
+        "width": 468,
+        "height": 418
+      },
+      "width": 464,
+      "height": 414
+    },
+    {
+      "index": 4,
+      "name": "olive laurel sprig",
+      "roi": [
+        550,
+        512,
+        1070,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 650,
+        "top": 524,
+        "width": 402,
+        "height": 390
+      },
+      "width": 402,
+      "height": 390
+    },
+    {
+      "index": 5,
+      "name": "antique brass star",
+      "roi": [
+        1070,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1127,
+        "top": 555,
+        "width": 349,
+        "height": 346
+      },
+      "width": 349,
+      "height": 346
+    }
+  ]
+}

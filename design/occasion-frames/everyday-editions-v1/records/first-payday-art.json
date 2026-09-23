@@ -1,0 +1,127 @@
+{
+  "id": "first-payday",
+  "source": "source/masters/first-payday.png",
+  "masterSha256": "97d729224ab3c9b26f8a698625a5b45fafae395c2f8c432ec3aeb17ac82cd1b0",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "9fee3bd988c2ef353ae0214ae424b16e1878e6a452495a15182e4d7717aa97ad",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "cream pay envelope with golden seal",
+      "roi": [
+        0,
+        0,
+        512,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 62,
+        "top": 107,
+        "width": 434,
+        "height": 336
+      },
+      "width": 434,
+      "height": 336
+    },
+    {
+      "index": 1,
+      "name": "stack of generic olive bills without currency detail",
+      "roi": [
+        512,
+        0,
+        1024,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 556,
+        "top": 102,
+        "width": 442,
+        "height": 345
+      },
+      "width": 442,
+      "height": 345
+    },
+    {
+      "index": 2,
+      "name": "small copper coin pile without text",
+      "roi": [
+        1024,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1090,
+        "top": 159,
+        "width": 377,
+        "height": 271
+      },
+      "width": 377,
+      "height": 271
+    },
+    {
+      "index": 3,
+      "name": "terracotta piggy bank",
+      "roi": [
+        0,
+        512,
+        512,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 80,
+        "top": 560,
+        "width": 412,
+        "height": 366
+      },
+      "width": 412,
+      "height": 366
+    },
+    {
+      "index": 4,
+      "name": "ivory receipt without writing",
+      "roi": [
+        512,
+        512,
+        1024,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 580,
+        "top": 526,
+        "width": 369,
+        "height": 401
+      },
+      "width": 369,
+      "height": 401
+    },
+    {
+      "index": 5,
+      "name": "celebratory rust ribbon",
+      "roi": [
+        1024,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1058,
+        "top": 543,
+        "width": 437,
+        "height": 380
+      },
+      "width": 437,
+      "height": 380
+    }
+  ]
+}

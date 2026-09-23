@@ -1,0 +1,127 @@
+{
+  "id": "sixty-seventy",
+  "source": "source/masters/sixty-seventy.png",
+  "masterSha256": "b8ebb6f7af6057c87ec13c97edefd96e8fa369e74bb1a3891865f3d63e2a25c8",
+  "sourceWidth": 1536,
+  "sourceHeight": 1024,
+  "atlasWidth": 1536,
+  "atlasHeight": 1024,
+  "atlasSha256": "50f86d171233453f6075a39a7f2b59952f0879f2351a164d37835a5d43db00b2",
+  "method": "Original alpha preserved; mechanical crop, transparent padding and downscale only.",
+  "motifs": [
+    {
+      "index": 0,
+      "name": "red and ivory peony bouquet",
+      "roi": [
+        0,
+        0,
+        545,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 28,
+        "top": 63,
+        "width": 485,
+        "height": 416
+      },
+      "width": 464,
+      "height": 398
+    },
+    {
+      "index": 1,
+      "name": "sage traditional Korean silk pouch",
+      "roi": [
+        545,
+        0,
+        1005,
+        492
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 582,
+        "top": 64,
+        "width": 397,
+        "height": 399
+      },
+      "width": 397,
+      "height": 399
+    },
+    {
+      "index": 2,
+      "name": "cream folding fan with subtle flower pattern",
+      "roi": [
+        1005,
+        0,
+        1536,
+        512
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1006,
+        "top": 96,
+        "width": 504,
+        "height": 392
+      },
+      "width": 464,
+      "height": 361
+    },
+    {
+      "index": 3,
+      "name": "golden crane bird",
+      "roi": [
+        0,
+        512,
+        545,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 32,
+        "top": 517,
+        "width": 513,
+        "height": 456
+      },
+      "width": 464,
+      "height": 412
+    },
+    {
+      "index": 4,
+      "name": "burgundy norigae tassel",
+      "roi": [
+        545,
+        492,
+        1005,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 643,
+        "top": 492,
+        "width": 260,
+        "height": 486
+      },
+      "width": 248,
+      "height": 464
+    },
+    {
+      "index": 5,
+      "name": "two pastel rice cakes",
+      "roi": [
+        1005,
+        512,
+        1536,
+        1024
+      ],
+      "polygon": null,
+      "bounds": {
+        "left": 1005,
+        "top": 606,
+        "width": 485,
+        "height": 320
+      },
+      "width": 464,
+      "height": 306
+    }
+  ]
+}
