@@ -3,9 +3,10 @@ package com.pocket4cut.presentation.frameTypeSelect
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -76,11 +80,12 @@ fun FrameTypeSelectScreen(
                 }
                 IconCircleButton(
                     onClick = onBack,
+                    accessibilityLabel = "사진 구성 닫기",
                     variant = IconButtonVariant.SOLID,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "닫기",
+                        contentDescription = null,
                         tint = AppColors.Text.primary,
                         modifier = Modifier.size(20.dp),
                     )
@@ -90,6 +95,7 @@ fun FrameTypeSelectScreen(
             Column(
                 modifier = Modifier
                     .weight(1f)
+                    .selectableGroup()
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = AppSpacing.Screen.horizontal)
                     .padding(bottom = 116.dp),
@@ -128,7 +134,7 @@ fun FrameTypeSelectScreen(
 }
 
 @Composable
-private fun FrameTypeRow(
+internal fun FrameTypeRow(
     index: Int,
     type: FrameType,
     layoutCount: Int,
@@ -136,6 +142,10 @@ private fun FrameTypeRow(
     inputSource: InputSource,
     onClick: () -> Unit,
 ) {
+    val sourceDescription = when (inputSource) {
+        InputSource.CAMERA -> type.subtitle
+        InputSource.ALBUM -> "앨범에서 ${type.selectCount}장 선택"
+    }
     val shape = RoundedCornerShape(AppLayout.Radius.md)
     val background by animateColorAsState(
         targetValue = if (selected) AppColors.Accent.pinkSubtle else AppColors.Background.card,
@@ -152,7 +162,14 @@ private fun FrameTypeRow(
                 color = if (selected) AppColors.Accent.pink else AppColors.Border.subtle,
                 shape = shape,
             )
-            .clickable(onClick = onClick)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "${type.selectCount}컷 구성, $sourceDescription, 레이아웃 ${layoutCount}종"
+            }
+            .selectable(
+                selected = selected,
+                role = Role.RadioButton,
+                onClick = onClick,
+            )
             .padding(horizontal = AppSpacing.md, vertical = AppSpacing.md),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -190,10 +207,7 @@ private fun FrameTypeRow(
             )
             Spacer(Modifier.height(2.dp))
             Text(
-                text = when (inputSource) {
-                    InputSource.CAMERA -> type.subtitle
-                    InputSource.ALBUM -> "앨범에서 ${type.selectCount}장 선택"
-                },
+                text = sourceDescription,
                 style = AppTypography.subheadline,
                 color = AppColors.Text.secondary,
             )

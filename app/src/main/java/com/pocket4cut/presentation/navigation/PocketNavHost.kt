@@ -30,6 +30,7 @@ import com.pocket4cut.frame.FrameCatalog
 import com.pocket4cut.frame.FrameColors
 import com.pocket4cut.frame.FrameLayoutId
 import com.pocket4cut.frame.FrameLayouts
+import com.pocket4cut.frame.FrameTheme
 import com.pocket4cut.frame.PhotoCropTransform
 import com.pocket4cut.frame.PhotoEditPipeline
 import com.pocket4cut.frame.occasion.OccasionCatalogContract
@@ -553,7 +554,7 @@ fun PocketNavHost(
                             },
                             onFailed = { occasionApplying = false },
                         ) {
-                            it.withOccasionSelection(occasion.id)
+                            it.withOccasionSelection(occasion.id, theme)
                         }
                     },
                 )
@@ -732,7 +733,7 @@ fun PocketNavHost(
                                 sessions.update(sessionId, document.revision) { current ->
                                     current.copy(
                                         stage = SessionStage.EDIT,
-                                        draft = current.draft.withOccasionSelection(occasion.id),
+                                        draft = current.draft.withOccasionSelection(occasion.id, frameTheme),
                                     )
                                 }
                                 saveError = null
@@ -1020,10 +1021,14 @@ private fun resumeRoute(document: SessionDocument): String {
     return "$destination/${frameType.id}/$id/$selectedRaw/$layout/$theme"
 }
 
-internal fun SessionDraft.withOccasionSelection(themeId: String): SessionDraft = copy(
+internal fun SessionDraft.withOccasionSelection(
+    occasionThemeId: String,
+    baseFrameTheme: FrameTheme,
+): SessionDraft = copy(
+    themeId = baseFrameTheme.id,
     frameStep = "occasion",
     backgroundType = "occasion",
-    occasionThemeId = themeId,
+    occasionThemeId = occasionThemeId,
     occasionDesignVersion = OccasionCatalogContract.SESSION_DESIGN_VERSION,
     seasonId = null,
     customDesignJson = null,

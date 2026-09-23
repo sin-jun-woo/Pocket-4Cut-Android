@@ -11,6 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pocket4cut.ui.designsystem.AppColors
@@ -161,6 +165,7 @@ fun DestructiveButton(
 @Composable
 fun IconCircleButton(
     onClick: () -> Unit,
+    accessibilityLabel: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     presetSize: IconCircleButtonSize = IconCircleButtonSize.MD,
@@ -168,7 +173,9 @@ fun IconCircleButton(
     variant: IconButtonVariant = IconButtonVariant.DEFAULT,
     content: @Composable () -> Unit,
 ) {
-    val resolvedSize = diameter ?: presetSize.toLayoutDp()
+    require(accessibilityLabel.isNotBlank()) { "IconCircleButton accessibilityLabel must not be blank" }
+    val visualSize = diameter ?: presetSize.toLayoutDp()
+    val touchTargetSize = maxOf(visualSize, AppLayout.Height.touchTargetMin)
     val shape = RoundedCornerShape(AppLayout.Radius.sm)
     val bg = when (variant) {
         IconButtonVariant.SOLID -> AppColors.Background.tertiary
@@ -176,13 +183,24 @@ fun IconCircleButton(
     }
     Box(
         modifier = modifier
-            .size(resolvedSize)
+            .size(touchTargetSize)
             .clip(shape)
-            .background(bg)
-            .border(AppLayout.BorderWidth.thin, AppColors.Border.light, shape)
-            .clickable(enabled = enabled, onClick = onClick),
+            .semantics(mergeDescendants = true) {
+                contentDescription = accessibilityLabel
+                role = Role.Button
+            }
+            .clickable(enabled = enabled, role = Role.Button, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        content()
+        Box(
+            modifier = Modifier
+                .size(visualSize)
+                .clip(shape)
+                .background(bg)
+                .border(AppLayout.BorderWidth.thin, AppColors.Border.light, shape),
+            contentAlignment = Alignment.Center,
+        ) {
+            content()
+        }
     }
 }

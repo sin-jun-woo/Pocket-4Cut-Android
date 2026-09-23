@@ -49,7 +49,11 @@ fun PrivacyPolicyScreen(onBack: () -> Unit) {
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
+            IconCircleButton(
+                onClick = onBack,
+                accessibilityLabel = "개인정보 처리방침 뒤로가기",
+                variant = IconButtonVariant.SOLID,
+            ) {
                 Icon(
                     imageVector = Icons.Default.ChevronLeft,
                     contentDescription = null,

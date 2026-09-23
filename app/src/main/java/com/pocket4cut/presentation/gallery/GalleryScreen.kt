@@ -11,6 +11,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -33,6 +35,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -46,14 +51,14 @@ import com.pocket4cut.ui.designsystem.*
 import com.pocket4cut.ui.designsystem.components.*
 import java.io.File
 
-private enum class GalleryViewMode {
+internal enum class GalleryViewMode {
     /** iOS `byDate` — 일 단위 섹션 */
     BY_DATE,
     /** iOS `byKind` — 2/4/6컷 */
     BY_KIND,
 }
 
-private enum class GallerySection { COMPLETED, DRAFTS }
+internal enum class GallerySection { COMPLETED, DRAFTS }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -97,28 +102,16 @@ fun GalleryScreen(
                 itemCount = uiState.items.size,
                 onClose = onBack,
             )
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = AppSpacing.Screen.horizontal),
-                horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
-            ) {
-                listOf(
-                    GallerySection.COMPLETED to "완성 ${uiState.items.size}",
-                    GallerySection.DRAFTS to "진행 중 ${uiState.drafts.size}",
-                ).forEach { (choice, label) ->
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .heightIn(min = 48.dp)
-                            .clip(RoundedCornerShape(AppLayout.Radius.sm))
-                            .background(if (section == choice) AppColors.Accent.pink else AppColors.Background.secondary)
-                            .clickable { section = choice; longPressedItemId = null },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(label, color = if (section == choice) Color.White else AppColors.Text.primary,
-                            style = AppTypography.caption1)
-                    }
-                }
-            }
+            GallerySectionTabs(
+                selectedSection = section,
+                completedCount = uiState.items.size,
+                draftCount = uiState.drafts.size,
+                onSectionSelected = {
+                    section = it
+                    longPressedItemId = null
+                },
+                modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal),
+            )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -417,6 +410,7 @@ private fun GalleryHeader(
     ) {
         IconCircleButton(
             onClick = onClose,
+            accessibilityLabel = "작업 보관함 닫기",
             variant = IconButtonVariant.SOLID,
             modifier = Modifier.align(Alignment.CenterStart),
         ) {
@@ -447,10 +441,57 @@ private fun GalleryHeader(
     }
 }
 
+@Composable
+internal fun GallerySectionTabs(
+    selectedSection: GallerySection,
+    completedCount: Int,
+    draftCount: Int,
+    onSectionSelected: (GallerySection) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .selectableGroup(),
+        horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+    ) {
+        listOf(
+            GallerySection.COMPLETED to "완성 $completedCount",
+            GallerySection.DRAFTS to "진행 중 $draftCount",
+        ).forEach { (choice, label) ->
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .heightIn(min = 48.dp)
+                    .clip(RoundedCornerShape(AppLayout.Radius.sm))
+                    .background(if (selectedSection == choice) AppColors.Accent.pink else AppColors.Background.secondary)
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = when (choice) {
+                            GallerySection.COMPLETED -> "완성 작업, ${completedCount}개"
+                            GallerySection.DRAFTS -> "진행 중인 작업, ${draftCount}개"
+                        }
+                    }
+                    .selectable(
+                        selected = selectedSection == choice,
+                        role = Role.Tab,
+                        onClick = { onSectionSelected(choice) },
+                    ),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = label,
+                    color = if (selectedSection == choice) Color.White else AppColors.Text.primary,
+                    style = AppTypography.caption1,
+                )
+            }
+        }
+    }
+}
+
 /* ── View‑mode toggle (종류 / 전체) ── */
 
 @Composable
-private fun GalleryViewModeToggle(
+internal fun GalleryViewModeToggle(
     selectedMode: GalleryViewMode,
     onModeSelected: (GalleryViewMode) -> Unit,
     modifier: Modifier = Modifier,
@@ -462,6 +503,7 @@ private fun GalleryViewModeToggle(
     )
     Row(
         modifier = modifier
+            .selectableGroup()
             .padding(bottom = 2.dp),
         horizontalArrangement = Arrangement.spacedBy(AppSpacing.lg),
     ) {
@@ -469,9 +511,20 @@ private fun GalleryViewModeToggle(
             val isSelected = mode == selectedMode
             Box(
                 modifier = Modifier
+                    .heightIn(min = 48.dp)
                     .clip(tabShape)
                     .background(Color.Transparent)
-                    .clickable { onModeSelected(mode) }
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = when (mode) {
+                            GalleryViewMode.BY_KIND -> "종류별 보기"
+                            GalleryViewMode.BY_DATE -> "전체 보기"
+                        }
+                    }
+                    .selectable(
+                        selected = isSelected,
+                        role = Role.Tab,
+                        onClick = { onModeSelected(mode) },
+                    )
                     .padding(horizontal = AppSpacing.xs, vertical = AppSpacing.xs),
                 contentAlignment = Alignment.Center,
             ) {

@@ -17,6 +17,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.pocket4cut.ui.designsystem.*
 
@@ -76,23 +82,36 @@ fun AppToast(
             text = message,
             style = AppTypography.callout,
             color = AppColors.Text.primary,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .semantics { liveRegion = LiveRegionMode.Polite },
             maxLines = 2,
         )
         Box(
             modifier = Modifier
-                .size(28.dp)
+                .size(48.dp)
                 .clip(RoundedCornerShape(AppLayout.Radius.xs))
-                .background(AppColors.Background.tertiary)
-                .clickable(onClick = onDismiss),
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "알림 닫기"
+                    role = Role.Button
+                }
+                .clickable(role = Role.Button, onClick = onDismiss),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(
-                imageVector = Icons.Filled.Close,
-                contentDescription = "닫기",
-                tint = AppColors.Text.secondary,
-                modifier = Modifier.size(12.dp),
-            )
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(RoundedCornerShape(AppLayout.Radius.xs))
+                    .background(AppColors.Background.tertiary),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = null,
+                    tint = AppColors.Text.secondary,
+                    modifier = Modifier.size(12.dp),
+                )
+            }
         }
     }
 }

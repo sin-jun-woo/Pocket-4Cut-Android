@@ -55,6 +55,7 @@ class PhotoImportAccessibilityInstrumentedTest {
                         photos = photos,
                         message = "복구 오류",
                         isMessageError = true,
+                        hasBlockingRecoveryError = true,
                     ),
                     onBack = {}, onOpenAlbum = {}, onMove = { _, _ -> }, onRemove = {},
                     onDismissMessage = {}, onDone = {},
@@ -62,6 +63,32 @@ class PhotoImportAccessibilityInstrumentedTest {
             }
         }
         compose.onNodeWithText("레이아웃 선택").assertIsNotEnabled()
+        compose.onNodeWithContentDescription("안내 닫기").assertDoesNotExist()
+    }
+
+    @Test
+    fun dismissibleErrorNoticeDoesNotBlockExactCount() {
+        val photos = listOf(
+            ImportedPhotoItem("first", "/missing/first.jpg"),
+            ImportedPhotoItem("second", "/missing/second.jpg"),
+        )
+        compose.setContent {
+            Pocket4CutTheme {
+                PhotoImportContent(
+                    frameType = FrameType.TWO_CUT,
+                    uiState = PhotoImportUiState(
+                        isInitialized = true,
+                        photos = photos,
+                        message = "같은 사진은 다시 추가하지 않았습니다.",
+                        isMessageError = true,
+                    ),
+                    onBack = {}, onOpenAlbum = {}, onMove = { _, _ -> }, onRemove = {},
+                    onDismissMessage = {}, onDone = {},
+                )
+            }
+        }
+        compose.onNodeWithText("레이아웃 선택").assertIsEnabled()
+        compose.onNodeWithContentDescription("안내 닫기").assertIsEnabled()
     }
 
     @Test

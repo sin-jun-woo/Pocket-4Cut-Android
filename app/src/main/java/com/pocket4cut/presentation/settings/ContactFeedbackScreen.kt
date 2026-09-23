@@ -80,7 +80,11 @@ fun ContactFeedbackScreen(onBack: () -> Unit) {
                     ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = onBack,
+                    accessibilityLabel = "문의/피드백 뒤로가기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(
                         imageVector = Icons.Default.ChevronLeft,
                         contentDescription = null,

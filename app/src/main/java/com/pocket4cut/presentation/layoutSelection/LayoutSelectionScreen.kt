@@ -8,7 +8,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +21,8 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -41,6 +42,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -115,7 +119,11 @@ fun LayoutSelectionScreen(
                     ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconCircleButton(onClick = onCancel, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = onCancel,
+                    accessibilityLabel = "이전 단계로 돌아가기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = null,
@@ -229,6 +237,7 @@ fun LayoutSelectionScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .selectableGroup()
                         .padding(horizontal = AppSpacing.Screen.horizontal)
                         .padding(bottom = 120.dp),
                     verticalArrangement = Arrangement.spacedBy(AppSpacing.md),
@@ -278,7 +287,7 @@ fun LayoutSelectionScreen(
 }
 
 @Composable
-private fun LayoutCard(
+internal fun LayoutCard(
     frameStyle: FrameStyle,
     isSelected: Boolean,
     onSelect: () -> Unit,
@@ -298,7 +307,14 @@ private fun LayoutCard(
                 color = borderColor,
                 shape = cardShape,
             )
-            .clickable(onClick = onSelect)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "레이아웃 ${frameStyle.name}"
+            }
+            .selectable(
+                selected = isSelected,
+                role = Role.RadioButton,
+                onClick = onSelect,
+            )
             .padding(AppSpacing.md),
     ) {
         Column {

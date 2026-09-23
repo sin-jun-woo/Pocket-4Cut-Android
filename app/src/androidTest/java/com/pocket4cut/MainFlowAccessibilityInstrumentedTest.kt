@@ -38,6 +38,8 @@ import com.pocket4cut.presentation.edit.EditUiState
 import com.pocket4cut.presentation.edit.OrderSection
 import com.pocket4cut.presentation.frameFlow.DecorationTransformControls
 import com.pocket4cut.presentation.selection.photoSelectionSemantics
+import com.pocket4cut.ui.designsystem.components.IconCircleButton
+import com.pocket4cut.ui.designsystem.components.IconCircleButtonSize
 import com.pocket4cut.ui.designsystem.components.PinkGradientSlider
 import com.pocket4cut.ui.theme.Pocket4CutTheme
 import org.junit.Assert.assertEquals
@@ -50,6 +52,36 @@ import org.junit.runner.RunWith
 @OptIn(ExperimentalTestApi::class)
 class MainFlowAccessibilityInstrumentedTest {
     @get:Rule val compose = createComposeRule()
+
+    @Test fun iconCircleButtonExposesMinimumTouchTargetLabelRoleAndEnabledState() {
+        var enabled by mutableStateOf(true)
+        var clicks = 0
+        compose.setContent {
+            Pocket4CutTheme {
+                IconCircleButton(
+                    onClick = { clicks += 1 },
+                    accessibilityLabel = "테스트 아이콘 동작",
+                    enabled = enabled,
+                    presetSize = IconCircleButtonSize.SM,
+                ) {
+                    Box(Modifier.size(20.dp))
+                }
+            }
+        }
+
+        val button = compose.onNodeWithContentDescription("테스트 아이콘 동작")
+        button
+            .assertHeightIsAtLeast(48.dp)
+            .assertWidthIsAtLeast(48.dp)
+            .assert(SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Button))
+            .assertIsEnabled()
+            .performClick()
+        compose.runOnIdle {
+            assertEquals(1, clicks)
+            enabled = false
+        }
+        button.assertIsNotEnabled()
+    }
 
     @Test fun selectedPhotosAnnounceOrderAndKeepDeselectionAvailableAtLimit() {
         var selected by mutableStateOf(listOf(2, 0))

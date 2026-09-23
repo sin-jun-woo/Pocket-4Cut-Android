@@ -2,7 +2,9 @@ package com.pocket4cut.frame
 
 import com.pocket4cut.data.local.SessionDocumentRepository
 import com.pocket4cut.domain.model.PhotoAdjustments
+import com.pocket4cut.domain.model.SessionDraft
 import com.pocket4cut.domain.model.SessionDocument
+import com.pocket4cut.frame.occasion.OccasionCatalogContract
 import com.pocket4cut.presentation.edit.PendingCollageStore
 import com.pocket4cut.presentation.navigation.FrameType
 
@@ -43,7 +45,7 @@ data class RenderSnapshot(
                 repository.resolvePhotoPath(photo).also { require(it.isFile) }.absolutePath
             }
             val layout = FrameLayoutId.valueOf(draft.layoutId)
-            val theme = FrameCatalog.themes(frameType).first { it.id == draft.themeId }
+            val theme = resolveFrameTheme(draft, frameType)
             val cropTransforms = draft.selectedPhotoIdsInOrder.map { id ->
                 val adjustment = draft.adjustmentsByPhotoId[id] ?: PhotoAdjustments()
                 PhotoCropTransform(
@@ -74,6 +76,30 @@ data class RenderSnapshot(
                 occasionThemeId = draft.occasionThemeId,
                 occasionDesignVersion = draft.occasionDesignVersion,
             )
+        }
+
+        /**
+         * Occasion drafts saved before the base-theme persistence fix can have a blank theme ID.
+         * They were rendered with the first catalog theme in preview, so preserve that exact
+         * behavior only for a complete, current-version occasion selection. Unknown non-blank
+         * IDs remain an explicit error instead of being replaced silently.
+         */
+        internal fun resolveFrameTheme(
+            draft: SessionDraft,
+            frameType: FrameType,
+        ): FrameTheme {
+            val themes = FrameCatalog.themes(frameType)
+            if (draft.themeId.isNotBlank()) {
+                return themes.firstOrNull { it.id == draft.themeId }
+                    ?: error("Unknown frame theme ID: ${draft.themeId}")
+            }
+            val isLegacyOccasionDraft =
+                draft.frameStep == "occasion" &&
+                    draft.backgroundType == "occasion" &&
+                    !draft.occasionThemeId.isNullOrBlank() &&
+                    draft.occasionDesignVersion == OccasionCatalogContract.SESSION_DESIGN_VERSION
+            check(isLegacyOccasionDraft) { "Frame theme ID is missing" }
+            return themes.first()
         }
     }
 }

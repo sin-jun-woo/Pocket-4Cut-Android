@@ -254,12 +254,17 @@ fun DetailEditScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                IconCircleButton(onClick = ::requestLeave, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = ::requestLeave,
+                    accessibilityLabel = "상세 편집 닫기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(Icons.Default.Close, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
                 }
                 Text("상세 편집", style = AppTypography.title2, color = AppColors.Text.primary)
                 IconCircleButton(
                     onClick = { viewModel.resetCurrentSlot() },
+                    accessibilityLabel = "현재 사진 편집 초기화",
                     variant = IconButtonVariant.SOLID,
                     enabled = uiState.hasChanges,
                 ) {

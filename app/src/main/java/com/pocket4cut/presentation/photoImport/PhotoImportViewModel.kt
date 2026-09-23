@@ -6,6 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.pocket4cut.data.importing.PhotoImportFailure
+import com.pocket4cut.data.importing.PhotoImportFailureReason
 import com.pocket4cut.data.importing.PhotoImportRepository
 import com.pocket4cut.data.local.SessionDocumentRepository
 import com.pocket4cut.domain.model.InputSource
@@ -18,6 +20,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+private fun List<PhotoImportFailure>.hasBlockingRecoveryFailure(): Boolean =
+    any { failure ->
+        failure.reason == PhotoImportFailureReason.STORAGE ||
+            failure.reason == PhotoImportFailureReason.CONFLICT
+    }
+
 data class ImportedPhotoItem(
     val photoId: String,
     val path: String,
@@ -29,9 +37,24 @@ data class PhotoImportUiState(
     val photos: List<ImportedPhotoItem> = emptyList(),
     val message: String? = null,
     val isMessageError: Boolean = false,
+    val hasBlockingRecoveryError: Boolean = false,
+    val hasUnacknowledgedEditFailure: Boolean = false,
 ) {
     fun canContinue(requiredCount: Int): Boolean =
-        !isBusy && !isMessageError && photos.size == requiredCount
+        !isBusy &&
+            !hasBlockingRecoveryError &&
+            !hasUnacknowledgedEditFailure &&
+            photos.size == requiredCount
+
+    internal fun dismissMessage(): PhotoImportUiState = if (hasBlockingRecoveryError) {
+        this
+    } else {
+        copy(
+            message = null,
+            isMessageError = false,
+            hasUnacknowledgedEditFailure = false,
+        )
+    }
 }
 
 class PhotoImportViewModel(
@@ -62,14 +85,16 @@ class PhotoImportViewModel(
                         recovery.failures.forEach { add(it.message) }
                     }.takeIf { it.isNotEmpty() }?.distinct()?.joinToString("\n"),
                     isMessageError = recovery.failures.isNotEmpty() || recovery.needsReselection,
+                    hasBlockingRecoveryError = recovery.failures.hasBlockingRecoveryFailure(),
                 )
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (failure: Exception) {
                 _uiState.value = PhotoImportUiState(
                     isInitialized = true,
-                        message = failure.message ?: "앨범 작업을 복구하지 못했습니다.",
+                    message = failure.message ?: "앨범 작업을 복구하지 못했습니다.",
                     isMessageError = true,
+                    hasBlockingRecoveryError = true,
                 )
             }
         }
@@ -114,6 +139,7 @@ class PhotoImportViewModel(
                         photos = document?.toUiPhotos().orEmpty(),
                         message = notices.takeIf { it.isNotEmpty() }?.joinToString("\n"),
                         isMessageError = result.failures.isNotEmpty(),
+                        hasBlockingRecoveryError = result.failures.hasBlockingRecoveryFailure(),
                     )
                 } catch (cancelled: CancellationException) {
                     throw cancelled
@@ -123,6 +149,7 @@ class PhotoImportViewModel(
                             isBusy = false,
                             message = failure.message ?: "사진을 가져오지 못했습니다. 다시 선택해 주세요.",
                             isMessageError = true,
+                            hasBlockingRecoveryError = true,
                         )
                     }
                 }
@@ -149,7 +176,11 @@ class PhotoImportViewModel(
                         draft = current.draft.copy(selectedPhotoIdsInOrder = reordered),
                     )
                 }
-                _uiState.value = PhotoImportUiState(isInitialized = true, photos = updated.toUiPhotos())
+                _uiState.value = PhotoImportUiState(
+                    isInitialized = true,
+                    photos = updated.toUiPhotos(),
+                    hasBlockingRecoveryError = _uiState.value.hasBlockingRecoveryError,
+                )
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (failure: Exception) {
@@ -165,7 +196,11 @@ class PhotoImportViewModel(
             try {
                 val document = sessions.getById(sessionId) ?: error("가져온 사진 작업을 찾지 못했습니다.")
                 val updated = imports.removePhoto(sessionId, photoId, document.revision)
-                _uiState.value = PhotoImportUiState(isInitialized = true, photos = updated.toUiPhotos())
+                _uiState.value = PhotoImportUiState(
+                    isInitialized = true,
+                    photos = updated.toUiPhotos(),
+                    hasBlockingRecoveryError = _uiState.value.hasBlockingRecoveryError,
+                )
             } catch (cancelled: CancellationException) {
                 throw cancelled
             } catch (failure: Exception) {
@@ -175,7 +210,7 @@ class PhotoImportViewModel(
     }
 
     fun clearMessage() {
-        _uiState.update { it.copy(message = null) }
+        _uiState.update(PhotoImportUiState::dismissMessage)
     }
 
     private suspend fun reloadAfterFailure(failure: Exception, fallback: String) {
@@ -185,6 +220,10 @@ class PhotoImportViewModel(
             photos = current?.toUiPhotos().orEmpty(),
             message = failure.message ?: fallback,
             isMessageError = true,
+            hasBlockingRecoveryError = _uiState.value.hasBlockingRecoveryError,
+            // The list above was reloaded from the persisted document, so it is safe to
+            // continue only after the user acknowledges that their requested edit failed.
+            hasUnacknowledgedEditFailure = true,
         )
     }
 

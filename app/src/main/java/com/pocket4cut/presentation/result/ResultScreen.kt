@@ -1,6 +1,9 @@
 package com.pocket4cut.presentation.result
 
+import android.content.ClipData
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -78,6 +81,40 @@ import kotlinx.coroutines.launch
 
 private val BottomChromeReserve = 184.dp
 
+internal enum class ResultLinkLoadState {
+    LOADING,
+    READY,
+    UNAVAILABLE,
+}
+
+internal enum class ResultOperation {
+    IDLE,
+    SAVING,
+    SHARING,
+}
+
+internal data class ResultActionState(
+    val linkState: ResultLinkLoadState,
+    val operation: ResultOperation,
+    val isSaved: Boolean,
+) {
+    val isPreparing: Boolean get() = linkState == ResultLinkLoadState.LOADING
+    val saveEnabled: Boolean get() =
+        linkState == ResultLinkLoadState.READY &&
+            operation == ResultOperation.IDLE &&
+            !isSaved
+    val shareEnabled: Boolean get() =
+        linkState == ResultLinkLoadState.READY && operation == ResultOperation.IDLE
+}
+
+internal fun imageShareIntent(context: Context, imageUri: Uri): Intent =
+    Intent(Intent.ACTION_SEND).apply {
+        type = "image/jpeg"
+        putExtra(Intent.EXTRA_STREAM, imageUri)
+        clipData = ClipData.newUri(context.contentResolver, "Pocket 4Cut result", imageUri)
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+
 /** A damaged, unrelated session must not hide a healthy result. */
 internal suspend fun findResultLink(
     sessions: SessionDocumentRepository,
@@ -96,17 +133,18 @@ internal suspend fun findResultLink(
 fun ResultScreen(
     resultPath: String,
     onHome: () -> Unit,
+    modifier: Modifier = Modifier,
     onShare: (() -> Unit)? = null,
     autoSave: Boolean = false,
-    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val file = remember(resultPath) { File(resultPath) }
 
-    var isSaving by remember { mutableStateOf(false) }
+    var operation by remember(resultPath) { mutableStateOf(ResultOperation.IDLE) }
     var isSaved by remember(resultPath) { mutableStateOf(false) }
     var resultLink by remember(resultPath) { mutableStateOf<Pair<String, String>?>(null) }
+    var resultLinkState by remember(resultPath) { mutableStateOf(ResultLinkLoadState.LOADING) }
     var resumeRevision by remember(resultPath) { mutableIntStateOf(0) }
 
     var toastMessage by remember { mutableStateOf<String?>(null) }
@@ -115,7 +153,7 @@ fun ResultScreen(
     val scope = rememberCoroutineScope()
     val sessions = remember(context) { SessionDocumentRepository(context) }
     val exporter = remember(context) { GalleryExporter(context) }
-    var pendingPermissionRetry by remember { mutableStateOf<Pair<String, String>?>(null) }
+    var pendingPermissionRetry by remember(resultPath) { mutableStateOf<Pair<String, String>?>(null) }
 
     fun showOutcome(outcome: ExportOutcome) {
         when (outcome) {
@@ -142,10 +180,20 @@ fun ResultScreen(
     val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         val target = pendingPermissionRetry
         pendingPermissionRetry = null
-        if (granted && target != null) scope.launch {
-            isSaving = true
-            showOutcome(exporter.export(target.first, target.second, ExportMode.SAVE))
-            isSaving = false
+        if (granted && target != null && operation == ResultOperation.IDLE) {
+            operation = ResultOperation.SAVING
+            scope.launch {
+                try {
+                    showOutcome(exporter.export(target.first, target.second, ExportMode.SAVE))
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (error: Exception) {
+                    toastType = AppToastType.Error
+                    toastMessage = error.message ?: "사진첩에 저장하지 못했습니다."
+                } finally {
+                    operation = ResultOperation.IDLE
+                }
+            }
         } else if (!granted) {
             toastType = AppToastType.Error
             toastMessage = "사진첩 저장 권한이 거부되었습니다."
@@ -161,10 +209,16 @@ fun ResultScreen(
     }
 
     LaunchedEffect(resultPath, resumeRevision) {
+        resultLinkState = ResultLinkLoadState.LOADING
         try {
             val match = findResultLink(sessions, file)
             resultLink = match
             isSaved = match?.let { exporter.isNormalCopyVerified(it.first, it.second) } == true
+            resultLinkState = if (match == null) {
+                ResultLinkLoadState.UNAVAILABLE
+            } else {
+                ResultLinkLoadState.READY
+            }
             if (match == null) {
                 toastType = AppToastType.Error
                 toastMessage = "저장된 결과를 찾을 수 없습니다."
@@ -172,6 +226,7 @@ fun ResultScreen(
         } catch (error: Exception) {
             if (error is CancellationException) throw error
             resultLink = null
+            resultLinkState = ResultLinkLoadState.UNAVAILABLE
             isSaved = false
             toastType = AppToastType.Error
             toastMessage = error.message ?: "결과 정보를 읽을 수 없습니다."
@@ -185,39 +240,52 @@ fun ResultScreen(
     }
 
     fun performShare() {
-        if (onShare != null) {
-            onShare()
-            return
-        }
+        if (resultLinkState != ResultLinkLoadState.READY || operation != ResultOperation.IDLE) return
         val target = resultLink ?: return
+        operation = ResultOperation.SHARING
         scope.launch {
-            runCatching { exporter.shareUri(target.first, target.second) }
-                .onSuccess { sharedUri ->
-                    val intent = Intent(Intent.ACTION_SEND).apply {
-                        type = "image/jpeg"
-                        putExtra(Intent.EXTRA_STREAM, sharedUri)
-                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    }
+            try {
+                if (onShare != null) {
+                    onShare()
+                } else {
+                    val sharedUri = exporter.shareUri(target.first, target.second)
+                    val intent = imageShareIntent(context, sharedUri)
                     context.startActivity(Intent.createChooser(intent, "공유"))
                 }
-                .onFailure {
-                    toastType = AppToastType.Error
-                    toastMessage = it.message ?: "공유할 수 없습니다."
-                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                toastType = AppToastType.Error
+                toastMessage = error.message ?: "공유할 수 없습니다."
+            } finally {
+                operation = ResultOperation.IDLE
+            }
         }
     }
 
     fun performSave() {
-        if (isSaving || isSaved) return
+        if (
+            resultLinkState != ResultLinkLoadState.READY ||
+            operation != ResultOperation.IDLE ||
+            isSaved
+        ) return
         val target = resultLink ?: return
+        operation = ResultOperation.SAVING
         scope.launch {
-            isSaving = true
-            val outcome = exporter.export(target.first, target.second, ExportMode.SAVE)
-            isSaving = false
-            if (outcome is ExportOutcome.NeedsPermission) {
-                pendingPermissionRetry = target
-                permissionLauncher.launch(outcome.permission)
-            } else showOutcome(outcome)
+            try {
+                val outcome = exporter.export(target.first, target.second, ExportMode.SAVE)
+                if (outcome is ExportOutcome.NeedsPermission) {
+                    pendingPermissionRetry = target
+                    permissionLauncher.launch(outcome.permission)
+                } else showOutcome(outcome)
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                toastType = AppToastType.Error
+                toastMessage = error.message ?: "사진첩에 저장하지 못했습니다."
+            } finally {
+                operation = ResultOperation.IDLE
+            }
         }
     }
 
@@ -225,12 +293,23 @@ fun ResultScreen(
         if (!autoSave) return@LaunchedEffect
         if (!AppSettings.autoSaveToGallery) return@LaunchedEffect
         if (!file.isFile) return@LaunchedEffect
+        if (operation != ResultOperation.IDLE || isSaved) return@LaunchedEffect
         val target = resultLink ?: return@LaunchedEffect
-        val outcome = exporter.export(target.first, target.second, ExportMode.AUTO)
-        if (outcome is ExportOutcome.NeedsPermission) {
-            pendingPermissionRetry = target
-            permissionLauncher.launch(outcome.permission)
-        } else showOutcome(outcome)
+        operation = ResultOperation.SAVING
+        try {
+            val outcome = exporter.export(target.first, target.second, ExportMode.AUTO)
+            if (outcome is ExportOutcome.NeedsPermission) {
+                pendingPermissionRetry = target
+                permissionLauncher.launch(outcome.permission)
+            } else showOutcome(outcome)
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (error: Exception) {
+            toastType = AppToastType.Error
+            toastMessage = error.message ?: "사진첩에 자동 저장하지 못했습니다."
+        } finally {
+            operation = ResultOperation.IDLE
+        }
     }
 
     Box(
@@ -255,10 +334,14 @@ fun ResultScreen(
                     ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconCircleButton(onClick = onHome, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = onHome,
+                    accessibilityLabel = "홈으로 이동",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(
                         imageVector = Icons.Filled.Home,
-                        contentDescription = "홈",
+                        contentDescription = null,
                         tint = AppColors.Text.secondary,
                         modifier = Modifier.size(20.dp),
                     )
@@ -344,44 +427,15 @@ fun ResultScreen(
                     .padding(top = AppSpacing.md, bottom = AppSpacing.Layout.ctaBottomSpace),
                 verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
-                ) {
-                    when {
-                        isSaved -> SavedResultButton(modifier = Modifier.weight(1f))
-                        isSaving -> SavingResultButton(modifier = Modifier.weight(1f))
-                        else -> PrimaryButton(
-                            text = "저장",
-                            onClick = { performSave() },
-                            fullWidth = false,
-                            modifier = Modifier.weight(1f),
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Filled.Download,
-                                    contentDescription = null,
-                                    tint = Color.White,
-                                    modifier = Modifier.size(18.dp),
-                                )
-                            },
-                        )
-                    }
-
-                    SecondaryButton(
-                        text = "공유",
-                        onClick = { performShare() },
-                        fullWidth = false,
-                        modifier = Modifier.weight(1f),
-                        icon = {
-                            Icon(
-                                imageVector = Icons.Filled.Share,
-                                contentDescription = null,
-                                tint = AppColors.Text.primary,
-                                modifier = Modifier.size(18.dp),
-                            )
-                        },
-                    )
-                }
+                ResultActionControls(
+                    state = ResultActionState(
+                        linkState = resultLinkState,
+                        operation = operation,
+                        isSaved = isSaved,
+                    ),
+                    onSave = ::performSave,
+                    onShare = ::performShare,
+                )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -414,6 +468,84 @@ fun ResultScreen(
                     .padding(horizontal = AppSpacing.Screen.horizontal),
             )
         }
+    }
+}
+
+@Composable
+internal fun ResultActionControls(
+    state: ResultActionState,
+    onSave: () -> Unit,
+    onShare: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+    ) {
+        when {
+            state.isSaved -> SavedResultButton(modifier = Modifier.weight(1f))
+            state.isPreparing -> PreparingResultButton(modifier = Modifier.weight(1f))
+            state.operation == ResultOperation.SAVING -> {
+                SavingResultButton(modifier = Modifier.weight(1f))
+            }
+            else -> PrimaryButton(
+                text = "저장",
+                onClick = onSave,
+                enabled = state.saveEnabled,
+                fullWidth = false,
+                modifier = Modifier.weight(1f),
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Download,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp),
+                    )
+                },
+            )
+        }
+
+        SecondaryButton(
+            text = if (state.operation == ResultOperation.SHARING) "공유 중..." else "공유",
+            onClick = onShare,
+            enabled = state.shareEnabled,
+            fullWidth = false,
+            modifier = Modifier.weight(1f),
+            icon = {
+                Icon(
+                    imageVector = Icons.Filled.Share,
+                    contentDescription = null,
+                    tint = if (state.shareEnabled) AppColors.Text.primary else AppColors.Text.tertiary,
+                    modifier = Modifier.size(18.dp),
+                )
+            },
+        )
+    }
+}
+
+@Composable
+private fun PreparingResultButton(modifier: Modifier = Modifier) {
+    val shape = RoundedCornerShape(AppLayout.Radius.md)
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(AppLayout.Height.Button.lg)
+            .clip(shape)
+            .background(AppColors.Text.tertiary),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(20.dp),
+            color = Color.White,
+            strokeWidth = 2.dp,
+        )
+        Spacer(Modifier.width(AppSpacing.xs))
+        Text(
+            text = "결과 준비 중...",
+            style = AppTypography.headline,
+            color = Color.White,
+        )
     }
 }
 

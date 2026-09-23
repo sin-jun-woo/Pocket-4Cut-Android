@@ -221,16 +221,20 @@ class OccasionFramePickerInstrumentedTest {
             assertEquals(created.draft, afterExploration.draft)
 
             val selectedTheme = catalog.themes.first()
+            val baseFrameTheme = FrameCatalog.themes(
+                com.pocket4cut.presentation.navigation.FrameType.TWO_CUT,
+            ).first()
             val applied = repository.update(sessionId, afterExploration.revision) { current ->
                 current.copy(
                     stage = SessionStage.EDIT,
-                    draft = current.draft.withOccasionSelection(selectedTheme.id),
+                    draft = current.draft.withOccasionSelection(selectedTheme.id, baseFrameTheme),
                 )
             }
             assertEquals(created.revision + 1, applied.revision)
             assertEquals(SessionStage.EDIT, applied.stage)
             assertEquals("occasion", applied.draft.frameStep)
             assertEquals("occasion", applied.draft.backgroundType)
+            assertEquals(baseFrameTheme.id, applied.draft.themeId)
             assertEquals(selectedTheme.id, applied.draft.occasionThemeId)
             assertEquals(1, applied.draft.occasionDesignVersion)
             assertNull(applied.draft.seasonId)

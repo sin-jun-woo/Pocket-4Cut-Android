@@ -21,6 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,10 +71,14 @@ fun FrameFlowCoordinatorScreen(
                     color = AppColors.Text.secondary,
                 )
             }
-            IconCircleButton(onClick = onDismiss, variant = IconButtonVariant.SOLID) {
+            IconCircleButton(
+                onClick = onDismiss,
+                accessibilityLabel = "프레임 선택 닫기",
+                variant = IconButtonVariant.SOLID,
+            ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "닫기",
+                    contentDescription = null,
                     tint = AppColors.Text.primary,
                     modifier = Modifier.size(20.dp),
                 )
@@ -121,7 +128,7 @@ fun FrameFlowCoordinatorScreen(
 }
 
 @Composable
-private fun FrameModeRow(
+internal fun FrameModeRow(
     code: String,
     icon: ImageVector,
     title: String,
@@ -131,7 +138,11 @@ private fun FrameModeRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .heightIn(min = 48.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "프레임 방식 $title, $subtitle"
+            }
+            .clickable(role = Role.Button, onClick = onClick)
             .padding(vertical = AppSpacing.lg),
         verticalAlignment = Alignment.CenterVertically,
     ) {

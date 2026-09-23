@@ -407,10 +407,15 @@ private fun OccasionHeader(
             modifier = Modifier.width(AppLayout.Height.IconButton.md),
             contentAlignment = Alignment.CenterStart,
         ) {
-            IconCircleButton(onClick = onBack, enabled = enabled, variant = IconButtonVariant.SOLID) {
+            IconCircleButton(
+                onClick = onBack,
+                accessibilityLabel = "프레임 방식으로 돌아가기",
+                enabled = enabled,
+                variant = IconButtonVariant.SOLID,
+            ) {
                 Icon(
                     imageVector = Icons.Default.ChevronLeft,
-                    contentDescription = "프레임 방식으로 돌아가기",
+                    contentDescription = null,
                     tint = AppColors.Text.primary,
                     modifier = Modifier.size(20.dp),
                 )
@@ -427,10 +432,15 @@ private fun OccasionHeader(
             modifier = Modifier.width(AppLayout.Height.IconButton.md),
             contentAlignment = Alignment.CenterEnd,
         ) {
-            IconCircleButton(onClick = onDismiss, enabled = enabled, variant = IconButtonVariant.SOLID) {
+            IconCircleButton(
+                onClick = onDismiss,
+                accessibilityLabel = "프레임 선택 닫기",
+                enabled = enabled,
+                variant = IconButtonVariant.SOLID,
+            ) {
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "프레임 선택 닫기",
+                    contentDescription = null,
                     tint = AppColors.Text.primary,
                     modifier = Modifier.size(20.dp),
                 )

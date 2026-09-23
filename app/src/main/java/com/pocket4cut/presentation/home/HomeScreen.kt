@@ -82,10 +82,14 @@ fun HomeScreen(
                     color = AppColors.Text.tertiary,
                 )
             }
-            IconCircleButton(onClick = onSettings, variant = IconButtonVariant.SOLID) {
+            IconCircleButton(
+                onClick = onSettings,
+                accessibilityLabel = "설정 열기",
+                variant = IconButtonVariant.SOLID,
+            ) {
                 Icon(
                     imageVector = Icons.Default.Settings,
-                    contentDescription = "설정",
+                    contentDescription = null,
                     tint = AppColors.Text.primary,
                     modifier = Modifier.size(20.dp),
                 )

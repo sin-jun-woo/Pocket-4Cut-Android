@@ -3,7 +3,6 @@ package com.pocket4cut.presentation.frameFlow
 import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -32,6 +33,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -87,7 +91,11 @@ fun SeasonBackgroundFramePickScreen(
                 modifier = Modifier.width(AppLayout.Height.IconButton.md),
                 contentAlignment = Alignment.CenterStart,
             ) {
-                IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = onBack,
+                    accessibilityLabel = "프레임 방식으로 돌아가기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(
                         imageVector = Icons.Default.ChevronLeft,
                         contentDescription = null,
@@ -107,7 +115,11 @@ fun SeasonBackgroundFramePickScreen(
                 modifier = Modifier.width(AppLayout.Height.IconButton.md),
                 contentAlignment = Alignment.CenterEnd,
             ) {
-                IconCircleButton(onClick = onDismiss, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = onDismiss,
+                    accessibilityLabel = "프레임 선택 닫기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = null,
@@ -155,7 +167,9 @@ fun SeasonBackgroundFramePickScreen(
             Spacer(Modifier.height(AppSpacing.md))
 
             Column(
-                modifier = Modifier.padding(horizontal = AppSpacing.Screen.horizontal),
+                modifier = Modifier
+                    .selectableGroup()
+                    .padding(horizontal = AppSpacing.Screen.horizontal),
                 verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
             ) {
                 seasons.chunked(2).forEach { rowSeasons ->
@@ -227,7 +241,7 @@ private fun SeasonPreviewContent(
 }
 
 @Composable
-private fun SeasonCard(
+internal fun SeasonCard(
     season: Season,
     themeSubtitle: String,
     selected: Boolean,
@@ -244,7 +258,14 @@ private fun SeasonCard(
                 shape = shape,
             )
             .background(if (selected) AppColors.Accent.pinkSubtle else AppColors.Background.card)
-            .clickable(onClick = onClick)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "계절 배경 ${season.displayName}"
+            }
+            .selectable(
+                selected = selected,
+                role = Role.RadioButton,
+                onClick = onClick,
+            )
             .padding(AppSpacing.md),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),

@@ -3,7 +3,6 @@ package com.pocket4cut.presentation.frameFlow
 import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -37,6 +38,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -89,7 +93,11 @@ fun ColorFramePalettePickScreen(
                 modifier = Modifier.width(AppLayout.Height.IconButton.md),
                 contentAlignment = Alignment.CenterStart,
             ) {
-                IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = onBack,
+                    accessibilityLabel = "프레임 방식으로 돌아가기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(
                         imageVector = Icons.Default.ChevronLeft,
                         contentDescription = null,
@@ -109,7 +117,11 @@ fun ColorFramePalettePickScreen(
                 modifier = Modifier.width(AppLayout.Height.IconButton.md),
                 contentAlignment = Alignment.CenterEnd,
             ) {
-                IconCircleButton(onClick = onDismiss, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = onDismiss,
+                    accessibilityLabel = "프레임 선택 닫기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = null,
@@ -190,6 +202,7 @@ fun ColorFramePalettePickScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .selectableGroup()
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
             ) {
@@ -216,7 +229,7 @@ fun ColorFramePalettePickScreen(
 }
 
 @Composable
-private fun ColorChip(
+internal fun ColorChip(
     frameColor: FrameColor,
     selected: Boolean,
     onClick: () -> Unit,
@@ -232,7 +245,14 @@ private fun ColorChip(
                     color = if (selected) AppColors.Accent.pink else AppColors.Border.subtle,
                     shape = CircleShape,
                 )
-                .clickable(onClick = onClick),
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "프레임 색상 ${frameColor.name}"
+                }
+                .selectable(
+                    selected = selected,
+                    role = Role.RadioButton,
+                    onClick = onClick,
+                ),
             contentAlignment = Alignment.Center,
         ) {
             Box(

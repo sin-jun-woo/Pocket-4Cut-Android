@@ -94,7 +94,11 @@ fun FrameThemeSelectScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = onBack,
+                    accessibilityLabel = "프레임 선택 닫기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(
                         Icons.Default.Close,
                         contentDescription = null,

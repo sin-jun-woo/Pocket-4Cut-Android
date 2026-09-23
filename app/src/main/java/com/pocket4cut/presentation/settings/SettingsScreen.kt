@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -19,6 +20,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -84,7 +87,11 @@ fun SettingsScreen(
                         color = AppColors.Text.secondary,
                     )
                 }
-                IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = onBack,
+                    accessibilityLabel = "설정 닫기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(Icons.Default.Close, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
                 }
             }
@@ -445,7 +452,7 @@ private fun SettingsGroup(
 }
 
 @Composable
-private fun ToggleRow(
+internal fun ToggleRow(
     title: String,
     subtitle: String,
     icon: ImageVector,
@@ -453,9 +460,19 @@ private fun ToggleRow(
     onCheckedChange: (Boolean) -> Unit,
     switchLabel: String? = null,
 ) {
+    val accessibilityLabel = switchLabel ?: title
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .heightIn(min = 48.dp)
+            .toggleable(
+                value = checked,
+                role = Role.Switch,
+                onValueChange = onCheckedChange,
+            )
+            .semantics(mergeDescendants = true) {
+                contentDescription = accessibilityLabel
+            }
             .padding(vertical = AppSpacing.sm, horizontal = AppSpacing.md),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(AppSpacing.md),
@@ -471,8 +488,8 @@ private fun ToggleRow(
         }
         Switch(
             checked = checked,
-            onCheckedChange = onCheckedChange,
-            modifier = Modifier.semantics { switchLabel?.let { contentDescription = it } },
+            onCheckedChange = null,
+            modifier = Modifier.clearAndSetSemantics { },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = Color.White,
                 checkedTrackColor = AppColors.Accent.pink,

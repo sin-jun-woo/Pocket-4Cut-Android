@@ -48,6 +48,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -229,13 +234,14 @@ fun CaptureScreen(
                         onBack()
                     },
                     diameter = 44.dp,
+                    accessibilityLabel = if (isCapturing) "촬영 일시정지 후 나가기" else "이전 화면",
                 ) {
                     if (isCapturing) {
-                        Icon(Icons.Default.Close, contentDescription = "닫기", tint = Color.White, modifier = Modifier.size(20.dp))
+                        Icon(Icons.Default.Close, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
                     } else {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "뒤로",
+                            contentDescription = null,
                             tint = Color.White,
                             modifier = Modifier.size(22.dp),
                         )
@@ -262,7 +268,7 @@ fun CaptureScreen(
                 if (uiState.phase == CapturePhase.COUNTDOWN) {
                     CountdownTopRightBadge(number = uiState.countdownRemaining)
                 } else {
-                    Spacer(Modifier.size(44.dp))
+                    Spacer(Modifier.size(48.dp))
                 }
             }
 
@@ -277,8 +283,13 @@ fun CaptureScreen(
                     .padding(vertical = 120.dp),
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(AppSpacing.md)) {
-                    GlassmorphismCircle(onClick = { viewModel.switchCamera() }, diameter = 52.dp) {
-                        Icon(Icons.Default.Cameraswitch, contentDescription = "카메라 전환", tint = Color.White, modifier = Modifier.size(24.dp))
+                    GlassmorphismCircle(
+                        onClick = { viewModel.switchCamera() },
+                        diameter = 52.dp,
+                        accessibilityLabel = "카메라 전환",
+                        accessibilityState = if (uiState.isFrontCamera) "현재 전면 카메라" else "현재 후면 카메라",
+                    ) {
+                        Icon(Icons.Default.Cameraswitch, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
                     }
                     GlassmorphismCircle(
                         onClick = {
@@ -287,8 +298,11 @@ fun CaptureScreen(
                             viewModel.setZoomRatio(s.zoomRatio + step)
                         },
                         diameter = 52.dp,
+                        accessibilityLabel = "확대",
+                        accessibilityState = "현재 %.1f배".format(uiState.zoomRatio),
+                        enabled = uiState.zoomRatio < uiState.maxZoom,
                     ) {
-                        Icon(Icons.Default.ZoomIn, contentDescription = "확대", tint = Color.White, modifier = Modifier.size(24.dp))
+                        Icon(Icons.Default.ZoomIn, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
                     }
                     GlassmorphismCircle(
                         onClick = {
@@ -297,8 +311,11 @@ fun CaptureScreen(
                             viewModel.setZoomRatio(s.zoomRatio - step)
                         },
                         diameter = 52.dp,
+                        accessibilityLabel = "축소",
+                        accessibilityState = "현재 %.1f배".format(uiState.zoomRatio),
+                        enabled = uiState.zoomRatio > uiState.minZoom,
                     ) {
-                        Icon(Icons.Default.ZoomOut, contentDescription = "축소", tint = Color.White, modifier = Modifier.size(24.dp))
+                        Icon(Icons.Default.ZoomOut, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
                     }
                 }
             }
@@ -362,20 +379,7 @@ fun CaptureScreen(
 
                 // "바로 촬영" capsule button (countdown only)
                 if (uiState.phase == CapturePhase.COUNTDOWN) {
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(AppLayout.Radius.sm))
-                            .background(AppColors.Accent.pink)
-                            .clickable { viewModel.onManualShutter() }
-                            .padding(horizontal = AppSpacing.lg, vertical = AppSpacing.xs),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            "바로 촬영",
-                            style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
-                            color = Color.White,
-                        )
-                    }
+                    ImmediateShutterButton(onClick = { viewModel.onManualShutter() })
                     Spacer(Modifier.height(AppSpacing.md))
                 }
 
@@ -425,23 +429,66 @@ fun CaptureScreen(
 // ────────────────────────────────────────────────────────────────
 
 @Composable
-private fun GlassmorphismCircle(
+internal fun GlassmorphismCircle(
     onClick: () -> Unit,
     diameter: Dp,
+    accessibilityLabel: String,
     modifier: Modifier = Modifier,
+    accessibilityState: String? = null,
+    enabled: Boolean = true,
     content: @Composable () -> Unit,
 ) {
+    require(accessibilityLabel.isNotBlank()) { "accessibilityLabel must not be blank" }
     val shape = RoundedCornerShape(AppLayout.Radius.sm)
+    val touchDiameter = if (diameter < 48.dp) 48.dp else diameter
     Box(
         modifier = modifier
-            .size(diameter)
+            .size(touchDiameter)
             .clip(shape)
-            .background(Color.Black.copy(alpha = 0.5f))
-            .border(1.dp, Color.White.copy(alpha = 0.15f), shape)
-            .clickable(onClick = onClick),
+            .semantics(mergeDescendants = true) {
+                contentDescription = accessibilityLabel
+                role = Role.Button
+                accessibilityState?.let { stateDescription = it }
+            }
+            .clickable(enabled = enabled, role = Role.Button, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        content()
+        Box(
+            modifier = Modifier
+                .size(diameter)
+                .clip(shape)
+                .background(Color.Black.copy(alpha = 0.5f))
+                .border(1.dp, Color.White.copy(alpha = 0.15f), shape),
+            contentAlignment = Alignment.Center,
+        ) {
+            content()
+        }
+    }
+}
+
+@Composable
+internal fun ImmediateShutterButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .heightIn(min = 48.dp)
+            .clip(RoundedCornerShape(AppLayout.Radius.sm))
+            .background(AppColors.Accent.pink)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "카운트다운 건너뛰고 바로 촬영"
+                role = Role.Button
+            }
+            .clickable(role = Role.Button, onClick = onClick)
+            .padding(horizontal = AppSpacing.lg, vertical = AppSpacing.xs),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            "바로 촬영",
+            style = AppTypography.subheadline.copy(fontWeight = FontWeight.SemiBold),
+            color = Color.White,
+        )
     }
 }
 
@@ -500,12 +547,16 @@ private fun ShutterButton(onClick: () -> Unit) {
                 .clip(CircleShape)
                 .background(AppColors.Accent.pink)
                 .border(2.dp, Color.White, CircleShape)
-                .clickable(onClick = onClick),
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "사진 촬영"
+                    role = Role.Button
+                }
+                .clickable(role = Role.Button, onClick = onClick),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
                 Icons.Default.CameraAlt,
-                contentDescription = "촬영",
+                contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier.size(36.dp),
             )

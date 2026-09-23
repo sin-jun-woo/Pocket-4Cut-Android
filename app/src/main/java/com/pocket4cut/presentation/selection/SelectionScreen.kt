@@ -139,11 +139,12 @@ fun SelectionScreen(
                 ) {
                     IconCircleButton(
                         onClick = { if (!isLeaving) showExitConfirm = true },
+                        accessibilityLabel = "작업 잠시 멈추기",
                         variant = IconButtonVariant.SOLID,
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "작업 잠시 멈추기",
+                            contentDescription = null,
                             tint = AppColors.Text.primary,
                             modifier = Modifier.size(IconCircleButtonSize.MD.toIconDp()),
                         )

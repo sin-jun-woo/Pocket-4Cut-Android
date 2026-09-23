@@ -151,8 +151,12 @@ internal fun PhotoImportContent(
                     color = AppColors.Text.secondary,
                 )
             }
-            IconCircleButton(onClick = onBack, variant = IconButtonVariant.SOLID) {
-                Icon(Icons.Default.Close, contentDescription = "앨범 사진 확인 닫기",
+            IconCircleButton(
+                onClick = onBack,
+                accessibilityLabel = "앨범 사진 확인 닫기",
+                variant = IconButtonVariant.SOLID,
+            ) {
+                Icon(Icons.Default.Close, contentDescription = null,
                     tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
             }
         }
@@ -170,9 +174,15 @@ internal fun PhotoImportContent(
                     style = AppTypography.footnote,
                     modifier = Modifier.weight(1f),
                 )
-                IconCircleButton(onClick = onDismissMessage, diameter = 48.dp) {
-                    Icon(Icons.Default.Close, contentDescription = "안내 닫기",
-                        tint = AppColors.Text.secondary, modifier = Modifier.size(18.dp))
+                if (!uiState.hasBlockingRecoveryError) {
+                    IconCircleButton(
+                        onClick = onDismissMessage,
+                        accessibilityLabel = "안내 닫기",
+                        diameter = 48.dp,
+                    ) {
+                        Icon(Icons.Default.Close, contentDescription = null,
+                            tint = AppColors.Text.secondary, modifier = Modifier.size(18.dp))
+                    }
                 }
             }
         }
@@ -369,8 +379,13 @@ private fun ImportedPhotoRow(
         Icon(Icons.Default.DragHandle, contentDescription = null,
             tint = AppColors.Text.tertiary, modifier = Modifier.size(24.dp))
         Spacer(Modifier.width(AppSpacing.xs))
-        IconCircleButton(onClick = onRemove, enabled = enabled, diameter = 48.dp) {
-            Icon(Icons.Default.DeleteOutline, contentDescription = "${index + 1}번째 사진 제거",
+        IconCircleButton(
+            onClick = onRemove,
+            accessibilityLabel = "${index + 1}번째 사진 제거",
+            enabled = enabled,
+            diameter = 48.dp,
+        ) {
+            Icon(Icons.Default.DeleteOutline, contentDescription = null,
                 tint = AppColors.Semantic.error, modifier = Modifier.size(20.dp))
         }
     }

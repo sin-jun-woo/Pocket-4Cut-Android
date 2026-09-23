@@ -168,10 +168,14 @@ fun CustomFrameEditorScreen(
                 modifier = Modifier.width(AppLayout.Height.IconButton.md),
                 contentAlignment = Alignment.CenterStart,
             ) {
-                IconCircleButton(onClick = { leave(toHome = false) }, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = { leave(toHome = false) },
+                    accessibilityLabel = "프레임 방식으로 돌아가기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(
                         imageVector = Icons.Default.ChevronLeft,
-                        contentDescription = "이전 단계",
+                        contentDescription = null,
                         tint = AppColors.Text.primary,
                         modifier = Modifier.size(20.dp),
                     )
@@ -188,10 +192,14 @@ fun CustomFrameEditorScreen(
                 modifier = Modifier.width(AppLayout.Height.IconButton.md),
                 contentAlignment = Alignment.CenterEnd,
             ) {
-                IconCircleButton(onClick = { leave(toHome = true) }, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = { leave(toHome = true) },
+                    accessibilityLabel = "작업 잠시 멈추기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "작업 잠시 멈추기",
+                        contentDescription = null,
                         tint = AppColors.Text.primary,
                         modifier = Modifier.size(20.dp),
                     )

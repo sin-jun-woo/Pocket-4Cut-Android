@@ -12,6 +12,8 @@ import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -125,7 +127,11 @@ fun EditScreen(
                     ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconCircleButton(onClick = { viewModel.leave(onBack) }, variant = IconButtonVariant.SOLID) {
+                IconCircleButton(
+                    onClick = { viewModel.leave(onBack) },
+                    accessibilityLabel = "편집 닫기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
                     Icon(Icons.Default.Close, null, tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
                 }
                 Text(
@@ -416,7 +422,9 @@ private fun FilterSection(
         }
         Spacer(Modifier.height(AppSpacing.md))
         Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()),
+            modifier = Modifier
+                .selectableGroup()
+                .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(AppSpacing.md),
         ) {
             FilterId.entries.forEach { filter ->
@@ -434,7 +442,7 @@ private fun FilterSection(
 }
 
 @Composable
-private fun FilterChip(
+internal fun FilterChip(
     filter: FilterId,
     isSelected: Boolean,
     thumbnail: Bitmap?,
@@ -451,13 +459,20 @@ private fun FilterChip(
                     color = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle,
                     shape = RoundedCornerShape(AppLayout.Radius.xs),
                 )
-                .clickable(onClick = onClick),
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "필터 ${filter.displayName}"
+                }
+                .selectable(
+                    selected = isSelected,
+                    role = Role.RadioButton,
+                    onClick = onClick,
+                ),
             contentAlignment = Alignment.Center,
         ) {
             if (thumbnail != null) {
                 Image(
                     bitmap = thumbnail.asImageBitmap(),
-                    contentDescription = filter.displayName,
+                    contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -508,7 +523,9 @@ private fun FrameColorSection(
         }
         Spacer(Modifier.height(AppSpacing.md))
         Row(
-            modifier = Modifier.horizontalScroll(rememberScrollState()),
+            modifier = Modifier
+                .selectableGroup()
+                .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
         ) {
             FrameColors.all.forEach { fc ->
@@ -521,7 +538,7 @@ private fun FrameColorSection(
 }
 
 @Composable
-private fun FrameColorChip(
+internal fun FrameColorChip(
     fc: FrameColor,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -540,7 +557,14 @@ private fun FrameColorChip(
                     color = if (isSelected) AppColors.Accent.pink else AppColors.Border.subtle,
                     shape = CircleShape,
                 )
-                .clickable(onClick = onClick),
+                .semantics(mergeDescendants = true) {
+                    contentDescription = "프레임 색상 ${fc.name}"
+                }
+                .selectable(
+                    selected = isSelected,
+                    role = Role.RadioButton,
+                    onClick = onClick,
+                ),
             contentAlignment = Alignment.Center,
         ) {
             if (isSelected) {
@@ -688,7 +712,10 @@ private fun TextInputSection(
         )
         Spacer(Modifier.height(AppSpacing.xs))
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .selectableGroup()
+                .horizontalScroll(rememberScrollState()),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(AppSpacing.sm),
         ) {
@@ -696,13 +723,21 @@ private fun TextInputSection(
             val autoSelected = uiState.captionColorRGB == null
             Box(
                 modifier = Modifier
+                    .heightIn(min = 48.dp)
                     .clip(autoShape)
                     .then(
                         if (autoSelected) Modifier.border(2.dp, AppColors.Accent.pink, autoShape)
                         else Modifier.border(1.dp, AppColors.Border.subtle, autoShape),
                     )
                     .background(AppColors.Background.tertiary, autoShape)
-                    .clickable(onClick = onCaptionColorAuto)
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = "글씨 색상 자동"
+                    }
+                    .selectable(
+                        selected = autoSelected,
+                        role = Role.RadioButton,
+                        onClick = onCaptionColorAuto,
+                    )
                     .padding(horizontal = AppSpacing.md, vertical = AppSpacing.xs),
                 contentAlignment = Alignment.Center,
             ) {
@@ -714,29 +749,53 @@ private fun TextInputSection(
                     color = if (autoSelected) AppColors.Accent.pink else AppColors.Text.secondary,
                 )
             }
-            val presetColors = listOf(0x111111L, 0xFFFFFFL, 0xFF6B9DL, 0x4FC3F7L, 0x6BCF9FL, 0xFFD93DL)
-            presetColors.forEach { hex ->
+            val presetColors = listOf(
+                0x111111L to "검정",
+                0xFFFFFFL to "흰색",
+                0xFF6B9DL to "핑크",
+                0x4FC3F7L to "하늘색",
+                0x6BCF9FL to "민트",
+                0xFFD93DL to "노랑",
+            )
+            presetColors.forEach { (hex, label) ->
                 val isPresetSel = uiState.captionColorRGB == hex
                 Box(
                     modifier = Modifier
-                        .size(24.dp)
+                        .size(48.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFF000000L or hex), CircleShape)
-                        .then(
-                            if (isPresetSel) Modifier.border(2.dp, AppColors.Accent.pink, CircleShape)
-                            else if (hex == 0xFFFFFFL) Modifier.border(1.dp, AppColors.Border.medium, CircleShape)
-                            else Modifier
-                        )
-                        .clickable { onCaptionColorPreset(hex) },
-                )
+                        .semantics(mergeDescendants = true) {
+                            contentDescription = "글씨 색상 $label"
+                        }
+                        .selectable(
+                            selected = isPresetSel,
+                            role = Role.RadioButton,
+                            onClick = { onCaptionColorPreset(hex) },
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFF000000L or hex), CircleShape)
+                            .then(
+                                if (isPresetSel) Modifier.border(2.dp, AppColors.Accent.pink, CircleShape)
+                                else if (hex == 0xFFFFFFL) Modifier.border(1.dp, AppColors.Border.medium, CircleShape)
+                                else Modifier
+                            ),
+                    )
+                }
             }
             Box(
                 modifier = Modifier
-                    .size(44.dp)
+                    .size(48.dp)
                     .clip(CircleShape)
                     .background(AppColors.Background.tertiary)
                     .border(1.dp, AppColors.Border.subtle, CircleShape)
-                    .clickable(onClick = onOpenColorSheet),
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = "다른 글씨 색상 선택"
+                    }
+                    .clickable(role = Role.Button, onClick = onOpenColorSheet),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(Icons.Default.Palette, null, tint = AppColors.Text.secondary, modifier = Modifier.size(22.dp))
