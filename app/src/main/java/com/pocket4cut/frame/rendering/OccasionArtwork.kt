@@ -25,6 +25,12 @@ object OccasionArtwork {
         val bitmap: Bitmap,
     )
 
+    internal data class Diagnostics(
+        val cachedSheetCount: Int,
+        val cachedAllocationBytes: Long,
+        val inFlightDecodeCount: Int,
+    )
+
     internal class RecoverableLoadException internal constructor(
         themeId: String,
         cause: OutOfMemoryError,
@@ -215,6 +221,20 @@ object OccasionArtwork {
         expectedHeight: Int,
     ): Int = synchronized(lock) {
         inFlight["test|$themeId|$cacheKey|${expectedWidth}x$expectedHeight"]?.waiters?.size ?: 0
+    }
+
+    /**
+     * Reports only memory and work owned by this loader. Process-wide native heap peaks also
+     * include decoder temporaries and Bitmap pixel buffers awaiting a platform GC, so they are
+     * useful diagnostics but are not a deterministic cache ownership measurement.
+     */
+    internal fun diagnosticsForTest(): Diagnostics = synchronized(lock) {
+        val cachedSheets = cache.snapshot().values.filterNot { it.bitmap.isRecycled }
+        Diagnostics(
+            cachedSheetCount = cachedSheets.size,
+            cachedAllocationBytes = cachedSheets.sumOf { it.bitmap.allocationByteCount.toLong() },
+            inFlightDecodeCount = inFlight.size,
+        )
     }
 
     internal fun recycleDecodedIfObsolete(bitmap: Bitmap, canPublish: () -> Boolean): Boolean {

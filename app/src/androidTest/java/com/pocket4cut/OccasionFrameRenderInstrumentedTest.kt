@@ -552,19 +552,66 @@ class OccasionFrameRenderInstrumentedTest {
         val nativeStart = Debug.getNativeHeapAllocatedSize()
         var managedPeak = managedStart
         var nativePeak = nativeStart
+        var maxCachedSheetCount = 0
+        var maxCachedAllocationBytes = 0L
+        val maxOwnedCacheBytes = 2L * 1536L * 1024L * 4L
         val firstTheme = catalog.themes.first()
         val firstSheet = loadWithHeapEvidence(firstTheme)
 
         // Keep only the first reference. All other sheets must be eligible for collection after
-        // the production two-entry LRU evicts them.
+        // the production two-entry LRU evicts them. Measure the loader's actual strong ownership;
+        // process-wide native heap peaks include platform decoder allocations awaiting a GC.
         catalog.themes.drop(1).forEach { occasion ->
             val sheet = loadWithHeapEvidence(occasion)
             assertEquals("Wrong atlas returned while loading ${occasion.id}", occasion.id, sheet.themeId)
             assertEquals(1536, sheet.bitmap.width)
             assertEquals(1024, sheet.bitmap.height)
             assertTrue("${occasion.id} lost alpha", sheet.bitmap.hasAlpha())
+            val diagnostics = OccasionArtwork.diagnosticsForTest()
+            maxCachedSheetCount = maxOf(maxCachedSheetCount, diagnostics.cachedSheetCount)
+            maxCachedAllocationBytes = maxOf(
+                maxCachedAllocationBytes,
+                diagnostics.cachedAllocationBytes,
+            )
+            assertTrue(
+                "Atlas cache retained ${diagnostics.cachedSheetCount} sheets after ${occasion.id}",
+                diagnostics.cachedSheetCount <= 2,
+            )
+            assertTrue(
+                "Atlas cache owned ${diagnostics.cachedAllocationBytes} bytes after ${occasion.id}",
+                diagnostics.cachedAllocationBytes <= maxOwnedCacheBytes,
+            )
+            assertEquals(
+                "Completed atlas load remained in flight after ${occasion.id}",
+                0,
+                diagnostics.inFlightDecodeCount,
+            )
             managedPeak = maxOf(managedPeak, runtime.totalMemory() - runtime.freeMemory())
             nativePeak = maxOf(nativePeak, Debug.getNativeHeapAllocatedSize())
+        }
+
+        assertFalse("An evicted sheet still held by a renderer was recycled", firstSheet.bitmap.isRecycled)
+        val retainedLayout = previewLayout(
+            Variant(FrameLayouts.byId(FrameLayoutId.TWO_HORIZONTAL)),
+            null,
+            null,
+        )
+        val retainedDestination = bitmapFor(retainedLayout)
+        try {
+            CollageRenderer.drawScene(
+                Canvas(retainedDestination),
+                input(
+                    firstTheme,
+                    firstSheet,
+                    Variant(FrameLayouts.byId(FrameLayoutId.TWO_HORIZONTAL)),
+                    emptyList(),
+                    null,
+                    null,
+                ),
+                retainedLayout,
+            )
+        } finally {
+            retainedDestination.recycle()
         }
 
         val reloadedFirst = loadWithHeapEvidence(firstTheme)
@@ -594,14 +641,15 @@ class OccasionFrameRenderInstrumentedTest {
         val managedGrowth = (managedPeak - managedStart).coerceAtLeast(0L)
         val nativeGrowth = (nativePeak - nativeStart).coerceAtLeast(0L)
         val combinedGrowth = managedGrowth + nativeGrowth
-        assertTrue(
-            "Sequential 88-theme atlas growth exceeded the 128 MiB renderer budget: " +
-                "managed=$managedGrowth native=$nativeGrowth combined=$combinedGrowth",
-            combinedGrowth < 128L * 1024L * 1024L,
-        )
+        val clearedDiagnostics = OccasionArtwork.diagnosticsForTest()
+        assertEquals(0, clearedDiagnostics.cachedSheetCount)
+        assertEquals(0L, clearedDiagnostics.cachedAllocationBytes)
+        assertEquals(0, clearedDiagnostics.inFlightDecodeCount)
         println(
             "OCCASION_ATLAS_SEQUENCE: count=${catalog.themes.size} " +
                 "managedPeak=$managedPeak nativePeak=$nativePeak combinedGrowth=$combinedGrowth " +
+                "maxCachedSheets=$maxCachedSheetCount " +
+                "maxCachedBytes=$maxCachedAllocationBytes " +
                 "last=${catalog.themes.last().id}",
         )
     }
