@@ -4,6 +4,19 @@
 
 `docs/`는 GitHub Pages 배포 대상이므로 공개 가능한 요약만 기록한다. 비밀값, 사용자 사진, 기기 serial, 개인 로컬 경로, 원시 실행 로그를 넣지 않는다. 세부 실행 산출물은 로컬 build/캐시 영역에 두고 필요한 명령·결과만 남긴다.
 
+## 2026-09-24 — 1.5(6) 앨범·자르기·Everyday Editions 88종 최종 출시 검증 (Asia/Seoul)
+
+- 요청/기준: 같은 날 추가한 앨범 가져오기, 사진별 비파괴 자르기, Everyday Editions 88종 런타임 프레임과 신뢰성·접근성 보강을 모두 합친 뒤 실제 기기에서 최종 출시 검증을 처음부터 다시 수행했다. 앱 기능 검증 기준은 `codex/album-import-crop`의 `f970d34a210884431d103f134eea4e88054c32a4`이며 배포 버전은 요청대로 `1.5 (6)`을 유지했다. 배포 앱 `com.pocket4cut`은 교체하거나 데이터를 지우지 않았고, 격리된 `com.pocket4cut.qa`만 설치했다.
+- 런타임 프레임: 88개 테마를 10개 카테고리, 일반 77개·직접 기록 11개로 제공한다. 선택 목록은 240×160 썸네일, 실제 장식은 테마별 1536×1024 q95 alpha WebP를 사용한다. schema v3가 occasion ID·디자인 버전을 저장하고 미리보기와 원본 기반 최종 Canvas가 같은 painter를 사용한다. 앱에는 1,584개 완성 PNG를 넣지 않는다.
+- 출시 전 수정: 손상된 현재 occasion 초안의 호환 복구 범위를 제한하고, 앨범 가져오기 경고와 실제 저장 실패를 구분했으며, 결과 저장·공유 중복 실행과 공유 URI 계약을 보강했다. 주요 버튼·색상·탭·설정 스위치의 48dp/스크린리더 의미를 추가했다. 순차 아틀라스 검사는 프로세스 전체 native allocator 순간값 대신 로더가 소유한 최대 2장·12MiB 캐시와 진행 요청 0건을 직접 검증한다. 비동기 필터 회귀 검사는 최신 미리보기 게시와 세션 저장을 기다린 뒤 전 픽셀을 비교한다.
+- 자산 검증: `npm run validate:android` 성공. themes 88, categories 10, groups 77+11, art 88, thumbnails 88, 검증 바이트 33,687,596, 합성 배경 최소 PSNR 42.01dB, alpha 차이 0, 변조 음성 검사 14건을 확인했다.
+- 자동 검증: `:app:assembleDebug :app:testDebugUnitTest :app:lintDebug :app:lintRelease :app:assembleDebugAndroidTest :app:assembleQaRelease :app:bundleRelease --rerun-tasks`가 173개 task 전부 실행 후 성공했다. JVM 25/25, 실패·오류·건너뜀 0. Debug Lint 오류 0·경고 56·힌트 6, Release Lint 오류 0·경고 55·힌트 6이다. 기존 경고 수와 같거나 적고 새 오류는 없다.
+- 실기기 자동 검증: Samsung Android 16/API 36 한 대에서 opt-in 최대 렌더 메모리와 실제 계절 출력까지 켠 `:app:connectedDebugAndroidTest`를 최종 SHA 기준으로 재실행해 146/146, 실패·오류·건너뜀 0으로 통과했다. 88×9 레이아웃/버전×문구·날짜 둘 다 없음/둘 다 있음인 1,584개 조합은 390px 렌더에서 슬롯 수·사진 순서·불투명/비어 있지 않은 결과·캡션 영역의 사진 침범 방지를 검사했다. preview/export 스케일 일치는 12개 아트 프로필 대표×2개 레이아웃×같은 캡션 2상태인 별도 48개 조합으로 검사했다. 각각을 16MP JPEG로 저장한 검사는 아니다.
+- 실기기 수동 검증: 카메라와 앨범 각각 2·4·6컷을 새로 완주했다. 촬영 중 Home·강제 종료 뒤 수동 재개, 권한 거부·설정 허용 복귀, 전·후면·줌·카운트다운 1/3/10초, 선택·순서와 대표 2·4·6컷 레이아웃, 색상·계절·커스텀·occasion, 필터·회전·반전·crop, 문구·날짜, 결과 저장·중복 방지·공유 시트·보관함 재열기를 확인했다. 8개 현재 레이아웃과 구형 6컷의 전수 범위는 자동 렌더 검사가 담당한다. 앨범은 부족 선택·제거·중복 URI 안내·정확 장수 CTA 복구와 시스템 Photo Picker를 확인했다. 작은 화면·가로·글자 1.0/1.5/2.0·밝음/어두움에서 주요 버튼 접근을 확인했고 접근성 의미는 계측 semantics 검사로 검증했다. 화면 켜짐 유지 시스템 값은 시작부터 끝까지 `15`로 읽혔고 변경하지 않았다.
+- R8 QA/AAB: `qaRelease` cold start와 홈·설정·앨범 2·4·6컷·시스템 Photo Picker를 확인했고 관련 crash buffer 기록은 없었다. 최종 `app-release.aab`은 72,284,509 bytes, SHA-256 `E9C97A953067B0BACEDD18E2AE18F02AD44A7A762354D1B01529CDB2C36E2826`이다. `jarsigner` exit 0의 `jar verified`, bundletool manifest의 `com.pocket4cut`·1.5(6)·min 26·target 36, R8 metadata와 50,691,035-byte mapping, AAB 내부 176 WebP 해시 일치를 확인했다.
+- 기기 정리: 최종 확인 뒤 이번 검사에서 만든 번호·색상 합성 원본 12개와 격리 QA 패키지만 제거했다. 배포 앱 `com.pocket4cut`은 설치 상태로 남았고 화면 켜짐 유지 값은 계속 `15`였다. 사진첩 저장 검증으로 만들어진 결과 사본은 기존 사용자 결과와 안전하게 구분할 기록이 없어 일괄 삭제하지 않았다.
+- 제외/한계: 사용자 지시에 따라 에뮬레이터, 글꼴 라이선스, 공개 개인정보 웹페이지는 검증하지 않았다. 88개 카드를 각각 수동 선택·저장·재열기한 순회, 실제 TalkBack 서비스 전체 탐색, 45색·25스티커·글꼴의 모든 조합 수동 순회도 수행하지 않았다. API 26/28 실제 권한 UI, 다른 제조사·카메라 HAL, 실제 저장 공간 고갈·OS 저메모리 kill, cloud provider/HEIF, 실제 백업·기기 이전, 독립 수신 앱을 통한 교차 프로세스 공유, Play Console의 versionCode 6 사용 가능 여부·등록 upload certificate·데이터 안전성·업로드/심사는 로컬 통과로 간주하지 않는다. 상세 근거와 Play Console 출시 문구 3종은 `engineering/FINAL_RELEASE_VERIFICATION_2026-09-24.md`에 기록한다.
+
 ## 2026-09-24 — 앨범 가져오기·사진별 비파괴 자르기 구현 (Asia/Seoul)
 
 - 요청/기준: 홈에서 카메라 촬영과 시스템 앨범 입력을 고르고, 앨범 2·4·6컷과 촬영·앨범 공통 사진별 자르기를 추가한다. 시작 및 확인한 GitHub `origin/main`은 `ee621886f1ef283e7a555a64fd07577a469b1264`, 구현 브랜치는 `codex/album-import-crop`이다. 버전은 `1.5 (6)` 그대로 유지한다.
@@ -13,7 +26,7 @@
 - 보안/노출: FileProvider 공개 경로를 완성 결과 디렉터리로 제한해 import 원본을 공유하지 않는다. 외부 원본과 다른 세션 사본을 수정·삭제하지 않으며, 결과가 있는 앨범 세션의 사진 목록 변경을 거부한다.
 - 사전 자동 검증: `:app:assembleDebug :app:testDebugUnitTest :app:lintDebug :app:assembleDebugAndroidTest :app:assembleQaRelease :app:bundleRelease`가 성공했다. JVM 12/12, 실패·오류·건너뜀 0. Debug Lint 오류 0, 경고 57, 힌트 2이며 새 import 파일의 KTX 경고는 제거했다. 독립 코드 감사에서 P0/P1 잔여를 찾지 못했다.
 - 사전 실기기 회귀: Android 16/API 36의 격리 QA 패키지에서 import 저장·이전·형식·중단·삭제 회귀 20/20, crop/region/EXIF·렌더 관련 두 클래스 10/10을 통과했다. EXIF 8종×회전 4종×반전 2종 64조합, 잘린 JPEG 거절, Motion Photo형 trailing payload 바이트 보존을 포함한다. 이 결과는 아래 전체 최종 실기기 흐름 검사와 구분한다.
-- 88종 프레임 경계: 기준 main에는 `design/occasion-frames/everyday-editions-v1/`의 88개 디자인 마스터와 1,584개 정적 PNG가 이미 포함되어 있다. 기존 기록대로 아직 Android 런타임 선택 UI·앱 자산에는 연결되지 않았으므로 이번 기능 커밋이 앱에서 88종을 제공한다고 주장하지 않는다. 전체 최종 검사에서는 디자인 패키지 무결성과 앱에서 실제 선택 가능한 프레임 범위를 각각 확인한다.
+- 88종 프레임 경계(당시 상태): 앨범·자르기 구현 커밋 `3b037d3` 시점에는 `design/occasion-frames/everyday-editions-v1/`의 정적 디자인 납품만 있었고 Android 런타임 선택 UI·앱 자산에는 연결되지 않았다. 같은 날 후속 커밋 `58baacb`에서 88종 런타임 통합을 완료했으므로 현재 상태는 위 최종 출시 검증 기록을 따른다.
 - 제외/다음 단계: 사용자 지시에 따라 글꼴 라이선스와 공개 개인정보 페이지는 검증하지 않는다. 화면 켜짐 유지 설정은 변경하지 않는다. 이 구현 커밋 뒤 QA 앱을 새 설치 상태로 만들고 카메라·앨범·편집·저장·공유·복원·88종 디자인 패키지를 처음부터 최종 검사하며, 결과·AAB·출시 판정은 별도 상세 보고서와 후속 작업 로그에 기록한다.
 
 ## 2026-09-23 — Everyday Editions 기념일 88종 이미지 제작 (Asia/Seoul)
