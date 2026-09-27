@@ -314,9 +314,9 @@ fun CustomFrameEditorScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .heightIn(max = 380.dp)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = AppSpacing.Screen.horizontal)
-                .heightIn(max = 380.dp),
+                .padding(horizontal = AppSpacing.Screen.horizontal),
         ) {
             Text(
                 text = "배경 색",

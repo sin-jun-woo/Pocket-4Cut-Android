@@ -23,10 +23,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
@@ -34,6 +37,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -88,14 +92,24 @@ fun SelectionScreen(
     val uiState by viewModel.uiState.collectAsState()
     val max = frameType.selectCount
     val selectedCount = uiState.selectedIndexes.size
-    val isDone = selectedCount == max
+    val isDone = uiState.hasLoaded && selectedCount == max
     val remaining = max - selectedCount
 
     var showExitConfirm by remember { mutableStateOf(false) }
     var isLeaving by remember { mutableStateOf(false) }
 
+    fun requestLeave() {
+        if (isLeaving || uiState.isCompleting) return
+        if (uiState.hasLoaded) {
+            showExitConfirm = true
+        } else {
+            isLeaving = true
+            viewModel.leave(onSaved = onBack, onFailed = { isLeaving = false })
+        }
+    }
+
     BackHandler(enabled = !showExitConfirm) {
-        if (!isLeaving) showExitConfirm = true
+        requestLeave()
     }
 
     ConfirmDialog(
@@ -138,9 +152,10 @@ fun SelectionScreen(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     IconCircleButton(
-                        onClick = { if (!isLeaving) showExitConfirm = true },
+                        onClick = ::requestLeave,
                         accessibilityLabel = "작업 잠시 멈추기",
                         variant = IconButtonVariant.SOLID,
+                        enabled = !isLeaving && !uiState.isCompleting,
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
@@ -219,16 +234,25 @@ fun SelectionScreen(
                         CircularProgressIndicator(color = AppColors.Accent.pink)
                     }
                 }
-                uiState.errorMessage != null -> {
-                    Box(
-                        modifier = Modifier.weight(1f).fillMaxWidth(),
-                        contentAlignment = Alignment.Center,
+                !uiState.hasLoaded -> {
+                    Column(
+                        modifier = Modifier.weight(1f).fillMaxWidth()
+                            .verticalScroll(rememberScrollState())
+                            .padding(horizontal = AppSpacing.Screen.horizontal)
+                            .padding(bottom = 180.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
                     ) {
                         Text(
                             text = uiState.errorMessage.orEmpty(),
                             style = AppTypography.body,
                             color = AppColors.Text.secondary,
                         )
+                        TextButton(
+                            onClick = { viewModel.load(sessionId, max) },
+                            enabled = !isLeaving,
+                        ) { Text("다시 불러오기") }
+                        TextButton(onClick = ::requestLeave, enabled = !isLeaving) { Text("홈으로") }
                     }
                 }
                 else -> {
@@ -242,6 +266,17 @@ fun SelectionScreen(
                         verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
                         contentPadding = PaddingValues(bottom = 180.dp),
                     ) {
+                        uiState.errorMessage?.let { message ->
+                            item(span = { GridItemSpan(maxLineSpan) }) {
+                                Column {
+                                    Text(message, style = AppTypography.footnote, color = AppColors.Semantic.error)
+                                    TextButton(onClick = viewModel::retrySave,
+                                        enabled = !isLeaving && !uiState.isCompleting) {
+                                        Text("선택 저장 다시 시도")
+                                    }
+                                }
+                            }
+                        }
                         itemsIndexed(uiState.imagePaths) { index, path ->
                             val order = uiState.selectedIndexes.indexOf(index)
                             val isSelected = order >= 0
@@ -278,6 +313,7 @@ fun SelectionScreen(
                                         photoNumber = index + 1,
                                         selectionOrder = if (isSelected) order + 1 else null,
                                         canSelect = selectedCount < max,
+                                        enabled = !isLeaving && !uiState.isCompleting,
                                         onToggle = { if (!isLeaving) viewModel.toggle(index, max) },
                                     ),
                             ) {
@@ -347,9 +383,13 @@ fun SelectionScreen(
             )
             Spacer(Modifier.height(AppSpacing.md))
             PrimaryButton(
-                text = if (isDone) "다음" else "${remaining}장 더 선택해주세요",
+                text = when {
+                    uiState.isCompleting -> "선택 저장 중..."
+                    isDone -> "다음"
+                    else -> "${remaining}장 더 선택해주세요"
+                },
                 onClick = { if (isDone) viewModel.complete(onDone) },
-                enabled = isDone && !isLeaving,
+                enabled = isDone && !isLeaving && !uiState.isCompleting,
                 fullWidth = true,
             )
             if (!isDone) {
@@ -380,6 +420,7 @@ internal fun Modifier.photoSelectionSemantics(
     photoNumber: Int,
     selectionOrder: Int?,
     canSelect: Boolean,
+    enabled: Boolean = true,
     onToggle: () -> Unit,
 ): Modifier = this
     .semantics {
@@ -392,7 +433,7 @@ internal fun Modifier.photoSelectionSemantics(
     }
     .toggleable(
         value = selectionOrder != null,
-        enabled = selectionOrder != null || canSelect,
+        enabled = enabled && (selectionOrder != null || canSelect),
         role = Role.Checkbox,
         onValueChange = { onToggle() },
     )

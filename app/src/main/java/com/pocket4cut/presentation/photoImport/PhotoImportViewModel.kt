@@ -14,6 +14,7 @@ import com.pocket4cut.domain.model.InputSource
 import com.pocket4cut.domain.model.SessionDocument
 import com.pocket4cut.domain.model.SessionStage
 import com.pocket4cut.presentation.navigation.FrameType
+import com.pocket4cut.presentation.settings.AppSettings
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -131,6 +132,7 @@ class PhotoImportViewModel(
                         sessionId = sessionId,
                         frameTypeId = frameType.id,
                         uris = decision.uris.map(Uri::parse),
+                        showDateByDefault = AppSettings.readShowDateByDefault(getApplication<Application>().applicationContext),
                     )
                     val document = result.session ?: sessions.getCurrentById(sessionId)
                     val duplicateCount = decision.duplicateUris.size + result.duplicates.size

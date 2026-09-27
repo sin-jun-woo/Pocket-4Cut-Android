@@ -317,6 +317,7 @@ internal fun CropEditorScreen(
                     modifier = Modifier
                         .weight(1f)
                         .semantics {
+                            contentDescription = "사진 확대 비율"
                             stateDescription = crop.accessibilityState(
                                 quarterTurnsClockwise,
                                 flipHorizontal,

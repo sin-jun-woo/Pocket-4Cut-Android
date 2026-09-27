@@ -13,6 +13,7 @@ import com.pocket4cut.data.local.SessionDocumentRepository
 import com.pocket4cut.data.storage.FileImageStorage
 import com.pocket4cut.domain.model.PhotoRef
 import com.pocket4cut.domain.model.SessionDocument
+import com.pocket4cut.domain.model.SessionDraft
 import com.pocket4cut.domain.model.SessionStage
 import com.pocket4cut.presentation.settings.AppSettings
 import com.pocket4cut.presentation.navigation.FrameType
@@ -240,6 +241,9 @@ class CaptureViewModel(app: Application, private val savedState: SavedStateHandl
                         createdAt = System.currentTimeMillis(),
                         captureCount = frameType.captureCount,
                         selectedCount = frameType.selectCount,
+                        draft = SessionDraft(
+                            showDate = AppSettings.readShowDateByDefault(getApplication<Application>().applicationContext),
+                        ),
                     ),
                 )
                 sessionRevision = created.revision

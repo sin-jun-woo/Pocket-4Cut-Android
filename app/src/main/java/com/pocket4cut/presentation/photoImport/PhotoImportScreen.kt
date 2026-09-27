@@ -8,8 +8,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,9 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteOutline
@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -126,125 +127,146 @@ internal fun PhotoImportContent(
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(AppColors.Background.primary),
-    ) {
-        Row(
+    val pageScroll = rememberScrollState()
+    val photoScroll = rememberScrollState()
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+        // Keep every action reachable when the header and large text consume the viewport.
+        // The photo list is bounded to six entries, so only one scroll container is active.
+        val scrollWholeScreen = maxHeight <= 480.dp || LocalDensity.current.fontScale >= 1.5f
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = AppSpacing.xxxl,
-                    start = AppSpacing.Screen.horizontal,
-                    end = AppSpacing.Screen.horizontal,
-                    bottom = AppSpacing.md,
-                ),
-            verticalAlignment = Alignment.CenterVertically,
+                .fillMaxSize()
+                .background(AppColors.Background.primary)
+                .then(if (scrollWholeScreen) Modifier.verticalScroll(pageScroll) else Modifier),
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text("앨범 사진 확인", style = AppTypography.title1, color = AppColors.Text.primary)
-                Spacer(Modifier.height(AppSpacing.xxs))
-                Text(
-                    "${frameType.selectCount}장 중 ${uiState.photos.size}장 · 길게 끌어 순서를 바꿀 수 있어요.",
-                    style = AppTypography.callout,
-                    color = AppColors.Text.secondary,
-                )
-            }
-            IconCircleButton(
-                onClick = onBack,
-                accessibilityLabel = "앨범 사진 확인 닫기",
-                variant = IconButtonVariant.SOLID,
-            ) {
-                Icon(Icons.Default.Close, contentDescription = null,
-                    tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
-            }
-        }
-
-        uiState.message?.let { message ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = AppSpacing.Screen.horizontal, vertical = AppSpacing.xs),
+                    .padding(
+                        top = AppSpacing.xxxl,
+                        start = AppSpacing.Screen.horizontal,
+                        end = AppSpacing.Screen.horizontal,
+                        bottom = AppSpacing.md,
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = message,
-                    color = if (uiState.isMessageError) AppColors.Semantic.error else AppColors.Semantic.info,
-                    style = AppTypography.footnote,
-                    modifier = Modifier.weight(1f),
-                )
-                if (!uiState.hasBlockingRecoveryError) {
-                    IconCircleButton(
-                        onClick = onDismissMessage,
-                        accessibilityLabel = "안내 닫기",
-                        diameter = 48.dp,
-                    ) {
-                        Icon(Icons.Default.Close, contentDescription = null,
-                            tint = AppColors.Text.secondary, modifier = Modifier.size(18.dp))
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("앨범 사진 확인", style = AppTypography.title1, color = AppColors.Text.primary)
+                    Spacer(Modifier.height(AppSpacing.xxs))
+                    Text(
+                        "${frameType.selectCount}장 중 ${uiState.photos.size}장 · 길게 끌어 순서를 바꿀 수 있어요.",
+                        style = AppTypography.callout,
+                        color = AppColors.Text.secondary,
+                    )
+                }
+                IconCircleButton(
+                    onClick = onBack,
+                    accessibilityLabel = "앨범 사진 확인 닫기",
+                    variant = IconButtonVariant.SOLID,
+                ) {
+                    Icon(Icons.Default.Close, contentDescription = null,
+                        tint = AppColors.Text.primary, modifier = Modifier.size(20.dp))
+                }
+            }
+
+            uiState.message?.let { message ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = AppSpacing.Screen.horizontal, vertical = AppSpacing.xs),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = message,
+                        color = if (uiState.isMessageError) AppColors.Semantic.error else AppColors.Semantic.info,
+                        style = AppTypography.footnote,
+                        modifier = Modifier.weight(1f),
+                    )
+                    if (!uiState.hasBlockingRecoveryError) {
+                        IconCircleButton(
+                            onClick = onDismissMessage,
+                            accessibilityLabel = "안내 닫기",
+                            diameter = 48.dp,
+                        ) {
+                            Icon(Icons.Default.Close, contentDescription = null,
+                                tint = AppColors.Text.secondary, modifier = Modifier.size(18.dp))
+                        }
                     }
                 }
             }
-        }
 
-        if (!uiState.isInitialized || (uiState.isBusy && uiState.photos.isEmpty())) {
-            Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = AppColors.Accent.pink)
-            }
-        } else if (uiState.photos.isEmpty()) {
-            EmptyImportState(
-                requiredCount = frameType.selectCount,
-                onOpenAlbum = onOpenAlbum,
-                modifier = Modifier.weight(1f),
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier.weight(1f).fillMaxWidth(),
-                contentPadding = PaddingValues(
-                    start = AppSpacing.Screen.horizontal,
-                    end = AppSpacing.Screen.horizontal,
-                    top = AppSpacing.xs,
-                    bottom = AppSpacing.md,
-                ),
-                verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
-            ) {
-                itemsIndexed(uiState.photos, key = { _, item -> item.photoId }) { index, item ->
-                    ImportedPhotoRow(
-                        item = item,
-                        index = index,
-                        count = uiState.photos.size,
-                        enabled = !uiState.isBusy,
-                        onMove = onMove,
-                        onRemove = { onRemove(item.photoId) },
-                    )
+            if (!uiState.isInitialized || (uiState.isBusy && uiState.photos.isEmpty())) {
+                Box(
+                    modifier = Modifier.fillMaxWidth().then(
+                        if (scrollWholeScreen) Modifier.height(120.dp) else Modifier.weight(1f),
+                    ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator(color = AppColors.Accent.pink)
                 }
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(AppColors.Background.primary)
-                .padding(horizontal = AppSpacing.Screen.horizontal)
-                .padding(top = AppSpacing.sm, bottom = AppSpacing.Layout.ctaBottomSpace),
-            verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
-        ) {
-            if (uiState.photos.isNotEmpty() && uiState.photos.size < frameType.selectCount) {
-                SecondaryButton(
-                    text = "사진 추가 · ${frameType.selectCount - uiState.photos.size}장 필요",
-                    onClick = onOpenAlbum,
-                    enabled = !uiState.isBusy,
-                    icon = {
-                        Icon(Icons.Default.PhotoLibrary, contentDescription = null,
-                            tint = AppColors.Text.primary, modifier = Modifier.size(19.dp))
+            } else if (uiState.photos.isEmpty()) {
+                EmptyImportState(
+                    requiredCount = frameType.selectCount,
+                    onOpenAlbum = onOpenAlbum,
+                    modifier = if (scrollWholeScreen) {
+                        Modifier.padding(vertical = AppSpacing.lg)
+                    } else {
+                        Modifier.weight(1f)
                     },
                 )
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(if (scrollWholeScreen) Modifier else Modifier.weight(1f).verticalScroll(photoScroll))
+                        .padding(
+                            start = AppSpacing.Screen.horizontal,
+                            end = AppSpacing.Screen.horizontal,
+                            top = AppSpacing.xs,
+                            bottom = AppSpacing.md,
+                        ),
+                    verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+                ) {
+                    uiState.photos.forEachIndexed { index, item ->
+                        key(item.photoId) {
+                            ImportedPhotoRow(
+                                item = item,
+                                index = index,
+                                count = uiState.photos.size,
+                                enabled = !uiState.isBusy,
+                                onMove = onMove,
+                                onRemove = { onRemove(item.photoId) },
+                            )
+                        }
+                    }
+                }
             }
-            PrimaryButton(
-                text = "레이아웃 선택",
-                onClick = onDone,
-                enabled = uiState.canContinue(frameType.selectCount),
-            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(AppColors.Background.primary)
+                    .padding(horizontal = AppSpacing.Screen.horizontal)
+                    .padding(top = AppSpacing.sm, bottom = AppSpacing.Layout.ctaBottomSpace),
+                verticalArrangement = Arrangement.spacedBy(AppSpacing.sm),
+            ) {
+                if (uiState.photos.isNotEmpty() && uiState.photos.size < frameType.selectCount) {
+                    SecondaryButton(
+                        text = "사진 추가 · ${frameType.selectCount - uiState.photos.size}장 필요",
+                        onClick = onOpenAlbum,
+                        enabled = !uiState.isBusy,
+                        icon = {
+                            Icon(Icons.Default.PhotoLibrary, contentDescription = null,
+                                tint = AppColors.Text.primary, modifier = Modifier.size(19.dp))
+                        },
+                    )
+                }
+                PrimaryButton(
+                    text = "레이아웃 선택",
+                    onClick = onDone,
+                    enabled = uiState.canContinue(frameType.selectCount),
+                )
+            }
         }
     }
 }

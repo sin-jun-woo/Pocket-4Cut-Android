@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.PixelMap
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
@@ -21,6 +22,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToIndex
@@ -29,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.pocket4cut.frame.occasion.OccasionCatalogLoader
+import com.pocket4cut.frame.occasion.OccasionTheme
 import com.pocket4cut.frame.FrameCatalog
 import com.pocket4cut.frame.FrameLayoutId
 import com.pocket4cut.frame.FrameLayouts
@@ -160,32 +163,56 @@ class OccasionFramePickerInstrumentedTest {
             }
         }
 
-        compose.onNode(hasContentDescription("${first.displayName} 실제 프레임 미리보기"))
-            .assertIsDisplayed()
-        compose.waitUntil(timeoutMillis = 5_000) {
-            runCatching { compose.onNodeWithTag("occasion-apply").assertIsEnabled() }.isSuccess
-        }
-        val headerBefore = compose.onNodeWithText("OCCASION 88").captureToImage().toPixelMap()
-        assertTrue(
-            "The loaded preview covered the header text with a flat background",
-            (0 until headerBefore.height).any { y ->
-                (0 until headerBefore.width).any { x -> headerBefore[x, y] != headerBefore[0, 0] }
-            },
-        )
+        val headerBefore = captureReadyHeader(first)
         compose.onNodeWithTag("occasion-theme-${second.id}").performClick()
-        compose.onNode(hasContentDescription("${second.displayName} 실제 프레임 미리보기"))
-            .assertIsDisplayed()
-        compose.waitUntil(timeoutMillis = 5_000) {
-            runCatching { compose.onNodeWithTag("occasion-apply").assertIsEnabled() }.isSuccess
-        }
-        val headerAfter = compose.onNodeWithText("OCCASION 88").captureToImage().toPixelMap()
-        assertEquals(headerBefore.width, headerAfter.width)
-        assertEquals(headerBefore.height, headerAfter.height)
-        for (y in 0 until headerBefore.height) {
-            for (x in 0 until headerBefore.width) {
-                assertEquals("Loaded artwork painted over the fixed header at $x,$y", headerBefore[x, y], headerAfter[x, y])
+        assertFixedHeaderUnchanged(second.id, headerBefore, captureReadyHeader(second))
+    }
+
+    /** Exercises the real picker and apply callback, not navigation, persistence or result export. */
+    @Test fun everyThemeCardLoadsWithoutCoveringHeaderAndAppliesItsOwnId() {
+        val frameType = com.pocket4cut.presentation.navigation.FrameType.FOUR_CUT
+        val images = List(frameType.selectCount) { index ->
+            Bitmap.createBitmap(64, 64, Bitmap.Config.ARGB_8888).apply {
+                eraseColor(if (index % 2 == 0) Color.RED else Color.BLUE)
             }
         }
+        val completedIds = mutableListOf<String>()
+        compose.setContent {
+            Pocket4CutTheme {
+                OccasionFramePickScreen(
+                    catalog = catalog,
+                    images = images,
+                    frameType = frameType,
+                    frameStyle = FrameLayouts.byId(FrameLayoutId.FOUR_GRID),
+                    frameTheme = FrameCatalog.themes(frameType).first(),
+                    onBack = {},
+                    onDismiss = {},
+                    onCompleted = { completedIds += it.id },
+                )
+            }
+        }
+
+        assertEquals(88, catalog.themes.size)
+        var referenceHeader: Map<String, PixelMap>? = null
+        catalog.themes.forEachIndexed { index, theme ->
+            compose.onNodeWithTag("occasion-theme-grid").performScrollToIndex(index)
+            compose.onNodeWithTag("occasion-theme-${theme.id}")
+                .assertIsDisplayed().performClick().assertIsSelected()
+            val currentHeader = captureReadyHeader(theme)
+            val expectedHeader = referenceHeader
+            if (expectedHeader == null) {
+                referenceHeader = currentHeader
+            } else {
+                assertFixedHeaderUnchanged(theme.id, expectedHeader, currentHeader)
+            }
+            compose.runOnIdle { assertEquals("${theme.id} applied before the CTA", index, completedIds.size) }
+            compose.onNodeWithTag("occasion-apply").assertIsDisplayed().assertIsEnabled().performClick()
+            compose.runOnIdle {
+                assertEquals("${theme.id} must apply exactly once", index + 1, completedIds.size)
+                assertEquals(theme.id, completedIds.last())
+            }
+        }
+        compose.runOnIdle { assertEquals(catalog.themes.map { it.id }, completedIds) }
     }
 
     @Test fun retappingReadySelectedThemeKeepsApplyEnabled() {
@@ -394,5 +421,46 @@ class OccasionFramePickerInstrumentedTest {
         compose.onNodeWithText("다시 시도").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("작업 보관함 열기").performScrollTo().assertIsDisplayed()
         compose.onNodeWithText("뒤로").performScrollTo().assertIsDisplayed()
+    }
+
+    private fun captureReadyHeader(theme: OccasionTheme): Map<String, PixelMap> {
+        compose.onNode(hasContentDescription("${theme.displayName} 실제 프레임 미리보기"))
+            .assertIsDisplayed()
+        compose.waitUntil(timeoutMillis = 5_000) {
+            runCatching { compose.onNodeWithTag("occasion-apply").assertIsEnabled() }.isSuccess
+        }
+        val header = linkedMapOf(
+            "title" to compose.onNodeWithText("OCCASION 88"),
+            "back" to compose.onNodeWithContentDescription("프레임 방식으로 돌아가기"),
+            "close" to compose.onNodeWithContentDescription("프레임 선택 닫기"),
+            "categories" to compose.onNodeWithTag("occasion-category-row"),
+        ).mapValues { (_, node) -> node.assertIsDisplayed().captureToImage().toPixelMap() }
+        val title = header.getValue("title")
+        assertTrue(
+            "${theme.id} covered the loaded header text with a flat background",
+            (0 until title.height).any { y ->
+                (0 until title.width).any { x -> title[x, y] != title[0, 0] }
+            },
+        )
+        return header
+    }
+
+    private fun assertFixedHeaderUnchanged(
+        themeId: String,
+        expected: Map<String, PixelMap>,
+        actual: Map<String, PixelMap>,
+    ) {
+        expected.forEach { (part, before) ->
+            val after = actual.getValue(part)
+            assertEquals("$themeId $part width", before.width, after.width)
+            assertEquals("$themeId $part height", before.height, after.height)
+            for (y in 0 until before.height) {
+                for (x in 0 until before.width) {
+                    if (before[x, y] != after[x, y]) {
+                        assertEquals("$themeId painted over $part at $x,$y", before[x, y], after[x, y])
+                    }
+                }
+            }
+        }
     }
 }

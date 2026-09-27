@@ -147,7 +147,7 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 4. 원본 사진의 ICC/광색역/HDR을 모두 명시적으로 변환·검증하는 파이프라인은 아니다. 출력 픽셀 상한은 전체 앱 메모리 상한도 아니다.
 5. 계측 소스에 렌더 계약과 출력 정책 검사가 존재한다. 실행 횟수·통과 여부·합성 fixture/물리 카메라 범위는 해당 검증 기록에서 확인한다.
 
-Everyday Editions는 generator/validator에서 자산 무결성과 변환 품질을 검사하지만, 실제 기기에서 88개 카드 순회, 각각의 선택·저장·보관함 재열기, 빠른 전환 메모리, 가로/큰 글자/TalkBack과 1,584개 렌더 조합을 실행한 결과는 WORKLOG와 출시 검증 보고서가 기준이다.
+Everyday Editions는 generator/validator에서 자산 무결성과 변환 품질을 검사하지만, 실제 기기에서 88개 카드 순회, 각각의 선택·저장·보관함 재열기, 빠른 전환 메모리, 큰 글자/TalkBack과 1,584개 렌더 조합을 실행한 결과는 WORKLOG와 해당 날짜의 검증 보고서가 기준이다. 2026-09-27 QA는 세로 화면만 대상으로 하며 가로 화면은 실행 범위에서 제외한다.
 
 
 ## 7. 신규 자산 제작 제안 — 아직 구현된 규칙이 아님
@@ -301,7 +301,7 @@ Everyday Editions는 generator/validator에서 자산 무결성과 변환 품질
 - 앱 이미지: `art/<themeId>.webp` 88개는 1536×1024, quality 95, alphaQuality 100, sRGB이며 각 파일은 3×2의 512px 셀 6개를 담는다. `thumbs/<themeId>.webp` 88개는 240×160, quality 90, alphaQuality 100이다. manifest의 176개 이미지 합계는 33,687,596 bytes다. `catalog.json` 515,642 bytes와 `manifest.json` 51,465 bytes를 포함한 `occasion/v1` 디렉터리 전체는 34,254,703 bytes다.
 - 제외: 정적 납품의 완성 PNG 1,584개는 합계 622,173,556 bytes이며 Android assets에 복사하지 않는다. 188MB 제작 master도 앱에 넣지 않는다. 앱은 현재 레이아웃·사진·사용자 문구와 한 테마의 6개 장식을 실행 시 조합한다.
 - 로딩과 메모리: 목록은 작은 썸네일만 요청한다. 실제 미리보기/저장은 선택한 한 테마의 아틀라스를 `inScaled=false`, ARGB_8888로 디코드하며 `OccasionArtwork` LRU가 최대 2장을 보유한다. 1536×1024 ARGB 한 장은 약 6MiB이므로 캐시 참조는 약 12MiB다. 캐시에서 밀린 Bitmap은 진행 중 Compose draw와 수명이 겹칠 수 있어 직접 recycle하지 않는다.
-- 렌더: `OccasionFramePainter`는 카탈로그의 종이색·패턴, 외곽선, 사진 테두리, header/side/gutter/footer 장식, 테마 제목과 `Pocket 4Cut / NN`을 Kotlin Canvas로 그린다. 사진 슬롯과 출력 크기는 기존 layout이 결정한다. `CollagePreview`와 최종 `DetailEditViewModel → RenderSnapshot → CollageRenderer`가 같은 occasion theme/artwork 입력과 painter를 사용한다.
+- 렌더: 런타임 통합 당시 `OccasionFramePainter`는 카탈로그의 종이색·패턴, 외곽선, 사진 테두리, header/side/gutter/footer 장식, 테마 제목과 `Pocket 4Cut / NN`을 Kotlin Canvas로 그렸다. 상단 공통 브랜드·번호 표기는 아래 2026-09-27 후속 변경에서 제거했다. 사진 슬롯과 출력 크기는 기존 layout이 결정한다. `CollagePreview`와 최종 `DetailEditViewModel → RenderSnapshot → CollageRenderer`가 같은 occasion theme/artwork 입력과 painter를 사용한다.
 - 직접 기록: `오늘의 날씨`, `D-Day`, `N번째 네컷` 등이 속한 11종은 선택 화면에서 `직접 기록`으로 안내한다. 정적 예시의 날짜·온도·장소·횟수를 자동 삽입하지 않으며 날씨/위치 권한이나 외부 API를 추가하지 않는다. 실제 값은 기존 사용자 문구·날짜 편집으로 입력한다.
 - 저장 호환: session schema v3은 `occasionThemeId`와 `occasionDesignVersion`을 저장한다. v1/v2는 다음 정상 저장 전까지 메모리에서 v3로 올리며 occasion 필드는 null이다. ID 누락·알 수 없는 ID·지원하지 않는 디자인 버전은 기본 흰색 프레임으로 바꾸지 않고 복구 필요 상태로 표시한다. 과거 완료 JPEG는 변경하지 않는다.
 
@@ -317,3 +317,11 @@ npm run validate:android
 exporter는 88개 source atlas가 1536×1024 RGBA인지, art record에 6개 motif가 있는지 검사하고 WebP·썸네일·카탈로그·SHA-256 manifest를 만든다. 여러 파일을 게시하기 전에 `occasion/v1/.export-incomplete`를 만들고 전체 validator가 통과한 뒤에만 제거한다. Gradle의 모든 `merge*Assets` 작업은 이 마커가 남아 있으면 실패하므로 마커를 수동 삭제하지 말고 exporter를 다시 완료해야 한다. validator는 88개/10카테고리/77+11 수량, 176개 파일의 경로·크기·WebP 형식·치수·알파·SHA-256와 원본 대비 픽셀 알파를 검사한다. 현재 생성분은 알파값 차이 0, 흰색·검정색 합성 기준 최저 PSNR 42.01dB였다.
 
 이 자산 검증은 변환 파일의 무결성과 합성 품질 근거다. Android 빌드·Lint·R8, 1,584개 렌더 조합, 88종 실기기 선택/저장/재열기, 빠른 스크롤과 저메모리, 밝고 어두운 사진 위 halo 육안 검사는 별도 실행 증거가 있어야 완료로 표시한다.
+
+## 17. 2026-09-27 — Occasion 런타임 상단 표기 정리
+
+- 변경 범위: [OccasionFramePainter](../app/src/main/java/com/pocket4cut/frame/rendering/OccasionFramePainter.kt)의 상단 공통 `Pocket 4Cut / NN` 그리기를 제거했다. 테마 제목·장식·기존 하단 브랜드는 유지한다. 사용자 문구·날짜 영역이 있으면 occasion footer를 그리지 않는 기존 보호 정책도 유지한다.
+- 적용 경로: Compose 미리보기와 원본 기반 최종 JPEG가 공용 painter를 사용하므로 새 렌더에 같은 변경을 적용한다. 이미 완료한 JPEG는 다시 쓰지 않는다. 정적 납품 PNG에 있는 표기를 런타임 결과의 현행 표기로 간주하지 않는다.
+- 자산: 새 이미지 생성·교체·재인코딩은 없다. `occasion/v1`의 1536×1024 알파 WebP 아틀라스 88개와 240×160 썸네일 88개, 카탈로그·manifest 및 정적 디자인 산출물은 그대로 유지한다. 새 생성 프롬프트나 변경된 이미지 규격은 없다.
+- 버전·검증: 상단 표기 수정과 초기 QA는 `1.6(7)`에서 수행했고 이후 사용자 요청으로 `1.7(8)`로 올렸다. 자산 파일은 버전 변경에도 동일하다. 과거 자산 변환·해시·알파 검증 기록은 원래 기준일의 증거로 보존한다. 버전 변경 전후 실행 결과는 [최종 QA 기록](../engineering/FINAL_RELEASE_QA_2026-09-27.md)을 따른다. 이 문서의 소스 설명만으로 모든 프레임의 실기기 검증이나 출시 완료를 판정하지 않는다.
+- 이번 QA 경계: API 36 휴대전화 1대의 세로 화면을 대상으로 하고 가로 화면·폰트 라이선스·공개 개인정보 페이지 검증은 제외한다. Manifest의 방향 정책과 화면 켜짐 유지 설정은 변경하지 않았다.

@@ -188,17 +188,6 @@ object OccasionFramePainter {
                 typeface = titleTypeface,
                 align = Paint.Align.LEFT,
             )
-            drawFittedText(
-                canvas,
-                numberedBrand(theme.index),
-                layout.canvasWidth * 0.068f,
-                header.top + headerHeight * 0.76f,
-                min(6.6f * unit, headerHeight * 0.12f),
-                layout.canvasWidth * 0.65f,
-                theme.inkColorArgb,
-                Typeface.MONOSPACE,
-                Paint.Align.LEFT,
-            )
         } else {
             drawFittedText(
                 canvas,
@@ -211,22 +200,19 @@ object OccasionFramePainter {
                 titleTypeface,
                 Paint.Align.CENTER,
             )
-            val subtitle = if (theme.id == "hangeul-day") {
-                "ㄱ  ㄴ  ㄷ / $BRAND_LABEL"
-            } else {
-                numberedBrand(theme.index)
+            if (theme.id == "hangeul-day") {
+                drawFittedText(
+                    canvas,
+                    "ㄱ  ㄴ  ㄷ / $BRAND_LABEL",
+                    layout.canvasWidth * 0.5f,
+                    header.top + headerHeight * 0.75f,
+                    min(6.8f * unit, headerHeight * 0.13f),
+                    layout.canvasWidth * 0.46f,
+                    theme.inkColorArgb,
+                    Typeface.create("sans-serif", Typeface.NORMAL),
+                    Paint.Align.CENTER,
+                )
             }
-            drawFittedText(
-                canvas,
-                subtitle,
-                layout.canvasWidth * 0.5f,
-                header.top + headerHeight * 0.75f,
-                min(6.8f * unit, headerHeight * 0.13f),
-                layout.canvasWidth * 0.46f,
-                theme.inkColorArgb,
-                Typeface.create("sans-serif", Typeface.NORMAL),
-                Paint.Align.CENTER,
-            )
             if (headerHeight / unit >= 52f) {
                 val line = Paint(Paint.ANTI_ALIAS_FLAG).apply {
                     color = theme.inkColorArgb

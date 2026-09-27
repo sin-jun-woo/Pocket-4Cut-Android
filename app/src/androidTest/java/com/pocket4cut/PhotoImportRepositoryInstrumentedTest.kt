@@ -534,6 +534,48 @@ class PhotoImportRepositoryInstrumentedTest {
             "Pocket4Cut/imports/$secondId").exists())
     }
 
+    @Test fun overSelectionRetainsRecoveryFailureWithoutChangingImportedPhotos() = runBlocking {
+        val sessionId = UUID.randomUUID().toString()
+        val sources = listOf(
+            jpeg("recovery-existing.jpg", android.graphics.Color.RED),
+            jpeg("recovery-extra-1.jpg", android.graphics.Color.GREEN),
+            jpeg("recovery-extra-2.jpg", android.graphics.Color.BLUE),
+        )
+        val sourceHashes = sources.map(::sha256)
+        val imported = imports.importUris(
+            sessionId,
+            "2",
+            listOf(Uri.fromFile(sources.first())),
+        ).session!!
+        val photo = imported.photos.single()
+        val ownedCopy = sessions.resolvePhotoPath(photo)
+        val copyHash = sha256(ownedCopy)
+        val journal = File(context.filesDir, "import_journals/$sessionId/${photo.photoId}.json")
+        journal.writeText(JSONObject(journal.readText()).apply {
+            put("sha256", "0".repeat(64))
+        }.toString())
+        val journalHash = sha256(journal)
+
+        // One slot remains, but the picker may return two photos. That selection error must
+        // not replace the blocking failure found while validating the existing import.
+        val rejected = imports.importUris(sessionId, "2", sources.drop(1).map(Uri::fromFile))
+
+        assertEquals(1, rejected.failures.count { it.reason == PhotoImportFailureReason.STORAGE })
+        assertEquals(2, rejected.failures.count {
+            it.reason == PhotoImportFailureReason.TOO_MANY_SELECTIONS
+        })
+        assertTrue(rejected.importedPhotoIds.isEmpty())
+        assertEquals(imported, rejected.session)
+        assertEquals(imported, sessions.getCurrentById(sessionId))
+        assertEquals(sourceHashes, sources.map(::sha256))
+        assertEquals(copyHash, sha256(ownedCopy))
+        assertEquals(journalHash, sha256(journal))
+        assertEquals(
+            listOf(ownedCopy.canonicalPath),
+            ownedCopy.parentFile!!.walkTopDown().filter(File::isFile).map { it.canonicalPath }.toList(),
+        )
+    }
+
     @Test fun unsupportedImageDoesNotCreateSessionOrLeavePendingCopy() = runBlocking {
         val id = UUID.randomUUID().toString()
         val gif = File(testRoot, "not-supported.gif").apply {

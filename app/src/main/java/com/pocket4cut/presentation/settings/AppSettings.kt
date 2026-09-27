@@ -65,4 +65,9 @@ object AppSettings {
         showDateByDefault = value
         prefs.edit().putBoolean("showDateByDefault", value).apply()
     }
+
+    /** Read a creation default without changing the process-wide settings state. */
+    internal fun readShowDateByDefault(context: Context): Boolean =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .getBoolean("showDateByDefault", false)
 }

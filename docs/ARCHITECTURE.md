@@ -4,6 +4,7 @@
 > 2026-09-22 실기기 후속 작업은 시작 HEAD `1b705cb3cd813efc062eefeed807f595e4b7adf2` 이후의 미커밋 코드까지 반영한다. 실행 범위와 남은 관문은 [실기기 최종 출시 후보 검증](../engineering/PHYSICAL_RELEASE_VERIFICATION_2026-09-22.md)을 따른다.
 > 아래는 소스에서 확인한 구현이다. 커밋·push 및 빌드·기기 검증 결과는 [WORKLOG](WORKLOG.md)의 해당 실행 기록을 따른다. 코드의 존재를 테스트 통과나 모든 장애 복구 완료로 해석하지 않는다.
 > 2026-09-27 보완: `adb73fe`에서 시작한 업데이트 후 앨범 가져오기와 88종 미리보기 수정은 아래 저장소 조회/Canvas 경계에 반영했다. 버전은 기존 `1.6 (7)`을 유지하며 실행 검증 범위는 WORKLOG의 같은 날짜 기록을 따른다.
+> 2026-09-27 최종 QA 보완: 현재 작업 트리의 미커밋 변경을 포함해 Selection·레이아웃 선택의 오류 복구, 앨범 큰 글자·복구 차단 상태, 커스텀 도구 스크롤과 occasion 상단 표기 변경을 반영했다. QA 후 사용자의 명시적 요청으로 버전을 `1.7 (8)`로 올렸다. 이번 실행 결과는 [최종 QA 기록](../engineering/FINAL_RELEASE_QA_2026-09-27.md)을 따르며 버전 변경 전후 검사를 구분한다. 실기기 QA 범위는 API 36 휴대전화 1대의 세로 화면이고 가로 화면은 제외한다. Manifest의 방향 정책은 변경하지 않았다.
 
 루트의 [ARCHITECTURE.md](../ARCHITECTURE.md)는 목표 계층과 예시를 포함한 초기 설계 문서다. 이 문서는 현재 호출 관계와 저장 계약을 설명하며, 이전 감사 결과를 현행 결함 목록으로 그대로 옮기지 않는다.
 
@@ -11,7 +12,7 @@
 
 [settings.gradle.kts](../settings.gradle.kts)에 등록된 모듈은 `:app` 하나다. Kotlin/Compose, CameraX, Android Canvas, JSON 파일, SharedPreferences를 사용한다. Room·Hilt·Koin·DataStore·AWS 서버는 현재 구현에 없다.
 
-[앱 빌드 설정](../app/build.gradle.kts)은 namespace/배포 applicationId `com.pocket4cut`, minSdk 26, compileSdk/targetSdk 36, 버전 `1.6 (7)`이다(2026-09-27 확인). 9월 24일 기능 검증 당시 버전은 `1.5 (6)`이며 이번 버그 수정은 versionCode/versionName을 변경하지 않았다. Gradle 9.1.0, AGP 9.0.1, Build Tools 36.1.0, Compose compiler plugin 2.2.10과 AGP 내장 Kotlin 지원을 사용한다. Java 코드 대상 11과 Gradle 실행 JDK는 별개다.
+[앱 빌드 설정](../app/build.gradle.kts)은 namespace/배포 applicationId `com.pocket4cut`, minSdk 26, compileSdk/targetSdk 36, 버전 `1.7 (8)`이다(2026-09-27 확인). 9월 24일 기능 검증은 `1.5 (6)`, 이번 QA의 초기 검증은 `1.6 (7)`이었다. 이후 사용자 승인으로 versionCode 8/versionName 1.7을 적용했다. Gradle 9.1.0, AGP 9.0.1, Build Tools 36.1.0, Compose compiler plugin 2.2.10과 AGP 내장 Kotlin 지원을 사용한다. Java 코드 대상 11과 Gradle 실행 JDK는 별개다.
 
 - `debug`: applicationId `com.pocket4cut.qa`, 버전 이름에 `-qa`를 붙여 배포 앱과 데이터를 분리한다.
 - `release`: R8 최적화·난독화와 리소스 축소를 활성화한다. 실제 배포 서명은 별도 설정이다.
@@ -81,15 +82,21 @@ flowchart LR
 
 촬영 구성은 2컷: 4장 중 2장, 4컷: 8장 중 4장, 6컷: 10장 중 6장이다. 매 컷 카운트다운은 [AppSettings](../app/src/main/java/com/pocket4cut/presentation/settings/AppSettings.kt)의 설정을 사용하며 기본값은 여전히 3초다. 화면 켜짐 유지 OFF, 전면 카메라 ON, 자동 사진첩 저장 OFF, 날짜 기본 표시 OFF가 기본 설정이다.
 
+날짜 기본 표시는 새 세션을 생성할 때 저장 설정에서 읽어 `SessionDraft.showDate`에 복사한다. CaptureViewModel은 카메라 초안 생성에, PhotoImportViewModel은 가져오기 요청에 이를 전달한다. 앨범 import journal에도 `showDateByDefault`를 기록하므로 첫 파일 게시 후 세션 문서를 만들기 전에 중단되어도 당시 값을 복구한다. 이 필드가 없는 구형 journal은 기존 OFF 동작을 유지한다. 기존 초안 재개·앨범 추가 가져오기는 저장된 날짜 선택을 보존하며, 날짜 문자열은 기존처럼 저장소가 `createdAt` 기준으로 채운다.
+
 앨범 구성은 완성 장수와 같은 2·4·6장을 시스템 `PickMultipleVisualMedia(ImageOnly)`로 고른다. 지원 기기는 시스템 Photo Picker를, 미지원 기기는 Activity Result 계약의 `ACTION_OPEN_DOCUMENT` fallback을 사용한다. `PhotoImportScreen`은 선택 취소를 빈 상태로 유지하고, 성공한 앱 전용 사본을 번호·썸네일로 보여 주며 추가·제거·드래그/TalkBack 순서 변경을 제공한다. 정확한 장수가 준비된 경우에만 레이아웃으로 이동한다. Manifest는 API 26–29의 가능한 기기에 공식 Photo Picker backport 설치를 요청하며 전체 사진 읽기 권한은 선언하지 않는다.
 
 - Home은 수정 시각이 가장 최근인 재개 가능한 초안 하나를 보여 준다. 초안은 여러 개 보존되며 Gallery에서도 나열한다. `NEEDS_RECOVERY`는 자동 이어하기 대상에서 제외한다.
 - Capture는 새 세션을 촬영 전에 만들고 `SavedStateHandle`에 세션 ID를 둔다. `ON_STOP`에서 일시 중지하고 복귀 후 사용자 재개 동작을 기다린다. 진행 중인 단일 촬영은 완료 파일 게시를 마친 뒤 멈추는 경로가 있다.
 - Capture의 빠른 전·후면 전환은 별도 `cameraSwitchJob`과 기존 CameraX 바인딩 Mutex를 함께 사용한다. 바인딩 완료 전 전환 중복 입력과 촬영 시작/재개를 보류하고, 실패 시 원래 렌즈 재바인딩을 시도한다. 이것은 모든 제조사의 카메라 연결 실패를 자동 복구한다는 보장은 아니다.
-- Selection은 저장된 photo ID 순서를 인덱스로 변환하여 화면을 복원한다. 선택 변경과 다음 단계 이동을 저장소에 반영한다. 시스템 뒤로가기도 화면 닫기 버튼과 동일한 작업 일시정지 확인창을 사용한다. `홈으로`는 저장 성공을 확인한 뒤 NavHost가 Home route까지 pop하며, 저장 중에는 중복 이탈·선택·다음 입력을 막고 실패하면 화면에 남는다. 보관함에서 재개한 선택 화면도 이 정책을 따른다. 관련 내비게이션 계측과 보관함 재개 후 실제 수동 Home 이동을 확인했다.
-- PhotoImport는 첫 유효 사진이 게시될 때 `IMPORT` 세션을 만들고, 완료된 사진과 순서를 즉시 초안에 남긴다. 새 가져오기의 세션 ID는 화면의 `rememberSaveable`에 유지하고, 작업 보관함에서 재개할 때는 route로 기존 세션 ID를 받는다. ViewModel은 이 ID의 import journal을 재생한다. 초과 callback은 일부를 임의 채택하지 않고 전체를 거절한다.
+- Selection은 저장된 photo ID 순서를 인덱스로 변환하여 화면을 복원하고 선택 변경과 다음 단계 이동을 저장소에 반영한다. 정상 로딩 뒤 시스템 뒤로가기는 화면 닫기와 같은 일시정지 확인창을 사용한다. `홈으로`는 저장 성공 뒤 NavHost가 Home route까지 pop하며, 이탈 저장 중에는 중복 이탈·선택·다음 입력을 막고 실패하면 화면에 남는다. 보관함 재개도 같은 정책이다. 이 정상 이탈 경로의 이전 내비게이션 계측·수동 Home 이동 기록은 WORKLOG에 보존한다.
+- Selection의 `hasLoaded`는 첫 읽기 실패와 편집 가능한 선택 상태를 구분한다. 첫 읽기 실패에는 다시 불러오기와 무쓰기 홈 이탈을 제공하여 빈 UI 선택으로 저장된 순서를 덮어쓰지 않는다. 저장 실패에는 grid와 미저장 선택 순서를 유지하고 명시적 저장 재시도를 제공한다. `persistedSelection`과 현재 선택이 다르면 같은 세션의 `load()`로 덮어쓰지 않으며, 직렬화된 저장이 현재 선택과 일치할 때만 오류를 지운다. 이는 프로세스 종료 뒤 아직 저장되지 않은 선택까지 복원한다는 뜻은 아니다.
+- PhotoImport는 첫 유효 사진이 게시될 때 `IMPORT` 세션을 만들고, 완료된 사진과 순서를 즉시 초안에 남긴다. 새 가져오기의 세션 ID는 화면의 `rememberSaveable`에 유지하고, 작업 보관함에서 재개할 때는 route로 기존 세션 ID를 받는다. ViewModel은 이 ID의 import journal을 재생한다. 초과 callback은 일부를 임의 채택하지 않고 전체를 거절하며 `hasBlockingRecoveryError`를 유지한다. 복구 차단 상태에서는 사진 장수가 맞아도 다음 단계로 갈 수 없고 안내 닫기로 차단을 해제하지 않는다.
+- PhotoImport 화면은 사용 가능한 높이가 480dp 이하이거나 fontScale이 1.5 이상이면 전체 페이지를 스크롤한다. 이때 내부 사진 목록의 별도 스크롤과 weight를 해제해 빈 상태·긴 오류·하단 동작까지 같은 스크롤로 접근하도록 한다. 그 외에는 사진 목록만 스크롤한다.
+- LayoutSelectionRoute는 문서의 복구 상태, frameType·선택 장수, 순서대로 참조한 사진 기록과 비어 있지 않은 파일을 확인한 뒤 선택 화면을 연다. 레이아웃은 revision 검사를 거쳐 저장한 뒤에만 프레임 화면으로 이동한다. 읽기·저장 예외에는 재시도·작업 보관함·뒤로 가기를 제공하고 저장 중 중복 선택을 막는다.
 - 프레임 선택 화면은 `COLOR`, `SEASON`, `OCCASION 88`, `CUSTOM` 네 방식을 제공한다. OCCASION 화면은 10개 카테고리와 88개 썸네일을 LazyGrid로 표시하고, 적용하기 전 탐색은 세션 확정값을 바꾸지 않는다. 11개 `special` 항목은 `직접 기록`으로 표시하며 날씨·위치·D-Day·횟수를 자동 계산하지 않는다.
 - 프레임 선택 단계·커스텀 디자인과 적용한 occasion ID/디자인 버전은 세션 초안에 기록한다. 색상·계절·커스텀은 frame destination의 내부 단계이고, 88종 카탈로그는 별도 `OCCASION_FRAME_PICK` destination이다. occasion 적용 성공 시 전용 picker를 Edit로 교체하므로 Edit에서 뒤로가면 저장된 inline occasion 단계 하나만 나타난다.
+- CustomFrameEditor의 하단 도구는 `heightIn(max = 380.dp)`로 스크롤 viewport를 제한한 뒤 `verticalScroll`을 적용한다. 이모지·스티커 트레이를 포함한 전체 도구 내용은 스크롤되며 기존 장식 조작·저장 경로는 유지한다. 세로 기본·큰 글자 화면의 실제 동작 결과는 최종 QA 기록에서 확인한다.
 - Edit는 문구·필터·순서 등을 자동 저장하고, 상세 편집 이동과 화면 내 나가기에서 저장 완료 후 콜백을 실행한다. Detail은 회전·반전·색 보정과 crop을 photo ID별로 저장한다. Detail에서 돌아온 Edit는 세션을 다시 읽어 변환된 사진과 crop을 공통 미리보기에 반영한다.
 - 모든 route가 ID 하나만 받도록 바뀐 것은 아니다. frameType·선택 인덱스·layout/theme 인자와 Base64 결과 경로가 아직 존재한다. 실제 선택·순서·보정 복원의 기준은 세션 문서다.
 
@@ -178,7 +185,9 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 
 Everyday Editions는 [OccasionCatalog](../app/src/main/java/com/pocket4cut/frame/occasion/OccasionCatalog.kt)가 `assets/occasion/v1/catalog.json`을 엄격히 읽고, [OccasionArtwork](../app/src/main/java/com/pocket4cut/frame/rendering/OccasionArtwork.kt)가 선택한 1536×1024 알파 WebP만 `inScaled=false`, ARGB_8888로 디코드한다. LRU는 2장으로 제한하며 UI가 참조할 수 있어 이탈 Bitmap을 직접 recycle하지 않는다. 목록은 별도 240×160 썸네일을 사용한다. [OccasionFramePainter](../app/src/main/java/com/pocket4cut/frame/rendering/OccasionFramePainter.kt)는 종이색·패턴, 사진 테두리, header/side/gutter/footer 장식과 제목을 현재 Canvas 기하에 그린다. 미리보기와 원본 기반 최종 저장은 같은 `CollageRenderer.Input.occasionTheme/occasionArtwork`와 painter를 사용한다. 622,173,556 bytes의 완성 PNG 1,584장은 앱에 포함하지 않는다.
 
-일반 편집의 필터 전환은 전체 사진 Bitmap을 매번 복제하지 않고 `orderedImages`와 `filterId`를 공통 Canvas에 전달한다. 필터 칩의 작은 thumbnail만 별도로 생성한다. 커스텀 장식의 화면 배치는 좌상단 기준 정규화 좌표에 맞췄으나 편집기의 장식 텍스트 표시와 최종 Canvas 텍스트 줄바꿈은 아직 별도 경로다.
+2026-09-27에는 이 공용 painter에서 상단의 공통 `Pocket 4Cut / NN` 표기를 제거했다. 테마 제목·장식과 기존 footer 브랜드는 유지하며 사용자 문구·날짜 영역이 있으면 occasion footer를 그리지 않는 보호 정책도 유지한다. 번들 WebP·썸네일·정적 디자인 산출물은 교체하지 않았고 기존 완료 JPEG를 다시 쓰지 않는다. 변경된 표기는 새 미리보기와 새로 렌더한 결과에 적용된다.
+
+일반 편집의 필터 전환은 전체 사진 Bitmap을 매번 복제하지 않고 `orderedImages`와 `filterId`를 공통 Canvas에 전달한다. 필터 칩의 작은 thumbnail만 별도로 생성한다. 커스텀 장식은 캔버스 기준 정규화 중심 좌표를 사용하며 편집기도 `CollagePreviewScaledToFit`에 디자인을 전달한다. 장식 텍스트는 미리보기·최종 출력의 공통 Canvas에서 같은 논리 폭과 최대 2행 말줄임으로 그린다. 편집기의 선택 표시와 제스처 영역은 그 위의 별도 UI다.
 
 - 레이아웃 8개를 제공한다. `SIX_COLLAGE`의 layoutVersion 2는 첫 사진이 큰 슬롯을 차지하는 비대칭 6컷이다. layoutVersion 1은 과거 3×2 기하를 유지한다.
 - 비대칭 6컷의 논리 사진 영역은 x=20부터, y=40부터 시작해 마지막 슬롯 아래 y=500에 끝난다. 390×545/585 캔버스와 3:4 작은 슬롯, 문구 영역 시작 y=525를 유지하면서 계절 footer와 문구 간격을 확보한다.
@@ -212,7 +221,9 @@ Everyday Editions는 [OccasionCatalog](../app/src/main/java/com/pocket4cut/frame
 
 JVM 테스트는 기존 기본 검사 외에 crop 회전/반전 좌표·역변환·clamp/no-blank·neutral 호환, Photo Picker 초과/중복 정책과 occasion 선택 계약을 다룬다. 계측 소스에는 패키지·Bitmap 수명, 렌더 계약, 출력 치수/버전별 6컷, revision·손상 복구·legacy 이전·삭제 소유권·export 직렬화에 더해 schema v1/v2/v3, import 형식/해시/재생/격리, crop renderer, PhotoImport 접근성, FileProvider 노출 범위, occasion 카탈로그 88종·선택 UI·1,584 렌더 조합 검사가 있다. 소스의 테스트 존재와 특정 실행의 통과 결과는 구분한다.
 
-[Android CI](../.github/workflows/android-ci.yml)는 PR·main push·수동 실행에서 debug 빌드, JVM 테스트, Lint, qaRelease 빌드를 정의하고 API 28/36 emulator 계측 작업을 포함한다. workflow 추가만으로 원격 CI 실행 성공을 주장하지 않는다. [Pages workflow](../.github/workflows/github-pages.yml)는 여전히 `docs/` 전체를 공개 배포한다.
+2026-09-27 후속 검사 소스는 Selection 첫 읽기 실패의 무쓰기 이탈·재로딩·미저장 순서 보존·저장 재시도, 레이아웃 읽기·저장 오류, PhotoImport 복구 차단 상태와 큰 글자 스크롤, CustomFrame 세로 기본·2배 글자에서의 이모지·스티커 도구 동작을 다룬다. 화면·예외별 정의와 전체 테스트 메서드 목록은 [QA 범위 목록](../engineering/RELEASE_QA_SCOPE_2026-09-27.md), 실제 실행과 미검증 범위는 [최종 QA 기록](../engineering/FINAL_RELEASE_QA_2026-09-27.md)을 따른다. 이번 QA에서 가로 화면·폰트 라이선스·공개 개인정보 페이지는 제외했고 화면 켜짐 유지 설정은 변경하지 않았다.
+
+[Android CI](../.github/workflows/android-ci.yml)는 PR·main/codex 브랜치 push·수동 실행에서 debug 빌드, JVM 테스트, Lint, qaRelease 빌드를 정의한다. API 26/28/29/33/36 emulator 계측은 `workflow_dispatch`로 수동 실행할 때만 수행하도록 정의했다. workflow 추가만으로 원격 CI 실행 성공을 주장하지 않는다. [Pages workflow](../.github/workflows/github-pages.yml)는 여전히 `docs/` 전체를 공개 배포한다.
 
 현재 남은 경계는 다음과 같다.
 

@@ -12,6 +12,7 @@ import com.pocket4cut.data.local.SessionStorageException
 import com.pocket4cut.domain.model.InputSource
 import com.pocket4cut.domain.model.PhotoRef
 import com.pocket4cut.domain.model.SessionDocument
+import com.pocket4cut.domain.model.SessionDraft
 import com.pocket4cut.domain.model.SessionStage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
@@ -74,6 +75,7 @@ private data class ImportJournal(
     val sha256: String? = null,
     val createdAt: Long,
     val persistableGrant: Boolean = false,
+    val showDateByDefault: Boolean = false,
 )
 
 private data class RemovalJournal(
@@ -118,6 +120,7 @@ class PhotoImportRepository(
         sessionId: String,
         frameTypeId: String,
         uris: List<Uri>,
+        showDateByDefault: Boolean = false,
     ): PhotoImportBatchResult = withContext(Dispatchers.IO) {
         processMutex.withLock {
             validateId(sessionId)
@@ -150,7 +153,7 @@ class PhotoImportRepository(
                 return@withLock PhotoImportBatchResult(
                     session = current,
                     duplicates = duplicates,
-                    failures = newUris.map {
+                    failures = replay.failures + newUris.map {
                         PhotoImportFailure(it.toString(), PhotoImportFailureReason.TOO_MANY_SELECTIONS, message)
                     },
                 )
@@ -171,6 +174,7 @@ class PhotoImportRepository(
                     pendingPath = "imports/$sessionId/.pending/$photoId.part",
                     createdAt = current?.createdAt ?: System.currentTimeMillis(),
                     persistableGrant = takePersistablePermission(uri),
+                    showDateByDefault = current?.draft?.showDate ?: showDateByDefault,
                 )
                 writeJournal(journal)
                 try {
@@ -440,6 +444,7 @@ class PhotoImportRepository(
                         frameTypeId = initial.frameTypeId,
                         inputSource = InputSource.ALBUM,
                         stage = SessionStage.IMPORT,
+                        draft = SessionDraft(showDate = initial.showDateByDefault),
                     ),
                 )
             }
@@ -752,6 +757,7 @@ class PhotoImportRepository(
             put("sha256", journal.sha256 ?: JSONObject.NULL)
             put("createdAt", journal.createdAt)
             put("persistableGrant", journal.persistableGrant)
+            put("showDateByDefault", journal.showDateByDefault)
         }
         writeAtomic(journalFile(journal.sessionId, journal.photoId), json.toString().toByteArray())
     }
@@ -772,6 +778,8 @@ class PhotoImportRepository(
                 sha256 = json.nullableString("sha256"),
                 createdAt = json.getLong("createdAt"),
                 persistableGrant = json.optBoolean("persistableGrant", false),
+                // Journals written before this field preserve their previous OFF default.
+                showDateByDefault = json.optBoolean("showDateByDefault", false),
             ).also {
                 if (it.sessionId != sessionId || file.nameWithoutExtension != it.photoId) {
                     throw SessionStorageException("Invalid import journal identity")

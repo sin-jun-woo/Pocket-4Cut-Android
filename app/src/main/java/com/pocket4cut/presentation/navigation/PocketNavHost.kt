@@ -306,36 +306,18 @@ fun PocketNavHost(
             val frameType = FrameType.fromId(frameTypeId)
             val context = LocalContext.current
             val sessions = remember(context) { SessionDocumentRepository(context) }
-            val scope = rememberCoroutineScope()
 
-            var photoPaths by remember { mutableStateOf(emptyList<String>()) }
-            var layoutSelectionVersion by remember(sessionId) { mutableIntStateOf(2) }
-            LaunchedEffect(sessionId) {
-                val document = sessions.getById(sessionId) ?: return@LaunchedEffect
-                layoutSelectionVersion = document.draft.layoutVersion
-                photoPaths = document.draft.selectedPhotoIdsInOrder.map { id ->
-                    sessions.resolvePhotoPath(document.photos.first { it.photoId == id }).absolutePath
-                }
-            }
-
-            LayoutSelectionScreen(
-                selectedPhotoPaths = photoPaths,
-                requiredCount = frameType.selectCount,
+            LayoutSelectionRoute(
+                sessions = sessions,
+                sessionId = sessionId,
                 frameType = frameType,
-                layoutVersion = layoutSelectionVersion,
-                onSelectLayout = { layoutId ->
-                    scope.launch {
-                        val doc = sessions.getById(sessionId) ?: return@launch
-                        sessions.update(sessionId, doc.revision) { current ->
-                            current.copy(stage = SessionStage.FRAME,
-                                draft = current.draft.copy(layoutId = layoutId.name))
-                        }
-                        navController.navigate(
-                            "${Routes.FRAME_THEME_SELECT}/${frameTypeId}/$sessionId/$selectedRaw/${layoutId.name}",
-                        )
-                    }
+                onLayoutSaved = { layoutId ->
+                    navController.navigate(
+                        "${Routes.FRAME_THEME_SELECT}/${frameTypeId}/$sessionId/$selectedRaw/${layoutId.name}",
+                    )
                 },
                 onCancel = { navController.popBackStack() },
+                onOpenGallery = { navController.navigate(Routes.GALLERY) },
             )
         }
 
@@ -991,6 +973,101 @@ fun PocketNavHost(
                 },
             )
         }
+    }
+}
+
+@Composable
+internal fun LayoutSelectionRoute(
+    sessions: SessionDocumentRepository,
+    sessionId: String,
+    frameType: FrameType,
+    onLayoutSaved: (FrameLayoutId) -> Unit,
+    onCancel: () -> Unit,
+    onOpenGallery: () -> Unit,
+) {
+    val scope = rememberCoroutineScope()
+    var photoPaths by remember(sessionId) { mutableStateOf(emptyList<String>()) }
+    var layoutVersion by remember(sessionId) { mutableIntStateOf(2) }
+    var loaded by remember(sessionId) { mutableStateOf(false) }
+    var needsRecovery by remember(sessionId) { mutableStateOf(false) }
+    var errorMessage by remember(sessionId) { mutableStateOf<String?>(null) }
+    var saving by remember(sessionId) { mutableStateOf(false) }
+    var retryKey by remember(sessionId) { mutableIntStateOf(0) }
+
+    LaunchedEffect(sessions, sessionId, frameType, retryKey) {
+        loaded = false
+        needsRecovery = false
+        errorMessage = null
+        try {
+            val document = sessions.getById(sessionId) ?: error("저장된 작업을 찾지 못했습니다.")
+            if (document.stage == SessionStage.NEEDS_RECOVERY) {
+                needsRecovery = true
+            } else {
+                require(document.frameTypeId == frameType.id &&
+                    document.draft.selectedPhotoIdsInOrder.size == frameType.selectCount
+                ) { "선택한 사진 정보가 현재 사진 구성과 일치하지 않습니다." }
+                photoPaths = withContext(Dispatchers.IO) {
+                    document.draft.selectedPhotoIdsInOrder.map { id ->
+                        val photo = document.photos.firstOrNull { it.photoId == id }
+                            ?: error("선택한 사진 기록이 없어 작업 복구가 필요합니다.")
+                        val file = sessions.resolvePhotoPath(photo)
+                        check(file.isFile && file.length() > 0) {
+                            "선택한 사진 원본을 찾지 못했습니다. 작업 보관함에서 확인해 주세요."
+                        }
+                        file.absolutePath
+                    }
+                }
+                layoutVersion = document.draft.layoutVersion
+            }
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (failure: Exception) {
+            errorMessage = failure.message ?: "저장된 작업을 읽지 못했습니다."
+        } finally {
+            loaded = true
+        }
+    }
+
+    when {
+        !loaded || saving -> SessionRouteLoadingScreen()
+        needsRecovery -> SessionRecoveryRequiredScreen(onOpenGallery = onOpenGallery, onBack = onCancel)
+        errorMessage != null -> SessionRouteErrorScreen(
+            message = errorMessage!!,
+            onRetry = { retryKey++ },
+            onOpenGallery = onOpenGallery,
+            onBack = onCancel,
+        )
+        else -> LayoutSelectionScreen(
+            selectedPhotoPaths = photoPaths,
+            requiredCount = frameType.selectCount,
+            frameType = frameType,
+            layoutVersion = layoutVersion,
+            onSelectLayout = { layoutId ->
+                if (!saving) {
+                    saving = true
+                    scope.launch {
+                        try {
+                            val document = sessions.getById(sessionId)
+                                ?: error("저장된 작업을 찾지 못했습니다.")
+                            sessions.update(sessionId, document.revision) { current ->
+                                current.copy(
+                                    stage = SessionStage.FRAME,
+                                    draft = current.draft.copy(layoutId = layoutId.name),
+                                )
+                            }
+                            onLayoutSaved(layoutId)
+                        } catch (cancelled: CancellationException) {
+                            throw cancelled
+                        } catch (failure: Exception) {
+                            errorMessage = failure.message ?: "레이아웃을 저장하지 못했습니다. 다시 시도해 주세요."
+                        } finally {
+                            saving = false
+                        }
+                    }
+                }
+            },
+            onCancel = onCancel,
+        )
     }
 }
 
