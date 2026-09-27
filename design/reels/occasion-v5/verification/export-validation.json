@@ -1,0 +1,117 @@
+{
+  "checkedAt": "2026-09-27T08:35:58.166Z",
+  "file": "deliverables/Pocket4Cut-Reels-88Frames-Voice.mp4",
+  "bytes": 8074069,
+  "sha256": "d445c64e07b47d60f165a5ab18501931b21c1dae483c2a3ba157acc9b479ace5",
+  "duration": 23,
+  "video": {
+    "codec": "h264",
+    "width": 1080,
+    "height": 1920,
+    "frames": 690,
+    "fps": 30,
+    "pixelFormat": "yuv420p",
+    "colorSpace": "bt709",
+    "colorTransfer": "bt709",
+    "colorPrimaries": "bt709"
+  },
+  "audio": {
+    "codec": "aac",
+    "sampleRate": 48000,
+    "channels": 2,
+    "duration": 23,
+    "integratedLUFS": -16.1,
+    "truePeakDbTP": -3,
+    "musicAdded": false,
+    "soundEffectsAdded": false
+  },
+  "checks": {
+    "fullDecode": "PASS",
+    "durationSync": "PASS",
+    "faststart": "PASS",
+    "blackIntervals": 0,
+    "coverSize": "PASS",
+    "sourceHashes": "PASS",
+    "uniqueThemes": 88,
+    "categories": 10
+  },
+  "proofs": [
+    {
+      "file": "verification/encoded-01-hook.jpg",
+      "time": 0.7
+    },
+    {
+      "file": "verification/encoded-02-solution.jpg",
+      "time": 3.37
+    },
+    {
+      "file": "verification/encoded-03-birthday.jpg",
+      "time": 6.21
+    },
+    {
+      "file": "verification/encoded-04-couple.jpg",
+      "time": 7.63
+    },
+    {
+      "file": "verification/encoded-05-graduation.jpg",
+      "time": 9.09
+    },
+    {
+      "file": "verification/encoded-06-travel.jpg",
+      "time": 10.489999999999998
+    },
+    {
+      "file": "verification/encoded-07-layout.jpg",
+      "time": 11.76
+    },
+    {
+      "file": "verification/encoded-08-layout.jpg",
+      "time": 12.32
+    },
+    {
+      "file": "verification/encoded-09-layout.jpg",
+      "time": 12.93
+    },
+    {
+      "file": "verification/encoded-10-layout.jpg",
+      "time": 13.95
+    },
+    {
+      "file": "verification/encoded-11-save.jpg",
+      "time": 15.959999999999999
+    },
+    {
+      "file": "verification/encoded-12-save.jpg",
+      "time": 17.349999999999998
+    },
+    {
+      "file": "verification/encoded-13-cta.jpg",
+      "time": 18.75
+    },
+    {
+      "file": "verification/encoded-14-cta.jpg",
+      "time": 20.41
+    },
+    {
+      "file": "verification/encoded-02-solution-detail.jpg",
+      "time": 4.7432
+    },
+    {
+      "file": "verification/encoded-03-birthday-detail.jpg",
+      "time": 6.5466
+    },
+    {
+      "file": "verification/encoded-04-couple-detail.jpg",
+      "time": 7.9958
+    },
+    {
+      "file": "verification/encoded-05-graduation-detail.jpg",
+      "time": 9.411999999999999
+    },
+    {
+      "file": "verification/encoded-06-travel-detail.jpg",
+      "time": 11.031
+    }
+  ],
+  "scope": "Actual encoded-file checks and selected-frame extraction. Visual review is separate; not subjective listening, exact timbre equivalence or Instagram upload acceptance."
+}

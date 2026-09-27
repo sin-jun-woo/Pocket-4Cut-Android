@@ -4,6 +4,18 @@
 
 `docs/`는 GitHub Pages 배포 대상이므로 공개 가능한 요약만 기록한다. 비밀값, 사용자 사진, 기기 serial, 개인 로컬 경로, 원시 실행 로그를 넣지 않는다. 세부 실행 산출물은 로컬 build/캐시 영역에 두고 필요한 명령·결과만 남긴다.
 
+## 2026-09-27 — 마지막 릴스 템플릿으로 88종 프레임 소개 영상 제작 (Asia/Seoul)
+
+- 요청/기준: 마지막 완성 릴스 `seasonal-v4`(2026-09-22, `6c815cb2`)의 기본 틀을 유지하고 88종 프레임 소개로 내용만 변경한다. 시작 `main`/HEAD `caa4508`, 작업 브랜치 `codex/occasion-reels`. 기존 미추적 `design/occasion-frames/everyday-editions-v1/deliverables/downloads/`를 보존·제외한다. 앱·버전·기존 프레임·옛 영상·사용자 자료는 변경하지 않는다.
+- 구현: 새 [occasion-v5 패키지](../design/reels/occasion-v5/README.md)에 같은 종이색·먹색·적색·Malgun 글꼴·인화지 기울임/확대·하드 컷·남성 존댓말·무음악/무효과음을 적용했다. 생일/커플/졸업/여행4분위기,88종 전체 월,10분류,2·4·6컷,저장·공유,검색CTA의14장면이다. 기존 구형 UI crop은 쓰지 않고 저장·공유 편집문구를 같은 위치에 둔다.
+- 이미지 경계: 현재 앱1.7(8)의 runtime catalog/WebP atlas88개와 기존 가상 성인사진4장으로 편집 합성7장,개별프레임88장,전체월2장,검토시트를 만들었다. 상단 공통Pocket/NN제거를 반영한다. Kotlin 기하/배치 규칙을 옮긴 Node출력이며 Android연속녹화/실제최종JPEG가 아니다. 시스템글꼴·래스터차이를 기록하고 자동위치·날씨·D-Day·횟수를 주장하지 않는다. 신규 생성형이미지·앱자산변경은 없다.
+- 음성: 기존승인6초참조/로컬Qwen모델·설정을 재사용하고 모델/tokenizer/참조해시를 다시대조했다. 네트워크다운로드/외부추론없이 실행. 1차ASR에서`포켓네컷에`→`포켓네컷의`1글자불일치로렌더차단,실패원음·대본·로그는ignored build attempt-01보존. 모호한조사를뺀새대본으로전체재생성했고 최종원음20.24초/24kHz mono float WAV,23초/48kHz stereo PCM24마스터다. 배속·발화자르기없음. SoX/flash-attn부재경고는있지만기존CPU/SDPA경로로완료했다.
+- 명령/검증: `generate-local-voice.py → master-narration.cjs → transcribe-narration.cjs → time-captions.cjs`의2차실행PASS. 정답프롬프트없는ASR에서문맥숫자정규화127글자/edit distance0,14장면. `node --test .../test-time-captions.cjs`12/12PASS,JS문법검사/Python AST검사PASS. 처음Python파일에Node문법검사를잘못호출한확장자오류는올바른AST검사로바로잡았다. 숫자88의두자리위치매핑검사를추가했으며ASR단어오류예외처리는넣지않았다.
+- 출력/품질: `render-occasions.cjs`28스틸/중요텍스트50개/레이아웃13개안전영역PASS. `export-occasions.cjs`최종1080×1920,30fps,23초/690프레임,8,074,069bytes,H.264/yuv420p/BT.709+AAC48kHz stereo. 전체디코딩·AV길이·faststart·소스해시연결PASS,검은구간0,−16.1LUFS/−3.0dBTP. MP4 SHA-256 `d445c64e07b47d60f165a5ab18501931b21c1dae483c2a3ba157acc9b479ace5`. renderer/입력manifest/ASR결과해시를렌더기록에묶어새스틸과옛영상혼입도차단한다.
+- 시각/패키지: 소스14개첫시점/14개후반스틸,대표7장,88종전체월,커버와실제MP4의14장면모아보기/88월을직접확인했다. 전체월88고유ID/10분류,2·4·6창보존,저장/공유사진순서확인. 커버1080×1920,MP3/SRT/대본/게시글/업로드안내제공. `package-occasions.ps1`ZIP7항목각스트림SHA일치PASS,8,978,121bytes. 참조원본은Git/ZIP에넣지않는다.
+- 변경파일: `design/reels/occasion-v5/`신규미디어·소스·재현/검증기록, `docs/IMAGE_ASSET_GUIDE.md`, 이WORKLOG만대상이다. 기존미추적다운로드는stage하지않는다. 관련파일검토후Conventional Commit과작업브랜치일반push를진행하며main은변경하지않는다.
+- 한계: 앱소스변경이없어Android빌드/JVM/Lint/기기검사는미실행. ASR일치는주관적청취나원본음색완전동일성보증이아니다. 휴대전화청취,정사각형커버크롭위치조정,실제스토어의88종배포여부,Instagram압축/게시확인은사용자게시전확인사항이다. 실제계정게시나캠페인집행은하지않았다.
+
 ## 2026-09-27 — 사용자 요청에 따른 1.7(8) 버전 상승과 최종 재검사 (Asia/Seoul)
 
 - 요청/기준: 사용자의 후속 요청으로 `app/build.gradle.kts`의 versionName을 1.6에서 1.7로, versionCode를 7에서 8로 올렸다. 기준 커밋 `25d825fd4ca540f5c2daebf95eb996eb516b852e`에 출시 QA 수정과 버전 변경을 더한 작업 트리이며 브랜치는 `codex/release-qa-20260927`이다. 새 APK/AAB 내부 버전과 실제 설치에서도1.7/code8을 확인했다.

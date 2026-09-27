@@ -1,0 +1,75 @@
+{
+  "note": "Existing fictional adult sample photos, prepared occasion frame composites based on the current runtime atlas/catalog without the removed Pocket/NN header, and the existing brand icon. Editorial animation, not Android-rendered output or a device recording. The save/share label is editorial typography, not an app screenshot.",
+  "assets": [
+    {
+      "id": "icon",
+      "file": "design/play-store/film-strip-v4/app-icon-master-1024.png",
+      "width": 1024,
+      "height": 1024,
+      "sha256": "fdbf0be23d2301297844a071db9458b95fdf4d885f02a3c65f20b691dc354c51"
+    },
+    {
+      "id": "birthday",
+      "file": "design/reels/occasion-v5/visual-assets/birthday.jpg",
+      "width": 825,
+      "height": 2460,
+      "sha256": "28f3d41781ad47863a54d123dddc7f37e379b9fe0447d55c59f126ce6c0b847b"
+    },
+    {
+      "id": "couple",
+      "file": "design/reels/occasion-v5/visual-assets/couple.jpg",
+      "width": 825,
+      "height": 2460,
+      "sha256": "9cfaa1953e7a27f9b354eeaf0c60f51864db7807e4fe5666e61942fe081b4bea"
+    },
+    {
+      "id": "graduation",
+      "file": "design/reels/occasion-v5/visual-assets/graduation.jpg",
+      "width": 825,
+      "height": 2460,
+      "sha256": "d35d3acd5b1701ddd69e95aa9bad463a2aebb58fb866cc0a6eafc5d92d866391"
+    },
+    {
+      "id": "travel",
+      "file": "design/reels/occasion-v5/visual-assets/travel.jpg",
+      "width": 825,
+      "height": 2460,
+      "sha256": "3ccf9c260e286c9714bdea7ee2bdb6794555754061137f6e60ec5e16e2c6d6d9"
+    },
+    {
+      "id": "two",
+      "file": "design/reels/occasion-v5/visual-assets/two.jpg",
+      "width": 1170,
+      "height": 935,
+      "sha256": "5dc14323784e064704f1bad4b0092a093ea23716c77327cce79bdeb5314a3fbb"
+    },
+    {
+      "id": "four",
+      "file": "design/reels/occasion-v5/visual-assets/four.jpg",
+      "width": 1170,
+      "height": 1645,
+      "sha256": "8937e10f751a9cb7bcf711884674257a150f9c7e0f2d6b89d1740bd5390633cb"
+    },
+    {
+      "id": "six",
+      "file": "design/reels/occasion-v5/visual-assets/six.jpg",
+      "width": 1170,
+      "height": 1635,
+      "sha256": "3ba0114e2acb89f9f897ba716671c2dbdcdd49c4d928e1f72d6e936bcd54e334"
+    },
+    {
+      "id": "all88",
+      "file": "design/reels/occasion-v5/visual-assets/overview-88.jpg",
+      "width": 2160,
+      "height": 3380,
+      "sha256": "2c59cf7b75c9dd79a6014d843a9e8b22b801c9fb7d5e82f14b4d9cfe18af9adc"
+    },
+    {
+      "id": "photo2",
+      "file": "design/play-store/print-booth-v1/demo-photos/demo_02.jpg",
+      "width": 627,
+      "height": 627,
+      "sha256": "f1db2811e4f4bb49eb6850774257e068f45d30f6b7f1b51edf44f5b7a5219232"
+    }
+  ]
+}

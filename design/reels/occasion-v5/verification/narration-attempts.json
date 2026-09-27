@@ -1,0 +1,28 @@
+{
+  "policy": "Preserve real recognition. Failed audio is not released and ASR words are not rewritten to force a pass.",
+  "attempts": [
+    {
+      "attempt": 1,
+      "voiceSha256": "c29ddd25e797cf42bc17234aa21bb700ba0ee427e77331ac88bba5b2e96b863c",
+      "rawDurationSeconds": 20.56,
+      "result": "BLOCKED",
+      "expectedCharacterCount": 128,
+      "editDistance": 1,
+      "mismatch": {"expected": "포켓네컷에", "recognized": "포켓네컷의"},
+      "action": "Preserved audio, original script, ASR and diagnostics locally in ignored build/reels-occasion-v5/attempt-01. Removed ambiguous particle from the next script and regenerated the complete narration.",
+      "released": false
+    },
+    {
+      "attempt": 2,
+      "voiceSha256": "861134cf8b1ee8e6b7f840cfab32a6fef2c56ddd92f4e7cab9743cd0df51ff59",
+      "rawDurationSeconds": 20.24,
+      "result": "PASS",
+      "expectedCharacterCount": 127,
+      "editDistance": 0,
+      "timedScenes": 14,
+      "masterDurationSeconds": 23,
+      "released": true
+    }
+  ],
+  "limits": "ASR agreement is not subjective listening or a voice-similarity measurement. See asr-result.json for contextual numeral normalization and timing estimates."
+}

@@ -1,0 +1,8 @@
+# Keep hashed source, manifests and packaged text stable on Windows checkout.
+*.cjs text eol=lf
+*.py text eol=lf
+*.ps1 text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.srt text eol=lf

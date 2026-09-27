@@ -1,0 +1,43 @@
+{
+  "CheckedAt": "2026-09-27T08:36:26.5088207Z",
+  "File": "Pocket4Cut-88Frames-Reels-Package.zip",
+  "Bytes": 8978121,
+  "SHA256": "8B59063DF61423AA7DABBFAD9D83E8367ED6B2513B2B52D36391E125CCD7D0A8",
+  "Entries": [
+    {
+      "File": "Pocket4Cut-Reels-88Frames-Voice.mp4",
+      "SHA256": "D445C64E07B47D60F165A5AB18501931B21C1DAE483C2A3BA157ACC9B479ACE5",
+      "Match": true
+    },
+    {
+      "File": "Pocket4Cut-88Frames-Narration.mp3",
+      "SHA256": "BACF80D33CF50D2A7EFC19CB02E7DA31E7F405C75D76930BCFCEFFDBD25F8B2E",
+      "Match": true
+    },
+    {
+      "File": "Pocket4Cut-88Frames-Cover.jpg",
+      "SHA256": "6863D91A115F43B19267E47185218F3C7AFAE5DFC5B20CBDD10BDE3709FD009B",
+      "Match": true
+    },
+    {
+      "File": "INSTAGRAM-CAPTION.txt",
+      "SHA256": "AB2E0791A012DE9CE86AFA877BEFD775B0E40A55FB4FCCF8588A37BEB6412D07",
+      "Match": true
+    },
+    {
+      "File": "CAPTIONS-KO.srt",
+      "SHA256": "E7666F0C85FCACD9DC2CC5E0B01771C25744AA0A02641AF3A2A7170AA26CDDB3",
+      "Match": true
+    },
+    {
+      "File": "NARRATION-KO.txt",
+      "SHA256": "C4F9917076B77B48E267BEAF0D03180C030927032A8F5C5AE0AD502ED3ADC2BE",
+      "Match": true
+    },
+    {
+      "File": "UPLOAD-GUIDE.md",
+      "SHA256": "62B9C7567BB907AFD960B8049E92EEECDAE6E1583EA22B6E5188AA6BA17DEEBF",
+      "Match": true
+    }
+  ]
+}

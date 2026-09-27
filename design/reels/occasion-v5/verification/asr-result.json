@@ -1,0 +1,1225 @@
+{
+  "provider": "Local whisper.cpp ASR, not supplied-text forced transcription",
+  "modelType": "small",
+  "language": "ko",
+  "transcript": " 기념일 사진, 아직도 같은 프레임 쓰세요. 포켓네컷, 88가지 프레임이 생겼어요. 생일은 케이크로 귀엽게, 둘만의 날은 다정하게, 새로운 시작은 단정하게, 여행의 설렘도 그대로 담아요. 2컷, 4컷, 6컷, 카테고리별로 편하게 골라보세요. 마음에 들면 저장하고 친구에게 바로 공유해요. 소중한 날에 어울리는 한 장, 포켓네컷.",
+  "expectedTranscript": "기념일 사진, 아직도 같은 프레임 쓰세요? 포켓네컷, 여든여덟 가지 프레임이 생겼어요. 생일은 케이크로 귀엽게. 둘만의 날은 다정하게. 새로운 시작은 단정하게. 여행의 설렘도 그대로 담아요. 두 컷, 네 컷, 여섯 컷. 카테고리별로 편하게 골라 보세요. 마음에 들면 저장하고, 친구에게 바로 공유해요. 소중한 날에 어울리는 한 장. 포켓네컷.",
+  "comparison": {
+    "normalizedTranscriptEqualsExpected": true,
+    "expectedNormalized": "기념일사진아직도같은프레임쓰세요포켓4컷88가지프레임이생겼어요생일은케이크로귀엽게둘만의날은다정하게새로운시작은단정하게여행의설렘도그대로담아요2컷4컷6컷카테고리별로편하게골라보세요마음에들면저장하고친구에게바로공유해요소중한날에어울리는1장포켓4컷",
+    "recognizedNormalized": "기념일사진아직도같은프레임쓰세요포켓4컷88가지프레임이생겼어요생일은케이크로귀엽게둘만의날은다정하게새로운시작은단정하게여행의설렘도그대로담아요2컷4컷6컷카테고리별로편하게골라보세요마음에들면저장하고친구에게바로공유해요소중한날에어울리는1장포켓4컷",
+    "expectedCharacterCount": 127,
+    "recognizedCharacterCount": 127,
+    "editDistance": 0,
+    "differences": [],
+    "normalization": [
+      "Ignore whitespace and punctuation; Latin letter case is ignored.",
+      "Only Korean 1/2/4/6/8/88 number forms immediately before 컷, 장 or 가지 are mapped to digits; 88 permits spacing between 여든 and 여덟.",
+      "No phonetic, brand-name, spelling, synonym or ASR-error corrections are applied."
+    ]
+  },
+  "units": {
+    "jsonOffsets": "milliseconds / 1000",
+    "t_dtw": "centiseconds / 100"
+  },
+  "limitations": [
+    "Recognition agreement is not a subjective listening or voice-similarity assessment.",
+    "DTW token moments and inferred phrase ends are estimates, not sample-accurate word boundaries.",
+    "A nonzero exit status must stop downstream rendering; an older story file is not updated on failure."
+  ],
+  "master": {
+    "durationSeconds": 23,
+    "voiceTimeOffsetSeconds": 0.12,
+    "sha256": "00b271eb10298bbe226d3cd36d0f1639385e90d2d24b740381752c496b4398b9"
+  },
+  "segments": [
+    {
+      "index": 0,
+      "text": " 기념일 사진, 아직도 같은 프레임 쓰세요.",
+      "startSeconds": 0,
+      "endSeconds": 2.4,
+      "tokens": [
+        {
+          "text": " 기념",
+          "id": 12503,
+          "probability": 0.671877,
+          "startSeconds": 0,
+          "endSeconds": 0.51,
+          "dtwCentiseconds": 22,
+          "dtwSeconds": 0.22
+        },
+        {
+          "text": "일",
+          "id": 6403,
+          "probability": 0.965723,
+          "startSeconds": 0.57,
+          "endSeconds": 0.69,
+          "dtwCentiseconds": 52,
+          "dtwSeconds": 0.52
+        },
+        {
+          "text": " 사진",
+          "id": 29899,
+          "probability": 0.835732,
+          "startSeconds": 0.72,
+          "endSeconds": 1,
+          "dtwCentiseconds": 78,
+          "dtwSeconds": 0.78
+        },
+        {
+          "text": ",",
+          "id": 11,
+          "probability": 0.459076,
+          "startSeconds": 1,
+          "endSeconds": 1.11,
+          "dtwCentiseconds": 92,
+          "dtwSeconds": 0.92
+        },
+        {
+          "text": " 아직",
+          "id": 22729,
+          "probability": 0.7886,
+          "startSeconds": 1.2,
+          "endSeconds": 1.26,
+          "dtwCentiseconds": 110,
+          "dtwSeconds": 1.1
+        },
+        {
+          "text": "도",
+          "id": 3744,
+          "probability": 0.995186,
+          "startSeconds": 1.3,
+          "endSeconds": 1.37,
+          "dtwCentiseconds": 128,
+          "dtwSeconds": 1.28
+        },
+        {
+          "text": " 같은",
+          "id": 10005,
+          "probability": 0.993911,
+          "startSeconds": 1.37,
+          "endSeconds": 1.52,
+          "dtwCentiseconds": 152,
+          "dtwSeconds": 1.52
+        },
+        {
+          "text": " 프레",
+          "id": 32051,
+          "probability": 0.984003,
+          "startSeconds": 1.52,
+          "endSeconds": 1.82,
+          "dtwCentiseconds": 174,
+          "dtwSeconds": 1.74
+        },
+        {
+          "text": "임",
+          "id": 13311,
+          "probability": 0.999325,
+          "startSeconds": 1.82,
+          "endSeconds": 1.89,
+          "dtwCentiseconds": 192,
+          "dtwSeconds": 1.92
+        },
+        {
+          "text": " 쓰",
+          "id": 17373,
+          "probability": 0.959474,
+          "startSeconds": 1.89,
+          "endSeconds": 1.95,
+          "dtwCentiseconds": 208,
+          "dtwSeconds": 2.08
+        },
+        {
+          "text": "세요",
+          "id": 7046,
+          "probability": 0.994243,
+          "startSeconds": 1.95,
+          "endSeconds": 2.11,
+          "dtwCentiseconds": 232,
+          "dtwSeconds": 2.32
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.467234,
+          "startSeconds": 2.11,
+          "endSeconds": 2.39,
+          "dtwCentiseconds": 246,
+          "dtwSeconds": 2.46
+        }
+      ],
+      "joinedTokenText": " 기념일 사진, 아직도 같은 프레임 쓰세요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 1,
+      "text": " 포켓네컷, 88가지 프레임이 생겼어요.",
+      "startSeconds": 2.4,
+      "endSeconds": 5.2,
+      "tokens": [
+        {
+          "text": " 포",
+          "id": 17101,
+          "probability": 0.864742,
+          "startSeconds": 2.4,
+          "endSeconds": 2.48,
+          "dtwCentiseconds": 260,
+          "dtwSeconds": 2.6
+        },
+        {
+          "text": "켓",
+          "id": 12397,
+          "probability": 0.975988,
+          "startSeconds": 2.58,
+          "endSeconds": 2.77,
+          "dtwCentiseconds": 276,
+          "dtwSeconds": 2.76
+        },
+        {
+          "text": "네",
+          "id": 17507,
+          "probability": 0.541958,
+          "startSeconds": 2.78,
+          "endSeconds": 2.87,
+          "dtwCentiseconds": 296,
+          "dtwSeconds": 2.96
+        },
+        {
+          "text": "컷",
+          "id": 13302,
+          "probability": 0.80053,
+          "startSeconds": 2.87,
+          "endSeconds": 3.2,
+          "dtwCentiseconds": 312,
+          "dtwSeconds": 3.12
+        },
+        {
+          "text": ",",
+          "id": 11,
+          "probability": 0.393094,
+          "startSeconds": 3.2,
+          "endSeconds": 3.24,
+          "dtwCentiseconds": 326,
+          "dtwSeconds": 3.26
+        },
+        {
+          "text": " 88",
+          "id": 24587,
+          "probability": 0.237897,
+          "startSeconds": 3.24,
+          "endSeconds": 3.8,
+          "dtwCentiseconds": 362,
+          "dtwSeconds": 3.62
+        },
+        {
+          "text": "가지",
+          "id": 26683,
+          "probability": 0.946705,
+          "startSeconds": 3.8,
+          "endSeconds": 3.98,
+          "dtwCentiseconds": 404,
+          "dtwSeconds": 4.04
+        },
+        {
+          "text": " 프레",
+          "id": 32051,
+          "probability": 0.992436,
+          "startSeconds": 3.98,
+          "endSeconds": 4.34,
+          "dtwCentiseconds": 428,
+          "dtwSeconds": 4.28
+        },
+        {
+          "text": "임",
+          "id": 13311,
+          "probability": 0.999007,
+          "startSeconds": 4.34,
+          "endSeconds": 4.42,
+          "dtwCentiseconds": 450,
+          "dtwSeconds": 4.5
+        },
+        {
+          "text": "이",
+          "id": 1129,
+          "probability": 0.997967,
+          "startSeconds": 4.43,
+          "endSeconds": 4.52,
+          "dtwCentiseconds": 460,
+          "dtwSeconds": 4.6
+        },
+        {
+          "text": " 생겼",
+          "id": 49810,
+          "probability": 0.990359,
+          "startSeconds": 4.52,
+          "endSeconds": 4.7,
+          "dtwCentiseconds": 474,
+          "dtwSeconds": 4.74
+        },
+        {
+          "text": "어요",
+          "id": 4213,
+          "probability": 0.998588,
+          "startSeconds": 4.7,
+          "endSeconds": 4.81,
+          "dtwCentiseconds": 518,
+          "dtwSeconds": 5.18
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.97101,
+          "startSeconds": 4.9,
+          "endSeconds": 5.2,
+          "dtwCentiseconds": 530,
+          "dtwSeconds": 5.3
+        }
+      ],
+      "joinedTokenText": " 포켓네컷, 88가지 프레임이 생겼어요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 2,
+      "text": " 생일은 케이크로 귀엽게, 둘만의 날은 다정하게,",
+      "startSeconds": 5.2,
+      "endSeconds": 8,
+      "tokens": [
+        {
+          "text": " 생",
+          "id": 6439,
+          "probability": 0.985597,
+          "startSeconds": 5.2,
+          "endSeconds": 5.28,
+          "dtwCentiseconds": 544,
+          "dtwSeconds": 5.44
+        },
+        {
+          "text": "일",
+          "id": 6403,
+          "probability": 0.997942,
+          "startSeconds": 5.38,
+          "endSeconds": 5.4,
+          "dtwCentiseconds": 558,
+          "dtwSeconds": 5.58
+        },
+        {
+          "text": "은",
+          "id": 2124,
+          "probability": 0.997961,
+          "startSeconds": 5.4,
+          "endSeconds": 5.5,
+          "dtwCentiseconds": 570,
+          "dtwSeconds": 5.7
+        },
+        {
+          "text": " 케이",
+          "id": 25777,
+          "probability": 0.843538,
+          "startSeconds": 5.5,
+          "endSeconds": 5.89,
+          "dtwCentiseconds": 590,
+          "dtwSeconds": 5.9
+        },
+        {
+          "text": "크로",
+          "id": 25175,
+          "probability": 0.984128,
+          "startSeconds": 5.92,
+          "endSeconds": 6.31,
+          "dtwCentiseconds": 612,
+          "dtwSeconds": 6.12
+        },
+        {
+          "text": " 귀",
+          "id": 19112,
+          "probability": 0.994199,
+          "startSeconds": 6.4,
+          "endSeconds": 6.44,
+          "dtwCentiseconds": 638,
+          "dtwSeconds": 6.38
+        },
+        {
+          "text": "엽",
+          "id": 44944,
+          "probability": 0.998462,
+          "startSeconds": 6.44,
+          "endSeconds": 6.54,
+          "dtwCentiseconds": 654,
+          "dtwSeconds": 6.54
+        },
+        {
+          "text": "게",
+          "id": 1810,
+          "probability": 0.996481,
+          "startSeconds": 6.54,
+          "endSeconds": 6.72,
+          "dtwCentiseconds": 668,
+          "dtwSeconds": 6.68
+        },
+        {
+          "text": ",",
+          "id": 11,
+          "probability": 0.855957,
+          "startSeconds": 6.72,
+          "endSeconds": 6.89,
+          "dtwCentiseconds": 678,
+          "dtwSeconds": 6.78
+        },
+        {
+          "text": " 둘만",
+          "id": 8108,
+          "probability": 0.579225,
+          "startSeconds": 6.89,
+          "endSeconds": 7.4,
+          "dtwCentiseconds": 686,
+          "dtwSeconds": 6.86
+        },
+        {
+          "text": "의",
+          "id": 2785,
+          "probability": 0.997818,
+          "startSeconds": 7.4,
+          "endSeconds": 7.48,
+          "dtwCentiseconds": 714,
+          "dtwSeconds": 7.14
+        },
+        {
+          "text": " 날",
+          "id": 16316,
+          "probability": 0.88646,
+          "startSeconds": 7.48,
+          "endSeconds": 7.56,
+          "dtwCentiseconds": 728,
+          "dtwSeconds": 7.28
+        },
+        {
+          "text": "은",
+          "id": 2124,
+          "probability": 0.998671,
+          "startSeconds": 7.56,
+          "endSeconds": 7.61,
+          "dtwCentiseconds": 738,
+          "dtwSeconds": 7.38
+        },
+        {
+          "text": " 다",
+          "id": 4279,
+          "probability": 0.938653,
+          "startSeconds": 7.64,
+          "endSeconds": 7.71,
+          "dtwCentiseconds": 756,
+          "dtwSeconds": 7.56
+        },
+        {
+          "text": "정",
+          "id": 6170,
+          "probability": 0.998304,
+          "startSeconds": 7.72,
+          "endSeconds": 7.78,
+          "dtwCentiseconds": 770,
+          "dtwSeconds": 7.7
+        },
+        {
+          "text": "하게",
+          "id": 8601,
+          "probability": 0.992547,
+          "startSeconds": 7.85,
+          "endSeconds": 8,
+          "dtwCentiseconds": 792,
+          "dtwSeconds": 7.92
+        },
+        {
+          "text": ",",
+          "id": 11,
+          "probability": 0.83189,
+          "startSeconds": 8,
+          "endSeconds": 8,
+          "dtwCentiseconds": 808,
+          "dtwSeconds": 8.08
+        }
+      ],
+      "joinedTokenText": " 생일은 케이크로 귀엽게, 둘만의 날은 다정하게,",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 3,
+      "text": " 새로운 시작은 단정하게, 여행의 설렘도 그대로 담아요.",
+      "startSeconds": 8,
+      "endSeconds": 11.2,
+      "tokens": [
+        {
+          "text": " 새로운",
+          "id": 41088,
+          "probability": 0.992937,
+          "startSeconds": 8,
+          "endSeconds": 8.44,
+          "dtwCentiseconds": 832,
+          "dtwSeconds": 8.32
+        },
+        {
+          "text": " 시작",
+          "id": 14525,
+          "probability": 0.997194,
+          "startSeconds": 8.44,
+          "endSeconds": 8.72,
+          "dtwCentiseconds": 860,
+          "dtwSeconds": 8.6
+        },
+        {
+          "text": "은",
+          "id": 2124,
+          "probability": 0.999321,
+          "startSeconds": 8.72,
+          "endSeconds": 8.87,
+          "dtwCentiseconds": 880,
+          "dtwSeconds": 8.8
+        },
+        {
+          "text": " 단",
+          "id": 16818,
+          "probability": 0.989355,
+          "startSeconds": 8.87,
+          "endSeconds": 9.01,
+          "dtwCentiseconds": 898,
+          "dtwSeconds": 8.98
+        },
+        {
+          "text": "정",
+          "id": 6170,
+          "probability": 0.997579,
+          "startSeconds": 9.01,
+          "endSeconds": 9.11,
+          "dtwCentiseconds": 914,
+          "dtwSeconds": 9.14
+        },
+        {
+          "text": "하게",
+          "id": 8601,
+          "probability": 0.996962,
+          "startSeconds": 9.2,
+          "endSeconds": 9.43,
+          "dtwCentiseconds": 940,
+          "dtwSeconds": 9.4
+        },
+        {
+          "text": ",",
+          "id": 11,
+          "probability": 0.91319,
+          "startSeconds": 9.51,
+          "endSeconds": 9.63,
+          "dtwCentiseconds": 958,
+          "dtwSeconds": 9.58
+        },
+        {
+          "text": " 여",
+          "id": 5518,
+          "probability": 0.542134,
+          "startSeconds": 9.68,
+          "endSeconds": 9.72,
+          "dtwCentiseconds": 972,
+          "dtwSeconds": 9.72
+        },
+        {
+          "text": "행",
+          "id": 12724,
+          "probability": 0.999012,
+          "startSeconds": 9.73,
+          "endSeconds": 9.81,
+          "dtwCentiseconds": 984,
+          "dtwSeconds": 9.84
+        },
+        {
+          "text": "의",
+          "id": 2785,
+          "probability": 0.971545,
+          "startSeconds": 9.81,
+          "endSeconds": 9.89,
+          "dtwCentiseconds": 994,
+          "dtwSeconds": 9.94
+        },
+        {
+          "text": " 설렘도",
+          "id": 24175,
+          "probability": 0.970996,
+          "startSeconds": 9.89,
+          "endSeconds": 10.31,
+          "dtwCentiseconds": 1012,
+          "dtwSeconds": 10.12
+        },
+        {
+          "text": " 그대로",
+          "id": 41711,
+          "probability": 0.997489,
+          "startSeconds": 10.31,
+          "endSeconds": 10.56,
+          "dtwCentiseconds": 1066,
+          "dtwSeconds": 10.66
+        },
+        {
+          "text": " 담아",
+          "id": 2515,
+          "probability": 0.981933,
+          "startSeconds": 10.56,
+          "endSeconds": 11.04,
+          "dtwCentiseconds": 1086,
+          "dtwSeconds": 10.86
+        },
+        {
+          "text": "요",
+          "id": 1495,
+          "probability": 0.999112,
+          "startSeconds": 11.07,
+          "endSeconds": 11.18,
+          "dtwCentiseconds": 1116,
+          "dtwSeconds": 11.16
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.977517,
+          "startSeconds": 11.2,
+          "endSeconds": 11.2,
+          "dtwCentiseconds": 1128,
+          "dtwSeconds": 11.28
+        }
+      ],
+      "joinedTokenText": " 새로운 시작은 단정하게, 여행의 설렘도 그대로 담아요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 4,
+      "text": " 2컷, 4컷, 6컷, 카테고리별로 편하게 골라보세요.",
+      "startSeconds": 11.2,
+      "endSeconds": 14.9,
+      "tokens": [
+        {
+          "text": " 2",
+          "id": 568,
+          "probability": 0.5399,
+          "startSeconds": 11.2,
+          "endSeconds": 11.42,
+          "dtwCentiseconds": 1142,
+          "dtwSeconds": 11.42
+        },
+        {
+          "text": "컷",
+          "id": 13302,
+          "probability": 0.87052,
+          "startSeconds": 11.42,
+          "endSeconds": 11.64,
+          "dtwCentiseconds": 1164,
+          "dtwSeconds": 11.64
+        },
+        {
+          "text": ",",
+          "id": 11,
+          "probability": 0.945767,
+          "startSeconds": 11.64,
+          "endSeconds": 11.79,
+          "dtwCentiseconds": 1184,
+          "dtwSeconds": 11.84
+        },
+        {
+          "text": " 4",
+          "id": 1017,
+          "probability": 0.986239,
+          "startSeconds": 11.79,
+          "endSeconds": 12.01,
+          "dtwCentiseconds": 1196,
+          "dtwSeconds": 11.96
+        },
+        {
+          "text": "컷",
+          "id": 13302,
+          "probability": 0.968031,
+          "startSeconds": 12.01,
+          "endSeconds": 12.23,
+          "dtwCentiseconds": 1222,
+          "dtwSeconds": 12.22
+        },
+        {
+          "text": ",",
+          "id": 11,
+          "probability": 0.996369,
+          "startSeconds": 12.23,
+          "endSeconds": 12.36,
+          "dtwCentiseconds": 1238,
+          "dtwSeconds": 12.38
+        },
+        {
+          "text": " 6",
+          "id": 1386,
+          "probability": 0.987901,
+          "startSeconds": 12.4,
+          "endSeconds": 12.6,
+          "dtwCentiseconds": 1254,
+          "dtwSeconds": 12.54
+        },
+        {
+          "text": "컷",
+          "id": 13302,
+          "probability": 0.975887,
+          "startSeconds": 12.6,
+          "endSeconds": 12.8,
+          "dtwCentiseconds": 1282,
+          "dtwSeconds": 12.82
+        },
+        {
+          "text": ",",
+          "id": 11,
+          "probability": 0.69354,
+          "startSeconds": 12.88,
+          "endSeconds": 12.94,
+          "dtwCentiseconds": 1300,
+          "dtwSeconds": 13
+        },
+        {
+          "text": " 카",
+          "id": 41703,
+          "probability": 0.920238,
+          "startSeconds": 12.94,
+          "endSeconds": 13.01,
+          "dtwCentiseconds": 1318,
+          "dtwSeconds": 13.18
+        },
+        {
+          "text": "테",
+          "id": 13433,
+          "probability": 0.910441,
+          "startSeconds": 13.01,
+          "endSeconds": 13.07,
+          "dtwCentiseconds": 1330,
+          "dtwSeconds": 13.3
+        },
+        {
+          "text": "고",
+          "id": 1313,
+          "probability": 0.984827,
+          "startSeconds": 13.07,
+          "endSeconds": 13.14,
+          "dtwCentiseconds": 1344,
+          "dtwSeconds": 13.44
+        },
+        {
+          "text": "리별로",
+          "id": 167,
+          "probability": 0.378842,
+          "startSeconds": 13.14,
+          "endSeconds": 13.61,
+          "dtwCentiseconds": 1346,
+          "dtwSeconds": 13.46
+        },
+        {
+          "text": " 편",
+          "id": 16990,
+          "probability": 0.991907,
+          "startSeconds": 13.69,
+          "endSeconds": 13.74,
+          "dtwCentiseconds": 1394,
+          "dtwSeconds": 13.94
+        },
+        {
+          "text": "하게",
+          "id": 8601,
+          "probability": 0.998544,
+          "startSeconds": 13.74,
+          "endSeconds": 13.88,
+          "dtwCentiseconds": 1414,
+          "dtwSeconds": 14.14
+        },
+        {
+          "text": " 골라보세요",
+          "id": 42142,
+          "probability": 0.997693,
+          "startSeconds": 13.89,
+          "endSeconds": 14.58,
+          "dtwCentiseconds": 1432,
+          "dtwSeconds": 14.32
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.987879,
+          "startSeconds": 14.58,
+          "endSeconds": 14.89,
+          "dtwCentiseconds": 1496,
+          "dtwSeconds": 14.96
+        }
+      ],
+      "joinedTokenText": " 2컷, 4컷, 6컷, 카테고리별로 편하게 골라보세요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 5,
+      "text": " 마음에 들면 저장하고 친구에게 바로 공유해요.",
+      "startSeconds": 14.9,
+      "endSeconds": 17.8,
+      "tokens": [
+        {
+          "text": " 마음에",
+          "id": 43093,
+          "probability": 0.975428,
+          "startSeconds": 14.9,
+          "endSeconds": 15.36,
+          "dtwCentiseconds": 1520,
+          "dtwSeconds": 15.2
+        },
+        {
+          "text": " 들",
+          "id": 6275,
+          "probability": 0.904134,
+          "startSeconds": 15.36,
+          "endSeconds": 15.51,
+          "dtwCentiseconds": 1540,
+          "dtwSeconds": 15.4
+        },
+        {
+          "text": "면",
+          "id": 21448,
+          "probability": 0.997664,
+          "startSeconds": 15.51,
+          "endSeconds": 15.66,
+          "dtwCentiseconds": 1556,
+          "dtwSeconds": 15.56
+        },
+        {
+          "text": " 저",
+          "id": 4841,
+          "probability": 0.99482,
+          "startSeconds": 15.66,
+          "endSeconds": 15.8,
+          "dtwCentiseconds": 1574,
+          "dtwSeconds": 15.74
+        },
+        {
+          "text": "장",
+          "id": 4573,
+          "probability": 0.995175,
+          "startSeconds": 15.81,
+          "endSeconds": 15.96,
+          "dtwCentiseconds": 1590,
+          "dtwSeconds": 15.9
+        },
+        {
+          "text": "하고",
+          "id": 7040,
+          "probability": 0.995858,
+          "startSeconds": 15.96,
+          "endSeconds": 16.28,
+          "dtwCentiseconds": 1618,
+          "dtwSeconds": 16.18
+        },
+        {
+          "text": " 친구",
+          "id": 28307,
+          "probability": 0.596757,
+          "startSeconds": 16.28,
+          "endSeconds": 16.5,
+          "dtwCentiseconds": 1658,
+          "dtwSeconds": 16.58
+        },
+        {
+          "text": "에게",
+          "id": 15989,
+          "probability": 0.99855,
+          "startSeconds": 16.58,
+          "endSeconds": 16.74,
+          "dtwCentiseconds": 1682,
+          "dtwSeconds": 16.82
+        },
+        {
+          "text": " 바로",
+          "id": 15965,
+          "probability": 0.997759,
+          "startSeconds": 16.74,
+          "endSeconds": 16.97,
+          "dtwCentiseconds": 1710,
+          "dtwSeconds": 17.1
+        },
+        {
+          "text": " 공",
+          "id": 9273,
+          "probability": 0.994497,
+          "startSeconds": 16.97,
+          "endSeconds": 17.08,
+          "dtwCentiseconds": 1736,
+          "dtwSeconds": 17.36
+        },
+        {
+          "text": "유",
+          "id": 19062,
+          "probability": 0.99504,
+          "startSeconds": 17.08,
+          "endSeconds": 17.19,
+          "dtwCentiseconds": 1746,
+          "dtwSeconds": 17.46
+        },
+        {
+          "text": "해요",
+          "id": 15788,
+          "probability": 0.940417,
+          "startSeconds": 17.19,
+          "endSeconds": 17.4,
+          "dtwCentiseconds": 1768,
+          "dtwSeconds": 17.68
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.959832,
+          "startSeconds": 17.42,
+          "endSeconds": 17.8,
+          "dtwCentiseconds": 1784,
+          "dtwSeconds": 17.84
+        }
+      ],
+      "joinedTokenText": " 마음에 들면 저장하고 친구에게 바로 공유해요.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    },
+    {
+      "index": 6,
+      "text": " 소중한 날에 어울리는 한 장, 포켓네컷.",
+      "startSeconds": 17.8,
+      "endSeconds": 20.2,
+      "tokens": [
+        {
+          "text": " 소",
+          "id": 10614,
+          "probability": 0.982079,
+          "startSeconds": 17.8,
+          "endSeconds": 17.88,
+          "dtwCentiseconds": 1798,
+          "dtwSeconds": 17.98
+        },
+        {
+          "text": "중",
+          "id": 13907,
+          "probability": 0.998291,
+          "startSeconds": 17.98,
+          "endSeconds": 18.04,
+          "dtwCentiseconds": 1810,
+          "dtwSeconds": 18.1
+        },
+        {
+          "text": "한",
+          "id": 3049,
+          "probability": 0.99382,
+          "startSeconds": 18.04,
+          "endSeconds": 18.16,
+          "dtwCentiseconds": 1824,
+          "dtwSeconds": 18.24
+        },
+        {
+          "text": " 날",
+          "id": 16316,
+          "probability": 0.959633,
+          "startSeconds": 18.16,
+          "endSeconds": 18.28,
+          "dtwCentiseconds": 1836,
+          "dtwSeconds": 18.36
+        },
+        {
+          "text": "에",
+          "id": 1517,
+          "probability": 0.993688,
+          "startSeconds": 18.28,
+          "endSeconds": 18.4,
+          "dtwCentiseconds": 1846,
+          "dtwSeconds": 18.46
+        },
+        {
+          "text": " 어울리",
+          "id": 27755,
+          "probability": 0.994704,
+          "startSeconds": 18.4,
+          "endSeconds": 18.93,
+          "dtwCentiseconds": 1862,
+          "dtwSeconds": 18.62
+        },
+        {
+          "text": "는",
+          "id": 1098,
+          "probability": 0.999893,
+          "startSeconds": 19,
+          "endSeconds": 19.11,
+          "dtwCentiseconds": 1890,
+          "dtwSeconds": 18.9
+        },
+        {
+          "text": " 한",
+          "id": 4815,
+          "probability": 0.949514,
+          "startSeconds": 19.13,
+          "endSeconds": 19.23,
+          "dtwCentiseconds": 1910,
+          "dtwSeconds": 19.1
+        },
+        {
+          "text": " 장",
+          "id": 12280,
+          "probability": 0.899808,
+          "startSeconds": 19.29,
+          "endSeconds": 19.4,
+          "dtwCentiseconds": 1930,
+          "dtwSeconds": 19.3
+        },
+        {
+          "text": ",",
+          "id": 11,
+          "probability": 0.384307,
+          "startSeconds": 19.4,
+          "endSeconds": 19.55,
+          "dtwCentiseconds": 1950,
+          "dtwSeconds": 19.5
+        },
+        {
+          "text": " 포",
+          "id": 17101,
+          "probability": 0.884117,
+          "startSeconds": 19.55,
+          "endSeconds": 19.63,
+          "dtwCentiseconds": 1964,
+          "dtwSeconds": 19.64
+        },
+        {
+          "text": "켓",
+          "id": 12397,
+          "probability": 0.996826,
+          "startSeconds": 19.63,
+          "endSeconds": 19.85,
+          "dtwCentiseconds": 1976,
+          "dtwSeconds": 19.76
+        },
+        {
+          "text": "네",
+          "id": 17507,
+          "probability": 0.988086,
+          "startSeconds": 19.85,
+          "endSeconds": 19.92,
+          "dtwCentiseconds": 1994,
+          "dtwSeconds": 19.94
+        },
+        {
+          "text": "컷",
+          "id": 13302,
+          "probability": 0.984459,
+          "startSeconds": 19.92,
+          "endSeconds": 20.19,
+          "dtwCentiseconds": 2012,
+          "dtwSeconds": 20.12
+        },
+        {
+          "text": ".",
+          "id": 13,
+          "probability": 0.671133,
+          "startSeconds": 20.19,
+          "endSeconds": 20.2,
+          "dtwCentiseconds": 2018,
+          "dtwSeconds": 20.18
+        }
+      ],
+      "joinedTokenText": " 소중한 날에 어울리는 한 장, 포켓네컷.",
+      "tokenTextExactlyMatchesSegment": true,
+      "normalizedTokenTextMatchesSegment": true
+    }
+  ],
+  "issues": [],
+  "warnings": [],
+  "readyForRender": true,
+  "joinedTokenTranscript": " 기념일 사진, 아직도 같은 프레임 쓰세요. 포켓네컷, 88가지 프레임이 생겼어요. 생일은 케이크로 귀엽게, 둘만의 날은 다정하게, 새로운 시작은 단정하게, 여행의 설렘도 그대로 담아요. 2컷, 4컷, 6컷, 카테고리별로 편하게 골라보세요. 마음에 들면 저장하고 친구에게 바로 공유해요. 소중한 날에 어울리는 한 장, 포켓네컷.",
+  "captionPhrases": [
+    {
+      "id": "hook",
+      "text": "기념일 사진, 아직도 같은 프레임 쓰세요?",
+      "lines": [
+        "기념일 사진, 아직도",
+        "같은 프레임 쓰세요?"
+      ],
+      "phraseIndex": 0,
+      "normalizedStart": 0,
+      "normalizedEnd": 16,
+      "rawVoiceStart": 0.22,
+      "rawVoiceEnd": 2.6,
+      "voiceStart": 0.34,
+      "voiceEnd": 2.72,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "solution",
+      "text": "포켓네컷, 여든여덟 가지 프레임이 생겼어요.",
+      "lines": [
+        "88가지 프레임이 생겼어요."
+      ],
+      "phraseIndex": 1,
+      "normalizedStart": 16,
+      "normalizedEnd": 32,
+      "rawVoiceStart": 2.6,
+      "rawVoiceEnd": 5.44,
+      "voiceStart": 2.72,
+      "voiceEnd": 5.56,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "birthday",
+      "text": "생일은 케이크로 귀엽게.",
+      "lines": [
+        "생일은 케이크로 귀엽게."
+      ],
+      "phraseIndex": 2,
+      "normalizedStart": 32,
+      "normalizedEnd": 42,
+      "rawVoiceStart": 5.44,
+      "rawVoiceEnd": 6.72,
+      "voiceStart": 5.56,
+      "voiceEnd": 6.84,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "couple",
+      "text": "둘만의 날은 다정하게.",
+      "lines": [
+        "둘만의 날은 다정하게."
+      ],
+      "phraseIndex": 3,
+      "normalizedStart": 42,
+      "normalizedEnd": 51,
+      "rawVoiceStart": 6.86,
+      "rawVoiceEnd": 8,
+      "voiceStart": 6.98,
+      "voiceEnd": 8.12,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "graduation",
+      "text": "새로운 시작은 단정하게.",
+      "lines": [
+        "새로운 시작은 단정하게."
+      ],
+      "phraseIndex": 4,
+      "normalizedStart": 51,
+      "normalizedEnd": 61,
+      "rawVoiceStart": 8.32,
+      "rawVoiceEnd": 9.43,
+      "voiceStart": 8.44,
+      "voiceEnd": 9.55,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "travel",
+      "text": "여행의 설렘도 그대로 담아요.",
+      "lines": [
+        "여행의 설렘도 그대로 담아요."
+      ],
+      "phraseIndex": 5,
+      "normalizedStart": 61,
+      "normalizedEnd": 73,
+      "rawVoiceStart": 9.72,
+      "rawVoiceEnd": 11.18,
+      "voiceStart": 9.84,
+      "voiceEnd": 11.3,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "layout",
+      "variant": "counts",
+      "text": "두 컷, 네 컷, 여섯 컷.",
+      "lines": [
+        "2컷 · 4컷 · 6컷"
+      ],
+      "phraseIndex": 6,
+      "normalizedStart": 73,
+      "normalizedEnd": 79,
+      "rawVoiceStart": 11.42,
+      "rawVoiceEnd": 13.18,
+      "voiceStart": 11.54,
+      "voiceEnd": 13.3,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "layout",
+      "variant": "gallery",
+      "text": "카테고리별로 편하게 골라 보세요.",
+      "lines": [
+        "카테고리별로 편하게 골라 보세요."
+      ],
+      "phraseIndex": 7,
+      "normalizedStart": 79,
+      "normalizedEnd": 93,
+      "rawVoiceStart": 13.18,
+      "rawVoiceEnd": 14.58,
+      "voiceStart": 13.3,
+      "voiceEnd": 14.7,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "save",
+      "text": "마음에 들면 저장하고,",
+      "lines": [
+        "마음에 들면 저장하고,"
+      ],
+      "phraseIndex": 8,
+      "normalizedStart": 93,
+      "normalizedEnd": 102,
+      "rawVoiceStart": 15.2,
+      "rawVoiceEnd": 16.28,
+      "voiceStart": 15.32,
+      "voiceEnd": 16.4,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "save",
+      "variant": "share",
+      "text": "친구에게 바로 공유해요.",
+      "lines": [
+        "친구에게 바로 공유해요."
+      ],
+      "phraseIndex": 9,
+      "normalizedStart": 102,
+      "normalizedEnd": 112,
+      "rawVoiceStart": 16.58,
+      "rawVoiceEnd": 17.98,
+      "voiceStart": 16.7,
+      "voiceEnd": 18.1,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "cta",
+      "text": "소중한 날에 어울리는 한 장.",
+      "lines": [
+        "소중한 날에 어울리는 한 장."
+      ],
+      "phraseIndex": 10,
+      "normalizedStart": 112,
+      "normalizedEnd": 123,
+      "rawVoiceStart": 17.98,
+      "rawVoiceEnd": 19.4,
+      "voiceStart": 18.1,
+      "voiceEnd": 19.52,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    },
+    {
+      "id": "cta",
+      "variant": "end",
+      "text": "포켓네컷.",
+      "lines": [
+        "Pocket4Cut"
+      ],
+      "phraseIndex": 11,
+      "normalizedStart": 123,
+      "normalizedEnd": 127,
+      "rawVoiceStart": 19.64,
+      "rawVoiceEnd": 20.19,
+      "voiceStart": 19.76,
+      "voiceEnd": 20.31,
+      "timingBasis": "First DTW token moment; end from compatible token offset, next token moment, or segment end."
+    }
+  ],
+  "inputVoiceSha256": "861134cf8b1ee8e6b7f840cfab32a6fef2c56ddd92f4e7cab9743cd0df51ff59",
+  "inputSha256": "de34d7bf15ee82391faeaa3a247292d420f516acf8fd1aa42f679303dbcdaa39"
+}

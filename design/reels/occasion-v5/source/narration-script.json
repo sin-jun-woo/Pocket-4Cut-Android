@@ -1,0 +1,20 @@
+{
+  "edition": "Everyday Editions 88 / seasonal-v4 template continuation",
+  "text": "기념일 사진, 아직도 같은 프레임 쓰세요? 포켓네컷, 여든여덟 가지 프레임이 생겼어요. 생일은 케이크로 귀엽게. 둘만의 날은 다정하게. 새로운 시작은 단정하게. 여행의 설렘도 그대로 담아요. 두 컷, 네 컷, 여섯 컷. 카테고리별로 편하게 골라 보세요. 마음에 들면 저장하고, 친구에게 바로 공유해요. 소중한 날에 어울리는 한 장. 포켓네컷.",
+  "phrases": [
+    {"id":"hook","text":"기념일 사진, 아직도 같은 프레임 쓰세요?","lines":["기념일 사진, 아직도","같은 프레임 쓰세요?"]},
+    {"id":"solution","text":"포켓네컷, 여든여덟 가지 프레임이 생겼어요.","lines":["88가지 프레임이 생겼어요."]},
+    {"id":"birthday","text":"생일은 케이크로 귀엽게.","lines":["생일은 케이크로 귀엽게."]},
+    {"id":"couple","text":"둘만의 날은 다정하게.","lines":["둘만의 날은 다정하게."]},
+    {"id":"graduation","text":"새로운 시작은 단정하게.","lines":["새로운 시작은 단정하게."]},
+    {"id":"travel","text":"여행의 설렘도 그대로 담아요.","lines":["여행의 설렘도 그대로 담아요."]},
+    {"id":"layout","variant":"counts","text":"두 컷, 네 컷, 여섯 컷.","lines":["2컷 · 4컷 · 6컷"]},
+    {"id":"layout","variant":"gallery","text":"카테고리별로 편하게 골라 보세요.","lines":["카테고리별로 편하게 골라 보세요."]},
+    {"id":"save","text":"마음에 들면 저장하고,","lines":["마음에 들면 저장하고,"]},
+    {"id":"save","variant":"share","text":"친구에게 바로 공유해요.","lines":["친구에게 바로 공유해요."]},
+    {"id":"cta","text":"소중한 날에 어울리는 한 장.","lines":["소중한 날에 어울리는 한 장."]},
+    {"id":"cta","variant":"end","text":"포켓네컷.","lines":["Pocket4Cut"]}
+  ],
+  "music": false,
+  "soundEffects": false
+}
