@@ -15,6 +15,8 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasStateDescription
+import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.junit4.StateRestorationTester
 import androidx.compose.ui.test.onNodeWithTag
@@ -41,6 +43,7 @@ import com.pocket4cut.presentation.frameFlow.OccasionFramePickScreen
 import com.pocket4cut.ui.theme.Pocket4CutTheme
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -159,9 +162,30 @@ class OccasionFramePickerInstrumentedTest {
 
         compose.onNode(hasContentDescription("${first.displayName} 실제 프레임 미리보기"))
             .assertIsDisplayed()
+        compose.waitUntil(timeoutMillis = 5_000) {
+            runCatching { compose.onNodeWithTag("occasion-apply").assertIsEnabled() }.isSuccess
+        }
+        val headerBefore = compose.onNodeWithText("OCCASION 88").captureToImage().toPixelMap()
+        assertTrue(
+            "The loaded preview covered the header text with a flat background",
+            (0 until headerBefore.height).any { y ->
+                (0 until headerBefore.width).any { x -> headerBefore[x, y] != headerBefore[0, 0] }
+            },
+        )
         compose.onNodeWithTag("occasion-theme-${second.id}").performClick()
         compose.onNode(hasContentDescription("${second.displayName} 실제 프레임 미리보기"))
             .assertIsDisplayed()
+        compose.waitUntil(timeoutMillis = 5_000) {
+            runCatching { compose.onNodeWithTag("occasion-apply").assertIsEnabled() }.isSuccess
+        }
+        val headerAfter = compose.onNodeWithText("OCCASION 88").captureToImage().toPixelMap()
+        assertEquals(headerBefore.width, headerAfter.width)
+        assertEquals(headerBefore.height, headerAfter.height)
+        for (y in 0 until headerBefore.height) {
+            for (x in 0 until headerBefore.width) {
+                assertEquals("Loaded artwork painted over the fixed header at $x,$y", headerBefore[x, y], headerAfter[x, y])
+            }
+        }
     }
 
     @Test fun retappingReadySelectedThemeKeepsApplyEnabled() {

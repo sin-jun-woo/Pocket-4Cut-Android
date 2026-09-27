@@ -103,12 +103,24 @@ class SessionDocumentRepository(
     }
 
     suspend fun getById(id: String): SessionDocument? = ioLocked {
+        getByIdLocked(id, migrateLegacyIfMissing = true)
+    }
+
+    /** Album sessions never existed in the legacy store; unrelated migration errors must not
+     * prevent their first import. Current-document corruption still propagates normally. */
+    suspend fun getCurrentById(id: String): SessionDocument? = ioLocked {
+        getByIdLocked(id, migrateLegacyIfMissing = false)
+    }
+
+    private fun getByIdLocked(id: String, migrateLegacyIfMissing: Boolean): SessionDocument? {
         validateId(id)
         if (atomicExists(hiddenFile(id))) {
             emit(null, id)
-            return@ioLocked null
+            return null
         }
-        if (!atomicExists(documentFile(id)) && !tombstoneFile(id).exists()) migrateLegacyLocked()
+        if (migrateLegacyIfMissing && !atomicExists(documentFile(id)) && !tombstoneFile(id).exists()) {
+            migrateLegacyLocked()
+        }
         val publicationNeedsRecovery = !tombstoneFile(id).exists() && replayResultPublicationsLocked(id)
         readDocumentLocked(id)?.takeIf {
             it.stage == SessionStage.DELETED || tombstoneFile(id).exists()
@@ -117,7 +129,7 @@ class SessionDocumentRepository(
             if (publicationNeedsRecovery) it.copy(stage = SessionStage.NEEDS_RECOVERY) else it
         }
         emit(document, id)
-        document
+        return document
     }
 
     suspend fun list(): List<SessionDocument> = ioLocked {

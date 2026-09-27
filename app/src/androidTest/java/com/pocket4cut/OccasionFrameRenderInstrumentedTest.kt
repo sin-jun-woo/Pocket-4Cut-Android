@@ -77,6 +77,59 @@ class OccasionFrameRenderInstrumentedTest {
         Variant(FrameLayouts.byId(FrameLayoutId.SIX_COLLAGE), version = 1)
 
     @Test
+    fun translatedPreviewNeverPaintsOutsideSceneOrChangesCallerClip() {
+        val catalog = OccasionCatalogLoader.load(context)
+        val variant = Variant(FrameLayouts.byId(FrameLayoutId.FOUR_GRID))
+        val layout = previewLayout(variant, null, null)
+        val scale = 0.5f
+        val left = 50
+        val top = 100
+        val right = left + ceil(layout.canvasWidth * scale).toInt()
+        val bottom = top + ceil(layout.canvasHeight * scale).toInt()
+        val sentinel = Color.MAGENTA
+        val destination = Bitmap.createBitmap(right + 50, bottom + 50, Bitmap.Config.ARGB_8888)
+        try {
+            // Test a light and a dark paper after artwork has loaded. Semantics-only
+            // UI assertions cannot detect a visible header covered by drawColor().
+            listOf(catalog.themes.first(), catalog.themes.first { it.id == "halloween" }).forEach { occasion ->
+                destination.eraseColor(sentinel)
+                val canvas = Canvas(destination)
+                canvas.translate(left.toFloat(), top.toFloat())
+                canvas.scale(scale, scale)
+                val clipBefore = canvas.clipBounds
+                val savesBefore = canvas.saveCount
+                CollageRenderer.drawScene(
+                    canvas, input(occasion, loadWithHeapEvidence(occasion), variant, emptyList(), null, null), layout,
+                )
+                assertEquals(clipBefore, canvas.clipBounds)
+                assertEquals(savesBefore, canvas.saveCount)
+                for (y in 0 until destination.height) {
+                    for (x in 0 until destination.width) {
+                        if (x < left || x >= right || y < top || y >= bottom) {
+                            assertEquals("${occasion.id} covered surrounding UI at $x,$y", sentinel, destination.getPixel(x, y))
+                        }
+                    }
+                }
+                assertTrue(destination.getPixel(left + 5, top + 5) != sentinel)
+
+                // A failure partway through photo rendering must also release the clip.
+                val failedInput = input(occasion, loadWithHeapEvidence(occasion), variant, emptyList(), null, null)
+                    .copy(imageProvider = { throw IllegalStateException("injected photo failure") })
+                try {
+                    CollageRenderer.drawScene(canvas, failedInput, layout)
+                    fail("Expected photo provider failure")
+                } catch (expected: IllegalStateException) {
+                    assertEquals("injected photo failure", expected.message)
+                }
+                assertEquals(clipBefore, canvas.clipBounds)
+                assertEquals(savesBefore, canvas.saveCount)
+            }
+        } finally {
+            destination.recycle()
+        }
+    }
+
+    @Test
     fun brandAndManualRecordTitlesNeverRenderExampleValues() {
         assertEquals("Pocket 4Cut", OccasionFramePainter.BRAND_LABEL)
         assertEquals("Pocket 4Cut / 01", OccasionFramePainter.numberedBrand(1))

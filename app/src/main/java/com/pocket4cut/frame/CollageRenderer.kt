@@ -124,6 +124,19 @@ object CollageRenderer {
 
     /** Both Compose preview and JPEG export draw the same scene and layer order. */
     fun drawScene(canvas: Canvas, input: Input, layout: CollageLayoutDimensions) {
+        // Compose supplies a shared Canvas: drawColor() fills its entire current clip,
+        // even when this scene is translated/scaled into a small preview. Keep every
+        // layer inside the scene and restore the caller's state, including on failure.
+        val checkpoint = canvas.save()
+        try {
+            canvas.clipRect(0f, 0f, layout.canvasWidth, layout.canvasHeight)
+            drawSceneContents(canvas, input, layout)
+        } finally {
+            canvas.restoreToCount(checkpoint)
+        }
+    }
+
+    private fun drawSceneContents(canvas: Canvas, input: Input, layout: CollageLayoutDimensions) {
         val seasonHTML = input.customFrameDesign?.resolvedSeason
         val occasionTheme = input.occasionTheme
         require(seasonHTML == null || occasionTheme == null) {

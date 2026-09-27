@@ -67,11 +67,13 @@ class PhotoImportViewModel(
     private val _uiState = MutableStateFlow(PhotoImportUiState())
     val uiState: StateFlow<PhotoImportUiState> = _uiState
 
+    private val initialization: kotlinx.coroutines.Job
+
     init {
-        viewModelScope.launch {
+        initialization = viewModelScope.launch {
             try {
                 val recovery = imports.recover(sessionId)
-                val document = recovery.session ?: sessions.getById(sessionId)
+                val document = recovery.session ?: sessions.getCurrentById(sessionId)
                 if (document != null) {
                     require(document.inputSource == InputSource.ALBUM && document.frameTypeId == frameType.id) {
                         "앨범 작업 정보가 현재 사진 구성과 일치하지 않습니다."
@@ -119,6 +121,10 @@ class PhotoImportViewModel(
                 }
             }
             is PhotoSelectionDecision.Accepted -> viewModelScope.launch {
+                // A restored picker can deliver its result before the initial recovery completes.
+                // Wait instead of letting recovery overwrite the newly imported photo list.
+                initialization.join()
+                if (_uiState.value.isBusy) return@launch
                 _uiState.update { it.copy(isBusy = true, message = null) }
                 try {
                     val result = imports.importUris(
@@ -126,7 +132,7 @@ class PhotoImportViewModel(
                         frameTypeId = frameType.id,
                         uris = decision.uris.map(Uri::parse),
                     )
-                    val document = result.session ?: sessions.getById(sessionId)
+                    val document = result.session ?: sessions.getCurrentById(sessionId)
                     val duplicateCount = decision.duplicateUris.size + result.duplicates.size
                     val notices = buildList {
                         if (duplicateCount > 0) add("같은 사진 ${duplicateCount}장은 중복으로 추가하지 않았습니다.")
@@ -163,7 +169,7 @@ class PhotoImportViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isBusy = true, message = null) }
             try {
-                val document = sessions.getById(sessionId) ?: error("가져온 사진 작업을 찾지 못했습니다.")
+                val document = sessions.getCurrentById(sessionId) ?: error("가져온 사진 작업을 찾지 못했습니다.")
                 val reordered = document.draft.selectedPhotoIdsInOrder.toMutableList().apply {
                     add(toIndex, removeAt(fromIndex))
                 }
@@ -194,7 +200,7 @@ class PhotoImportViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isBusy = true, message = null) }
             try {
-                val document = sessions.getById(sessionId) ?: error("가져온 사진 작업을 찾지 못했습니다.")
+                val document = sessions.getCurrentById(sessionId) ?: error("가져온 사진 작업을 찾지 못했습니다.")
                 val updated = imports.removePhoto(sessionId, photoId, document.revision)
                 _uiState.value = PhotoImportUiState(
                     isInitialized = true,
@@ -214,7 +220,7 @@ class PhotoImportViewModel(
     }
 
     private suspend fun reloadAfterFailure(failure: Exception, fallback: String) {
-        val current = runCatching { sessions.getById(sessionId) }.getOrNull()
+        val current = runCatching { sessions.getCurrentById(sessionId) }.getOrNull()
         _uiState.value = PhotoImportUiState(
             isInitialized = true,
             photos = current?.toUiPhotos().orEmpty(),

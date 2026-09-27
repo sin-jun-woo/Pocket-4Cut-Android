@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
@@ -237,7 +238,7 @@ fun CollagePreviewScaledToFit(
     occasionTheme: OccasionTheme? = null,
     onOccasionArtworkReadyChanged: ((themeId: String, ready: Boolean) -> Unit)? = null,
 ) {
-    SubcomposeLayout(modifier = modifier) { constraints ->
+    SubcomposeLayout(modifier = modifier.clipToBounds()) { constraints ->
         val maxW = constraints.maxWidth
         val maxH = constraints.maxHeight
         if (maxW == 0) return@SubcomposeLayout layout(0, 0) {}

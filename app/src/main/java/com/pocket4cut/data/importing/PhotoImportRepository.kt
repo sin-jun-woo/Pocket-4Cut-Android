@@ -187,11 +187,11 @@ class PhotoImportRepository(
                     // Keep the journal and published file for an idempotent retry.
                     failures += PhotoImportFailure(uri.toString(), PhotoImportFailureReason.CONFLICT,
                         "작업이 동시에 변경되었습니다. 저장된 사진을 다시 확인해 주세요.")
-                    current = sessions.getById(sessionId)
+                    current = sessions.getCurrentById(sessionId)
                 } catch (error: Throwable) {
                     failures += PhotoImportFailure(uri.toString(), PhotoImportFailureReason.STORAGE,
                         error.message ?: "사진을 안전하게 저장하지 못했습니다.")
-                    current = sessions.getById(sessionId)
+                    current = sessions.getCurrentById(sessionId)
                 }
             }
             PhotoImportBatchResult(current, imported, duplicates, failures)
@@ -222,7 +222,7 @@ class PhotoImportRepository(
             sessionIds.map { sessionId ->
                 try {
                     validateId(sessionId)
-                    val current = sessions.getByIdBlocking(sessionId)
+                    val current = sessions.getCurrentByIdBlocking(sessionId)
                     val hasUnfinishedJournal = readImportJournals(sessionId)
                         .any { it.status != ImportJournalStatus.SESSION_COMMITTED }
                     if (current == null || hasUnfinishedJournal || removalFiles(sessionId).isNotEmpty()) {
@@ -232,7 +232,7 @@ class PhotoImportRepository(
                     }
                 } catch (error: Throwable) {
                     PhotoImportRecoveryResult(
-                        session = runCatching { sessions.getByIdBlocking(sessionId) }.getOrNull(),
+                        session = runCatching { sessions.getCurrentByIdBlocking(sessionId) }.getOrNull(),
                         failures = listOf(
                             PhotoImportFailure(
                                 uri = "",
@@ -254,7 +254,7 @@ class PhotoImportRepository(
         processMutex.withLock {
             validateId(sessionId)
             validateId(photoId)
-            val current = sessions.getById(sessionId) ?: throw SessionStorageException("Session is missing")
+            val current = sessions.getCurrentById(sessionId) ?: throw SessionStorageException("Session is missing")
             if (current.revision != expectedRevision) throw SessionConflictException(sessionId)
             current.requireAlbumIdentity(current.frameTypeId)
             if (current.results.isNotEmpty()) throw SessionConflictException(sessionId)
@@ -275,7 +275,7 @@ class PhotoImportRepository(
         val failures = mutableListOf<PhotoImportFailure>()
         var needsReselection = false
         replayRemovals(sessionId, failures)
-        var current = sessions.getByIdBlocking(sessionId)
+        var current = sessions.getCurrentByIdBlocking(sessionId)
         // A removal intent wins over an older committed import journal. If deletion could not be
         // completed, replaying imports in the same pass could resurrect a photo reference that the
         // user already removed. Keep both journals for a later safe retry and surface the failure.
@@ -326,13 +326,13 @@ class PhotoImportRepository(
                     error.message ?: "가져오기 복구를 완료하지 못했습니다.")
             }
         }
-        current = sessions.getByIdBlocking(sessionId)
+        current = sessions.getCurrentByIdBlocking(sessionId)
         return PhotoImportRecoveryResult(current, recovered, needsReselection, failures)
     }
 
     /** This method runs on Dispatchers.IO under the import process mutex. */
-    private fun SessionDocumentRepository.getByIdBlocking(id: String): SessionDocument? =
-        kotlinx.coroutines.runBlocking { getById(id) }
+    private fun SessionDocumentRepository.getCurrentByIdBlocking(id: String): SessionDocument? =
+        kotlinx.coroutines.runBlocking { getCurrentById(id) }
 
     private fun copyAndPublish(initial: ImportJournal): ImportJournal {
         recoverPublishedFile(initial)?.let { return it }
@@ -427,7 +427,7 @@ class PhotoImportRepository(
 
     private fun commitJournal(initial: ImportJournal): SessionDocument {
         validatePublished(initial)
-        var current = sessions.getByIdBlocking(initial.sessionId)
+        var current = sessions.getCurrentByIdBlocking(initial.sessionId)
         if (current == null) {
             val target = selectedCount(initial.frameTypeId)
             current = kotlinx.coroutines.runBlocking {
@@ -685,7 +685,7 @@ class PhotoImportRepository(
         ) {
             throw SessionStorageException("Invalid import removal target")
         }
-        var current = sessions.getByIdBlocking(intent.sessionId)
+        var current = sessions.getCurrentByIdBlocking(intent.sessionId)
         val referencedPhoto = current?.photos?.firstOrNull { it.photoId == intent.photoId }
         if (referencedPhoto != null && referencedPhoto.path != intent.path) {
             throw SessionStorageException("Import removal path does not match the session")
@@ -707,7 +707,7 @@ class PhotoImportRepository(
             val file = File(picturesRoot, path)
             requireImportFile(journal.sessionId, file)
             // A file already attached to the session is never discarded here.
-            val attached = sessions.getByIdBlocking(journal.sessionId)?.photos?.any { it.photoId == journal.photoId } == true
+            val attached = sessions.getCurrentByIdBlocking(journal.sessionId)?.photos?.any { it.photoId == journal.photoId } == true
             if (!attached) file.delete()
         }
         deleteAtomic(journalFile(journal.sessionId, journal.photoId))

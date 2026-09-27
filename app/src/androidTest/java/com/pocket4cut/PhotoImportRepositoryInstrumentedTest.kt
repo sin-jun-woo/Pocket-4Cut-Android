@@ -224,6 +224,68 @@ class PhotoImportRepositoryInstrumentedTest {
         assertEquals(secondHash, sha256(second))
     }
 
+    @Test fun damagedLegacyIndexDoesNotBlockFirstAlbumImportOrResume() = runBlocking {
+        verifyImportIsIndependentOfDamagedLegacyFile("sessions.json")
+    }
+
+    @Test fun damagedLegacyPendingDoesNotBlockFirstAlbumImportOrResume() = runBlocking {
+        verifyImportIsIndependentOfDamagedLegacyFile("pending_collage_old-camera.json")
+    }
+
+    private suspend fun verifyImportIsIndependentOfDamagedLegacyFile(legacyFileName: String) {
+        val legacy = File(context.filesDir, legacyFileName).apply { writeText("{invalid legacy json") }
+        val legacyHash = sha256(legacy)
+        val oldOriginal = File(
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "Pocket4Cut/captures/old-camera/cap_01.jpg",
+        ).apply {
+            parentFile!!.mkdirs()
+            writeBytes(jpeg("old-camera-source.jpg", android.graphics.Color.GREEN).readBytes())
+        }
+        val oldOriginalHash = sha256(oldOriginal)
+        assertTrue(sessions.scanForGallery().legacyMigrationError != null)
+
+        val id = UUID.randomUUID().toString()
+        val initialRecovery = imports.recover(id)
+        assertNull(initialRecovery.session)
+        assertTrue(initialRecovery.failures.isEmpty())
+        val source = jpeg("new-album.jpg", android.graphics.Color.RED)
+        val sourceHash = sha256(source)
+        val result = imports.importUris(id, "2", listOf(Uri.fromFile(source)))
+        assertTrue(result.failures.isEmpty())
+        val photoId = result.session!!.photos.single().photoId
+
+        val recreatedSessions = SessionDocumentRepository(context)
+        val recreatedImports = PhotoImportRepository(context, recreatedSessions)
+        val recovered = recreatedImports.recover(id)
+        assertTrue(recovered.failures.isEmpty())
+        assertEquals(listOf(photoId), recovered.session!!.draft.selectedPhotoIdsInOrder)
+        val duplicate = recreatedImports.importUris(id, "2", listOf(Uri.fromFile(source)))
+        assertEquals(1, duplicate.session!!.photos.size)
+        assertEquals(1, duplicate.duplicates.size)
+        assertTrue(duplicate.failures.isEmpty())
+        assertTrue(recreatedImports.recoverAll().all { it.failures.isEmpty() })
+        val scan = recreatedSessions.scanForGallery()
+        assertTrue(scan.legacyMigrationError != null)
+        assertTrue(scan.documents.any { it.sessionId == id })
+        assertEquals(legacyHash, sha256(legacy))
+        assertEquals(oldOriginalHash, sha256(oldOriginal))
+        assertEquals(sourceHash, sha256(source))
+    }
+
+    @Test fun currentAlbumDocumentCorruptionIsNotHiddenByLegacyIndependentLookup() = runBlocking {
+        val id = UUID.randomUUID().toString()
+        val document = File(context.filesDir, "session_documents/$id.json").apply {
+            parentFile!!.mkdirs()
+            writeText("{invalid current json")
+        }
+        val hash = sha256(document)
+        val failure = runCatching { imports.recover(id) }.exceptionOrNull()
+        assertTrue(failure is SessionCorruptException)
+        assertEquals(hash, sha256(document))
+        assertFalse(File(context.filesDir, "import_journals/$id").exists())
+    }
+
     @Test fun cropRemainsAttachedToPhotoIdAfterReorderAndRepositoryRecreation() = runBlocking {
         val id = UUID.randomUUID().toString()
         val result = imports.importUris(id, "2", listOf(

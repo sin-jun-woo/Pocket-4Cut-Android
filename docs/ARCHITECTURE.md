@@ -3,6 +3,7 @@
 > 확인일: 2026-09-24. 앨범 가져오기·사진별 비파괴 자르기 작업의 시작 기준은 `main`의 `ee621886f1ef283e7a555a64fd07577a469b1264`, 구현 브랜치는 `codex/album-import-crop`이다. 이 문서는 Everyday Editions 88종 런타임 통합을 포함한 현재 작업 트리의 구조를 설명한다. 실제 검사 결과와 커밋 상태는 [WORKLOG](WORKLOG.md)의 2026-09-24 항목을 따른다.
 > 2026-09-22 실기기 후속 작업은 시작 HEAD `1b705cb3cd813efc062eefeed807f595e4b7adf2` 이후의 미커밋 코드까지 반영한다. 실행 범위와 남은 관문은 [실기기 최종 출시 후보 검증](../engineering/PHYSICAL_RELEASE_VERIFICATION_2026-09-22.md)을 따른다.
 > 아래는 소스에서 확인한 구현이다. 커밋·push 및 빌드·기기 검증 결과는 [WORKLOG](WORKLOG.md)의 해당 실행 기록을 따른다. 코드의 존재를 테스트 통과나 모든 장애 복구 완료로 해석하지 않는다.
+> 2026-09-27 보완: `adb73fe`에서 시작한 업데이트 후 앨범 가져오기와 88종 미리보기 수정은 아래 저장소 조회/Canvas 경계에 반영했다. 버전은 기존 `1.6 (7)`을 유지하며 실행 검증 범위는 WORKLOG의 같은 날짜 기록을 따른다.
 
 루트의 [ARCHITECTURE.md](../ARCHITECTURE.md)는 목표 계층과 예시를 포함한 초기 설계 문서다. 이 문서는 현재 호출 관계와 저장 계약을 설명하며, 이전 감사 결과를 현행 결함 목록으로 그대로 옮기지 않는다.
 
@@ -10,7 +11,7 @@
 
 [settings.gradle.kts](../settings.gradle.kts)에 등록된 모듈은 `:app` 하나다. Kotlin/Compose, CameraX, Android Canvas, JSON 파일, SharedPreferences를 사용한다. Room·Hilt·Koin·DataStore·AWS 서버는 현재 구현에 없다.
 
-[앱 빌드 설정](../app/build.gradle.kts)은 namespace/배포 applicationId `com.pocket4cut`, minSdk 26, compileSdk/targetSdk 36, 버전 `1.5 (6)`이다. 이번 기능 구현은 versionCode/versionName을 변경하지 않았다. Gradle 9.1.0, AGP 9.0.1, Build Tools 36.1.0, Compose compiler plugin 2.2.10과 AGP 내장 Kotlin 지원을 사용한다. Java 코드 대상 11과 Gradle 실행 JDK는 별개다.
+[앱 빌드 설정](../app/build.gradle.kts)은 namespace/배포 applicationId `com.pocket4cut`, minSdk 26, compileSdk/targetSdk 36, 버전 `1.6 (7)`이다(2026-09-27 확인). 9월 24일 기능 검증 당시 버전은 `1.5 (6)`이며 이번 버그 수정은 versionCode/versionName을 변경하지 않았다. Gradle 9.1.0, AGP 9.0.1, Build Tools 36.1.0, Compose compiler plugin 2.2.10과 AGP 내장 Kotlin 지원을 사용한다. Java 코드 대상 11과 Gradle 실행 JDK는 별개다.
 
 - `debug`: applicationId `com.pocket4cut.qa`, 버전 이름에 `-qa`를 붙여 배포 앱과 데이터를 분리한다.
 - `release`: R8 최적화·난독화와 리소스 축소를 활성화한다. 실제 배포 서명은 별도 설정이다.
@@ -128,6 +129,8 @@ occasion 선택의 지속 계약은 `backgroundType="occasion"`, 카탈로그에
 
 ## 4. 촬영 파일과 삭제 소유권
 
+앨범은 구버전 저장소에 존재하지 않는 입력 방식이므로 가져오기·복구·제거 경로는 `SessionDocumentRepository.getCurrentById()`로 현재 형식의 세션만 조회한다. 새 앨범 UUID가 없다는 이유로 전체 legacy 이전을 실행하지 않는다. 현재 문서의 잠금·검증·게시 복구·삭제/숨김 처리는 기존 조회와 공유하며 손상된 현재 문서의 오류는 숨기지 않는다. Home/보관함의 legacy 이전과 복구 경고는 유지한다. `PhotoImportViewModel`은 초기 journal 복구가 끝난 뒤 복원된 Photo Picker 결과를 처리하여 초기 상태가 새 사진 목록을 덮어쓰지 않도록 한다.
+
 [FileImageStorage](../app/src/main/java/com/pocket4cut/data/storage/FileImageStorage.kt)의 활성 경로는 다음과 같다.
 
 ```text
@@ -168,6 +171,8 @@ getExternalFilesDir(Pictures)/Pocket4Cut/
 최종 렌더에서 `CollageRenderer.slotImageProvider`는 각 출력 슬롯의 실제 크기를 받는다. 중립이 아닌 crop은 `CropMath.visibleSourceRect()`로 EXIF 정규화 원본의 표시 영역을 먼저 구하고 JPEG·PNG·정적 WebP는 그 영역만 region decode한다. 이후 사용자 회전·반전과 필터·색 보정을 적용하고, 이미 자른 Bitmap은 중립 transform으로 그린다. HEIF/HEIC처럼 region decode 대상이 아닌 형식이거나 decoder가 실패하면 원본 전체를 6MP 상한으로 sampled decode한 뒤 기존 crop transform을 적용한다. 중립 crop도 기존 픽셀 호환을 위해 이 전체 decode 경로를 사용한다. provider가 반환한 Bitmap은 해당 슬롯을 그린 뒤 회수하며 UI가 보유한 preview Bitmap과 수명을 공유하지 않는다.
 
 [CollagePreview](../app/src/main/java/com/pocket4cut/frame/CollagePreview.kt)는 Compose Canvas에서 최종 출력과 같은 [CollageRenderer.drawScene](../app/src/main/java/com/pocket4cut/frame/CollageRenderer.kt), 슬롯 기하와 `CropMath`를 호출한다. 따라서 선택 순서·슬롯·focus·zoom·회전·반전과 배경 → 사진 → 외곽·슬롯 테두리 → 계절/occasion 장식·제목 → 브랜드·문구·날짜 → 사용자 장식 순서를 공유한다. 미리보기는 화면 크기의 축소 Bitmap, 최종 출력은 슬롯 크기를 알고 원본에서 디코드한 Bitmap을 사용한다. 공통 장면·crop 계약은 유지하지만 해상도가 다르므로 모든 픽셀이 완전히 같다는 의미는 아니다.
+
+`drawScene`은 호출자의 Canvas 상태를 저장하고 장면 사각형으로 clip한 뒤 그리며 예외 발생 시에도 원래 상태로 복원한다. Compose가 제공한 Canvas의 `drawColor()`가 미리보기 밖 헤더·카테고리까지 덮지 않도록 하는 경계다. `CollagePreviewScaledToFit`도 자신의 레이아웃 경계에 clip한다. 88종 선택 화면의 고정 헤더/카테고리는 기존처럼 목록 바깥에 유지된다.
 
 2026-09-22 Paper Seasons 변경은 위 기준 커밋 이후의 계절 자산 교체다. `SeasonalStickerArt`가 번들 RGBA atlas(시즌당 1536×1024)를 IO에서 읽고 최대 2개를 캐시한다. 캐시 이탈 시 UI가 보유한 Bitmap을 recycle하지 않는다. 미리보기는 시즌별 비동기 로딩·오류/재시도를 사용하고, 최종 렌더는 스냅샷의 시즌을 먼저 로드하여 같은 `Input.seasonalArt`로 전달한다. 사진·브랜드·문구 영역을 제외하는 동일한 배치 함수를 사용한다. 저장된 `sourceSeason` 및 layoutVersion은 유지하고 레이아웃 선택·프레임 선택·일반 편집에서도 기존 배치 버전을 전달한다. 이번 변경의 실행 검증은 WORKLOG의 Paper Seasons 항목을 따른다.
 

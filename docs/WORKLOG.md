@@ -4,6 +4,16 @@
 
 `docs/`는 GitHub Pages 배포 대상이므로 공개 가능한 요약만 기록한다. 비밀값, 사용자 사진, 기기 serial, 개인 로컬 경로, 원시 실행 로그를 넣지 않는다. 세부 실행 산출물은 로컬 build/캐시 영역에 두고 필요한 명령·결과만 남긴다.
 
+## 2026-09-27 — 업데이트 후 앨범 가져오기 및 88종 선택 화면 가림 수정 (Asia/Seoul)
+
+- 요청/기준: 기존 데이터를 남긴 업데이트에서 앨범 선택 사진이 추가되지 않는 경우와 88종 프레임 선택 화면의 상단 메뉴 깜박임을 수정한다. 시작 HEAD `adb73fe`, 시작 브랜치 `codex/notion-1-6`, 수정 브랜치 `codex/fix-album-frame-preview`, 버전 `1.6 (7)` 유지. 시작부터 있던 `OccasionFramePainter.kt`의 상단 번호 브랜드 제거 변경은 보존하고 이번 커밋에서 제외한다.
+- 영상 확인: 사용자가 제공한 약 21.7초 영상 전체의 1초 간격 장면과 처음 3초의 프레임별 상단 영역을 로컬에서 확인했다. 프레임 교체 중에는 제목·뒤로가기·닫기·카테고리가 잠시 나타나고, 장식 로딩이 끝나면 상단이 해당 종이색으로 덮였다. 원본 영상과 추출 이미지는 공개 문서/Git에 포함하지 않는다.
+- 렌더 수정: `CollageRenderer.drawScene`에서 Canvas 상태 저장 → 장면 사각형 clip → 공통 그리기 → `finally`에서 상태 복원을 적용했다. Compose Canvas의 `drawColor()`가 미리보기 밖 고정 메뉴까지 칠하는 원인을 차단한다. `CollagePreviewScaledToFit`에도 레이아웃 경계 clip을 적용한다. 메뉴 위치/기능, 최종 출력 크기와 자산은 변경하지 않는다.
+- 앨범 수정: 새 앨범 UUID를 조회할 때 구버전 `sessions.json`/pending 전체 이전이 실행되고 손상 기록 하나 때문에 새 import까지 실패하는 경로를 확인했다. `SessionDocumentRepository.getCurrentById()`로 앨범 가져오기·복구·제거 조회를 분리하고 기존 잠금·현재 문서 검증·복구·숨김/삭제 처리는 유지했다. legacy 원문과 Home/보관함의 복구 경고를 지우지 않는다. 초기 복구와 복원된 picker callback이 병행되어 최신 목록을 덮지 않도록 ViewModel에서 초기화 완료를 기다린다. 실제 사용자 기기의 손상 파일을 읽어 원인을 단정한 것은 아니며, 코드에서 확인된 실패 경로의 수정이다.
+- 회귀 소스: `PhotoImportRepositoryInstrumentedTest`에 손상 legacy index/pending 각각의 첫 가져오기·저장소 재생성·중복 선택·전역 복구와 원문/기존 원본/외부 원본 해시 보존, 현재 문서 손상 오류 유지 검사를 추가했다. `OccasionFrameRenderInstrumentedTest`에 축소·이동된 밝은/어두운 프레임의 바깥 픽셀 보존과 정상/예외 Canvas 상태 복원을 추가했다. `OccasionFramePickerInstrumentedTest`는 장식 로딩 후 실제 헤더 픽셀 존재와 테마 변경 전후 동일 여부를 확인하도록 보강했다. 이 계측 소스의 작성·컴파일과 기기에서 실제 통과는 별개다.
+- 검증: 최종 소스에서 `:app:assembleDebug :app:testDebugUnitTest :app:lintDebug :app:assembleDebugAndroidTest --console=plain` 성공(79개 task 중 21 실행/58 캐시 재사용). JVM 25개 통과, 실패·오류·건너뜀 0; Lint 오류 0·기존 경고 56·힌트 6; 계측 테스트 APK 컴파일 성공. 첫 sandbox 실행은 Gradle 캐시 잠금 경로 접근 실패, 권한 조정 후 수정과 겹쳤던 중간 실행은 Lint `SuspiciousIndentation` 5건으로 실패했다. 소스 편집 완료 후 위 최종 명령을 재실행했으며 suppress나 baseline 추가 없이 오류 0을 확인했다. `git diff --check` 통과. 기존 상단 번호 브랜드 제거 미커밋 변경이 포함된 작업 트리에서 검사했지만 이 파일은 이번 커밋에서 제외한다. 사용자 지시에 따라 실기기 테스트와 앱 설치는 하지 않았다. 실제 업데이트 유지 환경의 Photo Picker 재선택, 초기 복구 중 callback 복원, 88종 화면의 헤더/카테고리 표시 재확인은 후속 실기기 범위다.
+- 변경 파일: 저장소/가져오기/ViewModel 3개, 공통 preview/renderer 2개, 계측 테스트 3개, `ARCHITECTURE`/`WORKLOG` 2개. 이미지 자산·버전·사용자 데이터는 변경하지 않는다. 관련 파일만 명시적으로 stage하고 수정 브랜치에 일반 커밋·push하며 main은 변경하지 않는다.
+
 ## 2026-09-24 — 1.6(7) 버전 변경의 Notion 최신화 (Asia/Seoul)
 
 - 요청/범위: 사용자가 변경한 앱 1.6(7)을 Notion 홈·제품 명세·UX·아키텍처·릴리스·품질·버전 연혁·당일 업데이트와 Git 일지에 반영한다. 앱 코드·Gradle·이미지는 추가 수정하지 않았고 저장소 변경은 이 WORKLOG 기록뿐이다.
