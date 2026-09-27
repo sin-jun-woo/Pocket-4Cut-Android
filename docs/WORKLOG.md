@@ -4,6 +4,14 @@
 
 `docs/`는 GitHub Pages 배포 대상이므로 공개 가능한 요약만 기록한다. 비밀값, 사용자 사진, 기기 serial, 개인 로컬 경로, 원시 실행 로그를 넣지 않는다. 세부 실행 산출물은 로컬 build/캐시 영역에 두고 필요한 명령·결과만 남긴다.
 
+## 2026-09-27 — 전체 작업 푸시 및 main 통합 요청 (Asia/Seoul)
+
+- 요청/기준: 사용자가 모든 작업을 GitHub와 main에 반영하도록 명시했다. 시작 작업 브랜치 `codex/occasion-reels`/HEAD `2e7d119a0a7cdbe485a8ff3f3acd541aa8d157f6`, 원격 main `caa450809b1e120723c0158b51d3ae9c4bcf1e52`. `git fetch origin --prune` 후 main이 작업 브랜치의 조상이고 차이가 릴스1커밋뿐임을 확인했다. 모든 로컬/원격 작업 브랜치 끝 커밋도 현재 HEAD에서 도달 가능하다.
+- 추가 보존: 앞선 릴스 작업에서 제외했던 미추적 `design/occasion-frames/everyday-editions-v1/deliverables/downloads/pocket4cut-all-88-frames/`의 압축 해제 사본1,775개를 이번 전체 푸시 요청에 포함한다. PNG/JPG1,773개는 기존 Git추적 원본과 전수SHA-256일치하며 새로운 사용자 사진이나 고유 이미지가 없다. manifest는 줄바꿈만 다르고 README첫줄은 예전 `Pocket4Cut` 표기다. 사본 내용은 그대로 보존하며 상위 현행 안내를 대체하지 않는다.
+- 제외 경계: 기존 `.gitignore`에 명시된 ZIP14개·build/로컬 캐시·서명키/비밀 파일은 강제추가하지 않는다. 전체 ZIP은698,471,379bytes(666.1MiB)로 GitHub일반Git의100MiB한도를 넘는다. 기존 원본PNG와 재생성 스크립트는 모두Git에 있으므로 프레임 디자인이 누락되는 것은 아니다. LFS설정·유료저장소·새Release게시로 임의전환하지 않았다.
+- 변경/검증: 압축 해제 사본1,775개와 이WORKLOG만 추가한다. 앱코드·버전·이미지내용·기존릴스변경없음. 브랜치조상관계·파일목록·이미지해시·ZIP경로종류와 staged diff/공백을 확인한다. Git동기화 작업이므로 앱빌드·JVM/Lint·기기테스트와 영상재인코딩은 실행하지 않는다.
+- 통합 절차: 관련경로만명시적으로stage/일반커밋/작업브랜치push → main에`git merge --ff-only codex/occasion-reels` → main일반push → 두원격브랜치SHA와최종status대조. 기존커밋재작성·force push·reset·사용자파일삭제없이진행하며 실제최종SHA/push결과는 완료보고에서확인한다.
+
 ## 2026-09-27 — 마지막 릴스 템플릿으로 88종 프레임 소개 영상 제작 (Asia/Seoul)
 
 - 요청/기준: 마지막 완성 릴스 `seasonal-v4`(2026-09-22, `6c815cb2`)의 기본 틀을 유지하고 88종 프레임 소개로 내용만 변경한다. 시작 `main`/HEAD `caa4508`, 작업 브랜치 `codex/occasion-reels`. 기존 미추적 `design/occasion-frames/everyday-editions-v1/deliverables/downloads/`를 보존·제외한다. 앱·버전·기존 프레임·옛 영상·사용자 자료는 변경하지 않는다.
