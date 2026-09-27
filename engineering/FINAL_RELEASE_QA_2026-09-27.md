@@ -1,6 +1,6 @@
 # Pocket 4Cut 1.7(8) 출시 후보 검증 — 2026-09-27
 
-검사일은 Asia/Seoul 기준이다. 기준 커밋은 `25d825fd4ca540f5c2daebf95eb996eb516b852e`, 작업 브랜치는 `codex/release-qa-20260927`이다. 사용자 후속 요청에 따라 `app/build.gradle.kts`의 버전을 **1.7(8)**로 변경했다. 이 보고서는 버전 변경 전 **1.6(7)의 실행 기록**과 **1.7(8)의 최종 재검사**를 구분한다. 1.6(7)과 9월 22~24일의 1.5(6) 성공 결과를 새 버전의 통과로 대체하지 않는다.
+검사일은 Asia/Seoul 기준이다. 시작 기준 커밋은 `25d825fd4ca540f5c2daebf95eb996eb516b852e`, 작업 브랜치는 `codex/release-qa-20260927`이다. 검증한 기능·테스트·버전 변경의 확정 커밋은 **`6b326bf386e8c69342b5bacb0e953ad60c7cb8dd`**다. 사용자 후속 요청에 따라 `app/build.gradle.kts`의 버전을 **1.7(8)**로 변경했다. 이 보고서는 버전 변경 전 **1.6(7)의 실행 기록**과 **1.7(8)의 최종 재검사**를 구분한다. 1.6(7)과 9월 22~24일의 1.5(6) 성공 결과를 새 버전의 통과로 대체하지 않는다.
 
 ## 1. 판정과 읽는 방법
 
@@ -125,7 +125,7 @@ adb shell am instrument -w -r
 - Debug Lint: 오류 0, 경고 56, 힌트 6. Release Lint: 오류 0, 경고 55, 힌트 6. suppression/baseline을 추가해 통과시키지 않았다. 최종 보고 XML에서 건수를 다시 대조했다.
 - Debug 경고 분류: UseKtx 18, GradleDependency 11, UnusedResources 8, ModifierParameter 7, IconLauncherShape 5, IconXmlAndPng 2, NewerVersionAvailable 2, AndroidGradlePluginVersion 1, RedundantLabel 1, UseOfNonLambdaOffsetOverload 1. 의존성 일괄 업데이트·아이콘 교체·대규모 코드 스타일 변경은 이번 버그 수정에 섞지 않았다. 경고 0건이라고 보고하지 않는다.
 - 런타임 자산: `npm.cmd run validate:android` PASS. 88개 테마, 10분류, 77+11 그룹, atlas 88개와 thumbnail 88개, 33,687,596 검증 바이트. 최소 합성 PSNR 42.01dB, 알파 차이 0, 변조 거부 14건.
-- `git diff --check` 통과. 최종 관련 파일을 명시적으로 stage하고 staged 공백 검사·diff를 별도로 검토한다.
+- `git diff --check` 통과. 최종 관련28파일을 명시적으로 stage했고 staged 공백 검사·diff 검토도 통과했다. 제품11파일·계측10파일의 독립 읽기 검토에서도 새로 조치할 확정 회귀·비밀정보는 발견하지 못했다.
 
 실패/미완료 실행도 보존한다. 초기 `connectedDebugAndroidTest`는 연결 종료와 불완전 수집으로 PASS가 아니다. CustomFrame 4개는 수정 전 실패했다. Selection 신규 검사의 첫 실행은 Kotlin 반환형 때문에 JUnit의 `should be void` 초기화 오류가 있었고, 같은 명령의 잘못된 접근성 클래스명도 오류였다. 반환형을 Unit으로 명시하고 실제 클래스명으로 재실행하여 위 14개가 통과했다. 이 오류를 앱 자체 crash로 기록하지 않는다.
 
@@ -281,8 +281,8 @@ Play Console 업로드·심사·내부 테스트 배포는 실행하지 않았�
 - 문서: README, ARCHITECTURE, IMAGE_ASSET_GUIDE, WORKLOG, 이 보고서와 QA 범위 목록.
 - 새 이미지 자산 없음. 기존 atlas 1536×1024와 thumbnail 240×160을 그대로 사용한다. 검사용 번호 JPEG와 실제 결과/스크린샷은 앱 배포 자산이 아니다.
 - 로컬 증거: `build/release-qa-20260927/`의 실행 로그, XML/PNG, `pre-r8-result-audit.json`, `r8-result-audit.json`, `after-delete-verification.json`, 수신 앱 결과, 서명/번들 검증 로그. 공개하지 않는다.
-- Git 식별: 이 보고서와 변경 파일을 포함한 커밋을 `codex/release-qa-20260927`에서 보존한다. 자체 커밋 SHA를 문서에 다시 삽입하려고 amend하지 않는다. 최종 응답에서 실제 SHA와 원격 push 결과를 함께 제공한다.
-- Git 통합 계획: 기존 사용자 승인에 따라 작업 브랜치의 검증·커밋·일반 push 뒤 `main`에 `--ff-only`로 통합한다. 이는 실행 예정이며 실제 통합·push 결과는 마감 시 기록한다. force push나 기존 이력 재작성은 하지 않는다.
+- 기능/검증 커밋: **`6b326bf386e8c69342b5bacb0e953ad60c7cb8dd`**, `fix: 출시 QA 복구 문제 개선 및 1.7(8) 준비`. 이번 관련28파일을 포함한다. 그 뒤의 보고서 마감 변경은 문서만 다루며 APK/AAB 생성 코드는 바꾸지 않는다.
+- Git 결과: `origin/codex/release-qa-20260927`에 일반 push하고 upstream을 설정했다. 기존 사용자 승인에 따라 `main`을 `e7aeb85`에서 이 커밋으로 `--ff-only` 통합한 뒤 push했다. 원격 조회에서 두 브랜치가 동일한 위 SHA임을 확인했다. 기준 커밋의 앨범/메뉴 가림 수정도 이 ancestry에 포함된다. force push·amend·기존 이력 재작성은 하지 않았다. 이 결과를 기록하는 문서 마감 커밋의 SHA와 최종 원격 상태는 최종 응답에서 제공한다.
 
 ## 12. Play Console 출시 내역 제안 — 세 가지 길이
 
